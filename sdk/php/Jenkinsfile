@@ -1,0 +1,14 @@
+defaultCiPipeline {
+	operatingSystem = ['ubuntu', 'windows']
+	instanceSize = 'medium'
+
+	environment = 'python'
+	otherEnvironments = ['python-ubuntu-base', 'python-ubuntu-latest', 'python-windows-lts']
+
+	packageId = 'sdk-python'
+
+	publisher = 'pypi'
+
+	codeCoverageTool = 'coverage'
+	minimumCodeCoverage = 90
+}
