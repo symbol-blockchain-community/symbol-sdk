@@ -70,7 +70,6 @@ class TypeFormatter(ClassFormatter):
 		if not method_descriptor:
 			return None
 
-		#if(method_descriptor.method_name == None):
 		method_descriptor.method_name = self.provider.typename
 		return self.generate_method(method_descriptor)
 
