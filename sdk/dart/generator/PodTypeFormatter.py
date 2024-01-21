@@ -31,11 +31,11 @@ class PodTypeFormatter(AbstractTypeFormatter):
 	def get_ctor_descriptor(self):
 		variable_name = self.printer.name
 		if self._is_array:
-			super = f': super(SIZE, {variable_name} ?? {self.printer.get_default_value()})'
-			arguments = [f'Uint8List {variable_name}']
+			super = f': super(SIZE, {variable_name})'
+			arguments = [f'[Uint8List? {variable_name}]']
 		else:
 			super = f': super(SIZE, {variable_name} ?? {self.printer.get_default_value()})'
-			arguments = [f'{self.printer.get_type()} {variable_name}']
+			arguments = [f'[{self.printer.get_type()}? {variable_name}]']
 		return MethodDescriptor(super=super, arguments=arguments)
 
 	def get_deserialize_descriptor(self):

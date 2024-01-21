@@ -32,17 +32,16 @@ class EnumTypeFormatter(AbstractTypeFormatter):
     )
 		fields.append('\n')
 		fields.append('final int value;\n')
-		if self.enum_type.is_bitwise:
-			fields.append('\n')
-			flags = 'static final _flags = {\n'
-			flags += indent(''.join(
-				map(
-						lambda e: f'{e.value}: \'{e.name}\',\n',
-						self.enum_type.values,
-				)
-			))
-			flags += '};\n'
-			fields.append(flags)
+		fields.append('\n')
+		flags = 'static final _flags = {\n'
+		flags += indent(''.join(
+			map(
+					lambda e: f'{e.value}: \'{e.name}\',\n',
+					self.enum_type.values,
+			)
+		))
+		flags += '};\n'
+		fields.append(flags)
 		return fields
 
 	def get_ctor_descriptor(self):
@@ -66,14 +65,9 @@ class EnumTypeFormatter(AbstractTypeFormatter):
 	
 	def get_str_descriptor(self):
 		body = ''
+		#   return 'LinkAction.${LinkAction.valueToKey(this.value)}';
 		if not self.enum_type.is_bitwise:
-			body += 'switch (value) {\n'
-			s = ''
-			for e in self.enum_type.values:
-				s += f'case {e.value}: return \'{e.name}\';\n'
-			s += f'default: throw ArgumentError(\'Invalid value for {self.enum_type.name}\');\n'
-			body += indent(s)
-			body += '}\n'
+			body = f'return \'{self.typename}.${{_flags[value]}}\';'
 			return MethodDescriptor(body=body)
 
 		if any(e.value == 0 for e in self.enum_type.values):
