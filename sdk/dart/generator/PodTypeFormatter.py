@@ -16,7 +16,7 @@ class PodTypeFormatter(AbstractTypeFormatter):
 
 	@property
 	def field_name(self):
-		return f'self._{self.printer.name}'
+		return f'this._{self.printer.name}'
 
 	@property
 	def _is_array(self):
@@ -50,7 +50,7 @@ class PodTypeFormatter(AbstractTypeFormatter):
 		body = 'var buffer = ByteData(SIZE);\n'
 		body += f'return {self.printer.store("value")};'
 		if self._is_array:
-			return MethodDescriptor(body='return bytes')
+			return MethodDescriptor(body='return bytes;')
 
 		return MethodDescriptor(body=body)
 
@@ -58,5 +58,5 @@ class PodTypeFormatter(AbstractTypeFormatter):
 		if not self._is_array:
 			return None
 
-		body = f'return {self.pod.size}\n'
+		body = f'return {self.pod.size};\n'
 		return MethodDescriptor(body=body)

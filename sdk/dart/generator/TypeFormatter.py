@@ -70,6 +70,7 @@ class TypeFormatter(ClassFormatter):
 		if not method_descriptor:
 			return None
 
+		#if(method_descriptor.method_name == None):
 		method_descriptor.method_name = self.provider.typename
 		return self.generate_method(method_descriptor)
 
@@ -113,7 +114,7 @@ class TypeFormatter(ClassFormatter):
 		if not method_descriptor:
 			return None
 
-		method_descriptor.method_name = 'get size'
+		method_descriptor.method_name = 'size'
 		method_descriptor.arguments = []
 		method_descriptor.result = 'int'
 		return self.generate_method(method_descriptor)
@@ -131,6 +132,7 @@ class TypeFormatter(ClassFormatter):
 
 		method_descriptor.method_name = 'toString'
 		method_descriptor.result = 'String'
+		method_descriptor.annotations = ['@override']
 		return self.generate_method(method_descriptor)
 
 	def generate_methods(self):
