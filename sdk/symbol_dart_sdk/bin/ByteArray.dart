@@ -4,7 +4,8 @@ import 'package:convert/convert.dart';
 class ByteArray {
   Uint8List bytes;
 
-  ByteArray(int fixedSize, dynamic arrayInput) {
+  ByteArray(int fixedSize, dynamic arrayInput)
+      : bytes = Uint8List(fixedSize) {
     var rawBytes = arrayInput;
     if (rawBytes is String) {
       rawBytes = hex.decode(rawBytes);
@@ -19,6 +20,6 @@ class ByteArray {
 
   @override
   String toString() {
-    return hex.encode(bytes.toList());
+    return hex.encode(bytes.toList()).toUpperCase();
   }
 }

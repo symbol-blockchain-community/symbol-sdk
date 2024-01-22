@@ -29,14 +29,16 @@ class IntPrinter(Printer):
 
 	def load(self):
 		data_size = self.get_size()
-		return f'BigInt.from(buffer.getInt{data_size * 8}(0, Endian.little))'
+		if(data_size == 8):
+			return f'BigInt.from(buffer.getUint64(0, Endian.little))'
+		return f'buffer.getUint{data_size * 8}(0, Endian.little)'
 
 	def advancement_size(self):
 		return self.get_size()
 
 	def store(self, field_name):
 		data_size = self.get_size()
-		return f'(buffer..setInt{data_size * 8}(0, {field_name}.toInt(), Endian.little)).buffer.asUint8List();'
+		return f'(buffer..setUint{data_size * 8}(0, {field_name}.toInt(), Endian.little)).buffer.asUint8List()'
 
 	@staticmethod
 	def assign(value):
