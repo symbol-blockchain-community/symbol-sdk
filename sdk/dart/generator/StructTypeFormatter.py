@@ -3,7 +3,7 @@ from itertools import filterfalse
 from catparser.DisplayType import DisplayType
 
 from .AbstractTypeFormatter import AbstractTypeFormatter, MethodDescriptor
-from .format import indent
+from .format import indent, uint32_to_int32
 from .name_formatting import lang_field_name
 
 def is_reserved(field):
@@ -35,9 +35,6 @@ def filter_size_if_first(fields_iter):
 
 	for field in fields_iter:
 		yield field
-
-def uint32_to_int32(x):
-  return (x & 0xFFFFFFFF) - (1 << 32) if x & (1 << 31) else x
 
 class StructFormatter(AbstractTypeFormatter):
 	# pylint: disable=too-many-public-methods

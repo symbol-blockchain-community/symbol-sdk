@@ -16,7 +16,7 @@ class PodTypeFormatter(AbstractTypeFormatter):
 
 	@property
 	def field_name(self):
-		return f'this._{self.printer.name}'
+		return f'_{self.printer.name}'
 
 	@property
 	def _is_array(self):

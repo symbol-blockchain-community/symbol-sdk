@@ -20,8 +20,6 @@ class ClassFormatter(ABC):
 		
 		if len(method_descriptor.arguments) > 1:
 			arguments = f'{{ {arguments}}}'
-		#elif len(method_descriptor.arguments) == 1 and not 'set ' in method_descriptor.method_name:
-		#	arguments = f'[{arguments}]'
 		if not 'get ' in method_descriptor.method_name:
 			arguments = '(' + arguments + ')'
 		annotations = '\n'.join(method_descriptor.annotations + [''])
