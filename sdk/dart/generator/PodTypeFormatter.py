@@ -39,11 +39,7 @@ class PodTypeFormatter(AbstractTypeFormatter):
 			body = 'payload = payload.sublist(0, SIZE);\n'
 			body += f'return {self.typename}({self.printer.load("payload")});'
 			return MethodDescriptor(body=body)
-		
-		#body = 'var buffer = ByteData.view(payload.buffer, 0, size);\n'
-		#if self.printer.get_size() == 8:
-		#	body += 'var bigInt = BigInt.from(buffer.getUint64(0, Endian.little));'
-		#	body += 'if (bigInt < BigInt.zero) bigInt = bigInt + BigInt.two.pow(64);'
+
 		body = f'return {self.typename}({self.printer.load("payload")});'
 		return MethodDescriptor(body=body)
 

@@ -27,10 +27,10 @@ class IntPrinter(Printer):
 		self.type_hint = None
 
 	def get_type(self):
-		return 'BigInt' if self.get_size() > 4 else 'int'
+		return 'int'
 
 	def get_default_value(self):
-		return 'BigInt.zero' if self.get_size() > 4 else '0'
+		return '0'
 
 	def get_size(self):
 		return self.descriptor.size
@@ -38,11 +38,6 @@ class IntPrinter(Printer):
 	def load(self, buffer_name='buffer'):
 		data_size = self.get_size()
 		return f'bytesToInt(({buffer_name} as Uint8List).sublist(0, {data_size}), {data_size})'
-		if(data_size == 8):
-			return f'BigInt.from({buffer_name}.getUint64(0, Endian.little))'
-		if(data_size == 1):
-			return f'{buffer_name}.getUint8(0)'
-		return f'{buffer_name}.getUint{data_size * 8}(0, Endian.little)'
 
 	def advancement_size(self):
 		return self.get_size()

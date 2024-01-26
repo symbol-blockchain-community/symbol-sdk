@@ -13,7 +13,7 @@ import 'package:tuple/tuple.dart';
 class Amount extends BaseValue implements IDeserializable {
 	static const int SIZE = 8;
 
-	Amount([dynamic amount]) : super(SIZE, amount ?? BigInt.zero);
+	Amount([dynamic amount]) : super(SIZE, amount ?? 0);
 
 	@override
 	Amount deserialize(dynamic payload) {
@@ -31,7 +31,7 @@ class Amount extends BaseValue implements IDeserializable {
 class Height extends BaseValue implements IDeserializable {
 	static const int SIZE = 8;
 
-	Height([dynamic height]) : super(SIZE, height ?? BigInt.zero);
+	Height([dynamic height]) : super(SIZE, height ?? 0);
 
 	@override
 	Height deserialize(dynamic payload) {

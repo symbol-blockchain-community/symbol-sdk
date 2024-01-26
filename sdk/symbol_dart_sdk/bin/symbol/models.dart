@@ -13,7 +13,7 @@ import 'package:tuple/tuple.dart';
 class Amount extends BaseValue implements IDeserializable {
 	static const int SIZE = 8;
 
-	Amount([dynamic amount]) : super(SIZE, amount ?? BigInt.zero);
+	Amount([dynamic amount]) : super(SIZE, amount ?? 0);
 
 	@override
 	Amount deserialize(dynamic payload) {
@@ -31,7 +31,7 @@ class Amount extends BaseValue implements IDeserializable {
 class BlockDuration extends BaseValue implements IDeserializable {
 	static const int SIZE = 8;
 
-	BlockDuration([dynamic blockDuration]) : super(SIZE, blockDuration ?? BigInt.zero);
+	BlockDuration([dynamic blockDuration]) : super(SIZE, blockDuration ?? 0);
 
 	@override
 	BlockDuration deserialize(dynamic payload) {
@@ -67,7 +67,7 @@ class BlockFeeMultiplier extends BaseValue implements IDeserializable {
 class Difficulty extends BaseValue implements IDeserializable {
 	static const int SIZE = 8;
 
-	Difficulty([dynamic difficulty]) : super(SIZE, difficulty ?? BigInt.zero);
+	Difficulty([dynamic difficulty]) : super(SIZE, difficulty ?? 0);
 
 	@override
 	Difficulty deserialize(dynamic payload) {
@@ -121,7 +121,7 @@ class FinalizationPoint extends BaseValue implements IDeserializable {
 class Height extends BaseValue implements IDeserializable {
 	static const int SIZE = 8;
 
-	Height([dynamic height]) : super(SIZE, height ?? BigInt.zero);
+	Height([dynamic height]) : super(SIZE, height ?? 0);
 
 	@override
 	Height deserialize(dynamic payload) {
@@ -139,7 +139,7 @@ class Height extends BaseValue implements IDeserializable {
 class Importance extends BaseValue implements IDeserializable {
 	static const int SIZE = 8;
 
-	Importance([dynamic importance]) : super(SIZE, importance ?? BigInt.zero);
+	Importance([dynamic importance]) : super(SIZE, importance ?? 0);
 
 	@override
 	Importance deserialize(dynamic payload) {
@@ -157,7 +157,7 @@ class Importance extends BaseValue implements IDeserializable {
 class ImportanceHeight extends BaseValue implements IDeserializable {
 	static const int SIZE = 8;
 
-	ImportanceHeight([dynamic importanceHeight]) : super(SIZE, importanceHeight ?? BigInt.zero);
+	ImportanceHeight([dynamic importanceHeight]) : super(SIZE, importanceHeight ?? 0);
 
 	@override
 	ImportanceHeight deserialize(dynamic payload) {
@@ -175,7 +175,7 @@ class ImportanceHeight extends BaseValue implements IDeserializable {
 class UnresolvedMosaicId extends BaseValue implements IDeserializable {
 	static const int SIZE = 8;
 
-	UnresolvedMosaicId([dynamic unresolvedMosaicId]) : super(SIZE, unresolvedMosaicId ?? BigInt.zero);
+	UnresolvedMosaicId([dynamic unresolvedMosaicId]) : super(SIZE, unresolvedMosaicId ?? 0);
 
 	@override
 	UnresolvedMosaicId deserialize(dynamic payload) {
@@ -193,7 +193,7 @@ class UnresolvedMosaicId extends BaseValue implements IDeserializable {
 class MosaicId extends BaseValue implements IDeserializable {
 	static const int SIZE = 8;
 
-	MosaicId([dynamic mosaicId]) : super(SIZE, mosaicId ?? BigInt.zero);
+	MosaicId([dynamic mosaicId]) : super(SIZE, mosaicId ?? 0);
 
 	@override
 	MosaicId deserialize(dynamic payload) {
@@ -211,7 +211,7 @@ class MosaicId extends BaseValue implements IDeserializable {
 class Timestamp extends BaseValue implements IDeserializable {
 	static const int SIZE = 8;
 
-	Timestamp([dynamic timestamp]) : super(SIZE, timestamp ?? BigInt.zero);
+	Timestamp([dynamic timestamp]) : super(SIZE, timestamp ?? 0);
 
 	@override
 	Timestamp deserialize(dynamic payload) {
@@ -1630,7 +1630,7 @@ class NemesisBlockV1 extends StructBase implements IDeserializable {
 	Address _beneficiaryAddress = Address();
 	BlockFeeMultiplier _feeMultiplier = BlockFeeMultiplier();
 	int _votingEligibleAccountsCount = 0;
-	BigInt _harvestingEligibleAccountsCount = BigInt.zero;
+	int _harvestingEligibleAccountsCount = 0;
 	Amount _totalVotingBalance = Amount();
 	Hash256 _previousImportanceBlockHash = Hash256();
 	List<Transaction> _transactions = [];
@@ -1654,7 +1654,7 @@ class NemesisBlockV1 extends StructBase implements IDeserializable {
 	Address? beneficiaryAddress,
 	BlockFeeMultiplier? feeMultiplier,
 	int? votingEligibleAccountsCount,
-	BigInt? harvestingEligibleAccountsCount,
+	int? harvestingEligibleAccountsCount,
 	Amount? totalVotingBalance,
 	Hash256? previousImportanceBlockHash,
 	List<Transaction>? transactions
@@ -1677,7 +1677,7 @@ class NemesisBlockV1 extends StructBase implements IDeserializable {
 		_beneficiaryAddress = beneficiaryAddress ?? Address();
 		_feeMultiplier = feeMultiplier ?? BlockFeeMultiplier();
 		_votingEligibleAccountsCount = votingEligibleAccountsCount ?? 0;
-		_harvestingEligibleAccountsCount = harvestingEligibleAccountsCount ?? BigInt.zero;
+		_harvestingEligibleAccountsCount = harvestingEligibleAccountsCount ?? 0;
 		_totalVotingBalance = totalVotingBalance ?? Amount();
 		_previousImportanceBlockHash = previousImportanceBlockHash ?? Hash256();
 		_transactions = transactions ?? [];
@@ -1751,7 +1751,7 @@ class NemesisBlockV1 extends StructBase implements IDeserializable {
 		return _votingEligibleAccountsCount;
 	}
 
-	BigInt get harvestingEligibleAccountsCount {
+	int get harvestingEligibleAccountsCount {
 		return _harvestingEligibleAccountsCount;
 	}
 
@@ -1831,7 +1831,7 @@ class NemesisBlockV1 extends StructBase implements IDeserializable {
 		_votingEligibleAccountsCount = value;
 	}
 
-	set harvestingEligibleAccountsCount(BigInt value) {
+	set harvestingEligibleAccountsCount(int value) {
 		_harvestingEligibleAccountsCount = value;
 	}
 
@@ -2469,7 +2469,7 @@ class ImportanceBlockV1 extends StructBase implements IDeserializable {
 	Address _beneficiaryAddress = Address();
 	BlockFeeMultiplier _feeMultiplier = BlockFeeMultiplier();
 	int _votingEligibleAccountsCount = 0;
-	BigInt _harvestingEligibleAccountsCount = BigInt.zero;
+	int _harvestingEligibleAccountsCount = 0;
 	Amount _totalVotingBalance = Amount();
 	Hash256 _previousImportanceBlockHash = Hash256();
 	List<Transaction> _transactions = [];
@@ -2493,7 +2493,7 @@ class ImportanceBlockV1 extends StructBase implements IDeserializable {
 	Address? beneficiaryAddress,
 	BlockFeeMultiplier? feeMultiplier,
 	int? votingEligibleAccountsCount,
-	BigInt? harvestingEligibleAccountsCount,
+	int? harvestingEligibleAccountsCount,
 	Amount? totalVotingBalance,
 	Hash256? previousImportanceBlockHash,
 	List<Transaction>? transactions
@@ -2516,7 +2516,7 @@ class ImportanceBlockV1 extends StructBase implements IDeserializable {
 		_beneficiaryAddress = beneficiaryAddress ?? Address();
 		_feeMultiplier = feeMultiplier ?? BlockFeeMultiplier();
 		_votingEligibleAccountsCount = votingEligibleAccountsCount ?? 0;
-		_harvestingEligibleAccountsCount = harvestingEligibleAccountsCount ?? BigInt.zero;
+		_harvestingEligibleAccountsCount = harvestingEligibleAccountsCount ?? 0;
 		_totalVotingBalance = totalVotingBalance ?? Amount();
 		_previousImportanceBlockHash = previousImportanceBlockHash ?? Hash256();
 		_transactions = transactions ?? [];
@@ -2590,7 +2590,7 @@ class ImportanceBlockV1 extends StructBase implements IDeserializable {
 		return _votingEligibleAccountsCount;
 	}
 
-	BigInt get harvestingEligibleAccountsCount {
+	int get harvestingEligibleAccountsCount {
 		return _harvestingEligibleAccountsCount;
 	}
 
@@ -2670,7 +2670,7 @@ class ImportanceBlockV1 extends StructBase implements IDeserializable {
 		_votingEligibleAccountsCount = value;
 	}
 
-	set harvestingEligibleAccountsCount(BigInt value) {
+	set harvestingEligibleAccountsCount(int value) {
 		_harvestingEligibleAccountsCount = value;
 	}
 
@@ -4440,7 +4440,7 @@ class MosaicRentalFeeReceipt extends StructBase implements IDeserializable {
 class NamespaceId extends BaseValue implements IDeserializable {
 	static const int SIZE = 8;
 
-	NamespaceId([dynamic namespaceId]) : super(SIZE, namespaceId ?? BigInt.zero);
+	NamespaceId([dynamic namespaceId]) : super(SIZE, namespaceId ?? 0);
 
 	@override
 	NamespaceId deserialize(dynamic payload) {
@@ -6403,14 +6403,14 @@ class Cosignature extends StructBase implements IDeserializable {
 		'signature': 'pod:Signature'
 	};
 
-	BigInt _version = BigInt.zero;
+	int _version = 0;
 	PublicKey _signerPublicKey = PublicKey();
 	Signature _signature = Signature();
 
-	Cosignature({ BigInt? version, PublicKey? signerPublicKey, Signature? signature}) 
+	Cosignature({ int? version, PublicKey? signerPublicKey, Signature? signature}) 
 		: super(version == null && signerPublicKey == null && signature == null )
 	{
-		_version = version ?? BigInt.zero;
+		_version = version ?? 0;
 		_signerPublicKey = signerPublicKey ?? PublicKey();
 		_signature = signature ?? Signature();
 	}
@@ -6419,7 +6419,7 @@ class Cosignature extends StructBase implements IDeserializable {
 		// empty body
 	}
 
-	BigInt get version {
+	int get version {
 		return _version;
 	}
 
@@ -6431,7 +6431,7 @@ class Cosignature extends StructBase implements IDeserializable {
 		return _signature;
 	}
 
-	set version(BigInt value) {
+	set version(int value) {
 		_version = value;
 	}
 
@@ -6504,15 +6504,15 @@ class DetachedCosignature extends StructBase implements IDeserializable {
 		'parentHash': 'pod:Hash256'
 	};
 
-	BigInt _version = BigInt.zero;
+	int _version = 0;
 	PublicKey _signerPublicKey = PublicKey();
 	Signature _signature = Signature();
 	Hash256 _parentHash = Hash256();
 
-	DetachedCosignature({ BigInt? version, PublicKey? signerPublicKey, Signature? signature, Hash256? parentHash}) 
+	DetachedCosignature({ int? version, PublicKey? signerPublicKey, Signature? signature, Hash256? parentHash}) 
 		: super(version == null && signerPublicKey == null && signature == null && parentHash == null )
 	{
-		_version = version ?? BigInt.zero;
+		_version = version ?? 0;
 		_signerPublicKey = signerPublicKey ?? PublicKey();
 		_signature = signature ?? Signature();
 		_parentHash = parentHash ?? Hash256();
@@ -6522,7 +6522,7 @@ class DetachedCosignature extends StructBase implements IDeserializable {
 		// empty body
 	}
 
-	BigInt get version {
+	int get version {
 		return _version;
 	}
 
@@ -6538,7 +6538,7 @@ class DetachedCosignature extends StructBase implements IDeserializable {
 		return _parentHash;
 	}
 
-	set version(BigInt value) {
+	set version(int value) {
 		_version = value;
 	}
 
@@ -7659,6 +7659,7 @@ class AggregateBondedTransactionV2 extends StructBase implements IDeserializable
 		buffer = buffer.sublist(payloadSize);
 		var cosignatures = ArrayHelpers.readArray(buffer, Cosignature()).map((item) => item as Cosignature).toList();
 		buffer = buffer.sublist(ArrayHelpers.size(cosignatures));
+
 		var instance = AggregateBondedTransactionV2(
 			signature: signature,
 			signerPublicKey: signerPublicKey,
@@ -10252,7 +10253,7 @@ class AccountMetadataTransactionV1 extends StructBase implements IDeserializable
 	Amount _fee = Amount();
 	Timestamp _deadline = Timestamp();
 	UnresolvedAddress _targetAddress = UnresolvedAddress();
-	BigInt _scopedMetadataKey = BigInt.zero;
+	int _scopedMetadataKey = 0;
 	int _valueSizeDelta = 0;
 	Uint8List _value = Uint8List(0);
 	final int _verifiableEntityHeaderReserved_1 = 0; // reserved field
@@ -10267,7 +10268,7 @@ class AccountMetadataTransactionV1 extends StructBase implements IDeserializable
 	Amount? fee,
 	Timestamp? deadline,
 	UnresolvedAddress? targetAddress,
-	BigInt? scopedMetadataKey,
+	int? scopedMetadataKey,
 	int? valueSizeDelta,
 	Uint8List? value
 	}) 
@@ -10281,7 +10282,7 @@ class AccountMetadataTransactionV1 extends StructBase implements IDeserializable
 		_fee = fee ?? Amount();
 		_deadline = deadline ?? Timestamp();
 		_targetAddress = targetAddress ?? UnresolvedAddress();
-		_scopedMetadataKey = scopedMetadataKey ?? BigInt.zero;
+		_scopedMetadataKey = scopedMetadataKey ?? 0;
 		_valueSizeDelta = valueSizeDelta ?? 0;
 		_value = value ?? Uint8List(0);
 	}
@@ -10322,7 +10323,7 @@ class AccountMetadataTransactionV1 extends StructBase implements IDeserializable
 		return _targetAddress;
 	}
 
-	BigInt get scopedMetadataKey {
+	int get scopedMetadataKey {
 		return _scopedMetadataKey;
 	}
 
@@ -10366,7 +10367,7 @@ class AccountMetadataTransactionV1 extends StructBase implements IDeserializable
 		_targetAddress = value;
 	}
 
-	set scopedMetadataKey(BigInt value) {
+	set scopedMetadataKey(int value) {
 		_scopedMetadataKey = value;
 	}
 
@@ -10440,6 +10441,7 @@ class AccountMetadataTransactionV1 extends StructBase implements IDeserializable
 		buffer = buffer.sublist(2);
 		var value = Uint8List.fromList(buffer.sublist(0, valueSize));
 		buffer = buffer.sublist(valueSize);
+
 		var instance = AccountMetadataTransactionV1(
 			signature: signature,
 			signerPublicKey: signerPublicKey,
@@ -10529,7 +10531,7 @@ class EmbeddedAccountMetadataTransactionV1 extends StructBase implements IDeseri
 	NetworkType _network = NetworkType.MAINNET;
 	TransactionType _type = TransactionType.ACCOUNT_KEY_LINK;
 	UnresolvedAddress _targetAddress = UnresolvedAddress();
-	BigInt _scopedMetadataKey = BigInt.zero;
+	int _scopedMetadataKey = 0;
 	int _valueSizeDelta = 0;
 	Uint8List _value = Uint8List(0);
 	final int _embeddedTransactionHeaderReserved_1 = 0; // reserved field
@@ -10541,7 +10543,7 @@ class EmbeddedAccountMetadataTransactionV1 extends StructBase implements IDeseri
 	NetworkType? network,
 	TransactionType? type,
 	UnresolvedAddress? targetAddress,
-	BigInt? scopedMetadataKey,
+	int? scopedMetadataKey,
 	int? valueSizeDelta,
 	Uint8List? value
 	}) 
@@ -10552,7 +10554,7 @@ class EmbeddedAccountMetadataTransactionV1 extends StructBase implements IDeseri
 		_network = network ?? NetworkType.MAINNET;
 		_type = type ?? EmbeddedAccountMetadataTransactionV1.TRANSACTION_TYPE;
 		_targetAddress = targetAddress ?? UnresolvedAddress();
-		_scopedMetadataKey = scopedMetadataKey ?? BigInt.zero;
+		_scopedMetadataKey = scopedMetadataKey ?? 0;
 		_valueSizeDelta = valueSizeDelta ?? 0;
 		_value = value ?? Uint8List(0);
 	}
@@ -10581,7 +10583,7 @@ class EmbeddedAccountMetadataTransactionV1 extends StructBase implements IDeseri
 		return _targetAddress;
 	}
 
-	BigInt get scopedMetadataKey {
+	int get scopedMetadataKey {
 		return _scopedMetadataKey;
 	}
 
@@ -10613,7 +10615,7 @@ class EmbeddedAccountMetadataTransactionV1 extends StructBase implements IDeseri
 		_targetAddress = value;
 	}
 
-	set scopedMetadataKey(BigInt value) {
+	set scopedMetadataKey(int value) {
 		_scopedMetadataKey = value;
 	}
 
@@ -10763,7 +10765,7 @@ class MosaicMetadataTransactionV1 extends StructBase implements IDeserializable 
 	Amount _fee = Amount();
 	Timestamp _deadline = Timestamp();
 	UnresolvedAddress _targetAddress = UnresolvedAddress();
-	BigInt _scopedMetadataKey = BigInt.zero;
+	int _scopedMetadataKey = 0;
 	UnresolvedMosaicId _targetMosaicId = UnresolvedMosaicId();
 	int _valueSizeDelta = 0;
 	Uint8List _value = Uint8List(0);
@@ -10779,7 +10781,7 @@ class MosaicMetadataTransactionV1 extends StructBase implements IDeserializable 
 	Amount? fee,
 	Timestamp? deadline,
 	UnresolvedAddress? targetAddress,
-	BigInt? scopedMetadataKey,
+	int? scopedMetadataKey,
 	UnresolvedMosaicId? targetMosaicId,
 	int? valueSizeDelta,
 	Uint8List? value
@@ -10794,7 +10796,7 @@ class MosaicMetadataTransactionV1 extends StructBase implements IDeserializable 
 		_fee = fee ?? Amount();
 		_deadline = deadline ?? Timestamp();
 		_targetAddress = targetAddress ?? UnresolvedAddress();
-		_scopedMetadataKey = scopedMetadataKey ?? BigInt.zero;
+		_scopedMetadataKey = scopedMetadataKey ?? 0;
 		_targetMosaicId = targetMosaicId ?? UnresolvedMosaicId();
 		_valueSizeDelta = valueSizeDelta ?? 0;
 		_value = value ?? Uint8List(0);
@@ -10836,7 +10838,7 @@ class MosaicMetadataTransactionV1 extends StructBase implements IDeserializable 
 		return _targetAddress;
 	}
 
-	BigInt get scopedMetadataKey {
+	int get scopedMetadataKey {
 		return _scopedMetadataKey;
 	}
 
@@ -10884,7 +10886,7 @@ class MosaicMetadataTransactionV1 extends StructBase implements IDeserializable 
 		_targetAddress = value;
 	}
 
-	set scopedMetadataKey(BigInt value) {
+	set scopedMetadataKey(int value) {
 		_scopedMetadataKey = value;
 	}
 
@@ -11060,7 +11062,7 @@ class EmbeddedMosaicMetadataTransactionV1 extends StructBase implements IDeseria
 	NetworkType _network = NetworkType.MAINNET;
 	TransactionType _type = TransactionType.ACCOUNT_KEY_LINK;
 	UnresolvedAddress _targetAddress = UnresolvedAddress();
-	BigInt _scopedMetadataKey = BigInt.zero;
+	int _scopedMetadataKey = 0;
 	UnresolvedMosaicId _targetMosaicId = UnresolvedMosaicId();
 	int _valueSizeDelta = 0;
 	Uint8List _value = Uint8List(0);
@@ -11073,7 +11075,7 @@ class EmbeddedMosaicMetadataTransactionV1 extends StructBase implements IDeseria
 	NetworkType? network,
 	TransactionType? type,
 	UnresolvedAddress? targetAddress,
-	BigInt? scopedMetadataKey,
+	int? scopedMetadataKey,
 	UnresolvedMosaicId? targetMosaicId,
 	int? valueSizeDelta,
 	Uint8List? value
@@ -11085,7 +11087,7 @@ class EmbeddedMosaicMetadataTransactionV1 extends StructBase implements IDeseria
 		_network = network ?? NetworkType.MAINNET;
 		_type = type ?? EmbeddedMosaicMetadataTransactionV1.TRANSACTION_TYPE;
 		_targetAddress = targetAddress ?? UnresolvedAddress();
-		_scopedMetadataKey = scopedMetadataKey ?? BigInt.zero;
+		_scopedMetadataKey = scopedMetadataKey ?? 0;
 		_targetMosaicId = targetMosaicId ?? UnresolvedMosaicId();
 		_valueSizeDelta = valueSizeDelta ?? 0;
 		_value = value ?? Uint8List(0);
@@ -11115,7 +11117,7 @@ class EmbeddedMosaicMetadataTransactionV1 extends StructBase implements IDeseria
 		return _targetAddress;
 	}
 
-	BigInt get scopedMetadataKey {
+	int get scopedMetadataKey {
 		return _scopedMetadataKey;
 	}
 
@@ -11151,7 +11153,7 @@ class EmbeddedMosaicMetadataTransactionV1 extends StructBase implements IDeseria
 		_targetAddress = value;
 	}
 
-	set scopedMetadataKey(BigInt value) {
+	set scopedMetadataKey(int value) {
 		_scopedMetadataKey = value;
 	}
 
@@ -11312,7 +11314,7 @@ class NamespaceMetadataTransactionV1 extends StructBase implements IDeserializab
 	Amount _fee = Amount();
 	Timestamp _deadline = Timestamp();
 	UnresolvedAddress _targetAddress = UnresolvedAddress();
-	BigInt _scopedMetadataKey = BigInt.zero;
+	int _scopedMetadataKey = 0;
 	NamespaceId _targetNamespaceId = NamespaceId();
 	int _valueSizeDelta = 0;
 	Uint8List _value = Uint8List(0);
@@ -11328,7 +11330,7 @@ class NamespaceMetadataTransactionV1 extends StructBase implements IDeserializab
 	Amount? fee,
 	Timestamp? deadline,
 	UnresolvedAddress? targetAddress,
-	BigInt? scopedMetadataKey,
+	int? scopedMetadataKey,
 	NamespaceId? targetNamespaceId,
 	int? valueSizeDelta,
 	Uint8List? value
@@ -11343,7 +11345,7 @@ class NamespaceMetadataTransactionV1 extends StructBase implements IDeserializab
 		_fee = fee ?? Amount();
 		_deadline = deadline ?? Timestamp();
 		_targetAddress = targetAddress ?? UnresolvedAddress();
-		_scopedMetadataKey = scopedMetadataKey ?? BigInt.zero;
+		_scopedMetadataKey = scopedMetadataKey ?? 0;
 		_targetNamespaceId = targetNamespaceId ?? NamespaceId();
 		_valueSizeDelta = valueSizeDelta ?? 0;
 		_value = value ?? Uint8List(0);
@@ -11385,7 +11387,7 @@ class NamespaceMetadataTransactionV1 extends StructBase implements IDeserializab
 		return _targetAddress;
 	}
 
-	BigInt get scopedMetadataKey {
+	int get scopedMetadataKey {
 		return _scopedMetadataKey;
 	}
 
@@ -11433,7 +11435,7 @@ class NamespaceMetadataTransactionV1 extends StructBase implements IDeserializab
 		_targetAddress = value;
 	}
 
-	set scopedMetadataKey(BigInt value) {
+	set scopedMetadataKey(int value) {
 		_scopedMetadataKey = value;
 	}
 
@@ -11609,7 +11611,7 @@ class EmbeddedNamespaceMetadataTransactionV1 extends StructBase implements IDese
 	NetworkType _network = NetworkType.MAINNET;
 	TransactionType _type = TransactionType.ACCOUNT_KEY_LINK;
 	UnresolvedAddress _targetAddress = UnresolvedAddress();
-	BigInt _scopedMetadataKey = BigInt.zero;
+	int _scopedMetadataKey = 0;
 	NamespaceId _targetNamespaceId = NamespaceId();
 	int _valueSizeDelta = 0;
 	Uint8List _value = Uint8List(0);
@@ -11622,7 +11624,7 @@ class EmbeddedNamespaceMetadataTransactionV1 extends StructBase implements IDese
 	NetworkType? network,
 	TransactionType? type,
 	UnresolvedAddress? targetAddress,
-	BigInt? scopedMetadataKey,
+	int? scopedMetadataKey,
 	NamespaceId? targetNamespaceId,
 	int? valueSizeDelta,
 	Uint8List? value
@@ -11634,7 +11636,7 @@ class EmbeddedNamespaceMetadataTransactionV1 extends StructBase implements IDese
 		_network = network ?? NetworkType.MAINNET;
 		_type = type ?? EmbeddedNamespaceMetadataTransactionV1.TRANSACTION_TYPE;
 		_targetAddress = targetAddress ?? UnresolvedAddress();
-		_scopedMetadataKey = scopedMetadataKey ?? BigInt.zero;
+		_scopedMetadataKey = scopedMetadataKey ?? 0;
 		_targetNamespaceId = targetNamespaceId ?? NamespaceId();
 		_valueSizeDelta = valueSizeDelta ?? 0;
 		_value = value ?? Uint8List(0);
@@ -11664,7 +11666,7 @@ class EmbeddedNamespaceMetadataTransactionV1 extends StructBase implements IDese
 		return _targetAddress;
 	}
 
-	BigInt get scopedMetadataKey {
+	int get scopedMetadataKey {
 		return _scopedMetadataKey;
 	}
 
@@ -11700,7 +11702,7 @@ class EmbeddedNamespaceMetadataTransactionV1 extends StructBase implements IDese
 		_targetAddress = value;
 	}
 
-	set scopedMetadataKey(BigInt value) {
+	set scopedMetadataKey(int value) {
 		_scopedMetadataKey = value;
 	}
 
@@ -17076,9 +17078,9 @@ class MosaicAddressRestrictionTransactionV1 extends StructBase implements IDeser
 	Amount _fee = Amount();
 	Timestamp _deadline = Timestamp();
 	UnresolvedMosaicId _mosaicId = UnresolvedMosaicId();
-	BigInt _restrictionKey = BigInt.zero;
-	BigInt _previousRestrictionValue = BigInt.zero;
-	BigInt _newRestrictionValue = BigInt.zero;
+	int _restrictionKey = 0;
+	int _previousRestrictionValue = 0;
+	int _newRestrictionValue = 0;
 	UnresolvedAddress _targetAddress = UnresolvedAddress();
 	final int _verifiableEntityHeaderReserved_1 = 0; // reserved field
 	final int _entityBodyReserved_1 = 0; // reserved field
@@ -17092,9 +17094,9 @@ class MosaicAddressRestrictionTransactionV1 extends StructBase implements IDeser
 	Amount? fee,
 	Timestamp? deadline,
 	UnresolvedMosaicId? mosaicId,
-	BigInt? restrictionKey,
-	BigInt? previousRestrictionValue,
-	BigInt? newRestrictionValue,
+	int? restrictionKey,
+	int? previousRestrictionValue,
+	int? newRestrictionValue,
 	UnresolvedAddress? targetAddress
 	}) 
 		: super(signature == null && signerPublicKey == null && version == null && network == null && type == null && fee == null && deadline == null && mosaicId == null && restrictionKey == null && previousRestrictionValue == null && newRestrictionValue == null && targetAddress == null )
@@ -17107,9 +17109,9 @@ class MosaicAddressRestrictionTransactionV1 extends StructBase implements IDeser
 		_fee = fee ?? Amount();
 		_deadline = deadline ?? Timestamp();
 		_mosaicId = mosaicId ?? UnresolvedMosaicId();
-		_restrictionKey = restrictionKey ?? BigInt.zero;
-		_previousRestrictionValue = previousRestrictionValue ?? BigInt.zero;
-		_newRestrictionValue = newRestrictionValue ?? BigInt.zero;
+		_restrictionKey = restrictionKey ?? 0;
+		_previousRestrictionValue = previousRestrictionValue ?? 0;
+		_newRestrictionValue = newRestrictionValue ?? 0;
 		_targetAddress = targetAddress ?? UnresolvedAddress();
 	}
 
@@ -17149,15 +17151,15 @@ class MosaicAddressRestrictionTransactionV1 extends StructBase implements IDeser
 		return _mosaicId;
 	}
 
-	BigInt get restrictionKey {
+	int get restrictionKey {
 		return _restrictionKey;
 	}
 
-	BigInt get previousRestrictionValue {
+	int get previousRestrictionValue {
 		return _previousRestrictionValue;
 	}
 
-	BigInt get newRestrictionValue {
+	int get newRestrictionValue {
 		return _newRestrictionValue;
 	}
 
@@ -17197,15 +17199,15 @@ class MosaicAddressRestrictionTransactionV1 extends StructBase implements IDeser
 		_mosaicId = value;
 	}
 
-	set restrictionKey(BigInt value) {
+	set restrictionKey(int value) {
 		_restrictionKey = value;
 	}
 
-	set previousRestrictionValue(BigInt value) {
+	set previousRestrictionValue(int value) {
 		_previousRestrictionValue = value;
 	}
 
-	set newRestrictionValue(BigInt value) {
+	set newRestrictionValue(int value) {
 		_newRestrictionValue = value;
 	}
 
@@ -17367,9 +17369,9 @@ class EmbeddedMosaicAddressRestrictionTransactionV1 extends StructBase implement
 	NetworkType _network = NetworkType.MAINNET;
 	TransactionType _type = TransactionType.ACCOUNT_KEY_LINK;
 	UnresolvedMosaicId _mosaicId = UnresolvedMosaicId();
-	BigInt _restrictionKey = BigInt.zero;
-	BigInt _previousRestrictionValue = BigInt.zero;
-	BigInt _newRestrictionValue = BigInt.zero;
+	int _restrictionKey = 0;
+	int _previousRestrictionValue = 0;
+	int _newRestrictionValue = 0;
 	UnresolvedAddress _targetAddress = UnresolvedAddress();
 	final int _embeddedTransactionHeaderReserved_1 = 0; // reserved field
 	final int _entityBodyReserved_1 = 0; // reserved field
@@ -17380,9 +17382,9 @@ class EmbeddedMosaicAddressRestrictionTransactionV1 extends StructBase implement
 	NetworkType? network,
 	TransactionType? type,
 	UnresolvedMosaicId? mosaicId,
-	BigInt? restrictionKey,
-	BigInt? previousRestrictionValue,
-	BigInt? newRestrictionValue,
+	int? restrictionKey,
+	int? previousRestrictionValue,
+	int? newRestrictionValue,
 	UnresolvedAddress? targetAddress
 	}) 
 		: super(signerPublicKey == null && version == null && network == null && type == null && mosaicId == null && restrictionKey == null && previousRestrictionValue == null && newRestrictionValue == null && targetAddress == null )
@@ -17392,9 +17394,9 @@ class EmbeddedMosaicAddressRestrictionTransactionV1 extends StructBase implement
 		_network = network ?? NetworkType.MAINNET;
 		_type = type ?? EmbeddedMosaicAddressRestrictionTransactionV1.TRANSACTION_TYPE;
 		_mosaicId = mosaicId ?? UnresolvedMosaicId();
-		_restrictionKey = restrictionKey ?? BigInt.zero;
-		_previousRestrictionValue = previousRestrictionValue ?? BigInt.zero;
-		_newRestrictionValue = newRestrictionValue ?? BigInt.zero;
+		_restrictionKey = restrictionKey ?? 0;
+		_previousRestrictionValue = previousRestrictionValue ?? 0;
+		_newRestrictionValue = newRestrictionValue ?? 0;
 		_targetAddress = targetAddress ?? UnresolvedAddress();
 	}
 
@@ -17422,15 +17424,15 @@ class EmbeddedMosaicAddressRestrictionTransactionV1 extends StructBase implement
 		return _mosaicId;
 	}
 
-	BigInt get restrictionKey {
+	int get restrictionKey {
 		return _restrictionKey;
 	}
 
-	BigInt get previousRestrictionValue {
+	int get previousRestrictionValue {
 		return _previousRestrictionValue;
 	}
 
-	BigInt get newRestrictionValue {
+	int get newRestrictionValue {
 		return _newRestrictionValue;
 	}
 
@@ -17458,15 +17460,15 @@ class EmbeddedMosaicAddressRestrictionTransactionV1 extends StructBase implement
 		_mosaicId = value;
 	}
 
-	set restrictionKey(BigInt value) {
+	set restrictionKey(int value) {
 		_restrictionKey = value;
 	}
 
-	set previousRestrictionValue(BigInt value) {
+	set previousRestrictionValue(int value) {
 		_previousRestrictionValue = value;
 	}
 
-	set newRestrictionValue(BigInt value) {
+	set newRestrictionValue(int value) {
 		_newRestrictionValue = value;
 	}
 
@@ -17593,7 +17595,7 @@ class EmbeddedMosaicAddressRestrictionTransactionV1 extends StructBase implement
 class MosaicRestrictionKey extends BaseValue implements IDeserializable {
 	static const int SIZE = 8;
 
-	MosaicRestrictionKey([dynamic mosaicRestrictionKey]) : super(SIZE, mosaicRestrictionKey ?? BigInt.zero);
+	MosaicRestrictionKey([dynamic mosaicRestrictionKey]) : super(SIZE, mosaicRestrictionKey ?? 0);
 
 	@override
 	MosaicRestrictionKey deserialize(dynamic payload) {
@@ -17679,9 +17681,9 @@ class MosaicGlobalRestrictionTransactionV1 extends StructBase implements IDeseri
 	Timestamp _deadline = Timestamp();
 	UnresolvedMosaicId _mosaicId = UnresolvedMosaicId();
 	UnresolvedMosaicId _referenceMosaicId = UnresolvedMosaicId();
-	BigInt _restrictionKey = BigInt.zero;
-	BigInt _previousRestrictionValue = BigInt.zero;
-	BigInt _newRestrictionValue = BigInt.zero;
+	int _restrictionKey = 0;
+	int _previousRestrictionValue = 0;
+	int _newRestrictionValue = 0;
 	MosaicRestrictionType _previousRestrictionType = MosaicRestrictionType.NONE;
 	MosaicRestrictionType _newRestrictionType = MosaicRestrictionType.NONE;
 	final int _verifiableEntityHeaderReserved_1 = 0; // reserved field
@@ -17697,9 +17699,9 @@ class MosaicGlobalRestrictionTransactionV1 extends StructBase implements IDeseri
 	Timestamp? deadline,
 	UnresolvedMosaicId? mosaicId,
 	UnresolvedMosaicId? referenceMosaicId,
-	BigInt? restrictionKey,
-	BigInt? previousRestrictionValue,
-	BigInt? newRestrictionValue,
+	int? restrictionKey,
+	int? previousRestrictionValue,
+	int? newRestrictionValue,
 	MosaicRestrictionType? previousRestrictionType,
 	MosaicRestrictionType? newRestrictionType
 	}) 
@@ -17714,9 +17716,9 @@ class MosaicGlobalRestrictionTransactionV1 extends StructBase implements IDeseri
 		_deadline = deadline ?? Timestamp();
 		_mosaicId = mosaicId ?? UnresolvedMosaicId();
 		_referenceMosaicId = referenceMosaicId ?? UnresolvedMosaicId();
-		_restrictionKey = restrictionKey ?? BigInt.zero;
-		_previousRestrictionValue = previousRestrictionValue ?? BigInt.zero;
-		_newRestrictionValue = newRestrictionValue ?? BigInt.zero;
+		_restrictionKey = restrictionKey ?? 0;
+		_previousRestrictionValue = previousRestrictionValue ?? 0;
+		_newRestrictionValue = newRestrictionValue ?? 0;
 		_previousRestrictionType = previousRestrictionType ?? MosaicRestrictionType.NONE;
 		_newRestrictionType = newRestrictionType ?? MosaicRestrictionType.NONE;
 	}
@@ -17761,15 +17763,15 @@ class MosaicGlobalRestrictionTransactionV1 extends StructBase implements IDeseri
 		return _referenceMosaicId;
 	}
 
-	BigInt get restrictionKey {
+	int get restrictionKey {
 		return _restrictionKey;
 	}
 
-	BigInt get previousRestrictionValue {
+	int get previousRestrictionValue {
 		return _previousRestrictionValue;
 	}
 
-	BigInt get newRestrictionValue {
+	int get newRestrictionValue {
 		return _newRestrictionValue;
 	}
 
@@ -17817,15 +17819,15 @@ class MosaicGlobalRestrictionTransactionV1 extends StructBase implements IDeseri
 		_referenceMosaicId = value;
 	}
 
-	set restrictionKey(BigInt value) {
+	set restrictionKey(int value) {
 		_restrictionKey = value;
 	}
 
-	set previousRestrictionValue(BigInt value) {
+	set previousRestrictionValue(int value) {
 		_previousRestrictionValue = value;
 	}
 
-	set newRestrictionValue(BigInt value) {
+	set newRestrictionValue(int value) {
 		_newRestrictionValue = value;
 	}
 
@@ -18008,9 +18010,9 @@ class EmbeddedMosaicGlobalRestrictionTransactionV1 extends StructBase implements
 	TransactionType _type = TransactionType.ACCOUNT_KEY_LINK;
 	UnresolvedMosaicId _mosaicId = UnresolvedMosaicId();
 	UnresolvedMosaicId _referenceMosaicId = UnresolvedMosaicId();
-	BigInt _restrictionKey = BigInt.zero;
-	BigInt _previousRestrictionValue = BigInt.zero;
-	BigInt _newRestrictionValue = BigInt.zero;
+	int _restrictionKey = 0;
+	int _previousRestrictionValue = 0;
+	int _newRestrictionValue = 0;
 	MosaicRestrictionType _previousRestrictionType = MosaicRestrictionType.NONE;
 	MosaicRestrictionType _newRestrictionType = MosaicRestrictionType.NONE;
 	final int _embeddedTransactionHeaderReserved_1 = 0; // reserved field
@@ -18023,9 +18025,9 @@ class EmbeddedMosaicGlobalRestrictionTransactionV1 extends StructBase implements
 	TransactionType? type,
 	UnresolvedMosaicId? mosaicId,
 	UnresolvedMosaicId? referenceMosaicId,
-	BigInt? restrictionKey,
-	BigInt? previousRestrictionValue,
-	BigInt? newRestrictionValue,
+	int? restrictionKey,
+	int? previousRestrictionValue,
+	int? newRestrictionValue,
 	MosaicRestrictionType? previousRestrictionType,
 	MosaicRestrictionType? newRestrictionType
 	}) 
@@ -18037,9 +18039,9 @@ class EmbeddedMosaicGlobalRestrictionTransactionV1 extends StructBase implements
 		_type = type ?? EmbeddedMosaicGlobalRestrictionTransactionV1.TRANSACTION_TYPE;
 		_mosaicId = mosaicId ?? UnresolvedMosaicId();
 		_referenceMosaicId = referenceMosaicId ?? UnresolvedMosaicId();
-		_restrictionKey = restrictionKey ?? BigInt.zero;
-		_previousRestrictionValue = previousRestrictionValue ?? BigInt.zero;
-		_newRestrictionValue = newRestrictionValue ?? BigInt.zero;
+		_restrictionKey = restrictionKey ?? 0;
+		_previousRestrictionValue = previousRestrictionValue ?? 0;
+		_newRestrictionValue = newRestrictionValue ?? 0;
 		_previousRestrictionType = previousRestrictionType ?? MosaicRestrictionType.NONE;
 		_newRestrictionType = newRestrictionType ?? MosaicRestrictionType.NONE;
 	}
@@ -18072,15 +18074,15 @@ class EmbeddedMosaicGlobalRestrictionTransactionV1 extends StructBase implements
 		return _referenceMosaicId;
 	}
 
-	BigInt get restrictionKey {
+	int get restrictionKey {
 		return _restrictionKey;
 	}
 
-	BigInt get previousRestrictionValue {
+	int get previousRestrictionValue {
 		return _previousRestrictionValue;
 	}
 
-	BigInt get newRestrictionValue {
+	int get newRestrictionValue {
 		return _newRestrictionValue;
 	}
 
@@ -18116,15 +18118,15 @@ class EmbeddedMosaicGlobalRestrictionTransactionV1 extends StructBase implements
 		_referenceMosaicId = value;
 	}
 
-	set restrictionKey(BigInt value) {
+	set restrictionKey(int value) {
 		_restrictionKey = value;
 	}
 
-	set previousRestrictionValue(BigInt value) {
+	set previousRestrictionValue(int value) {
 		_previousRestrictionValue = value;
 	}
 
-	set newRestrictionValue(BigInt value) {
+	set newRestrictionValue(int value) {
 		_newRestrictionValue = value;
 	}
 

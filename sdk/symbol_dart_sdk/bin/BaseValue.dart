@@ -2,35 +2,32 @@ import 'package:convert/convert.dart';
 import './utils/converter.dart';
 import 'dart:typed_data';
 
-abstract class Ordered {}
-
-class BaseValue extends Ordered {
+class BaseValue {
   final int size;
   dynamic value;
   final List<dynamic> _tag;
-  final bool signed;
 
-  BaseValue(this.size, this.value, {dynamic tag, this.signed = false})
-      : _tag = [tag, signed] {
+  BaseValue(this.size, this.value, {dynamic tag})
+      : _tag = [tag] {
 
     if (value is String) {
       if(!isHexString(value)){
-        value = BigInt.parse(value);
+        value = int.parse(value);
       } else {
         var decoded = hex.decode(value.substring(2)); // Remove '0x' prefix
-        var byteData = ByteData.view(Uint8List.fromList(decoded).buffer);
+        var byteData = ByteData.view(Uint8List.fromList(decoded.reversed.toList()).buffer);
         switch(decoded.length){
           case 1:
-            value = byteData.getUint8(0);
+            value = byteData.getInt8(0);
             break;
           case 2:
-            value = byteData.getUint16(0, Endian.little);
+            value = byteData.getInt16(0, Endian.little);
             break;
           case 4:
-            value = byteData.getUint32(0, Endian.little);
+            value = byteData.getInt32(0, Endian.little);
             break;
           default:
-            value = BigInt.parse(value.substring(2), radix: 16);
+            value = byteData.getInt64(0, Endian.little);
             break;
         }
       }
@@ -39,21 +36,20 @@ class BaseValue extends Ordered {
     // check bounds
     var bitSize = size * 8;
 
-    BigInt upperBound;
-    BigInt lowerBound;
+    int upperBound;
+    int lowerBound;
 
-    if (signed) {
-      upperBound = (BigInt.one << (bitSize - 1)) - BigInt.one;
-      lowerBound = -upperBound - BigInt.one;
+    if (size == 8) {
+      lowerBound = (1 << (bitSize - 1)) - 0;
+      upperBound = -lowerBound - 1;
     } else {
-      upperBound = (BigInt.one << bitSize) - BigInt.one;
-      lowerBound = BigInt.zero;
+      upperBound = (1 << (bitSize - 1)) - 0;
+      lowerBound = -upperBound - 1;
     }
-
-    if ((value is int ? BigInt.from(value) : value) < lowerBound || (value is int ? BigInt.from(value) : value) > upperBound) {
-      var signedDescription = signed ? 'signed' : 'unsigned';
+  
+    if (value < lowerBound || value > upperBound) {
       var valueRangeMessage = '$value must be in range [$lowerBound, $upperBound]';
-      throw ArgumentError('$valueRangeMessage for $size bytes ($signedDescription)');
+      throw ArgumentError('$valueRangeMessage for $size bytes');
     }
   }
 
@@ -70,14 +66,10 @@ class BaseValue extends Ordered {
 
   @override
   String toString() {
-    BigInt unsignedValue;
+    int unsignedValue;
 
-    if (!_tag[1] || value >= BigInt.zero) {
-      unsignedValue = value is int ? BigInt.from(value) : value;
-    } else {
-      var upperBoundPlusOne = BigInt.from(1 << (size * 8));
-      unsignedValue = value + upperBoundPlusOne;
-    }
+    var upperBoundPlusOne = 1 << (size * 8);
+    unsignedValue = value + upperBoundPlusOne;
 
     return '0x' + unsignedValue.toRadixString(16).padLeft(size * 2, '0').toUpperCase();
   }

@@ -1,12 +1,11 @@
 // ignore_for_file: prefer_final_fields, unnecessary_getters_setters, unused_local_variable
 
-import './bin/BaseValue.dart';
-import './bin/ByteArray.dart';
-import './bin/utils/arrayHelpers.dart';
-import './bin/utils/converter.dart';
+// import './bin/BaseValue.dart';
+// import './bin/ByteArray.dart';
+// import './bin/utils/arrayHelpers.dart';
 import './bin/utils/transform.dart';
-import 'bin/models/IDeserializable.dart';
-import 'bin/models/StructBase.dart';
+// import 'bin/models/IDeserializable.dart';
+// import 'bin/models/StructBase.dart';
 
 import 'dart:typed_data';
 import 'package:convert/convert.dart';
@@ -19,143 +18,235 @@ import 'package:base32/base32.dart';
 import 'package:ed25519_edwards/ed25519_edwards.dart' as ed;
 import 'package:tuple/tuple.dart';
 
-class MosaicDefinition extends StructBase implements IDeserializable {
+class TransferTransactionV1 extends StructBase implements IDeserializable {
+	static const int TRANSACTION_VERSION = 1;
+	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.TRANSFER.value);
 
 	static const Map<String, String> TYPE_HINTS = {
-		'ownerPublicKey': 'pod:PublicKey',
-		'id': 'struct:MosaicId',
-		'description': 'bytes_array',
-		'properties': 'array[SizePrefixedMosaicProperty]',
-		'levy': 'struct:MosaicLevy'
+		'signature': 'pod:Signature',
+		'signerPublicKey': 'pod:PublicKey',
+		'network': 'enum:NetworkType',
+		'type': 'enum:TransactionType',
+		'fee': 'pod:Amount',
+		'deadline': 'pod:Timestamp',
+		'recipientAddress': 'pod:UnresolvedAddress',
+		'mosaics': 'array[UnresolvedMosaic]',
+		'message': 'bytes_array'
 	};
 
-	PublicKey _ownerPublicKey = PublicKey();
-	MosaicId _id = MosaicId();
-	Uint8List _description = Uint8List(0);
-	List<SizePrefixedMosaicProperty> _properties = [];
-	MosaicLevy _levy = MosaicLevy();
-	final int _ownerPublicKeySize = 0; // reserved field
+	Signature _signature = Signature();
+	PublicKey _signerPublicKey = PublicKey();
+	int _version = 0;
+	NetworkType _network = NetworkType.MAINNET;
+	TransactionType _type = TransactionType.ACCOUNT_KEY_LINK;
+	Amount _fee = Amount();
+	Timestamp _deadline = Timestamp();
+	UnresolvedAddress _recipientAddress = UnresolvedAddress();
+	List<UnresolvedMosaic> _mosaics = [];
+	Uint8List _message = Uint8List(0);
+	final int _verifiableEntityHeaderReserved_1 = 0; // reserved field
+	final int _entityBodyReserved_1 = 0; // reserved field
+	final int _transferTransactionBodyReserved_1 = 0; // reserved field
+	final int _transferTransactionBodyReserved_2 = 0; // reserved field
 
-	MosaicDefinition({ ownerPublicKey, id, description, properties, levy}) 
-  : super(ownerPublicKey == null && id == null && description == null && properties == null && levy == null) {
-		_ownerPublicKey = ownerPublicKey ?? PublicKey();
-		_id = id ?? MosaicId();
-		_description = description ?? Uint8List(0);
-		_properties = properties ?? [];
-		_levy = levy ?? MosaicLevy();
+	TransferTransactionV1({ 
+	Signature? signature,
+	PublicKey? signerPublicKey,
+	int? version,
+	NetworkType? network,
+	TransactionType? type,
+	Amount? fee,
+	Timestamp? deadline,
+	UnresolvedAddress? recipientAddress,
+	List<UnresolvedMosaic>? mosaics,
+	Uint8List? message
+	}) 
+		: super(signature == null && signerPublicKey == null && version == null && network == null && type == null && fee == null && deadline == null && recipientAddress == null && mosaics == null && message == null )
+	{
+		_signature = signature ?? Signature();
+		_signerPublicKey = signerPublicKey ?? PublicKey();
+		_version = version ?? TransferTransactionV1.TRANSACTION_VERSION;
+		_network = network ?? NetworkType.MAINNET;
+		_type = type ?? TransferTransactionV1.TRANSACTION_TYPE;
+		_fee = fee ?? Amount();
+		_deadline = deadline ?? Timestamp();
+		_recipientAddress = recipientAddress ?? UnresolvedAddress();
+		_mosaics = mosaics ?? [];
+		_message = message ?? Uint8List(0);
 	}
 
 	void sort() {
-		_id.sort();
-		if (0 != levySizeComputed)
-		{
-			_levy.sort();
-		}
+		_mosaics.sort((lhs, rhs) {
+			return ArrayHelpers.deepCompare(ArrayHelpers.getValue(lhs.mosaicId), ArrayHelpers.getValue(rhs.mosaicId));
+		});
 	}
 
-	PublicKey get ownerPublicKey {
-		return _ownerPublicKey;
+	Signature get signature {
+		return _signature;
 	}
 
-	MosaicId get id {
-		return _id;
+	PublicKey get signerPublicKey {
+		return _signerPublicKey;
 	}
 
-	Uint8List get description {
-		return _description;
+	int get version {
+		return _version;
 	}
 
-	List<SizePrefixedMosaicProperty> get properties {
-		return _properties;
+	NetworkType get network {
+		return _network;
 	}
 
-	MosaicLevy get levy {
-		return _levy;
+	TransactionType get type {
+		return _type;
 	}
 
-	int get levySizeComputed {
-    return levy.isDefault ? 0 : levy.size;
+	Amount get fee {
+		return _fee;
 	}
 
-	set ownerPublicKey(PublicKey value) {
-		_ownerPublicKey = value;
+	Timestamp get deadline {
+		return _deadline;
 	}
 
-	set id(MosaicId value) {
-		_id = value;
+	UnresolvedAddress get recipientAddress {
+		return _recipientAddress;
 	}
 
-	set description(Uint8List value) {
-		_description = value;
+	List<UnresolvedMosaic> get mosaics {
+		return _mosaics;
 	}
 
-	set properties(List<SizePrefixedMosaicProperty> value) {
-		_properties = value;
+	Uint8List get message {
+		return _message;
 	}
 
-	set levy(MosaicLevy value) {
-		_levy = value;
+	set signature(Signature value) {
+		_signature = value;
+	}
+
+	set signerPublicKey(PublicKey value) {
+		_signerPublicKey = value;
+	}
+
+	set version(int value) {
+		_version = value;
+	}
+
+	set network(NetworkType value) {
+		_network = value;
+	}
+
+	set type(TransactionType value) {
+		_type = value;
+	}
+
+	set fee(Amount value) {
+		_fee = value;
+	}
+
+	set deadline(Timestamp value) {
+		_deadline = value;
+	}
+
+	set recipientAddress(UnresolvedAddress value) {
+		_recipientAddress = value;
+	}
+
+	set mosaics(List<UnresolvedMosaic> value) {
+		_mosaics = value;
+	}
+
+	set message(Uint8List value) {
+		_message = value;
 	}
 
 	int get size {
 		var size = 0;
 		size += 4;
-		size += ownerPublicKey.size;
 		size += 4;
-		size += id.size;
+		size += signature.size;
+		size += signerPublicKey.size;
 		size += 4;
-		size += description.lengthInBytes;
+		size += 1;
+		size += network.size;
+		size += type.size;
+		size += fee.size;
+		size += deadline.size;
+		size += recipientAddress.size;
+		size += 2;
+		size += 1;
+		size += 1;
 		size += 4;
-		size += ArrayHelpers.size(properties);
-		size += 4;
-		if (0 != levySizeComputed)
-		{
-			size += levy.size;
-		}
+		size += ArrayHelpers.size(mosaics);
+		size += message.lengthInBytes;
 		return size;
 	}
 
 	@override
-	MosaicDefinition deserialize(dynamic payload) {
+	TransferTransactionV1 deserialize(dynamic payload) {
 		if(payload is String) {
 			payload = hex.decode(payload);
 		}
 		Uint8List buffer = payload.buffer.asUint8List();
-		var ownerPublicKeySize = ByteData.view(buffer.sublist(0, 4).buffer).getUint32(0, Endian.little);
+		// nothing to do for size
 		buffer = buffer.sublist(4);
-		if (32 != ownerPublicKeySize) {
-			throw RangeError('Invalid value of reserved field ($ownerPublicKeySize)');
+		var verifiableEntityHeaderReserved_1 = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		buffer = buffer.sublist(4);
+		if (0 != verifiableEntityHeaderReserved_1) {
+			throw RangeError('Invalid value of reserved field ($verifiableEntityHeaderReserved_1)');
 		}
-		var ownerPublicKey = PublicKey().deserialize(buffer);
-		buffer = buffer.sublist(ownerPublicKey.size);
-		var idSize = ByteData.view(buffer.sublist(0, 4).buffer).getUint32(0, Endian.little);
+		var signature = Signature().deserialize(buffer);
+		buffer = buffer.sublist(signature.size);
+		var signerPublicKey = PublicKey().deserialize(buffer);
+		buffer = buffer.sublist(signerPublicKey.size);
+		var entityBodyReserved_1 = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
-		//marking sizeof field
-		var id = MosaicId().deserialize(buffer);
-		buffer = buffer.sublist(id.size);
-		var descriptionSize = ByteData.view(buffer.sublist(0, 4).buffer).getUint32(0, Endian.little);
-		buffer = buffer.sublist(4);
-		var description = Uint8List.fromList(buffer.sublist(0, descriptionSize));
-		buffer = buffer.sublist(descriptionSize);
-		var propertiesCount = ByteData.view(buffer.sublist(0, 4).buffer).getUint32(0, Endian.little);
-		buffer = buffer.sublist(4);
-		var properties = ArrayHelpers.readArrayCount(buffer, SizePrefixedMosaicProperty(), propertiesCount)
-			.cast<SizePrefixedMosaicProperty>();
-		var levySize = ByteData.view(buffer.sublist(0, 4).buffer).getUint32(0, Endian.little);
-		buffer = buffer.sublist(4);
-		var levy = MosaicLevy();
-		if (0 != levySize)
-		{
-			levy = MosaicLevy().deserialize(buffer);
-			buffer = buffer.sublist(levy.size);
+		if (0 != entityBodyReserved_1) {
+			throw RangeError('Invalid value of reserved field ($entityBodyReserved_1)');
 		}
+		var version = bytesToInt((buffer.sublist(0, 1) as Uint8List).sublist(0, 1), 1);
+		buffer = buffer.sublist(1);
+		var network = NetworkType().deserialize(buffer);
+		buffer = buffer.sublist(network.size);
+		var type = TransactionType().deserialize(buffer);
+		buffer = buffer.sublist(type.size);
+		var fee = Amount().deserialize(buffer);
+		buffer = buffer.sublist(fee.size);
+		var deadline = Timestamp().deserialize(buffer);
+		buffer = buffer.sublist(deadline.size);
+		var recipientAddress = UnresolvedAddress().deserialize(buffer);
+		buffer = buffer.sublist(recipientAddress.size);
+		var messageSize = bytesToInt((buffer.sublist(0, 2) as Uint8List).sublist(0, 2), 2);
+		buffer = buffer.sublist(2);
+		var mosaicsCount = bytesToInt((buffer.sublist(0, 1) as Uint8List).sublist(0, 1), 1);
+		buffer = buffer.sublist(1);
+		var transferTransactionBodyReserved_1 = bytesToInt((buffer.sublist(0, 1) as Uint8List).sublist(0, 1), 1);
+		buffer = buffer.sublist(1);
+		if (0 != transferTransactionBodyReserved_1) {
+			throw RangeError('Invalid value of reserved field ($transferTransactionBodyReserved_1)');
+		}
+		var transferTransactionBodyReserved_2 = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		buffer = buffer.sublist(4);
+		if (0 != transferTransactionBodyReserved_2) {
+			throw RangeError('Invalid value of reserved field ($transferTransactionBodyReserved_2)');
+		}
+		var mosaics = ArrayHelpers.readArrayCount(buffer, UnresolvedMosaic(), mosaicsCount, (e) { return ArrayHelpers.getValue(e.mosaicId);}).map((item) => item as UnresolvedMosaic).toList();
+		buffer = buffer.sublist(ArrayHelpers.size(mosaics));
+		var message = Uint8List.fromList(buffer.sublist(0, messageSize));
+		buffer = buffer.sublist(messageSize);
 
-		var instance = MosaicDefinition(
-			ownerPublicKey: ownerPublicKey,
-			id: id,
-			description: description,
-			properties: properties,
-			levy: levy,
+		var instance = TransferTransactionV1(
+			signature: signature,
+			signerPublicKey: signerPublicKey,
+			version: version,
+			network: network,
+			type: type,
+			fee: fee,
+			deadline: deadline,
+			recipientAddress: recipientAddress,
+			mosaics: mosaics,
+			message: message,
 		);
 		return instance;
 	}
@@ -163,199 +254,161 @@ class MosaicDefinition extends StructBase implements IDeserializable {
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_ownerPublicKeySize, 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(size, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _ownerPublicKey.size, _ownerPublicKey.serialize());;
-		currentPos += ownerPublicKey.size;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(id.size, 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(_verifiableEntityHeaderReserved_1, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _id.size, _id.serialize());;
-		currentPos += id.size;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_description.length, 4));
+		buffer.setRange(currentPos, currentPos + _signature.size, _signature.serialize());;
+		currentPos += signature.size;
+		buffer.setRange(currentPos, currentPos + _signerPublicKey.size, _signerPublicKey.serialize());;
+		currentPos += signerPublicKey.size;
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(_entityBodyReserved_1, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _description.lengthInBytes, _description);
-		currentPos += description.lengthInBytes;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_properties.length, 4));
+		buffer.setRange(currentPos, currentPos + 1, intToBytes(_version, 1));
+		currentPos += 1;
+		buffer.setRange(currentPos, currentPos + _network.size, _network.serialize());;
+		currentPos += network.size;
+		buffer.setRange(currentPos, currentPos + _type.size, _type.serialize());;
+		currentPos += type.size;
+		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());;
+		currentPos += fee.size;
+		buffer.setRange(currentPos, currentPos + _deadline.size, _deadline.serialize());;
+		currentPos += deadline.size;
+		buffer.setRange(currentPos, currentPos + _recipientAddress.size, _recipientAddress.serialize());;
+		currentPos += recipientAddress.size;
+		buffer.setRange(currentPos, currentPos + 2, intToBytes(_message.length, 2));
+		currentPos += 2;
+		buffer.setRange(currentPos, currentPos + 1, intToBytes(_mosaics.length, 1));
+		currentPos += 1;
+		buffer.setRange(currentPos, currentPos + 1, intToBytes(_transferTransactionBodyReserved_1, 1));
+		currentPos += 1;
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(_transferTransactionBodyReserved_2, 4));
 		currentPos += 4;
 		sort();
-		var res_properties = ArrayHelpers.writeArray(buffer, _properties, currentPos);
-		currentPos = res_properties.item2;
-		buffer = res_properties.item1;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(levySizeComputed, 4));
-		currentPos += 4;
-		if (0 != levySizeComputed)
-		{
-			buffer.setRange(currentPos, currentPos + _levy.size, _levy.serialize());;
-			currentPos += levy.size;
-		}
+		var res_mosaics = ArrayHelpers.writeArray(buffer, _mosaics, currentPos, (e) { return ArrayHelpers.getValue(e.mosaicId);});
+		currentPos = res_mosaics.item2;
+		buffer = res_mosaics.item1;
+		buffer.setRange(currentPos, currentPos + _message.lengthInBytes, _message);
+		currentPos += message.lengthInBytes;
 		return buffer.buffer.asUint8List();
 	}
 
 	@override
 	String toString() {
-		var result = 'MosaicDefinition(';
-		result += 'ownerPublicKey: "${_ownerPublicKey.toString()}", ';
-		result += 'id: "${_id.toString()}", ';
-		result += 'description: "${hex.encode(_description.toList()).toUpperCase()}", ';
-		result += 'properties: "${_properties.map((e) => e.toString()).toList()}", ';
-		if (0 != levySizeComputed)
-		{
-			result += 'levy: "${_levy.toString()}", ';
-		}
+		var result = 'TransferTransactionV1(';
+		result += 'signature: "${_signature.toString()}", ';
+		result += 'signerPublicKey: "${_signerPublicKey.toString()}", ';
+		result += 'version: "0x${_version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'network: "${_network.toString()}", ';
+		result += 'type: "${_type.toString()}", ';
+		result += 'fee: "${_fee.toString()}", ';
+		result += 'deadline: "${_deadline.toString()}", ';
+		result += 'recipientAddress: "${_recipientAddress.toString()}", ';
+		result += 'mosaics: "${_mosaics.map((e) => e.toString()).toList()}", ';
+		result += 'message: "${hex.encode(_message.toList()).toUpperCase()}", ';
 		result += ')';
 		return result;
 	}
 }
 
+class TransactionType implements IDeserializable {
+	static final ACCOUNT_KEY_LINK = TransactionType(16716);
+	static final NODE_KEY_LINK = TransactionType(16972);
+	static final AGGREGATE_COMPLETE = TransactionType(16705);
+	static final AGGREGATE_BONDED = TransactionType(16961);
+	static final VOTING_KEY_LINK = TransactionType(16707);
+	static final VRF_KEY_LINK = TransactionType(16963);
+	static final HASH_LOCK = TransactionType(16712);
+	static final SECRET_LOCK = TransactionType(16722);
+	static final SECRET_PROOF = TransactionType(16978);
+	static final ACCOUNT_METADATA = TransactionType(16708);
+	static final MOSAIC_METADATA = TransactionType(16964);
+	static final NAMESPACE_METADATA = TransactionType(17220);
+	static final MOSAIC_DEFINITION = TransactionType(16717);
+	static final MOSAIC_SUPPLY_CHANGE = TransactionType(16973);
+	static final MOSAIC_SUPPLY_REVOCATION = TransactionType(17229);
+	static final MULTISIG_ACCOUNT_MODIFICATION = TransactionType(16725);
+	static final ADDRESS_ALIAS = TransactionType(16974);
+	static final MOSAIC_ALIAS = TransactionType(17230);
+	static final NAMESPACE_REGISTRATION = TransactionType(16718);
+	static final ACCOUNT_ADDRESS_RESTRICTION = TransactionType(16720);
+	static final ACCOUNT_MOSAIC_RESTRICTION = TransactionType(16976);
+	static final ACCOUNT_OPERATION_RESTRICTION = TransactionType(17232);
+	static final MOSAIC_ADDRESS_RESTRICTION = TransactionType(16977);
+	static final MOSAIC_GLOBAL_RESTRICTION = TransactionType(16721);
+	static final TRANSFER = TransactionType(16724);
 
-class MosaicId implements IDeserializable {
+	final int value;
 
-	static const Map<String, String> TYPE_HINTS = {
-		'namespaceId': 'struct:NamespaceId',
-		'name': 'bytes_array'
+	static final _flags = {
+		16716: 'ACCOUNT_KEY_LINK',
+		16972: 'NODE_KEY_LINK',
+		16705: 'AGGREGATE_COMPLETE',
+		16961: 'AGGREGATE_BONDED',
+		16707: 'VOTING_KEY_LINK',
+		16963: 'VRF_KEY_LINK',
+		16712: 'HASH_LOCK',
+		16722: 'SECRET_LOCK',
+		16978: 'SECRET_PROOF',
+		16708: 'ACCOUNT_METADATA',
+		16964: 'MOSAIC_METADATA',
+		17220: 'NAMESPACE_METADATA',
+		16717: 'MOSAIC_DEFINITION',
+		16973: 'MOSAIC_SUPPLY_CHANGE',
+		17229: 'MOSAIC_SUPPLY_REVOCATION',
+		16725: 'MULTISIG_ACCOUNT_MODIFICATION',
+		16974: 'ADDRESS_ALIAS',
+		17230: 'MOSAIC_ALIAS',
+		16718: 'NAMESPACE_REGISTRATION',
+		16720: 'ACCOUNT_ADDRESS_RESTRICTION',
+		16976: 'ACCOUNT_MOSAIC_RESTRICTION',
+		17232: 'ACCOUNT_OPERATION_RESTRICTION',
+		16977: 'MOSAIC_ADDRESS_RESTRICTION',
+		16721: 'MOSAIC_GLOBAL_RESTRICTION',
+		16724: 'TRANSFER',
 	};
 
-	NamespaceId _namespaceId = NamespaceId();
-	Uint8List _name = Uint8List(0);
-
-	MosaicId({ namespaceId, name}) {
-		_namespaceId = namespaceId ?? NamespaceId();
-		_name = name ?? Uint8List(0);
-	}
-
-	void sort() {
-		_namespaceId.sort();
-	}
-
-	NamespaceId get namespaceId {
-		return _namespaceId;
-	}
-
-	Uint8List get name {
-		return _name;
-	}
-
-	set namespaceId(NamespaceId value) {
-		_namespaceId = value;
-	}
-
-	set name(Uint8List value) {
-		_name = value;
-	}
+	TransactionType([int? _value]) : value = _value ?? 16716;
 
 	int get size {
-		var size = 0;
-		size += namespaceId.size;
-		size += 4;
-		size += name.lengthInBytes;
-		return size;
+		return 2;
 	}
 
 	@override
-	MosaicId deserialize(dynamic payload) {
-		if(payload is String) {
-			payload = hex.decode(payload);
-		}
-		Uint8List buffer = payload.buffer.asUint8List();
-		var namespaceId = NamespaceId().deserialize(buffer);
-		buffer = buffer.sublist(namespaceId.size);
-		var nameSize = ByteData.view(buffer.sublist(0, 4).buffer).getUint32(0, Endian.little);
-		buffer = buffer.sublist(4);
-		var name = Uint8List.fromList(buffer.sublist(0, nameSize));
-		buffer = buffer.sublist(nameSize);
-
-		var instance = MosaicId(
-			namespaceId: namespaceId,
-			name: name,
-		);
-		return instance;
+	TransactionType deserialize(dynamic payload) {
+		var byteData = ByteData.sublistView(payload);
+		return TransactionType(byteData.getUint16(0, Endian.little));
 	}
 
 	Uint8List serialize() {
-		var buffer = Uint8List(size);
-		var currentPos = 0;
-		buffer.setRange(currentPos, currentPos + _namespaceId.size, _namespaceId.serialize());;
-		currentPos += namespaceId.size;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_name.length, 4));
-		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _name.lengthInBytes, _name);
-		currentPos += name.lengthInBytes;
-		return buffer.buffer.asUint8List();
+		var byteData = ByteData(2)..setUint16(0, value, Endian.little);
+		return byteData.buffer.asUint8List();
 	}
 
 	@override
 	String toString() {
-		var result = 'MosaicId(';
-		result += 'namespaceId: "${_namespaceId.toString()}", ';
-		result += 'name: "${hex.encode(_name.toList()).toUpperCase()}", ';
-		result += ')';
-		return result;
+		return 'TransactionType.${_flags[value]}';
 	}
 }
 
 
-class NamespaceId implements IDeserializable {
+class Signature extends ByteArray implements IDeserializable {
+	static const int SIZE = 64;
 
-	static const Map<String, String> TYPE_HINTS = {
-		'name': 'bytes_array'
-	};
-
-	Uint8List _name = Uint8List(0);
-
-	NamespaceId([name]) {
-		_name = name ?? Uint8List(0);
-	}
-
-	void sort() {
-		// empty body
-	}
-
-	Uint8List get name {
-		return _name;
-	}
-
-	set name(Uint8List value) {
-		_name = value;
-	}
+	Signature([dynamic signature]) : super(SIZE, signature ?? Uint8List(64));
 
 	int get size {
-		var size = 0;
-		size += 4;
-		size += name.lengthInBytes;
-		return size;
+		return 64;
 	}
 
 	@override
-	NamespaceId deserialize(dynamic payload) {
-		if(payload is String) {
-			payload = hex.decode(payload);
-		}
-		Uint8List buffer = payload.buffer.asUint8List();
-		var nameSize = ByteData.view(buffer.sublist(0, 4).buffer).getUint32(0, Endian.little);
-		buffer = buffer.sublist(4);
-		var name = Uint8List.fromList(buffer.sublist(0, nameSize));
-		buffer = buffer.sublist(nameSize);
-
-		var instance = NamespaceId(name);
-		return instance;
+	Signature deserialize(dynamic payload) {
+		payload = payload.sublist(0, SIZE);
+		return Signature(Uint8List.fromList(payload));
 	}
 
 	Uint8List serialize() {
-		var buffer = Uint8List(size);
-		var currentPos = 0;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_name.length, 4));
-		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _name.lengthInBytes, _name);
-		currentPos += name.lengthInBytes;
-		return buffer.buffer.asUint8List();
-	}
-
-	@override
-	String toString() {
-		var result = 'NamespaceId(';
-		result += 'name: "${hex.encode(_name.toList()).toUpperCase()}", ';
-		result += ')';
-		return result;
+		return bytes;
 	}
 }
 
@@ -376,964 +429,6 @@ class PublicKey extends ByteArray implements IDeserializable {
 
 	Uint8List serialize() {
 		return bytes;
-	}
-}
-
-class SizePrefixedMosaicProperty implements IDeserializable {
-
-	static const Map<String, String> TYPE_HINTS = {
-		'property': 'struct:MosaicProperty'
-	};
-
-	MosaicProperty _property = MosaicProperty();
-
-	SizePrefixedMosaicProperty([property]) {
-		_property = property ?? MosaicProperty();
-	}
-
-	void sort() {
-		_property.sort();
-	}
-
-	MosaicProperty get property {
-		return _property;
-	}
-
-	set property(MosaicProperty value) {
-		_property = value;
-	}
-
-	int get size {
-		var size = 0;
-		size += 4;
-		size += property.size;
-		return size;
-	}
-
-	@override
-	SizePrefixedMosaicProperty deserialize(dynamic payload) {
-		if(payload is String) {
-			payload = hex.decode(payload);
-		}
-		Uint8List buffer = payload.buffer.asUint8List();
-		var propertySize = ByteData.view(buffer.sublist(0, 4).buffer).getUint32(0, Endian.little);
-		buffer = buffer.sublist(4);
-		//marking sizeof field
-		var property = MosaicProperty().deserialize(buffer);
-		buffer = buffer.sublist(property.size);
-
-		var instance = SizePrefixedMosaicProperty(property);
-		return instance;
-	}
-
-	Uint8List serialize() {
-		var buffer = Uint8List(size);
-		var currentPos = 0;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(property.size, 4));
-		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _property.size, _property.serialize());;
-		currentPos += property.size;
-		return buffer.buffer.asUint8List();
-	}
-
-	@override
-	String toString() {
-		var result = 'SizePrefixedMosaicProperty(';
-		result += 'property: "${_property.toString()}", ';
-		result += ')';
-		return result;
-	}
-}
-
-class MosaicLevy extends StructBase implements IDeserializable {
-
-	static const Map<String, String> TYPE_HINTS = {
-		'transferFeeType': 'enum:MosaicTransferFeeType',
-		'recipientAddress': 'pod:Address',
-		'mosaicId': 'struct:MosaicId',
-		'fee': 'pod:Amount'
-	};
-
-	MosaicTransferFeeType _transferFeeType = MosaicTransferFeeType.ABSOLUTE;
-	Address _recipientAddress = Address();
-	MosaicId _mosaicId = MosaicId();
-	Amount _fee = Amount();
-	final int _recipientAddressSize = 0; // reserved field
-
-	MosaicLevy({ transferFeeType, recipientAddress, mosaicId, fee})
-  : super(transferFeeType == null && recipientAddress == null && mosaicId == null && fee == null) {
-		_transferFeeType = transferFeeType ?? MosaicTransferFeeType.ABSOLUTE;
-		_recipientAddress = recipientAddress ?? Address();
-		_mosaicId = mosaicId ?? MosaicId();
-		_fee = fee ?? Amount();
-	}
-
-	void sort() {
-		_mosaicId.sort();
-	}
-
-	MosaicTransferFeeType get transferFeeType {
-		return _transferFeeType;
-	}
-
-	Address get recipientAddress {
-		return _recipientAddress;
-	}
-
-	MosaicId get mosaicId {
-		return _mosaicId;
-	}
-
-	Amount get fee {
-		return _fee;
-	}
-
-	set transferFeeType(MosaicTransferFeeType value) {
-		_transferFeeType = value;
-	}
-
-	set recipientAddress(Address value) {
-		_recipientAddress = value;
-	}
-
-	set mosaicId(MosaicId value) {
-		_mosaicId = value;
-	}
-
-	set fee(Amount value) {
-		_fee = value;
-	}
-
-	int get size {
-		var size = 0;
-		size += transferFeeType.size;
-		size += 4;
-		size += recipientAddress.size;
-		size += 4;
-		size += mosaicId.size;
-		size += fee.size;
-		return size;
-	}
-
-	@override
-	MosaicLevy deserialize(dynamic payload) {
-		if(payload is String) {
-			payload = hex.decode(payload);
-		}
-		Uint8List buffer = payload.buffer.asUint8List();
-		var transferFeeType = MosaicTransferFeeType().deserialize(buffer);
-		buffer = buffer.sublist(transferFeeType.size);
-		var recipientAddressSize = ByteData.view(buffer.sublist(0, 4).buffer).getUint32(0, Endian.little);
-		buffer = buffer.sublist(4);
-		if (40 != recipientAddressSize) {
-			throw RangeError('Invalid value of reserved field ($recipientAddressSize)');
-		}
-		var recipientAddress = Address().deserialize(buffer);
-		buffer = buffer.sublist(recipientAddress.size);
-		var mosaicIdSize = ByteData.view(buffer.sublist(0, 4).buffer).getUint32(0, Endian.little);
-		buffer = buffer.sublist(4);
-		//marking sizeof field
-		var mosaicId = MosaicId().deserialize(buffer);
-		buffer = buffer.sublist(mosaicId.size);
-		var fee = Amount().deserialize(buffer);
-		buffer = buffer.sublist(fee.size);
-
-		var instance = MosaicLevy(
-			transferFeeType: transferFeeType,
-			recipientAddress: recipientAddress,
-			mosaicId: mosaicId,
-			fee: fee,
-		);
-		return instance;
-	}
-
-	Uint8List serialize() {
-		var buffer = Uint8List(size);
-		var currentPos = 0;
-		buffer.setRange(currentPos, currentPos + _transferFeeType.size, _transferFeeType.serialize());;
-		currentPos += transferFeeType.size;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_recipientAddressSize, 4));
-		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _recipientAddress.size, _recipientAddress.serialize());;
-		currentPos += recipientAddress.size;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(mosaicId.size, 4));
-		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _mosaicId.size, _mosaicId.serialize());;
-		currentPos += mosaicId.size;
-		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());;
-		currentPos += fee.size;
-		return buffer.buffer.asUint8List();
-	}
-
-	@override
-	String toString() {
-		var result = 'MosaicLevy(';
-		result += 'transferFeeType: "${_transferFeeType.toString()}", ';
-		result += 'recipientAddress: "${_recipientAddress.toString()}", ';
-		result += 'mosaicId: "${_mosaicId.toString()}", ';
-		result += 'fee: "${_fee.toString()}", ';
-		result += ')';
-		return result;
-	}
-}
-
-class MosaicTransferFeeType implements IDeserializable {
-	static final ABSOLUTE = MosaicTransferFeeType(1);
-	static final PERCENTILE = MosaicTransferFeeType(2);
-
-	final int value;
-
-	static final _flags = {
-		1: 'ABSOLUTE',
-		2: 'PERCENTILE',
-	};
-
-	MosaicTransferFeeType([int? _value]) : value = _value ?? 1;
-
-	int get size {
-		return 4;
-	}
-
-	@override
-	MosaicTransferFeeType deserialize(dynamic payload) {
-		var byteData = ByteData.sublistView(payload);
-		return MosaicTransferFeeType(byteData.getUint32(0, Endian.little));
-	}
-
-	Uint8List serialize() {
-		var byteData = ByteData(4)..setUint32(0, value, Endian.little);
-		return byteData.buffer.asUint8List();
-	}
-
-	@override
-	String toString() {
-		return 'MosaicTransferFeeType.${_flags[value]}';
-	}
-}
-
-class MosaicProperty implements IDeserializable {
-
-	static const Map<String, String> TYPE_HINTS = {
-		'name': 'bytes_array',
-		'value': 'bytes_array'
-	};
-
-	Uint8List _name = Uint8List(0);
-	Uint8List _value = Uint8List(0);
-
-	MosaicProperty({ name, value}) {
-		_name = name ?? Uint8List(0);
-		_value = value ?? Uint8List(0);
-	}
-
-	void sort() {
-		// empty body
-	}
-
-	Uint8List get name {
-		return _name;
-	}
-
-	Uint8List get value {
-		return _value;
-	}
-
-	set name(Uint8List value) {
-		_name = value;
-	}
-
-	set value(Uint8List value) {
-		_value = value;
-	}
-
-	int get size {
-		var size = 0;
-		size += 4;
-		size += name.lengthInBytes;
-		size += 4;
-		size += value.lengthInBytes;
-		return size;
-	}
-
-	@override
-	MosaicProperty deserialize(dynamic payload) {
-		if(payload is String) {
-			payload = hex.decode(payload);
-		}
-		Uint8List buffer = payload.buffer.asUint8List();
-		var nameSize = ByteData.view(buffer.sublist(0, 4).buffer).getUint32(0, Endian.little);
-		buffer = buffer.sublist(4);
-		var name = Uint8List.fromList(buffer.sublist(0, nameSize));
-		buffer = buffer.sublist(nameSize);
-		var valueSize = ByteData.view(buffer.sublist(0, 4).buffer).getUint32(0, Endian.little);
-		buffer = buffer.sublist(4);
-		var value = Uint8List.fromList(buffer.sublist(0, valueSize));
-		buffer = buffer.sublist(valueSize);
-
-		var instance = MosaicProperty(
-			name: name,
-			value: value,
-		);
-		return instance;
-	}
-
-	Uint8List serialize() {
-		var buffer = Uint8List(size);
-		var currentPos = 0;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_name.length, 4));
-		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _name.lengthInBytes, _name);
-		currentPos += name.lengthInBytes;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_value.length, 4));
-		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _value.lengthInBytes, _value);
-		currentPos += value.lengthInBytes;
-		return buffer.buffer.asUint8List();
-	}
-
-	@override
-	String toString() {
-		var result = 'MosaicProperty(';
-		result += 'name: "${hex.encode(_name.toList()).toUpperCase()}", ';
-		result += 'value: "${hex.encode(_value.toList()).toUpperCase()}", ';
-		result += ')';
-		return result;
-	}
-}
-
-class Address extends ByteArray implements IDeserializable {
-	static const int SIZE = 40;
-
-	Address([dynamic address]) : super(SIZE, address ?? Uint8List(40));
-
-	int get size {
-		return 40;
-	}
-
-	@override
-	Address deserialize(dynamic payload) {
-		payload = payload.sublist(0, SIZE);
-		return Address(Uint8List.fromList(payload));
-	}
-
-	Uint8List serialize() {
-		return bytes;
-	}
-}
-
-class Amount extends BaseValue implements IDeserializable {
-	static const int SIZE = 8;
-
-	Amount([dynamic amount]) : super(SIZE, amount ?? BigInt.zero);
-
-	@override
-	Amount deserialize(dynamic payload) {
-		var buffer = ByteData.view(payload.buffer);
-		return Amount(BigInt.from(buffer.getUint64(0, Endian.little)));
-	}
-
-	Uint8List serialize() {
-		var buffer = Uint8List(SIZE);
-		buffer.setRange(0, 0 + 8, intToBytes(value, 8));
-		return buffer;
-	}
-}
-
-class NamespaceRegistrationTransactionV1 extends StructBase implements IDeserializable {
-	static const int TRANSACTION_VERSION = 1;
-	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.NAMESPACE_REGISTRATION.value);
-
-	static const Map<String, String> TYPE_HINTS = {
-		'type': 'enum:TransactionType',
-		'network': 'enum:NetworkType',
-		'timestamp': 'pod:Timestamp',
-		'signerPublicKey': 'pod:PublicKey',
-		'signature': 'pod:Signature',
-		'fee': 'pod:Amount',
-		'deadline': 'pod:Timestamp',
-		'rentalFeeSink': 'pod:Address',
-		'rentalFee': 'pod:Amount',
-		'name': 'bytes_array',
-		'parentName': 'bytes_array'
-	};
-
-	TransactionType _type = TransactionType.TRANSFER;
-	int _version = 0;
-	NetworkType _network = NetworkType.MAINNET;
-	Timestamp _timestamp = Timestamp();
-	PublicKey _signerPublicKey = PublicKey();
-	Signature _signature = Signature();
-	Amount _fee = Amount();
-	Timestamp _deadline = Timestamp();
-	Address _rentalFeeSink = Address();
-	Amount _rentalFee = Amount();
-	Uint8List _name = Uint8List(0);
-	Uint8List _parentName = Uint8List(0);
-	final int _entityBodyReserved_1 = 0; // reserved field
-	final int _signerPublicKeySize = 0; // reserved field
-	final int _signatureSize = 0; // reserved field
-	final int _rentalFeeSinkSize = 0; // reserved field
-
-	NamespaceRegistrationTransactionV1({ 
-	type,
-	version,
-	network,
-	timestamp,
-	signerPublicKey,
-	signature,
-	fee,
-	deadline,
-	rentalFeeSink,
-	rentalFee,
-	name,
-	parentName
-	}) 
-		: super(type == null && version == null && network == null && timestamp == null && signerPublicKey == null && signature == null && fee == null && deadline == null && rentalFeeSink == null && rentalFee == null && name == null && parentName == null )
-	{
-		_type = type ?? NamespaceRegistrationTransactionV1.TRANSACTION_TYPE;
-		_version = version ?? NamespaceRegistrationTransactionV1.TRANSACTION_VERSION;
-		_network = network ?? NetworkType.MAINNET;
-		_timestamp = timestamp ?? Timestamp();
-		_signerPublicKey = signerPublicKey ?? PublicKey();
-		_signature = signature ?? Signature();
-		_fee = fee ?? Amount();
-		_deadline = deadline ?? Timestamp();
-		_rentalFeeSink = rentalFeeSink ?? Address();
-		_rentalFee = rentalFee ?? Amount();
-		_name = name ?? Uint8List(0);
-		_parentName = parentName ?? Uint8List(0);
-	}
-
-	void sort() {
-		// empty body
-	}
-
-	TransactionType get type {
-		return _type;
-	}
-
-	int get version {
-		return _version;
-	}
-
-	NetworkType get network {
-		return _network;
-	}
-
-	Timestamp get timestamp {
-		return _timestamp;
-	}
-
-	PublicKey get signerPublicKey {
-		return _signerPublicKey;
-	}
-
-	Signature get signature {
-		return _signature;
-	}
-
-	Amount get fee {
-		return _fee;
-	}
-
-	Timestamp get deadline {
-		return _deadline;
-	}
-
-	Address get rentalFeeSink {
-		return _rentalFeeSink;
-	}
-
-	Amount get rentalFee {
-		return _rentalFee;
-	}
-
-	Uint8List get name {
-		return _name;
-	}
-
-	Uint8List get parentName {
-		return _parentName;
-	}
-
-	set type(TransactionType value) {
-		_type = value;
-	}
-
-	set version(int value) {
-		_version = value;
-	}
-
-	set network(NetworkType value) {
-		_network = value;
-	}
-
-	set timestamp(Timestamp value) {
-		_timestamp = value;
-	}
-
-	set signerPublicKey(PublicKey value) {
-		_signerPublicKey = value;
-	}
-
-	set signature(Signature value) {
-		_signature = value;
-	}
-
-	set fee(Amount value) {
-		_fee = value;
-	}
-
-	set deadline(Timestamp value) {
-		_deadline = value;
-	}
-
-	set rentalFeeSink(Address value) {
-		_rentalFeeSink = value;
-	}
-
-	set rentalFee(Amount value) {
-		_rentalFee = value;
-	}
-
-	set name(Uint8List value) {
-		_name = value;
-	}
-
-	set parentName(Uint8List value) {
-		_parentName = value;
-	}
-
-	int get size {
-		var size = 0;
-		size += type.size;
-		size += 1;
-		size += 2;
-		size += network.size;
-		size += timestamp.size;
-		size += 4;
-		size += signerPublicKey.size;
-		size += 4;
-		size += signature.size;
-		size += fee.size;
-		size += deadline.size;
-		size += 4;
-		size += rentalFeeSink.size;
-		size += rentalFee.size;
-		size += 4;
-		size += name.lengthInBytes;
-		size += 4;
-		if (parentName == Uint8List(0))
-		{
-			size += parentName.lengthInBytes;
-		}
-		return size;
-	}
-
-	@override
-	NamespaceRegistrationTransactionV1 deserialize(dynamic payload) {
-		if(payload is String) {
-			payload = hex.decode(payload);
-		}
-		Uint8List buffer = payload.buffer.asUint8List();
-		var type = TransactionType().deserialize(buffer);
-		buffer = buffer.sublist(type.size);
-		var version = ByteData.view(buffer.sublist(0, 1).buffer).getUint8(0);
-		buffer = buffer.sublist(1);
-		var entityBodyReserved_1 = ByteData.view(buffer.sublist(0, 2).buffer).getUint16(0, Endian.little);
-		buffer = buffer.sublist(2);
-		if (0 != entityBodyReserved_1) {
-			throw RangeError('Invalid value of reserved field ($entityBodyReserved_1)');
-		}
-		var network = NetworkType().deserialize(buffer);
-		buffer = buffer.sublist(network.size);
-		var timestamp = Timestamp().deserialize(buffer);
-		buffer = buffer.sublist(timestamp.size);
-		var signerPublicKeySize = ByteData.view(buffer.sublist(0, 4).buffer).getUint32(0, Endian.little);
-		buffer = buffer.sublist(4);
-		if (32 != signerPublicKeySize) {
-			throw RangeError('Invalid value of reserved field ($signerPublicKeySize)');
-		}
-		var signerPublicKey = PublicKey().deserialize(buffer);
-		buffer = buffer.sublist(signerPublicKey.size);
-		var signatureSize = ByteData.view(buffer.sublist(0, 4).buffer).getUint32(0, Endian.little);
-		buffer = buffer.sublist(4);
-		if (64 != signatureSize) {
-			throw RangeError('Invalid value of reserved field ($signatureSize)');
-		}
-		var signature = Signature().deserialize(buffer);
-		buffer = buffer.sublist(signature.size);
-		var fee = Amount().deserialize(buffer);
-		buffer = buffer.sublist(fee.size);
-		var deadline = Timestamp().deserialize(buffer);
-		buffer = buffer.sublist(deadline.size);
-		var rentalFeeSinkSize = ByteData.view(buffer.sublist(0, 4).buffer).getUint32(0, Endian.little);
-		buffer = buffer.sublist(4);
-		if (40 != rentalFeeSinkSize) {
-			throw RangeError('Invalid value of reserved field ($rentalFeeSinkSize)');
-		}
-		var rentalFeeSink = Address().deserialize(buffer);
-		buffer = buffer.sublist(rentalFeeSink.size);
-		var rentalFee = Amount().deserialize(buffer);
-		buffer = buffer.sublist(rentalFee.size);
-		var nameSize = ByteData.view(buffer.sublist(0, 4).buffer).getUint32(0, Endian.little);
-		buffer = buffer.sublist(4);
-		var name = Uint8List.fromList(buffer.sublist(0, nameSize));
-		buffer = buffer.sublist(nameSize);
-		var parentNameSize = ByteData.view(buffer.sublist(0, 4).buffer).getUint32(0, Endian.little);
-		buffer = buffer.sublist(4);
-		var parentName = Uint8List(0);
-		if (4294967295 != parentNameSize)
-		{
-			parentName = Uint8List.fromList(buffer.sublist(0, parentNameSize));
-			buffer = buffer.sublist(parentNameSize);
-		}
-
-		var instance = NamespaceRegistrationTransactionV1(
-			type: type,
-			version: version,
-			network: network,
-			timestamp: timestamp,
-			signerPublicKey: signerPublicKey,
-			signature: signature,
-			fee: fee,
-			deadline: deadline,
-			rentalFeeSink: rentalFeeSink,
-			rentalFee: rentalFee,
-			name: name,
-			parentName: parentName,
-		);
-		return instance;
-	}
-
-	Uint8List serialize() {
-		var buffer = Uint8List(size);
-		var currentPos = 0;
-		buffer.setRange(currentPos, currentPos + _type.size, _type.serialize());;
-		currentPos += type.size;
-		buffer.setRange(currentPos, currentPos + 1, intToBytes(_version, 1));
-		currentPos += 1;
-		buffer.setRange(currentPos, currentPos + 2, intToBytes(_entityBodyReserved_1, 2));
-		currentPos += 2;
-		buffer.setRange(currentPos, currentPos + _network.size, _network.serialize());;
-		currentPos += network.size;
-		buffer.setRange(currentPos, currentPos + _timestamp.size, _timestamp.serialize());;
-		currentPos += timestamp.size;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_signerPublicKeySize, 4));
-		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _signerPublicKey.size, _signerPublicKey.serialize());;
-		currentPos += signerPublicKey.size;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_signatureSize, 4));
-		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _signature.size, _signature.serialize());;
-		currentPos += signature.size;
-		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());;
-		currentPos += fee.size;
-		buffer.setRange(currentPos, currentPos + _deadline.size, _deadline.serialize());;
-		currentPos += deadline.size;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_rentalFeeSinkSize, 4));
-		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _rentalFeeSink.size, _rentalFeeSink.serialize());;
-		currentPos += rentalFeeSink.size;
-		buffer.setRange(currentPos, currentPos + _rentalFee.size, _rentalFee.serialize());;
-		currentPos += rentalFee.size;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_name.length, 4));
-		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _name.lengthInBytes, _name);
-		currentPos += name.lengthInBytes;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes((parentName != Uint8List(0) ? parentName.length : 4294967295), 4));
-		currentPos += 4;
-		if (parentName == Uint8List(0))
-		{
-			buffer.setRange(currentPos, currentPos + _parentName.lengthInBytes, _parentName);
-			currentPos += parentName.lengthInBytes;
-		}
-		return buffer.buffer.asUint8List();
-	}
-
-	@override
-	String toString() {
-		var result = 'NamespaceRegistrationTransactionV1(';
-		result += 'type: "${_type.toString()}", ';
-		result += 'version: "0x${_version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
-		result += 'network: "${_network.toString()}", ';
-		result += 'timestamp: "${_timestamp.toString()}", ';
-		result += 'signerPublicKey: "${_signerPublicKey.toString()}", ';
-		result += 'signature: "${_signature.toString()}", ';
-		result += 'fee: "${_fee.toString()}", ';
-		result += 'deadline: "${_deadline.toString()}", ';
-		result += 'rentalFeeSink: "${_rentalFeeSink.toString()}", ';
-		result += 'rentalFee: "${_rentalFee.toString()}", ';
-		result += 'name: "${hex.encode(_name.toList()).toUpperCase()}", ';
-		if (parentName == Uint8List(0))
-		{
-			result += 'parentName: "${hex.encode(_parentName.toList()).toUpperCase()}", ';
-		}
-		result += ')';
-		return result;
-	}
-}
-
-class TransactionType implements IDeserializable {
-	static final TRANSFER = TransactionType(257);
-	static final ACCOUNT_KEY_LINK = TransactionType(2049);
-	static final MULTISIG_ACCOUNT_MODIFICATION = TransactionType(4097);
-	static final MULTISIG_COSIGNATURE = TransactionType(4098);
-	static final MULTISIG = TransactionType(4100);
-	static final NAMESPACE_REGISTRATION = TransactionType(8193);
-	static final MOSAIC_DEFINITION = TransactionType(16385);
-	static final MOSAIC_SUPPLY_CHANGE = TransactionType(16386);
-
-	final int value;
-
-	static final _flags = {
-		257: 'TRANSFER',
-		2049: 'ACCOUNT_KEY_LINK',
-		4097: 'MULTISIG_ACCOUNT_MODIFICATION',
-		4098: 'MULTISIG_COSIGNATURE',
-		4100: 'MULTISIG',
-		8193: 'NAMESPACE_REGISTRATION',
-		16385: 'MOSAIC_DEFINITION',
-		16386: 'MOSAIC_SUPPLY_CHANGE',
-	};
-
-	TransactionType([int? _value]) : value = _value ?? 257;
-
-	int get size {
-		return 4;
-	}
-
-	@override
-	TransactionType deserialize(dynamic payload) {
-		var byteData = ByteData.sublistView(payload);
-		return TransactionType(byteData.getUint32(0, Endian.little));
-	}
-
-	Uint8List serialize() {
-		var byteData = ByteData(4)..setUint32(0, value, Endian.little);
-		return byteData.buffer.asUint8List();
-	}
-
-	@override
-	String toString() {
-		return 'TransactionType.${_flags[value]}';
-	}
-}
-
-
-class Transaction extends StructBase implements IDeserializable {
-
-	static const Map<String, String> TYPE_HINTS = {
-		'type': 'enum:TransactionType',
-		'network': 'enum:NetworkType',
-		'timestamp': 'pod:Timestamp',
-		'signerPublicKey': 'pod:PublicKey',
-		'signature': 'pod:Signature',
-		'fee': 'pod:Amount',
-		'deadline': 'pod:Timestamp'
-	};
-
-	TransactionType _type = TransactionType.TRANSFER;
-	int _version = 0;
-	NetworkType _network = NetworkType.MAINNET;
-	Timestamp _timestamp = Timestamp();
-	PublicKey _signerPublicKey = PublicKey();
-	Signature _signature = Signature();
-	Amount _fee = Amount();
-	Timestamp _deadline = Timestamp();
-	final int _entityBodyReserved_1 = 0; // reserved field
-	final int _signerPublicKeySize = 0; // reserved field
-	final int _signatureSize = 0; // reserved field
-
-	Transaction({ type, version, network, timestamp, signerPublicKey, signature, fee, deadline}) 
-		: super(type == null && version == null && network == null && timestamp == null && signerPublicKey == null && signature == null && fee == null && deadline == null )
-	{
-		_type = type ?? TransactionType.TRANSFER;
-		_version = version ?? 0;
-		_network = network ?? NetworkType.MAINNET;
-		_timestamp = timestamp ?? Timestamp();
-		_signerPublicKey = signerPublicKey ?? PublicKey();
-		_signature = signature ?? Signature();
-		_fee = fee ?? Amount();
-		_deadline = deadline ?? Timestamp();
-	}
-
-	void sort() {
-		// empty body
-	}
-
-	TransactionType get type {
-		return _type;
-	}
-
-	int get version {
-		return _version;
-	}
-
-	NetworkType get network {
-		return _network;
-	}
-
-	Timestamp get timestamp {
-		return _timestamp;
-	}
-
-	PublicKey get signerPublicKey {
-		return _signerPublicKey;
-	}
-
-	Signature get signature {
-		return _signature;
-	}
-
-	Amount get fee {
-		return _fee;
-	}
-
-	Timestamp get deadline {
-		return _deadline;
-	}
-
-	set type(TransactionType value) {
-		_type = value;
-	}
-
-	set version(int value) {
-		_version = value;
-	}
-
-	set network(NetworkType value) {
-		_network = value;
-	}
-
-	set timestamp(Timestamp value) {
-		_timestamp = value;
-	}
-
-	set signerPublicKey(PublicKey value) {
-		_signerPublicKey = value;
-	}
-
-	set signature(Signature value) {
-		_signature = value;
-	}
-
-	set fee(Amount value) {
-		_fee = value;
-	}
-
-	set deadline(Timestamp value) {
-		_deadline = value;
-	}
-
-	int get size {
-		var size = 0;
-		size += type.size;
-		size += 1;
-		size += 2;
-		size += network.size;
-		size += timestamp.size;
-		size += 4;
-		size += signerPublicKey.size;
-		size += 4;
-		size += signature.size;
-		size += fee.size;
-		size += deadline.size;
-		return size;
-	}
-
-	@override
-	Transaction deserialize(dynamic payload) {
-		if(payload is String) {
-			payload = hex.decode(payload);
-		}
-		Uint8List buffer = payload.buffer.asUint8List();
-		var type = TransactionType().deserialize(buffer);
-		buffer = buffer.sublist(type.size);
-		var version = ByteData.view(buffer.sublist(0, 1).buffer).getUint8(0);
-		buffer = buffer.sublist(1);
-		var entityBodyReserved_1 = ByteData.view(buffer.sublist(0, 2).buffer).getUint16(0, Endian.little);
-		buffer = buffer.sublist(2);
-		if (0 != entityBodyReserved_1) {
-			throw RangeError('Invalid value of reserved field ($entityBodyReserved_1)');
-		}
-		var network = NetworkType().deserialize(buffer);
-		buffer = buffer.sublist(network.size);
-		var timestamp = Timestamp().deserialize(buffer);
-		buffer = buffer.sublist(timestamp.size);
-		var signerPublicKeySize = ByteData.view(buffer.sublist(0, 4).buffer).getUint32(0, Endian.little);
-		buffer = buffer.sublist(4);
-		if (32 != signerPublicKeySize) {
-			throw RangeError('Invalid value of reserved field ($signerPublicKeySize)');
-		}
-		var signerPublicKey = PublicKey().deserialize(buffer);
-		buffer = buffer.sublist(signerPublicKey.size);
-		var signatureSize = ByteData.view(buffer.sublist(0, 4).buffer).getUint32(0, Endian.little);
-		buffer = buffer.sublist(4);
-		if (64 != signatureSize) {
-			throw RangeError('Invalid value of reserved field ($signatureSize)');
-		}
-		var signature = Signature().deserialize(buffer);
-		buffer = buffer.sublist(signature.size);
-		var fee = Amount().deserialize(buffer);
-		buffer = buffer.sublist(fee.size);
-		var deadline = Timestamp().deserialize(buffer);
-		buffer = buffer.sublist(deadline.size);
-
-		var instance = Transaction(
-			type: type,
-			version: version,
-			network: network,
-			timestamp: timestamp,
-			signerPublicKey: signerPublicKey,
-			signature: signature,
-			fee: fee,
-			deadline: deadline,
-		);
-		return instance;
-	}
-
-	Uint8List serialize() {
-		var buffer = Uint8List(size);
-		var currentPos = 0;
-		buffer.setRange(currentPos, currentPos + _type.size, _type.serialize());;
-		currentPos += type.size;
-		buffer.setRange(currentPos, currentPos + 1, intToBytes(_version, 1));
-		currentPos += 1;
-		buffer.setRange(currentPos, currentPos + 2, intToBytes(_entityBodyReserved_1, 2));
-		currentPos += 2;
-		buffer.setRange(currentPos, currentPos + _network.size, _network.serialize());;
-		currentPos += network.size;
-		buffer.setRange(currentPos, currentPos + _timestamp.size, _timestamp.serialize());;
-		currentPos += timestamp.size;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_signerPublicKeySize, 4));
-		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _signerPublicKey.size, _signerPublicKey.serialize());;
-		currentPos += signerPublicKey.size;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_signatureSize, 4));
-		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _signature.size, _signature.serialize());;
-		currentPos += signature.size;
-		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());;
-		currentPos += fee.size;
-		buffer.setRange(currentPos, currentPos + _deadline.size, _deadline.serialize());;
-		currentPos += deadline.size;
-		return buffer.buffer.asUint8List();
-	}
-
-	@override
-	String toString() {
-		var result = 'Transaction(';
-		result += 'type: "${_type.toString()}", ';
-		result += 'version: "0x${_version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
-		result += 'network: "${_network.toString()}", ';
-		result += 'timestamp: "${_timestamp.toString()}", ';
-		result += 'signerPublicKey: "${_signerPublicKey.toString()}", ';
-		result += 'signature: "${_signature.toString()}", ';
-		result += 'fee: "${_fee.toString()}", ';
-		result += 'deadline: "${_deadline.toString()}", ';
-		result += ')';
-		return result;
 	}
 }
 
@@ -1371,37 +466,54 @@ class NetworkType implements IDeserializable {
 	}
 }
 
+class Amount extends BaseValue implements IDeserializable {
+	static const int SIZE = 8;
+
+	Amount([dynamic amount]) : super(SIZE, amount ?? 0);
+
+	@override
+	Amount deserialize(dynamic payload) {
+		return Amount(bytesToInt((payload as Uint8List).sublist(0, 8), 8));
+	}
+
+	Uint8List serialize() {
+		var buffer = Uint8List(SIZE);
+		buffer.setRange(0, 0 + 8, intToBytes(value, 8));
+		return buffer;
+	}
+}
+
+
 class Timestamp extends BaseValue implements IDeserializable {
-	static const int SIZE = 4;
+	static const int SIZE = 8;
 
 	Timestamp([dynamic timestamp]) : super(SIZE, timestamp ?? 0);
 
 	@override
 	Timestamp deserialize(dynamic payload) {
-		var buffer = ByteData.view(payload.buffer);
-		return Timestamp(buffer.getUint32(0, Endian.little));
+		return Timestamp(bytesToInt((payload as Uint8List).sublist(0, 8), 8));
 	}
 
 	Uint8List serialize() {
 		var buffer = Uint8List(SIZE);
-		buffer.setRange(0, 0 + 4, intToBytes(value, 4));
+		buffer.setRange(0, 0 + 8, intToBytes(value, 8));
 		return buffer;
 	}
 }
 
-class Signature extends ByteArray implements IDeserializable {
-	static const int SIZE = 64;
+class UnresolvedAddress extends ByteArray implements IDeserializable {
+	static const int SIZE = 24;
 
-	Signature([dynamic signature]) : super(SIZE, signature ?? Uint8List(64));
+	UnresolvedAddress([dynamic unresolvedAddress]) : super(SIZE, unresolvedAddress ?? Uint8List(24));
 
 	int get size {
-		return 64;
+		return 24;
 	}
 
 	@override
-	Signature deserialize(dynamic payload) {
+	UnresolvedAddress deserialize(dynamic payload) {
 		payload = payload.sublist(0, SIZE);
-		return Signature(Uint8List.fromList(payload));
+		return UnresolvedAddress(Uint8List.fromList(payload));
 	}
 
 	Uint8List serialize() {
@@ -1409,113 +521,64 @@ class Signature extends ByteArray implements IDeserializable {
 	}
 }
 
-class MultisigAccountModificationType implements IDeserializable {
-	static final ADD_COSIGNATORY = MultisigAccountModificationType(1);
-	static final DELETE_COSIGNATORY = MultisigAccountModificationType(2);
-
-	final int value;
-
-	static final _flags = {
-		1: 'ADD_COSIGNATORY',
-		2: 'DELETE_COSIGNATORY',
-	};
-
-	MultisigAccountModificationType([int? _value]) : value = _value ?? 1;
-
-	int get size {
-		return 4;
-	}
-
-	@override
-	MultisigAccountModificationType deserialize(dynamic payload) {
-		var byteData = ByteData.sublistView(payload);
-		return MultisigAccountModificationType(byteData.getUint32(0, Endian.little));
-	}
-
-	Uint8List serialize() {
-		var byteData = ByteData(4)..setUint32(0, value, Endian.little);
-		return byteData.buffer.asUint8List();
-	}
-
-	@override
-	String toString() {
-		return 'MultisigAccountModificationType.${_flags[value]}';
-	}
-}
-
-
-class MultisigAccountModification extends StructBase implements IDeserializable {
+class UnresolvedMosaic extends StructBase implements IDeserializable {
 
 	static const Map<String, String> TYPE_HINTS = {
-		'modificationType': 'enum:MultisigAccountModificationType',
-		'cosignatoryPublicKey': 'pod:PublicKey'
+		'mosaicId': 'pod:UnresolvedMosaicId',
+		'amount': 'pod:Amount'
 	};
 
-	MultisigAccountModificationType _modificationType = MultisigAccountModificationType.ADD_COSIGNATORY;
-	PublicKey _cosignatoryPublicKey = PublicKey();
-	final int _cosignatoryPublicKeySize = 0; // reserved field
+	UnresolvedMosaicId _mosaicId = UnresolvedMosaicId();
+	Amount _amount = Amount();
 
-	MultisigAccountModification({ modificationType, cosignatoryPublicKey}) 
-		: super(modificationType == null && cosignatoryPublicKey == null )
+	UnresolvedMosaic({ UnresolvedMosaicId? mosaicId, Amount? amount}) 
+		: super(mosaicId == null && amount == null )
 	{
-		_modificationType = modificationType ?? MultisigAccountModificationType.ADD_COSIGNATORY;
-		_cosignatoryPublicKey = cosignatoryPublicKey ?? PublicKey();
+		_mosaicId = mosaicId ?? UnresolvedMosaicId();
+		_amount = amount ?? Amount();
 	}
-
-	Tuple2 comparer() {
-    return Tuple2(
-      modificationType is Enum ? modificationType.value : modificationType,
-      ripemdKeccak256(cosignatoryPublicKey.bytes),
-    );
-  }
 
 	void sort() {
 		// empty body
 	}
 
-	MultisigAccountModificationType get modificationType {
-		return _modificationType;
+	UnresolvedMosaicId get mosaicId {
+		return _mosaicId;
 	}
 
-	PublicKey get cosignatoryPublicKey {
-		return _cosignatoryPublicKey;
+	Amount get amount {
+		return _amount;
 	}
 
-	set modificationType(MultisigAccountModificationType value) {
-		_modificationType = value;
+	set mosaicId(UnresolvedMosaicId value) {
+		_mosaicId = value;
 	}
 
-	set cosignatoryPublicKey(PublicKey value) {
-		_cosignatoryPublicKey = value;
+	set amount(Amount value) {
+		_amount = value;
 	}
 
 	int get size {
 		var size = 0;
-		size += modificationType.size;
-		size += 4;
-		size += cosignatoryPublicKey.size;
+		size += mosaicId.size;
+		size += amount.size;
 		return size;
 	}
 
 	@override
-	MultisigAccountModification deserialize(dynamic payload) {
+	UnresolvedMosaic deserialize(dynamic payload) {
 		if(payload is String) {
 			payload = hex.decode(payload);
 		}
 		Uint8List buffer = payload.buffer.asUint8List();
-		var modificationType = MultisigAccountModificationType().deserialize(buffer);
-		buffer = buffer.sublist(modificationType.size);
-		var cosignatoryPublicKeySize = ByteData.view(buffer.sublist(0, 4).buffer).getUint32(0, Endian.little);
-		buffer = buffer.sublist(4);
-		if (32 != cosignatoryPublicKeySize) {
-			throw RangeError('Invalid value of reserved field ($cosignatoryPublicKeySize)');
-		}
-		var cosignatoryPublicKey = PublicKey().deserialize(buffer);
-		buffer = buffer.sublist(cosignatoryPublicKey.size);
+		var mosaicId = UnresolvedMosaicId().deserialize(buffer);
+		buffer = buffer.sublist(mosaicId.size);
+		var amount = Amount().deserialize(buffer);
+		buffer = buffer.sublist(amount.size);
 
-		var instance = MultisigAccountModification(
-			modificationType: modificationType,
-			cosignatoryPublicKey: cosignatoryPublicKey,
+		var instance = UnresolvedMosaic(
+			mosaicId: mosaicId,
+			amount: amount,
 		);
 		return instance;
 	}
@@ -1523,21 +586,681 @@ class MultisigAccountModification extends StructBase implements IDeserializable 
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
-		buffer.setRange(currentPos, currentPos + _modificationType.size, _modificationType.serialize());;
-		currentPos += modificationType.size;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_cosignatoryPublicKeySize, 4));
-		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _cosignatoryPublicKey.size, _cosignatoryPublicKey.serialize());;
-		currentPos += cosignatoryPublicKey.size;
+		buffer.setRange(currentPos, currentPos + _mosaicId.size, _mosaicId.serialize());;
+		currentPos += mosaicId.size;
+		buffer.setRange(currentPos, currentPos + _amount.size, _amount.serialize());;
+		currentPos += amount.size;
 		return buffer.buffer.asUint8List();
 	}
 
 	@override
 	String toString() {
-		var result = 'MultisigAccountModification(';
-		result += 'modificationType: "${_modificationType.toString()}", ';
-		result += 'cosignatoryPublicKey: "${_cosignatoryPublicKey.toString()}", ';
+		var result = 'UnresolvedMosaic(';
+		result += 'mosaicId: "${_mosaicId.toString()}", ';
+		result += 'amount: "${_amount.toString()}", ';
 		result += ')';
 		return result;
 	}
 }
+
+class UnresolvedMosaicId extends BaseValue implements IDeserializable {
+	static const int SIZE = 8;
+
+	UnresolvedMosaicId([dynamic unresolvedMosaicId]) : super(SIZE, unresolvedMosaicId ?? 0);
+
+	@override
+	UnresolvedMosaicId deserialize(dynamic payload) {
+		return UnresolvedMosaicId(bytesToInt((payload as Uint8List).sublist(0, 8), 8));
+	}
+
+	Uint8List serialize() {
+		var buffer = Uint8List(SIZE);
+		buffer.setRange(0, 0 + 8, intToBytes(value, 8));
+		return buffer;
+	}
+}
+
+
+class ArrayHelpers {
+  static dynamic getValue(dynamic e) {
+    try {
+      return e.comparer();
+    } catch (_) {
+      return e.value;
+    }
+  }
+
+  static int deepCompare(dynamic lhs, dynamic rhs) {
+    if (!(lhs is List) && !(lhs is Uint8List)) {
+      if (lhs == rhs) return 0;
+      return lhs > rhs ? 1 : -1;
+    }
+
+    if (lhs.length != rhs.length) return lhs.length > rhs.length ? 1 : -1;
+
+    for (var i = 0; i < lhs.length; ++i) {
+      final compareResult = deepCompare(lhs[i], rhs[i]);
+      if (0 != compareResult) return compareResult;
+    }
+
+    return 0;
+  }
+
+  static List readArrayImpl(Uint8List buffer, IDeserializable FactoryClass, dynamic accessor, bool Function(int, Uint8List) shouldContinue) {
+    final elements = <IDeserializable>[];
+    var previousElement;
+    var i = 0;
+
+    while (shouldContinue(i, buffer)) {
+      final element = FactoryClass.deserialize(buffer);
+      if (0 >= element.size) throw RangeError('element size has invalid size');
+      if (accessor != null && previousElement != null && 0 <= deepCompare(accessor(previousElement), accessor(element))) {
+        throw RangeError('elements in array are not sorted');
+      }
+      buffer = buffer.sublist(element.size);
+      elements.add(element);
+      previousElement = element;
+      ++i;
+    }
+
+    return elements;
+  }
+
+  static Tuple2<Uint8List, int> writeArrayImpl(Uint8List output, List elements, int count, int currentPos, dynamic accessor) {
+    for (var i = 0; i < count; ++i) {
+      final element = elements[i];
+      if (accessor != null && 0 < i && 0 <= deepCompare(accessor(elements[i - 1]), accessor(element))) {
+        throw RangeError('array passed to write array is not sorted');
+      }
+      var serializedElement = element.serialize();
+      var elementSize = serializedElement.length as int;
+      output.setRange(currentPos, currentPos + elementSize, serializedElement);
+      currentPos += elementSize;
+    }
+    return Tuple2(output, currentPos);
+  }
+
+  static int sum(List<int> numbers) => numbers.reduce((a, b) => a + b);
+
+  static int alignUp(int size, int alignment) => ((size + alignment - 1) / alignment).floor() * alignment;
+
+  static int size(List elements, [int alignment = 0, bool skipLastElementPadding = false]) {
+    if (elements.isEmpty) return 0;
+    if (alignment == 0) return sum(elements.map<int>((e) => e.size).toList());
+
+    if (!skipLastElementPadding) return sum(elements.map((e) => alignUp(e.size, alignment)).toList());
+
+    return sum(elements.sublist(0, elements.length - 1).map((e) => alignUp(e.size, alignment)).toList()) +
+        sum(elements.sublist(elements.length - 1).map<int>((e) => e.size()).toList());
+  }
+
+  static List readArray(Uint8List buffer, IDeserializable FactoryClass, [dynamic accessor]) =>
+      readArrayImpl(buffer, FactoryClass, accessor, (_, view) => 0 < buffer.lengthInBytes);
+
+  static List readArrayCount(Uint8List buffer, IDeserializable FactoryClass, int count, [dynamic accessor]) =>
+      readArrayImpl(buffer, FactoryClass, accessor, (index, _) => count > index);
+
+  static List readVariableSizeElements(Uint8List bufferInput, dynamic FactoryClass, int alignment, [bool skipLastElementPadding = false]) {
+    var buffer = ByteData.view(bufferInput.buffer);
+    final elements = <dynamic>[];
+    while (0 < buffer.lengthInBytes) {
+      final element = FactoryClass.deserialize(buffer);
+
+      if (0 >= element.size) throw RangeError('element size has invalid size');
+
+      elements.add(element);
+
+      final alignedSize = (skipLastElementPadding && element.size >= buffer.lengthInBytes)
+          ? element.size
+          : alignUp(element.size, alignment);
+      if (alignedSize > buffer.lengthInBytes) throw RangeError('unexpected buffer length');
+      buffer = ByteData.view(buffer.buffer, buffer.offsetInBytes + alignedSize as int);
+    }
+    return elements;
+  }
+
+  static Tuple2<Uint8List, int> writeArray(Uint8List output, List elements, int currentPos, [dynamic accessor]) {
+    return writeArrayImpl(output, elements, elements.length, currentPos, accessor);
+  }
+
+  static Tuple2<Uint8List, int> writeArrayCount(Uint8List output, List elements, int count, int currentPos, [dynamic accessor]) {
+    return writeArrayImpl(output, elements, count, currentPos, accessor);
+  }
+
+  static Tuple2<Uint8List, int> writeVariableSizeElements(dynamic output, List elements, int alignment, int currentPos, [bool skipLastElementPadding = false]) {
+    for (var i = 0; i < elements.length; i++) {
+      var serializedElement = elements[i].serialize();
+      var elementSize = elements[i].size as int;
+      output.setRange(currentPos, currentPos + elementSize, serializedElement);
+      currentPos = currentPos + elementSize;
+      if (!skipLastElementPadding || elements.length - 1 != i) {
+        final alignedSize = alignUp(elementSize, alignment);
+        if (alignedSize - elements[i].size > 0) {
+          output.setRange(currentPos, currentPos + 1, List<int>.filled(alignedSize - elementSize, 0));
+          currentPos = currentPos + 1;
+        }
+      }
+    }
+    return Tuple2(output, currentPos);
+  }
+}
+
+
+class StructBase implements IDeserializable {
+  bool isDefault = false;
+  StructBase(bool _isDefault){
+    isDefault = _isDefault;
+  }
+  @override
+  dynamic deserialize(Uint8List payload){
+    throw UnimplementedError();
+  }
+}
+
+interface class IDeserializable {
+  dynamic deserialize(Uint8List payload){
+    throw UnimplementedError('unimplement deserialize');
+  }
+}
+
+class BaseValue {
+  final int size;
+  dynamic value;
+  final List<dynamic> _tag;
+
+  BaseValue(this.size, this.value, {dynamic tag})
+      : _tag = [tag] {
+
+    if (value is String) {
+      if(!isHexString(value)){
+        value = int.parse(value);
+      } else {
+        var decoded = hex.decode(value.substring(2)); // Remove '0x' prefix
+        var byteData = ByteData.view(Uint8List.fromList(decoded.reversed.toList()).buffer);
+        switch(decoded.length){
+          case 1:
+            value = byteData.getInt8(0);
+            break;
+          case 2:
+            value = byteData.getInt16(0, Endian.little);
+            break;
+          case 4:
+            value = byteData.getInt32(0, Endian.little);
+            break;
+          default:
+            value = byteData.getInt64(0, Endian.little);
+            break;
+        }
+      }
+    }
+    
+    // check bounds
+    var bitSize = size * 8;
+
+    int upperBound;
+    int lowerBound;
+
+    lowerBound = (1 << (bitSize - 1)) - 0;
+    upperBound = -lowerBound - 1;
+  
+    if (value < lowerBound || value > upperBound) {
+      var valueRangeMessage = '$value must be in range [$lowerBound, $upperBound]';
+      throw ArgumentError('$valueRangeMessage for $size bytes');
+    }
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (other is BaseValue) {
+      return value == other.value && _tag == other._tag;
+    }
+    return false;
+  }
+
+  @override
+  int get hashCode => value.hashCode ^ _tag.hashCode;
+
+  @override
+  String toString() {
+    int unsignedValue;
+
+    var upperBoundPlusOne = 1 << (size * 8);
+    unsignedValue = value + upperBoundPlusOne;
+
+    return '0x' + unsignedValue.toRadixString(16).padLeft(size * 2, '0').toUpperCase();
+  }
+}
+
+class ByteArray {
+  Uint8List bytes;
+
+  ByteArray(int fixedSize, dynamic arrayInput)
+      : bytes = Uint8List(fixedSize) {
+    var rawBytes = arrayInput;
+    if (rawBytes is String) {
+      try {
+        if (isHexString(rawBytes)) {
+          rawBytes = hex.decode(rawBytes.substring(2)); // Remove '0x' prefix
+        } else {
+          rawBytes = stringToAddress(arrayInput);
+        }
+      } catch (e) {
+        throw ArgumentError('bytes was not a valid hex or address string');
+      }
+    }
+
+    if (fixedSize != rawBytes.length) {
+      throw RangeError('bytes was size ${rawBytes.length} but must be $fixedSize');
+    }
+
+    bytes = Uint8List.fromList(rawBytes);
+  }
+
+  @override
+  String toString() {
+    try {
+      return addressToString(bytes);
+    } catch(_) {
+      return hex.encode(bytes.toList()).toUpperCase();
+    }
+  }
+}
+
+class NamespaceMetadataTransactionV1 extends StructBase implements IDeserializable {
+	static const int TRANSACTION_VERSION = 1;
+	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.NAMESPACE_METADATA.value);
+
+	static const Map<String, String> TYPE_HINTS = {
+		'signature': 'pod:Signature',
+		'signerPublicKey': 'pod:PublicKey',
+		'network': 'enum:NetworkType',
+		'type': 'enum:TransactionType',
+		'fee': 'pod:Amount',
+		'deadline': 'pod:Timestamp',
+		'targetAddress': 'pod:UnresolvedAddress',
+		'targetNamespaceId': 'pod:NamespaceId',
+		'value': 'bytes_array'
+	};
+
+	Signature _signature = Signature();
+	PublicKey _signerPublicKey = PublicKey();
+	int _version = 0;
+	NetworkType _network = NetworkType.MAINNET;
+	TransactionType _type = TransactionType.ACCOUNT_KEY_LINK;
+	Amount _fee = Amount();
+	Timestamp _deadline = Timestamp();
+	UnresolvedAddress _targetAddress = UnresolvedAddress();
+	int _scopedMetadataKey = 0;
+	NamespaceId _targetNamespaceId = NamespaceId();
+	int _valueSizeDelta = 0;
+	Uint8List _value = Uint8List(0);
+	final int _verifiableEntityHeaderReserved_1 = 0; // reserved field
+	final int _entityBodyReserved_1 = 0; // reserved field
+
+	NamespaceMetadataTransactionV1({ 
+	Signature? signature,
+	PublicKey? signerPublicKey,
+	int? version,
+	NetworkType? network,
+	TransactionType? type,
+	Amount? fee,
+	Timestamp? deadline,
+	UnresolvedAddress? targetAddress,
+	int? scopedMetadataKey,
+	NamespaceId? targetNamespaceId,
+	int? valueSizeDelta,
+	Uint8List? value
+	}) 
+		: super(signature == null && signerPublicKey == null && version == null && network == null && type == null && fee == null && deadline == null && targetAddress == null && scopedMetadataKey == null && targetNamespaceId == null && valueSizeDelta == null && value == null )
+	{
+		_signature = signature ?? Signature();
+		_signerPublicKey = signerPublicKey ?? PublicKey();
+		_version = version ?? NamespaceMetadataTransactionV1.TRANSACTION_VERSION;
+		_network = network ?? NetworkType.MAINNET;
+		_type = type ?? NamespaceMetadataTransactionV1.TRANSACTION_TYPE;
+		_fee = fee ?? Amount();
+		_deadline = deadline ?? Timestamp();
+		_targetAddress = targetAddress ?? UnresolvedAddress();
+		_scopedMetadataKey = scopedMetadataKey ?? 0;
+		_targetNamespaceId = targetNamespaceId ?? NamespaceId();
+		_valueSizeDelta = valueSizeDelta ?? 0;
+		_value = value ?? Uint8List(0);
+	}
+
+	void sort() {
+		// empty body
+	}
+
+	Signature get signature {
+		return _signature;
+	}
+
+	PublicKey get signerPublicKey {
+		return _signerPublicKey;
+	}
+
+	int get version {
+		return _version;
+	}
+
+	NetworkType get network {
+		return _network;
+	}
+
+	TransactionType get type {
+		return _type;
+	}
+
+	Amount get fee {
+		return _fee;
+	}
+
+	Timestamp get deadline {
+		return _deadline;
+	}
+
+	UnresolvedAddress get targetAddress {
+		return _targetAddress;
+	}
+
+	int get scopedMetadataKey {
+		return _scopedMetadataKey;
+	}
+
+	NamespaceId get targetNamespaceId {
+		return _targetNamespaceId;
+	}
+
+	int get valueSizeDelta {
+		return _valueSizeDelta;
+	}
+
+	Uint8List get value {
+		return _value;
+	}
+
+	set signature(Signature value) {
+		_signature = value;
+	}
+
+	set signerPublicKey(PublicKey value) {
+		_signerPublicKey = value;
+	}
+
+	set version(int value) {
+		_version = value;
+	}
+
+	set network(NetworkType value) {
+		_network = value;
+	}
+
+	set type(TransactionType value) {
+		_type = value;
+	}
+
+	set fee(Amount value) {
+		_fee = value;
+	}
+
+	set deadline(Timestamp value) {
+		_deadline = value;
+	}
+
+	set targetAddress(UnresolvedAddress value) {
+		_targetAddress = value;
+	}
+
+	set scopedMetadataKey(int value) {
+		_scopedMetadataKey = value;
+	}
+
+	set targetNamespaceId(NamespaceId value) {
+		_targetNamespaceId = value;
+	}
+
+	set valueSizeDelta(int value) {
+		_valueSizeDelta = value;
+	}
+
+	set value(Uint8List value) {
+		_value = value;
+	}
+
+	int get size {
+		var size = 0;
+		size += 4;
+		size += 4;
+		size += signature.size;
+		size += signerPublicKey.size;
+		size += 4;
+		size += 1;
+		size += network.size;
+		size += type.size;
+		size += fee.size;
+		size += deadline.size;
+		size += targetAddress.size;
+		size += 8;
+		size += targetNamespaceId.size;
+		size += 2;
+		size += 2;
+		size += value.lengthInBytes;
+		return size;
+	}
+
+	@override
+	NamespaceMetadataTransactionV1 deserialize(dynamic payload) {
+		if(payload is String) {
+			payload = hex.decode(payload);
+		}
+		Uint8List buffer = payload.buffer.asUint8List();
+		// nothing to do for size
+		buffer = buffer.sublist(4);
+		var verifiableEntityHeaderReserved_1 = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		buffer = buffer.sublist(4);
+		if (0 != verifiableEntityHeaderReserved_1) {
+			throw RangeError('Invalid value of reserved field ($verifiableEntityHeaderReserved_1)');
+		}
+		var signature = Signature().deserialize(buffer);
+		buffer = buffer.sublist(signature.size);
+		var signerPublicKey = PublicKey().deserialize(buffer);
+		buffer = buffer.sublist(signerPublicKey.size);
+		var entityBodyReserved_1 = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		buffer = buffer.sublist(4);
+		if (0 != entityBodyReserved_1) {
+			throw RangeError('Invalid value of reserved field ($entityBodyReserved_1)');
+		}
+		var version = bytesToInt((buffer.sublist(0, 1) as Uint8List).sublist(0, 1), 1);
+		buffer = buffer.sublist(1);
+		var network = NetworkType().deserialize(buffer);
+		buffer = buffer.sublist(network.size);
+		var type = TransactionType().deserialize(buffer);
+		buffer = buffer.sublist(type.size);
+		var fee = Amount().deserialize(buffer);
+		buffer = buffer.sublist(fee.size);
+		var deadline = Timestamp().deserialize(buffer);
+		buffer = buffer.sublist(deadline.size);
+		var targetAddress = UnresolvedAddress().deserialize(buffer);
+		buffer = buffer.sublist(targetAddress.size);
+		var scopedMetadataKey = bytesToInt((buffer.sublist(0, 8) as Uint8List).sublist(0, 8), 8);
+		buffer = buffer.sublist(8);
+		var targetNamespaceId = NamespaceId().deserialize(buffer);
+		buffer = buffer.sublist(targetNamespaceId.size);
+		var valueSizeDelta = bytesToInt((buffer.sublist(0, 2) as Uint8List).sublist(0, 2), 2);
+		buffer = buffer.sublist(2);
+		var valueSize = bytesToInt((buffer.sublist(0, 2) as Uint8List).sublist(0, 2), 2);
+		buffer = buffer.sublist(2);
+		var value = Uint8List.fromList(buffer.sublist(0, valueSize));
+		buffer = buffer.sublist(valueSize);
+
+		var instance = NamespaceMetadataTransactionV1(
+			signature: signature,
+			signerPublicKey: signerPublicKey,
+			version: version,
+			network: network,
+			type: type,
+			fee: fee,
+			deadline: deadline,
+			targetAddress: targetAddress,
+			scopedMetadataKey: scopedMetadataKey,
+			targetNamespaceId: targetNamespaceId,
+			valueSizeDelta: valueSizeDelta,
+			value: value,
+		);
+		return instance;
+	}
+
+	Uint8List serialize() {
+		var buffer = Uint8List(size);
+		var currentPos = 0;
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(size, 4));
+		currentPos += 4;
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(_verifiableEntityHeaderReserved_1, 4));
+		currentPos += 4;
+		buffer.setRange(currentPos, currentPos + _signature.size, _signature.serialize());;
+		currentPos += signature.size;
+		buffer.setRange(currentPos, currentPos + _signerPublicKey.size, _signerPublicKey.serialize());;
+		currentPos += signerPublicKey.size;
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(_entityBodyReserved_1, 4));
+		currentPos += 4;
+		buffer.setRange(currentPos, currentPos + 1, intToBytes(_version, 1));
+		currentPos += 1;
+		buffer.setRange(currentPos, currentPos + _network.size, _network.serialize());;
+		currentPos += network.size;
+		buffer.setRange(currentPos, currentPos + _type.size, _type.serialize());;
+		currentPos += type.size;
+		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());;
+		currentPos += fee.size;
+		buffer.setRange(currentPos, currentPos + _deadline.size, _deadline.serialize());;
+		currentPos += deadline.size;
+		buffer.setRange(currentPos, currentPos + _targetAddress.size, _targetAddress.serialize());;
+		currentPos += targetAddress.size;
+		buffer.setRange(currentPos, currentPos + 8, intToBytes(_scopedMetadataKey, 8));
+		currentPos += 8;
+		buffer.setRange(currentPos, currentPos + _targetNamespaceId.size, _targetNamespaceId.serialize());;
+		currentPos += targetNamespaceId.size;
+		buffer.setRange(currentPos, currentPos + 2, intToBytes(_valueSizeDelta, 2));
+		currentPos += 2;
+		buffer.setRange(currentPos, currentPos + 2, intToBytes(_value.length, 2));
+		currentPos += 2;
+		buffer.setRange(currentPos, currentPos + _value.lengthInBytes, _value);
+		currentPos += value.lengthInBytes;
+		return buffer.buffer.asUint8List();
+	}
+
+	@override
+	String toString() {
+		var result = 'NamespaceMetadataTransactionV1(';
+		result += 'signature: "${_signature.toString()}", ';
+		result += 'signerPublicKey: "${_signerPublicKey.toString()}", ';
+		result += 'version: "0x${_version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'network: "${_network.toString()}", ';
+		result += 'type: "${_type.toString()}", ';
+		result += 'fee: "${_fee.toString()}", ';
+		result += 'deadline: "${_deadline.toString()}", ';
+		result += 'targetAddress: "${_targetAddress.toString()}", ';
+		result += 'scopedMetadataKey: "0x${_scopedMetadataKey.toRadixString(16).padLeft(8 * 2, '0').toUpperCase()}", ';
+		result += 'targetNamespaceId: "${_targetNamespaceId.toString()}", ';
+		result += 'valueSizeDelta: "0x${_valueSizeDelta.toRadixString(16).padLeft(2 * 2, '0').toUpperCase()}", ';
+		result += 'value: "${hex.encode(_value.toList()).toUpperCase()}", ';
+		result += ')';
+		return result;
+	}
+}
+
+class NamespaceId extends BaseValue implements IDeserializable {
+	static const int SIZE = 8;
+
+	NamespaceId([dynamic namespaceId]) : super(SIZE, namespaceId ?? 0);
+
+	@override
+	NamespaceId deserialize(dynamic payload) {
+		return NamespaceId(bytesToInt((payload as Uint8List).sublist(0, 8), 8));
+	}
+
+	Uint8List serialize() {
+		var buffer = Uint8List(SIZE);
+		buffer.setRange(0, 0 + 8, intToBytes(value, 8));
+		return buffer;
+	}
+}
+
+Uint8List intToBytes(int value, int byteSize) {
+  var byteData = ByteData(byteSize);
+
+  switch (byteSize) {
+    case 1:
+      byteData.setInt8(0, value);
+      break;
+    case 2:
+      byteData.setInt16(0, value, Endian.little);
+      break;
+    case 4:
+      byteData.setInt32(0, value, Endian.little);
+      break;
+    case 8:
+      byteData.setInt64(0, value, Endian.little);
+      break;
+    default:
+      throw Exception('byteSize not supported');
+  }
+
+  return byteData.buffer.asUint8List();
+}
+
+dynamic bytesToInt(Uint8List input, int size) {
+  var byteData = ByteData.view(input.buffer, input.offsetInBytes, size);
+
+  switch (size) {
+    case 1:
+      return byteData.getInt8(0);
+    case 2:
+      return byteData.getInt16(0, Endian.little);
+    case 4:
+      return byteData.getInt32(0, Endian.little);
+    case 8:
+      return byteData.getInt64(0, Endian.little);
+    default:
+      throw Exception('byteSize not supported');
+  }
+}
+
+Uint8List stringToAddress(String encoded) {
+  if (_constants['sizes']!['symbolAddressEncoded'] == encoded.length) {
+    var bytes = base32.decode(encoded + 'A');
+    return Uint8List.fromList(bytes.sublist(0, _constants['sizes']!['symbolAddressDecoded']));
+  }
+  if (_constants['sizes']!['nemAddressEncoded'] == encoded.length) {
+    return base32.decode(encoded);
+  }
+  throw Exception('$encoded does not represent a valid encoded address');
+}
+
+String addressToString(Uint8List decoded) {
+  if (_constants['sizes']!['symbolAddressDecoded'] == decoded.length) {
+    var padded = Uint8List(_constants['sizes']!['symbolAddressDecoded']! + 1);
+    padded.setRange(0, decoded.length, decoded);
+    return base32.encode(padded).substring(0, _constants['sizes']!['symbolAddressEncoded']);
+  }
+  if (_constants['sizes']!['nemAddressDecoded'] == decoded.length) {
+    return base32.encode(decoded);
+  }
+  throw Exception('Bytes to Hex function is not implemented yet. It does not represent a valid decoded address');
+}
+
+bool isHexString(String value) {
+  final hexPattern = RegExp(r'^0x[0-9a-fA-F]+$', caseSensitive: false);
+  return hexPattern.hasMatch(value);
+}
+
+final Map<String, Map<String, int>> _constants = {
+  'sizes': {
+    'ripemd160': 20,
+    'symbolAddressDecoded': 24,
+    'nemAddressDecoded': 40,
+    'symbolAddressEncoded': 39,
+    'nemAddressEncoded': 40,
+    'key': 32,
+    'checksum': 3,
+  }
+};
