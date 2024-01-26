@@ -11,25 +11,22 @@ class BaseValue {
       : _tag = [tag] {
 
     if (value is String) {
-      if(!isHexString(value)){
-        value = int.parse(value);
-      } else {
-        var decoded = hex.decode(value.substring(2)); // Remove '0x' prefix
-        var byteData = ByteData.view(Uint8List.fromList(decoded.reversed.toList()).buffer);
-        switch(decoded.length){
-          case 1:
-            value = byteData.getInt8(0);
-            break;
-          case 2:
-            value = byteData.getInt16(0, Endian.little);
-            break;
-          case 4:
-            value = byteData.getInt32(0, Endian.little);
-            break;
-          default:
-            value = byteData.getInt64(0, Endian.little);
-            break;
-        }
+      tryHexString(value);
+      var decoded = hex.decode(value);
+      var byteData = ByteData.view(Uint8List.fromList(decoded.reversed.toList()).buffer);
+      switch(decoded.length){
+        case 1:
+          value = byteData.getInt8(0);
+          break;
+        case 2:
+          value = byteData.getInt16(0, Endian.little);
+          break;
+        case 4:
+          value = byteData.getInt32(0, Endian.little);
+          break;
+        default:
+          value = byteData.getInt64(0, Endian.little);
+          break;
       }
     }
     

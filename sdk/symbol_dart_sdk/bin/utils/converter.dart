@@ -77,6 +77,12 @@ String addressToString(Uint8List decoded) {
 }
 
 bool isHexString(String value) {
-  final hexPattern = RegExp(r'^0x[0-9a-fA-F]+$', caseSensitive: false);
+  final hexPattern = RegExp(r'^[0-9a-fA-F]+$', caseSensitive: false);
   return hexPattern.hasMatch(value);
+}
+
+void tryHexString(String value) {
+  if (!isHexString(value)) {
+    throw ArgumentError('value was not a valid hex string');
+  }
 }

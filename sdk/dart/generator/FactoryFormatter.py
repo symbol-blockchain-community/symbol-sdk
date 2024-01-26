@@ -58,8 +58,9 @@ class FactoryFormatter(AbstractTypeFormatter):
 		return f'({first_field}, {remaining_fields}): {name}()'
 
 	def get_deserialize_descriptor(self):
-		body = 'if(payload is String) {\n'
-		body += '	payload = hex.decode(payload);\n'
+		body = 'if(payload is String){\n'
+		body += '\ttryHexString(payload);\n'
+		body += '\tpayload = hex.decode(payload);\n'
 		body += '}\n'
 		body += 'Uint8List buffer = payload.buffer.asUint8List();\n'
 		body += f'var {self.printer.name} = {self.printer.load()};\n'

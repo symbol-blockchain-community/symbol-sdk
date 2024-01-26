@@ -12,7 +12,7 @@ class ByteArray {
     if (rawBytes is String) {
       try {
         if (isHexString(rawBytes)) {
-          rawBytes = hex.decode(rawBytes.substring(2)); // Remove '0x' prefix
+          rawBytes = hex.decode(rawBytes); // Remove '0x' prefix
         } else {
           rawBytes = stringToAddress(arrayInput);
         }
