@@ -4,32 +4,27 @@ from catparser.DisplayType import DisplayType
 
 from .AbstractTypeFormatter import AbstractTypeFormatter, MethodDescriptor
 from .format import indent
-from .name_formatting import fix_size_name
-
+from .name_formatting import lang_field_name
 
 def is_reserved(field):
 	return 'reserved' == field.disposition
 
-
 def is_bound_size(field):
 	return field.extensions.bound_field is not None
-
 
 def is_const(field):
 	return field.is_const
 
-
 def is_computed(field):
 	return hasattr(field.field_type, 'sizeref') and field.field_type.sizeref
 
-
 def create_temporary_buffer_name(name):
-	return f'{name}_condition'
-
+	return f'{lang_field_name(name)}Condition'
 
 def indent_if_conditional(condition, statements):
-	return statements if not condition else condition + indent(statements)
-
+	if condition:
+		return condition + '{\n' + indent(statements) + '}\n'
+	return statements
 
 def filter_size_if_first(fields_iter):
 	first_field = next(fields_iter, None)
@@ -41,7 +36,6 @@ def filter_size_if_first(fields_iter):
 	for field in fields_iter:
 		yield field
 
-
 class StructFormatter(AbstractTypeFormatter):
 	# pylint: disable=too-many-public-methods
 
@@ -49,6 +43,15 @@ class StructFormatter(AbstractTypeFormatter):
 		super().__init__()
 
 		self.struct = ast_model
+
+	def get_base_class(self):
+		return 'StructBase'
+
+	def get_interface(self):
+		return ', IEmbeddedTransaction' if 'Embedded' in self.struct.name else ''
+	
+	def is_fields_one(self):
+		return len(list(self.non_reserved_fields())) == 1
 
 	def non_const_fields(self):
 		return filterfalse(is_const, self.struct.fields)
@@ -64,26 +67,49 @@ class StructFormatter(AbstractTypeFormatter):
 
 	def computed_fields(self):
 		return filter(is_computed, self.non_const_fields())
+	
+	@staticmethod
+	def embedded_name(name):
+		return name.replace("Embedded", "IEmbedded")
 
 	@property
 	def typename(self):
 		return self.struct.name
 
 	@staticmethod
-	def field_name(field, object_name='self'):
+	def field_name(field, object_name='this', is_argument=False):
 		if is_computed(field):
 			# add _computed postfix for easier filtering in bespoke code
-			return f'{object_name}.{field.extensions.printer.name}_computed'
+			return f'{field.extensions.printer.name}Computed'
+		
+		if is_argument:
+			return field.extensions.printer.name
 
-		return f'{object_name}._{field.extensions.printer.name}'
+		return f'_{field.extensions.printer.name}'
 
 	@staticmethod
 	def generate_class_field(field):
+		modifier = field.extensions.printer.modifier()
 		default_value = field.extensions.printer.assign(field.value)
-		return f'{field.name}: {field.extensions.printer.get_type()} = {default_value}'
+		return f'static {modifier} {field.extensions.printer.get_type()} {field.name} = {default_value};'
+	
+	def generate_private_field(self):
+		body = '\n'
+		for field in self.non_reserved_fields():
+			field_name = self.field_name(field)
+			value = field.extensions.printer.get_default_value()
+			body += f'{self.embedded_name(field.extensions.printer.get_type())} {field_name} = {value};\n'
+
+		for field in self.reserved_fields():
+			field_name = self.field_name(field)
+			value = field.extensions.printer.get_default_value()
+			body += f'final {field.extensions.printer.get_type()} {field_name} = {value}; // reserved field\n'
+		
+		return body
 
 	def generate_type_hints(self):
-		body = 'TYPE_HINTS = {\n'
+		body = '\n'
+		body += 'static const Map<String, String> TYPE_HINTS = {\n'
 		hints = []
 		for field in self.non_reserved_fields():
 			if not field.extensions.printer.type_hint:
@@ -92,11 +118,11 @@ class StructFormatter(AbstractTypeFormatter):
 			hints.append(f'\'{field.extensions.printer.name}\': \'{field.extensions.printer.type_hint}\'')
 
 		body += indent(',\n'.join(hints))
-		body += '}\n'
+		body += '};\n'
 		return body
 
 	def get_fields(self):
-		return list(map(self.generate_class_field, self.const_fields())) + [self.generate_type_hints()]
+		return list(map(self.generate_class_field, self.const_fields())) + [self.generate_type_hints()] + [self.generate_private_field()]
 
 	def get_paired_const_field(self, field):
 		for const_field in self.const_fields():
@@ -105,14 +131,22 @@ class StructFormatter(AbstractTypeFormatter):
 		return None
 
 	def get_ctor_descriptor(self):
-		arguments = []
+		args = []
+		super = '\n\t: super('
+		for field in self.non_reserved_fields():
+			field_name = self.field_name(field, is_argument=True)
+			args.append(f'{self.embedded_name(field.extensions.printer.get_type())}? {field_name}') if not self.is_fields_one() else args.append(f'[{field_name}]')
+			super += f'{field_name} == null && '
+		super = super.rsplit("&&", 1)[0] + ")\n"
+		arguments = args
 
 		body = ''
 		for field in self.non_reserved_fields():
 			const_field = self.get_paired_const_field(field)
 			field_name = self.field_name(field)
+			arg_name = self.field_name(field, is_argument=True)
 			if const_field:
-				body += f'{field_name} = {self.typename}.{const_field.name}\n'
+				body += f'{field_name} = {arg_name} ?? {self.typename}.{const_field.name};\n'
 			else:
 				value = field.extensions.printer.get_default_value()
 				if field.is_conditional:
@@ -122,42 +156,33 @@ class StructFormatter(AbstractTypeFormatter):
 					condition_model = condition_field.extensions.type_model
 
 					# only initialize default implicit union field in constructor
-					if f'{condition_model.name}.{conditional.value}' != condition_field.extensions.printer.get_default_value():
-						value = 'None'
+					# if f'{condition_model.name}.{conditional.value}' != condition_field.extensions.printer.get_default_value():
+					#	value = 'None'
 
-				body += f'{field_name} = {value}\n'
-
-		body += '\n'.join(
-			map(
-				lambda field: f'{self.field_name(field)} = {field.value}  # reserved field',
-				self.reserved_fields()
-			)
-		)
+				body += f'{field_name} = {arg_name} ?? {value};\n'
 
 		if not body:
 			return None
 
-		return MethodDescriptor(body=body, arguments=arguments)
+		return MethodDescriptor(body=body, arguments=arguments, super=super)
 
 	def get_comparer_descriptor(self):
 		if not self.struct.comparer:
 			return None
 
-		body = ''
-		if any('ripemd_keccak_256' == transform for (_, transform) in self.struct.comparer):
-			body += 'from ..Transforms import ripemd_keccak_256  # pylint: disable=import-outside-toplevel\n\n'
-
-		body += 'return (\n'
+		body = 'return Tuple2(\n'
 		for (property_name, transform) in self.struct.comparer:
 			body += '\t'
+			property_name = lang_field_name(property_name)
 			if not transform:
-				body += f'self.{property_name} if not isinstance(self.{property_name}, Enum) else self.{property_name}.value'
+				# modificationType is Enum ? modificationType.value : modificationType,
+				body += f'{property_name} is Enum ? {property_name}.value : {property_name}'
 			else:
-				body += f'{transform}(self.{property_name}.bytes)'
+				body += f'{lang_field_name(transform).replace("_", "")}({property_name}.bytes)'
 
 			body += ',\n'
 
-		body += ')'
+		body += ');'
 
 		return MethodDescriptor(body=body)
 
@@ -180,19 +205,21 @@ class StructFormatter(AbstractTypeFormatter):
 
 		value = f'{conditional.value}'
 		condition_model = condition_field.extensions.type_model
-		yoda_value = value if DisplayType.INTEGER == condition_model.display_type else f'{condition_model.name}.{value}'
-		field_prefix = 'self.' if prefix_field else ''
+		yoda_value = value if DisplayType.INTEGER == condition_model.display_type else f'{condition_model.name}.{value}.value'
+		field_prefix = '_' if prefix_field else ''
 
 		# HACK: instead of handling dumb magic value in namespace parent_name, generate slightly simpler condition
 		if prefix_field and DisplayType.UNSET != field.display_type:
-			return f'if {field_prefix}{field.name}:\n'
+			return f'if ({lang_field_name(field.name)} == Uint8List(0))\n'
 
-		field_postfix = '_computed' if prefix_field and is_computed(condition_field) else ''
+		field_postfix = 'Computed' if prefix_field and is_computed(condition_field) else ''
+		field_prefix = '' if field_prefix and is_computed(condition_field) else field_prefix
 
-		return f'if {yoda_value} {condition_operator} {field_prefix}{condition_field_name}{field_postfix}:\n'
+		return f'if ({yoda_value} {condition_operator} {field_prefix}{lang_field_name(condition_field_name)}{field_postfix})\n'
 
 	def get_sort_descriptor(self):
 		body = ''
+		is_last_sort_field_conditional = False
 		for field in self.non_const_fields():
 			field_value = self.field_name(field)
 
@@ -203,12 +230,15 @@ class StructFormatter(AbstractTypeFormatter):
 			condition = self.generate_condition(field, True)
 
 			if is_computed(field):
-				sort += '_computed'
+				sort += 'Computed'
 
-			body += indent_if_conditional(condition, f'{sort}\n')
+			body += indent_if_conditional(condition, f'{sort};\n')
 
-		if not body:
-			body = 'pass'
+		if is_last_sort_field_conditional:
+			body = body[:-1]
+
+		if body == '':
+			body = '// empty body'
 
 		return MethodDescriptor(body=body)
 
@@ -216,41 +246,54 @@ class StructFormatter(AbstractTypeFormatter):
 		condition = self.generate_condition(field)
 
 		buffer_name = arg_buffer_name or 'buffer'
-		field_name = fix_size_name(field.extensions.printer.name)
+		field_name = field.extensions.printer.name
+		field_name_ = field_name if condition else 'var ' + field_name
 
 		# half-hack: limit buffer to amount specified in size field
 		buffer_load_name = buffer_name
 		size_fields = field.extensions.size_fields
 		if size_fields:
 			assert len(size_fields) == 1, f'unexpected number of size_fields associated with {field.name}'
-			buffer_load_name = f'buffer[:{size_fields[0].name}]'
+			buffer_load_name = 'buffer'
 
-		use_custom_buffer_name = arg_buffer_name or size_fields
-		load = field.extensions.printer.load(buffer_load_name) if use_custom_buffer_name else field.extensions.printer.load()
-		deserialize = f'{field_name} = {load}'
-		adjust = f'{buffer_name} = {buffer_name}[{field.extensions.printer.advancement_size()}:]'
+		adjust = ''
+		field_size = field.extensions.printer.advancement_size()
+		if field.display_type == DisplayType.TYPED_ARRAY:
+			load = f'{field.extensions.printer.load(buffer_load_name)}'
+			adjust = f'{buffer_name} = {buffer_name}.sublist({lang_field_name(field_size)});\n'
+		else:
+			field_size = field.extensions.printer.advancement_size()
+			if field.display_type == DisplayType.INTEGER:
+				buffer_load_name = f'buffer.sublist(0, {field.size})'
+			elif field.display_type == DisplayType.BYTE_ARRAY:
+				buffer_load_name = f'buffer.sublist(0, {lang_field_name(field.size)})'
+				field_size = lang_field_name(field.size)
+			load = field.extensions.printer.load(buffer_load_name)
+			adjust = f'{buffer_name} = {buffer_name}.sublist({field_size});\n'
+		deserialize = '// nothing to do for size' if field_name == 'size' else f'{field_name_} = {load};'
+		# deserialize = f'{load};' if field_name == 'size' else f'{field_name_} = {load};'
 
 		additional_statements = ''
 		if is_reserved(field):
-			assert_message = f'f\'Invalid value of reserved field ({{{field.extensions.printer.name}}})\''
-			additional_statements = f'assert {field.extensions.printer.name} == {field.value}, {assert_message}\n'
-
-		if self.struct.size == field.extensions.printer.name:
-			additional_statements += f'{buffer_name} = {buffer_name}[:{field_name} - {field.extensions.printer.advancement_size()}]\n'
-			additional_statements += f'del {field_name}\n'
+			assert_message = f'throw RangeError(\'Invalid value of reserved field (${field.extensions.printer.name})\');'
+			additional_statements = f'if ({field.value} != {field.extensions.printer.name}) {{\n\t{assert_message}\n}}\n'
 
 		if is_bound_size(field) and field.is_size_reference:
-			additional_statements += '# marking sizeof field\n'
+			additional_statements += '//marking sizeof field\n'
 
-		deserialize_field = deserialize + '\n' + adjust + '\n' + additional_statements
+		deserialize_field = deserialize + '\n' + adjust + additional_statements
 
+		value = '0' if field.extensions.printer.get_type() == 'Uint8List' else ''
 		if condition:
-			condition = f'{field.extensions.printer.name} = None\n' + condition
+			condition = f'var {field.extensions.printer.name} = {field.extensions.printer.get_type()}({value});\n' + condition
 
 		return indent_if_conditional(condition, deserialize_field)
 
 	def get_deserialize_descriptor(self):
-		body = 'buffer = memoryview(payload)\n'
+		body = 'if(payload is String) {\n'
+		body += '\tpayload = hex.decode(payload);\n'
+		body += '}\n'
+		body += 'Uint8List buffer = payload.buffer.asUint8List();\n'
 
 		# special treatment for condition-guarded fields,
 		# where condition is behind the fields...
@@ -266,11 +309,11 @@ class StructFormatter(AbstractTypeFormatter):
 						queued_fields[condition_field_name] = []
 
 						# assume same size and generate single dummy access
-						comment = '# deserialize to temporary buffer for further processing'
-						deserialize = f'{field.extensions.printer.name}_temporary = {field.extensions.printer.load()}'
+						comment = '// deserialize to temporary buffer for further processing'
+						deserialize = f'var {field.extensions.printer.name}Temporary = {field.extensions.printer.load()};'
 						temporary_buffer = create_temporary_buffer_name(condition_field_name)
-						temporary = f'{temporary_buffer} = buffer[:{field.extensions.printer.name}_temporary.size]'
-						adjust = f'buffer = buffer[{field.extensions.printer.name}_temporary.size:]'
+						temporary = f'var {temporary_buffer} = buffer.sublist(0, {field.extensions.printer.name}Temporary.size);'
+						adjust = f'buffer = buffer.sublist({field.extensions.printer.name}Temporary.size);'
 						body += comment + '\n' + deserialize + '\n' + temporary + '\n' + adjust + '\n\n'
 
 					# queue field for re-reading it from temporary buffer
@@ -290,13 +333,17 @@ class StructFormatter(AbstractTypeFormatter):
 
 		# create call to ctor
 		body += '\n'
-		body += f'instance = {self.typename}()\n'
+		body += f'var instance = {self.typename}('
+
+		if not self.is_fields_one():
+			body += '\n'
 
 		for field in self.non_reserved_fields():
-			field_name = self.field_name(field, 'instance')
-			body += f'{field_name} = {field.extensions.printer.name}\n'
+			field_name = self.field_name(field, 'instance', True)
+			body += f'{field_name}' if self.is_fields_one() else f'\t{field_name}: {field_name},\n'
 
-		body += 'return instance'
+		body += ');\n'
+		body += 'return instance;'
 		return MethodDescriptor(body=body)
 
 	def generate_serialize_field(self, field):
@@ -313,7 +360,7 @@ class StructFormatter(AbstractTypeFormatter):
 
 			if bound_field.display_type.is_array:
 				if field.name.endswith('_count') or not bound_field.field_type.is_byte_constrained:
-					field_value = f'len({bound_field_name})'
+					field_value = f'{bound_field_name}.length'
 
 					bound_condition = self.generate_condition(bound_field, True)
 					if condition and bound_condition:
@@ -322,7 +369,7 @@ class StructFormatter(AbstractTypeFormatter):
 					# HACK: create inline if condition (for NEM namespace purposes)
 					if bound_condition:
 						condition_value = bound_field.value.value
-						field_value = f'({field_value} if {bound_field_name} is not None else {condition_value})'
+						field_value = f'({bound_field_name} != Uint8List ? {field_value} : {condition_value})'
 				else:
 					field_value = bound_field.extensions.printer.get_size()
 			elif field.is_size_reference:
@@ -330,50 +377,59 @@ class StructFormatter(AbstractTypeFormatter):
 		else:
 			field_value = self.field_name(field)
 
-		serialize_field = field.extensions.printer.store(field_value) + field_comment
+		adjust = ''
+		serialize_field = f'{field.extensions.printer.store(field_value, "currentPos")}'
+		if field.display_type == DisplayType.TYPED_ARRAY:
 
-		return indent_if_conditional(condition, f'buffer += {serialize_field}\n')
+			serialize_field = f'sort();\nvar res_{field.extensions.printer.name} = {serialize_field}'
+			adjust = f'currentPos = res{field_value}.item2;\n'
+			adjust += f'buffer = res{field_value}.item1;\n'
+		else:
+			adjust = f'currentPos += {field.extensions.printer.get_size()};\n'
+			
+		return indent_if_conditional(condition, f'{serialize_field};\n{adjust}')
 
 	def get_serialize_descriptor(self):
-		body = 'buffer = bytes()\n'
+		body = 'var buffer = Uint8List(size);\n'
+		body += 'var currentPos = 0;\n'
 
 		# if first field is size replace serializer with custom one (to access builder .size() instead)
 		fields_iter = self.non_const_fields()
 		first_field = next(fields_iter)
 		if self.struct.size == first_field.extensions.printer.name:
-			body += f'buffer += self.size.to_bytes({first_field.size}, byteorder=\'little\', signed=False)\n'
+			body += f'buffer.setRange(currentPos, currentPos + 4, intToBytes(size, 4));\n'
+			body += 'currentPos += 4;\n'
 		else:
 			body += self.generate_serialize_field(first_field)
 
 		for field in fields_iter:
 			body += self.generate_serialize_field(field)
 
-		body += 'return buffer'
+		body += 'return buffer.buffer.asUint8List();'
 		return MethodDescriptor(body=body)
 
 	def generate_size_field(self, field):
 		condition = self.generate_condition(field, True)
 		size_field = field.extensions.printer.get_size()
 
-		return indent_if_conditional(condition, f'size += {size_field}\n')
+		return indent_if_conditional(condition, f'size += {size_field};\n')
 
 	def get_size_descriptor(self):
-		body = 'size = 0\n'
+		body = 'var size = 0;\n'
 		body += ''.join(map(self.generate_size_field, self.non_const_fields()))
-		body += 'return size'
+		body += 'return size;'
 		return MethodDescriptor(body=body)
-
+	
 	def create_getter_descriptor(self, field):
-		method_name = field.extensions.printer.name
-		body = f'return {self.field_name(field)}'
+		method_name = 'get ' + field.extensions.printer.name
+		body = f'return {self.field_name(field)};'
 		if is_computed(field):
-			method_name += '_computed'
+			method_name += 'Computed'
 
 			sizeref = field.field_type.sizeref
-			body = f'return 0 if not self.{sizeref.property_name} else self.{sizeref.property_name}.size + {sizeref.delta}'
+			body = f'return {sizeref.property_name}.isDefault ? 0 : {sizeref.property_name}.size + {sizeref.delta};'
 
-		method_descriptor = MethodDescriptor(method_name=method_name, body=body, result=field.extensions.printer.get_type())
-		method_descriptor.annotations = ['@property']
+		method_descriptor = MethodDescriptor(method_name=method_name, body=body, result=self.embedded_name(field.extensions.printer.get_type()))
 		return method_descriptor
 
 	def get_getter_descriptors(self):
@@ -383,11 +439,10 @@ class StructFormatter(AbstractTypeFormatter):
 
 	def create_setter_descriptor(self, field):
 		method_descriptor = MethodDescriptor(
-			method_name=field.extensions.printer.name,
-			arguments=[f'value: {field.extensions.printer.get_type()}'],
-			body=f'{self.field_name(field)} = value',
+			method_name= 'set ' + field.extensions.printer.name,
+			arguments=[f'{self.embedded_name(field.extensions.printer.get_type())} value'],
+			body=f'{self.field_name(field)} = value;',
 		)
-		method_descriptor.annotations = [f'@{field.extensions.printer.name}.setter']
 		return method_descriptor
 
 	def get_setter_descriptors(self):
@@ -395,13 +450,16 @@ class StructFormatter(AbstractTypeFormatter):
 
 	def generate_str_field(self, field):
 		condition = self.generate_condition(field, True)
-		field_to_string = field.extensions.printer.to_string(self.field_name(field))
-		field_to_string = field_to_string if '{' in field_to_string else f'{{{field_to_string}}}'
-		return indent_if_conditional(condition, f'result += f\'{field.extensions.printer.name}: {field_to_string}, \'\n')
+		if field.display_type == DisplayType.INTEGER:
+			field_to_string = field.extensions.printer.to_string(self.field_name(field), field.size)
+		else:
+			field_to_string = field.extensions.printer.to_string(self.field_name(field))
+		field_to_string = field_to_string if '{' in field_to_string else f'${{{field_to_string}}}'
+		return indent_if_conditional(condition, f'result += \'{field.extensions.printer.name}: "{field_to_string}", \';\n')
 
 	def get_str_descriptor(self):
-		body = 'result = \'(\'\n'
+		body = f'var result = \'{self.typename}(\';\n'
 		body += ''.join(map(self.generate_str_field, self.non_reserved_fields()))
-		body += 'result += \')\'\n'
-		body += 'return result'
+		body += 'result += \')\';\n'
+		body += 'return result;'
 		return MethodDescriptor(body=body)

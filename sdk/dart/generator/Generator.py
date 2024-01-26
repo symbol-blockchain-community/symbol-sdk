@@ -37,7 +37,16 @@ def generate_files(ast_models, output_directory: Path):
 	with open(output_directory / 'models.dart', 'w', encoding='utf8', newline='\n') as output_file:
 		output_file.write(
 			'''import '../BaseValue.dart';
+import '../ByteArray.dart';
+import '../models/IDeserializable.dart';
+import '../models/IEmbeddedTransaction.dart';
+import '../models/StructBase.dart';
+import '../utils/converter.dart';
+import '../utils/arrayHelpers.dart';
+import '../utils/transform.dart';
 import 'dart:typed_data';
+import 'package:convert/convert.dart';
+import 'package:tuple/tuple.dart';
 
 '''
 		)

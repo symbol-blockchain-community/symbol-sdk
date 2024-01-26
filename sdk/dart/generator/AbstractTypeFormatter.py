@@ -2,14 +2,14 @@ from abc import ABC, abstractmethod
 
 
 class MethodDescriptor:
-	def __init__(self, method_name=None, arguments=None, body=None, result='', super=None, modifier=None):
-		self.modifier = modifier
+	def __init__(self, method_name=None, arguments=None, body=None, result='', super=None, is_enum_ctor=False):
 		self.method_name = method_name
 		self.arguments = arguments or []
 		self.super = super
 		self.body = body
 		self.result = result
 		self.annotations = []
+		self.is_enum_ctor = is_enum_ctor
 
 
 class AbstractTypeFormatter(ABC):
@@ -19,6 +19,10 @@ class AbstractTypeFormatter(ABC):
 		raise NotImplementedError('need to override method')
 
 	def get_base_class(self):
+		# pylint: disable=no-self-use
+		return ''
+	
+	def get_interface(self):
 		# pylint: disable=no-self-use
 		return ''
 

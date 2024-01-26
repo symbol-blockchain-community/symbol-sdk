@@ -1,4 +1,5 @@
 import 'package:convert/convert.dart';
+import './utils/converter.dart';
 import 'dart:typed_data';
 
 abstract class Ordered {}
@@ -13,10 +14,10 @@ class BaseValue extends Ordered {
       : _tag = [tag, signed] {
 
     if (value is String) {
-      if(value.length == 16){
-        value = BigInt.parse(value, radix: 16);
+      if(!isHexString(value)){
+        value = BigInt.parse(value);
       } else {
-        var decoded = hex.decode(value);
+        var decoded = hex.decode(value.substring(2)); // Remove '0x' prefix
         var byteData = ByteData.view(Uint8List.fromList(decoded).buffer);
         switch(decoded.length){
           case 1:
@@ -28,10 +29,13 @@ class BaseValue extends Ordered {
           case 4:
             value = byteData.getUint32(0, Endian.little);
             break;
+          default:
+            value = BigInt.parse(value.substring(2), radix: 16);
+            break;
         }
       }
     }
-
+    
     // check bounds
     var bitSize = size * 8;
 

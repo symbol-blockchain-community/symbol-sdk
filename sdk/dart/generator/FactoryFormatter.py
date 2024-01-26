@@ -17,17 +17,15 @@ class FactoryClassFormatter(ClassFormatter):
 	def generate_deserializer(self):
 		method_descriptor = self.provider.get_deserialize_descriptor()
 		method_descriptor.method_name = 'deserialize'
-		method_descriptor.arguments = ['payload: bytes']
-		method_descriptor.annotations = ['@classmethod']
+		method_descriptor.arguments = ['dynamic payload']
+		method_descriptor.result = 'dynamic'
+		method_descriptor.annotations = ['@override']
 		return self.generate_method(method_descriptor)
 
 	def generate_create_by_name(self):
 		method_descriptor = self.provider.get_create_by_name_descriptor()
-		method_descriptor.method_name = 'create_by_name'
-		method_descriptor.arguments = [
-			'entity_name: str'
-		]
-		method_descriptor.annotations = ['@classmethod']
+		method_descriptor.method_name = 'createByName'
+		method_descriptor.arguments = ['String entityName']
 		return self.generate_method(method_descriptor)
 
 	def generate_methods(self):
@@ -52,17 +50,21 @@ class FactoryFormatter(AbstractTypeFormatter):
 	@property
 	def typename(self):
 		return f'{self.abstract.name}Factory'
-
+	
 	def create_discriminator(self, name):
 		field_names = self.factory_descriptor.discriminator_values
-		values = ', '.join(map(lambda value: f'{name}.{value}', field_names))
-		return f'({values}): {name}'
+		first_field = f'{name}.{field_names[0]}.value'
+		remaining_fields = ', '.join(f'{name}.{field}' for field in field_names[1:])
+		return f'({first_field}, {remaining_fields}): {name}()'
 
 	def get_deserialize_descriptor(self):
-		body = 'buffer = bytes(payload)\n'
-		body += f'{self.printer.name} = {self.printer.load()}\n'
+		body = 'if(payload is String) {\n'
+		body += '	payload = hex.decode(payload);\n'
+		body += '}\n'
+		body += 'Uint8List buffer = payload.buffer.asUint8List();\n'
+		body += f'var {self.printer.name} = {self.printer.load()};\n'
 
-		body += 'mapping = {\n'
+		body += 'var mapping = {\n'
 
 		if self.factory_descriptor:
 			names = [f'{concrete.name}' for concrete in self.factory_descriptor.children]
@@ -70,36 +72,41 @@ class FactoryFormatter(AbstractTypeFormatter):
 				',\n'.join(map(self.create_discriminator, names))
 			)
 
-		body += '}\n'
+		body += '};\n'
 
 		discriminators = [] if not self.factory_descriptor else self.factory_descriptor.discriminator_names
-		values = ', '.join(map(lambda discriminator: f'{self.printer.name}.{fix_name(discriminator)}', discriminators))
-		body += f'discriminator = ({values})\n'
-		body += 'factory_class = mapping[discriminator]\n'
-		body += 'return factory_class.deserialize(buffer)'
-
+		values = ', '.join(map(lambda discriminator: f'{self.printer.name}.{discriminator}.value' 
+			if discriminator == discriminators[0] else f'{self.printer.name}.{discriminator}', discriminators))
+		body += f'var discriminator = ({values});\n'
+		body += 'if (mapping[discriminator] != null) {\n'
+		body += '	var factory_class = mapping[discriminator]!;\n'
+		body += '	return factory_class.deserialize(buffer);\n'
+		body += '} else {\n'
+		body += '	throw Exception(\'Null value found for mapping[discriminator]\');\n'
+		body += '}\n'
 		return MethodDescriptor(body=body, result=self.abstract.name)
 
 	def get_create_by_name_descriptor(self):
 		body = ''
-		body += 'mapping = {\n'
+		body += 'var mapping = {\n'
 		body += indent(
 			',\n'.join(
 				map(
-					lambda child: f'\'{skip_embedded(underline_name(child.name))}\': {child.name}',
+					lambda child: f'\'{skip_embedded(underline_name(child.name))}\': () => {child.name}()',
 					[] if not self.factory_descriptor else self.factory_descriptor.children
 				)
 			)
 		)
-		body += '}\n'
+		body += '};\n'
 
 		body += f'''
-if entity_name not in mapping:
-	raise ValueError(f'unknown {self.printer.get_type()} type {{entity_name}}')
+if (!mapping.containsKey(entityName)) {{
+	throw Exception('Unknown Transaction type $entityName');
+}}
 
-return mapping[entity_name]()
+return mapping[entityName]!();
 '''
-		return MethodDescriptor(body=body, result=self.abstract.name)
+		return MethodDescriptor(body=body, result='IDeserializable')
 
 	def get_serialize_descriptor(self):
 		raise RuntimeError('not required')

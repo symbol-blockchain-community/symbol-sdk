@@ -27,24 +27,30 @@ class PodTypeFormatter(AbstractTypeFormatter):
 
 	def get_base_class(self):
 		return 'ByteArray' if self._is_array else 'BaseValue'
-
+	
 	def get_ctor_descriptor(self):
 		variable_name = self.printer.name
 		super = f': super(SIZE, {variable_name} ?? {self.printer.get_default_value()})'
-		arguments = [f'[dynamic? {variable_name}]']
+		arguments = [f'[dynamic {variable_name}]']
 		return MethodDescriptor(super=super, arguments=arguments)
 
 	def get_deserialize_descriptor(self):
 		if self._is_array:
-			return MethodDescriptor(body=f'return {self.typename}({self.printer.load()});')
+			body = 'payload = payload.sublist(0, SIZE);\n'
+			body += f'return {self.typename}({self.printer.load("payload")});'
+			return MethodDescriptor(body=body)
 		
-		body = 'var buffer = ByteData.view(payload.buffer);\n'
-		body += f'return {self.typename}({self.printer.load()});'
+		#body = 'var buffer = ByteData.view(payload.buffer, 0, size);\n'
+		#if self.printer.get_size() == 8:
+		#	body += 'var bigInt = BigInt.from(buffer.getUint64(0, Endian.little));'
+		#	body += 'if (bigInt < BigInt.zero) bigInt = bigInt + BigInt.two.pow(64);'
+		body = f'return {self.typename}({self.printer.load("payload")});'
 		return MethodDescriptor(body=body)
 
 	def get_serialize_descriptor(self):
-		body = 'var buffer = ByteData(SIZE);\n'
-		body += f'return {self.printer.store("value")};'
+		body = 'var buffer = Uint8List(SIZE);\n'
+		body += f'{self.printer.store("value", 0)};\n'
+		body += 'return buffer;'
 		if self._is_array:
 			return MethodDescriptor(body='return bytes;')
 

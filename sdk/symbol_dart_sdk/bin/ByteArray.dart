@@ -1,6 +1,8 @@
 import 'dart:typed_data';
 import 'package:convert/convert.dart';
 
+import 'utils/converter.dart';
+
 class ByteArray {
   Uint8List bytes;
 
@@ -8,7 +10,15 @@ class ByteArray {
       : bytes = Uint8List(fixedSize) {
     var rawBytes = arrayInput;
     if (rawBytes is String) {
-      rawBytes = hex.decode(rawBytes);
+      try {
+        if (isHexString(rawBytes)) {
+          rawBytes = hex.decode(rawBytes.substring(2)); // Remove '0x' prefix
+        } else {
+          rawBytes = stringToAddress(arrayInput);
+        }
+      } catch (e) {
+        throw ArgumentError('bytes was not a valid hex or address string');
+      }
     }
 
     if (fixedSize != rawBytes.length) {
@@ -20,6 +30,10 @@ class ByteArray {
 
   @override
   String toString() {
-    return hex.encode(bytes.toList()).toUpperCase();
+    try {
+      return addressToString(bytes);
+    } catch(_) {
+      return hex.encode(bytes.toList()).toUpperCase();
+    }
   }
 }

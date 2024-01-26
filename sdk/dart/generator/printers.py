@@ -2,12 +2,20 @@ from catparser.DisplayType import DisplayType
 
 from .name_formatting import fix_name, lang_field_name, fix_size_name, underline_name
 
+def plural_to_singular(word):
+    if word.endswith('s'):
+        return word[:-1]
+    else:
+        return word
+
+def embedded_name(name):
+	return name.replace("Embedded", "IEmbedded")
 
 class Printer:
 	def __init__(self, descriptor, name):
 		self.descriptor = descriptor
 		# printer.name is 'fixed' field name
-		self.name = fix_name(lang_field_name(name or underline_name(self.descriptor.name)))
+		self.name = lang_field_name(name or underline_name(self.descriptor.name))
 
 	def sort(self, _field_name):  # pylint: disable=no-self-use
 		return None
@@ -27,26 +35,33 @@ class IntPrinter(Printer):
 	def get_size(self):
 		return self.descriptor.size
 
-	def load(self):
+	def load(self, buffer_name='buffer'):
 		data_size = self.get_size()
+		return f'bytesToInt(({buffer_name} as Uint8List).sublist(0, {data_size}), {data_size})'
 		if(data_size == 8):
-			return f'BigInt.from(buffer.getUint64(0, Endian.little))'
-		return f'buffer.getUint{data_size * 8}(0, Endian.little)'
+			return f'BigInt.from({buffer_name}.getUint64(0, Endian.little))'
+		if(data_size == 1):
+			return f'{buffer_name}.getUint8(0)'
+		return f'{buffer_name}.getUint{data_size * 8}(0, Endian.little)'
 
 	def advancement_size(self):
 		return self.get_size()
 
-	def store(self, field_name):
+	def store(self, field_name, pos):
 		data_size = self.get_size()
-		return f'(buffer..setUint{data_size * 8}(0, {field_name}.toInt(), Endian.little)).buffer.asUint8List()'
+		return f'buffer.setRange({pos}, {pos} + {data_size}, intToBytes({field_name}, {data_size}))'
+
+	@staticmethod
+	def modifier():
+		return f'const'
 
 	@staticmethod
 	def assign(value):
 		return str(value)
 
 	@staticmethod
-	def to_string(field_name):
-		return f'0x{{{field_name}:X}}'
+	def to_string(field_name, size):
+		return f'0x${{{field_name}.toRadixString(16).padLeft({size} * 2, \'0\').toUpperCase()}}'
 
 
 class TypedArrayPrinter(Printer):
@@ -55,7 +70,7 @@ class TypedArrayPrinter(Printer):
 		self.type_hint = f'array[{self.descriptor.field_type.element_type}]'
 
 	def get_type(self):
-		return f'List[{self.descriptor.field_type.element_type}]'
+		return f'List<{self.descriptor.field_type.element_type}>'
 
 	@staticmethod
 	def get_default_value():
@@ -71,16 +86,20 @@ class TypedArrayPrinter(Printer):
 		if self.is_variable_size:
 			alignment = self.descriptor.field_type.alignment
 			skip_last_element_padding = not self.descriptor.field_type.is_last_element_padded
-			return f'ArrayHelpers.size(self.{self.name}, {alignment}, skip_last_element_padding={skip_last_element_padding})'
+			return f'ArrayHelpers.size({self.name}, {alignment}, {str(skip_last_element_padding).lower()})'
 
-		return f'ArrayHelpers.size(self.{self.name})'
+		return f'ArrayHelpers.size({self.name})'
+
+	def _get_sort_comparer(self, variable_name):
+		sort_key = lang_field_name(self.descriptor.field_type.sort_key)
+		comparer = f'return ArrayHelpers.getValue({variable_name}.{sort_key});'
+		return comparer
 
 	def _get_sort_accessor(self):
-		sort_key = self.descriptor.field_type.sort_key
-		accessor = f'lambda e: e.{sort_key}.comparer() if hasattr(e.{sort_key}, \'comparer\') else e.{sort_key}'
+		accessor = f'(e) {{ {self._get_sort_comparer("e")}}}'
 		return accessor
 
-	def load(self):
+	def load(self, buffer_name='buffer'):
 		element_type = self.descriptor.field_type.element_type
 
 		# use either type name or if it's an abstract type use a factory instead
@@ -88,27 +107,28 @@ class TypedArrayPrinter(Printer):
 			element_type = f'{element_type}Factory'
 
 		if self.is_variable_size:
-			buffer = f'buffer[:{self.descriptor.size}]'
+			buffer = 'buffer'
 			if self.descriptor.field_type.is_expandable:
 				buffer = 'buffer'
 
 			alignment = self.descriptor.field_type.alignment
-			skip_last_element_padding = f'skip_last_element_padding={not self.descriptor.field_type.is_last_element_padded}'
-			return f'ArrayHelpers.read_variable_size_elements({buffer}, {element_type}, {alignment}, {skip_last_element_padding})'
+			skip_last_element_padding = f'{not self.descriptor.field_type.is_last_element_padded}'
+			return f'ArrayHelpers.readVariableSizeElements(buffer, {element_type}(), {alignment}, {str(skip_last_element_padding).lower()}).map((item) => item as {embedded_name(self.descriptor.field_type.element_type)}).toList()'
 
 		if self.descriptor.field_type.is_expandable:
-			return f'ArrayHelpers.read_array(buffer, {element_type})'
+			return f'ArrayHelpers.readArray(buffer, {element_type}()).map((item) => item as {self.descriptor.field_type.element_type}).toList()'
 
 		args = [
 			'buffer',
-			element_type,
-			str(self.descriptor.size),
+			element_type + '()',
+			lang_field_name(str(self.descriptor.size)),
 		]
 		if self.descriptor.field_type.sort_key:
 			args.append(self._get_sort_accessor())
 
 		args_str = ', '.join(args)
-		return f'ArrayHelpers.read_array_count({args_str})'
+
+		return f'ArrayHelpers.readArrayCount({args_str}).map((item) => item as {self.descriptor.field_type.element_type}).toList()'
 
 	def advancement_size(self):
 		if self.descriptor.field_type.is_byte_constrained:
@@ -116,43 +136,45 @@ class TypedArrayPrinter(Printer):
 
 		alignment = self.descriptor.field_type.alignment
 		if alignment:
-			return f'ArrayHelpers.size({self.name}, {alignment}, skip_last_element_padding={not self.descriptor.field_type.is_last_element_padded})'
+			return f'ArrayHelpers.size({self.name}, {alignment}, {str(not self.descriptor.field_type.is_last_element_padded).lower()})'
 
 		return f'ArrayHelpers.size({self.name})'
 
-	def store(self, field_name):
+	def store(self, field_name, pos):
 		if self.is_variable_size:
 			alignment = self.descriptor.field_type.alignment
 			skip_last_element_padding = not self.descriptor.field_type.is_last_element_padded
-			return f'ArrayHelpers.write_variable_size_elements({field_name}, {alignment}, skip_last_element_padding={skip_last_element_padding})'
+			return f'ArrayHelpers.writeVariableSizeElements(buffer, {field_name}, {alignment}, {pos}, {str(skip_last_element_padding).lower()})'
 
 		if self.descriptor.field_type.is_expandable:
-			return f'ArrayHelpers.write_array({field_name})'
+			return f'ArrayHelpers.writeArray(buffer, {field_name}, {pos})'
 
-		args = [field_name]
+		args = ['buffer', field_name, pos]
 		size = self.descriptor.size
 		if not isinstance(size, str):
 			args.append(str(size))
-
+		
 		if self.descriptor.field_type.sort_key:
 			args.append(self._get_sort_accessor())
-
+			
 		args_str = ', '.join(args)
-		if isinstance(size, str):
-			return f'ArrayHelpers.write_array({args_str})'
-
-		return f'ArrayHelpers.write_array_count({args_str})'
+				
+		return f'ArrayHelpers.writeArray({args_str})'
 
 	def sort(self, field_name):
 		if not self.descriptor.field_type.sort_key:
 			return None
 
-		return f'{field_name} = sorted({field_name}, key={self._get_sort_accessor()})'
+		sort_key = lang_field_name(self.descriptor.field_type.sort_key)
+		body = ''
+		body = f'{field_name}.sort((lhs, rhs) {{\n'
+		body += f'\treturn ArrayHelpers.deepCompare(ArrayHelpers.getValue(lhs.{sort_key}), ArrayHelpers.getValue(rhs.{sort_key}));\n'
+		body += f'}})'
+		return body
 
 	@staticmethod
 	def to_string(field_name):
-		return f'list(map(str, {field_name}))'
-
+		return f'${{{field_name}.map((e) => e.toString()).toList()}}'
 
 class ArrayPrinter(Printer):
 	def __init__(self, descriptor, name=None):
@@ -161,37 +183,36 @@ class ArrayPrinter(Printer):
 
 	@staticmethod
 	def get_type():
-		return 'bytes'
+		return 'Uint8List'
 
 	def get_default_value(self):
 		size = self.descriptor.size
 		if isinstance(size, str):
-			return 'Uint8List()'
+			return 'Uint8List(0)'
 
 		return f'Uint8List({self.get_size()})'
 
 	def get_size(self):
 		size = self.descriptor.size
 		if isinstance(size, str):
-			return f'len(self._{self.name})'
+			return f'{self.name}.lengthInBytes'
 
 		return size
 
-	def load(self):
-		return 'Uint8List.fromList(payload)'
+	def load(self, buffer_name='buffer'):
+		return f'Uint8List.fromList({buffer_name})'
 
 	def advancement_size(self):
 		# like get_size() but without self prefix, as this refers to local method field
 		return fix_size_name(self.descriptor.size)
 
 	@staticmethod
-	def store(field_name):
-		return field_name
+	def store(field_name, pos):
+		return f'buffer.setRange(currentPos, currentPos + {field_name}.lengthInBytes, {field_name})'
 
 	@staticmethod
 	def to_string(field_name):
-		return f'hexlify({field_name}).decode("utf8")'
-
+		return f'${{hex.encode({field_name}.toList()).toUpperCase()}}'
 
 class BuiltinPrinter(Printer):
 	def __init__(self, descriptor, name=None):
@@ -217,33 +238,38 @@ class BuiltinPrinter(Printer):
 		return f'{self.get_type()}()'
 
 	def get_size(self):
-		return f'self.{self.name}.size'
+		return f'{self.name}.size'
 
 	def load(self, buffer_name='buffer'):
 		if DisplayType.STRUCT == self.descriptor.display_type and self.descriptor.is_abstract:
 			# HACK: factories use this printers as well, ignore them
 			if 'parent' != self.name:
 				factory_name = self.get_type() + 'Factory'
-				return f'{factory_name}.deserialize({buffer_name})'
+				return f'{factory_name}().deserialize({buffer_name})'
 
-		return f'{self.get_type()}.deserialize({buffer_name})'
+		return f'{self.get_type()}().deserialize({buffer_name})'
 
 	def advancement_size(self):
 		return f'{self.name}.size'
 
 	@staticmethod
-	def store(field_name):
-		return f'{field_name}.serialize()'
+	def store(field_name, pos):
+		return f'buffer.setRange(currentPos, currentPos + {field_name}.size, {field_name}.serialize());'
 
 	def sort(self, field_name):
 		return f'{field_name}.sort()' if DisplayType.STRUCT == self.descriptor.display_type else None
+	
+	@staticmethod
+	def modifier():
+		return f'final'
 
 	def assign(self, value):
-		return f'{self.get_type()}.{value}'
+		# TransactionType(TransactionType.TRANSFER.value);
+		return f'{self.get_type()}({self.get_type()}.{value}.value)'
 
 	@staticmethod
 	def to_string(field_name):
-		return f'{field_name}.__str__()'
+		return f'{field_name}.toString()'
 
 
 def create_pod_printer(descriptor, name=None):

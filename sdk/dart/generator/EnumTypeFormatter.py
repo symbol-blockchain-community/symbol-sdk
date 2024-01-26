@@ -45,17 +45,22 @@ class EnumTypeFormatter(AbstractTypeFormatter):
 		return fields
 
 	def get_ctor_descriptor(self):
-		arguments = ['this.value']
 		method_name = f'{self.typename}'
-		return MethodDescriptor(method_name=method_name, arguments=arguments)
+		arguments = ['[int? _value]']
+		body = f': value = _value ?? {self.enum_type.values[0].value};\n'
+		return MethodDescriptor(method_name=method_name, body=body, arguments=arguments, is_enum_ctor=True)
 	
 	def get_deserialize_descriptor(self):
 		body = 'var byteData = ByteData.sublistView(payload);\n'
-		body += f'return {self.enum_type.name}(byteData.getUint{self.get_bit_size()}(0));'
+		if self.get_bit_size() == '8':
+			body += f'return {self.enum_type.name}(byteData.getUint8(0));'
+		else:
+			body += f'return {self.enum_type.name}(byteData.getUint{self.get_bit_size()}(0, Endian.little));'
 		return MethodDescriptor(body=body)
 
-	def get_serialize_descriptor(self):
-		body = f'var byteData = ByteData({self.enum_type.size})..setUint{self.get_bit_size()}(0, value);\n'
+	def get_serialize_descriptor(self):		
+		endian = ', Endian.little' if not self.get_bit_size() == '8' else ''
+		body = f'var byteData = ByteData({self.enum_type.size})..setUint{self.get_bit_size()}(0, value{endian});\n'
 		body += f'return byteData.buffer.asUint8List();'
 		return MethodDescriptor(body=body)
 

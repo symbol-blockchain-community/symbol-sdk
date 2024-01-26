@@ -14,20 +14,29 @@ class ClassFormatter(ABC):
 	@staticmethod
 	def generate_method(method_descriptor):
 		super = method_descriptor.super if method_descriptor.super else ''
-		modifier = method_descriptor.modifier if method_descriptor.modifier else ''
 		arguments = ', '.join(method_descriptor.arguments)
 		if len(arguments) > 100:
-			arguments = '\n    ' + ',\n    '.join(method_descriptor.arguments) + '\n'
-
+			arguments = '\n' + ',\n'.join(method_descriptor.arguments) + '\n'
+		
+		if len(method_descriptor.arguments) > 1:
+			arguments = f'{{ {arguments}}}'
+		#elif len(method_descriptor.arguments) == 1 and not 'set ' in method_descriptor.method_name:
+		#	arguments = f'[{arguments}]'
+		if not 'get ' in method_descriptor.method_name:
+			arguments = '(' + arguments + ')'
 		annotations = '\n'.join(method_descriptor.annotations + [''])
 
 		method_result = f'{method_descriptor.result} ' if method_descriptor.result else ''
 		body = f'{{\n{indent(method_descriptor.body)}}}' if method_descriptor.body else ';'
-		return f'{annotations}{modifier}{method_result}{method_descriptor.method_name}({arguments}){super}{body}'
+		if method_descriptor.is_enum_ctor:
+			return f'{method_descriptor.method_name}{arguments} {method_descriptor.body}'
+		return f'{annotations}{method_result}{method_descriptor.method_name}{arguments} {super}{body}'
 
 	def generate_class_header(self):
 		base_class = self.provider.get_base_class()
 		base_class = f' extends {base_class}' if base_class else ''
+		interface = self.provider.get_interface()
+		base_class += f' implements IDeserializable{interface}' if interface else ' implements IDeserializable'
 		header = f'class {self.provider.typename}{base_class} {{\n'
 		comment = ''
 		return header + indent(comment)
@@ -80,7 +89,7 @@ class TypeFormatter(ClassFormatter):
 
 		method_descriptor.method_name = 'comparer'
 		method_descriptor.arguments = []
-		method_descriptor.result = 'tuple'
+		method_descriptor.result = 'Tuple2'
 		return self.generate_method(method_descriptor)
 
 	def generate_sort(self):
@@ -90,16 +99,16 @@ class TypeFormatter(ClassFormatter):
 
 		method_descriptor.method_name = 'sort'
 		method_descriptor.arguments = []
-		method_descriptor.result = 'None'
+		method_descriptor.result = 'void'
 		return self.generate_method(method_descriptor)
 
 	def generate_deserializer(self):
 		# 'deserialize'
 		method_descriptor = self.provider.get_deserialize_descriptor()
 		method_descriptor.method_name = 'deserialize'
-		method_descriptor.modifier = 'static '
-		method_descriptor.arguments = ['Uint8List payload']
+		method_descriptor.arguments = ['dynamic payload']
 		method_descriptor.result = self.provider.typename
+		method_descriptor.annotations = ['@override']
 		return self.generate_method(method_descriptor)
 
 	def generate_serializer(self):
@@ -113,11 +122,11 @@ class TypeFormatter(ClassFormatter):
 		if not method_descriptor:
 			return None
 
-		method_descriptor.method_name = 'size'
+		method_descriptor.method_name = 'get size'
 		method_descriptor.arguments = []
 		method_descriptor.result = 'int'
 		return self.generate_method(method_descriptor)
-
+	
 	def generate_getters(self):
 		return list(map(self.generate_method, self.provider.get_getter_descriptors()))
 

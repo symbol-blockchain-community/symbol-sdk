@@ -33,7 +33,7 @@ class TransactionDescriptorProcessor:
 			if ignore_keys and key in ignore_keys:
 				continue
 
-			if key.endswith('_computed'):
+			if key.endswith('Computed'):
 				raise ValueError(f'cannot explicitly set computed field {key}')
 
 			if not hasattr(transaction, key):
