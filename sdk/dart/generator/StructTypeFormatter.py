@@ -89,7 +89,7 @@ class StructFormatter(AbstractTypeFormatter):
 		if is_argument:
 			return field.extensions.printer.name
 
-		return f'_{field.extensions.printer.name}'
+		return f'{field.extensions.printer.name}'
 
 	@staticmethod
 	def generate_class_field(field):
@@ -97,7 +97,7 @@ class StructFormatter(AbstractTypeFormatter):
 		default_value = field.extensions.printer.assign(field.value)
 		return f'static {modifier} {field.extensions.printer.get_type()} {field.name} = {default_value};'
 	
-	def generate_private_field(self):
+	def generate_field(self):
 		body = '\n'
 		for field in self.non_reserved_fields():
 			field_name = self.field_name(field)
@@ -126,7 +126,7 @@ class StructFormatter(AbstractTypeFormatter):
 		return body
 
 	def get_fields(self):
-		return list(map(self.generate_class_field, self.const_fields())) + [self.generate_type_hints()] + [self.generate_private_field()]
+		return list(map(self.generate_class_field, self.const_fields())) + [self.generate_type_hints()] + [self.generate_field()]
 
 	def get_paired_const_field(self, field):
 		for const_field in self.const_fields():
@@ -150,7 +150,7 @@ class StructFormatter(AbstractTypeFormatter):
 			field_name = self.field_name(field)
 			arg_name = self.field_name(field, is_argument=True)
 			if const_field:
-				body += f'{field_name} = {arg_name} ?? {self.typename}.{const_field.name};\n'
+				body += f'this.{field_name} = {arg_name} ?? {self.typename}.{const_field.name};\n'
 			else:
 				value = field.extensions.printer.get_default_value()
 				if field.is_conditional:
@@ -163,7 +163,7 @@ class StructFormatter(AbstractTypeFormatter):
 					# if f'{condition_model.name}.{conditional.value}' != condition_field.extensions.printer.get_default_value():
 					#	value = 'None'
 
-				body += f'{field_name} = {arg_name} ?? {value};\n'
+				body += f'this.{field_name} = {arg_name} ?? {value};\n'
 
 		if not body:
 			return None
@@ -210,7 +210,8 @@ class StructFormatter(AbstractTypeFormatter):
 		value = f'{conditional.value if not isinstance(conditional.value, int) else uint32_to_int32(conditional.value)}'
 		condition_model = condition_field.extensions.type_model
 		yoda_value = value if DisplayType.INTEGER == condition_model.display_type else f'{condition_model.name}.{value}.value'
-		field_prefix = '_' if prefix_field else ''
+		#field_prefix = '_' if prefix_field else ''
+		field_prefix = ''
 
 		# HACK: instead of handling dumb magic value in namespace parent_name, generate slightly simpler condition
 		if prefix_field and DisplayType.UNSET != field.display_type:
@@ -383,8 +384,8 @@ class StructFormatter(AbstractTypeFormatter):
 		if field.display_type == DisplayType.TYPED_ARRAY:
 
 			serialize_field = f'sort();\nvar res_{field.extensions.printer.name} = {serialize_field}'
-			adjust = f'currentPos = res{field_value}.item2;\n'
-			adjust += f'buffer = res{field_value}.item1;\n'
+			adjust = f'currentPos = res_{field_value}.item2;\n'
+			adjust += f'buffer = res_{field_value}.item1;\n'
 		else:
 			adjust = f'currentPos += {field.extensions.printer.get_size()};\n'
 			
@@ -434,6 +435,7 @@ class StructFormatter(AbstractTypeFormatter):
 		return method_descriptor
 
 	def get_getter_descriptors(self):
+		return list(map(self.create_getter_descriptor, self.computed_fields()))
 		return list(map(self.create_getter_descriptor, self.non_reserved_fields())) + (
 			list(map(self.create_getter_descriptor, self.computed_fields()))
 		)
@@ -446,8 +448,8 @@ class StructFormatter(AbstractTypeFormatter):
 		)
 		return method_descriptor
 
-	def get_setter_descriptors(self):
-		return list(map(self.create_setter_descriptor, self.non_reserved_fields()))
+	#def get_setter_descriptors(self):
+	#	return list(map(self.create_setter_descriptor, self.non_reserved_fields()))
 
 	def generate_str_field(self, field):
 		condition = self.generate_condition(field, True)

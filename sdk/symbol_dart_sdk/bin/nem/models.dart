@@ -243,17 +243,17 @@ class Transaction extends StructBase implements IDeserializable {
 		'deadline': 'pod:Timestamp'
 	};
 
-	TransactionType _type = TransactionType.TRANSFER;
-	int _version = 0;
-	NetworkType _network = NetworkType.MAINNET;
-	Timestamp _timestamp = Timestamp();
-	PublicKey _signerPublicKey = PublicKey();
-	Signature _signature = Signature();
-	Amount _fee = Amount();
-	Timestamp _deadline = Timestamp();
-	final int _entityBodyReserved_1 = 0; // reserved field
-	final int _signerPublicKeySize = 32; // reserved field
-	final int _signatureSize = 64; // reserved field
+	TransactionType type = TransactionType.TRANSFER;
+	int version = 0;
+	NetworkType network = NetworkType.MAINNET;
+	Timestamp timestamp = Timestamp();
+	PublicKey signerPublicKey = PublicKey();
+	Signature signature = Signature();
+	Amount fee = Amount();
+	Timestamp deadline = Timestamp();
+	final int entityBodyReserved_1 = 0; // reserved field
+	final int signerPublicKeySize = 32; // reserved field
+	final int signatureSize = 64; // reserved field
 
 	Transaction({ 
 	TransactionType? type,
@@ -267,82 +267,18 @@ class Transaction extends StructBase implements IDeserializable {
 	}) 
 		: super(type == null && version == null && network == null && timestamp == null && signerPublicKey == null && signature == null && fee == null && deadline == null )
 	{
-		_type = type ?? TransactionType.TRANSFER;
-		_version = version ?? 0;
-		_network = network ?? NetworkType.MAINNET;
-		_timestamp = timestamp ?? Timestamp();
-		_signerPublicKey = signerPublicKey ?? PublicKey();
-		_signature = signature ?? Signature();
-		_fee = fee ?? Amount();
-		_deadline = deadline ?? Timestamp();
+		this.type = type ?? TransactionType.TRANSFER;
+		this.version = version ?? 0;
+		this.network = network ?? NetworkType.MAINNET;
+		this.timestamp = timestamp ?? Timestamp();
+		this.signerPublicKey = signerPublicKey ?? PublicKey();
+		this.signature = signature ?? Signature();
+		this.fee = fee ?? Amount();
+		this.deadline = deadline ?? Timestamp();
 	}
 
 	void sort() {
 		// empty body
-	}
-
-	TransactionType get type {
-		return _type;
-	}
-
-	int get version {
-		return _version;
-	}
-
-	NetworkType get network {
-		return _network;
-	}
-
-	Timestamp get timestamp {
-		return _timestamp;
-	}
-
-	PublicKey get signerPublicKey {
-		return _signerPublicKey;
-	}
-
-	Signature get signature {
-		return _signature;
-	}
-
-	Amount get fee {
-		return _fee;
-	}
-
-	Timestamp get deadline {
-		return _deadline;
-	}
-
-	set type(TransactionType value) {
-		_type = value;
-	}
-
-	set version(int value) {
-		_version = value;
-	}
-
-	set network(NetworkType value) {
-		_network = value;
-	}
-
-	set timestamp(Timestamp value) {
-		_timestamp = value;
-	}
-
-	set signerPublicKey(PublicKey value) {
-		_signerPublicKey = value;
-	}
-
-	set signature(Signature value) {
-		_signature = value;
-	}
-
-	set fee(Amount value) {
-		_fee = value;
-	}
-
-	set deadline(Timestamp value) {
-		_deadline = value;
 	}
 
 	int get size {
@@ -412,27 +348,27 @@ class Transaction extends StructBase implements IDeserializable {
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
-		buffer.setRange(currentPos, currentPos + _type.size, _type.serialize());
+		buffer.setRange(currentPos, currentPos + type.size, type.serialize());
 		currentPos += type.size;
-		buffer.setRange(currentPos, currentPos + 1, intToBytes(_version, 1));
+		buffer.setRange(currentPos, currentPos + 1, intToBytes(version, 1));
 		currentPos += 1;
-		buffer.setRange(currentPos, currentPos + 2, intToBytes(_entityBodyReserved_1, 2));
+		buffer.setRange(currentPos, currentPos + 2, intToBytes(entityBodyReserved_1, 2));
 		currentPos += 2;
-		buffer.setRange(currentPos, currentPos + _network.size, _network.serialize());
+		buffer.setRange(currentPos, currentPos + network.size, network.serialize());
 		currentPos += network.size;
-		buffer.setRange(currentPos, currentPos + _timestamp.size, _timestamp.serialize());
+		buffer.setRange(currentPos, currentPos + timestamp.size, timestamp.serialize());
 		currentPos += timestamp.size;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_signerPublicKeySize, 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(signerPublicKeySize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _signerPublicKey.size, _signerPublicKey.serialize());
+		buffer.setRange(currentPos, currentPos + signerPublicKey.size, signerPublicKey.serialize());
 		currentPos += signerPublicKey.size;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_signatureSize, 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(signatureSize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _signature.size, _signature.serialize());
+		buffer.setRange(currentPos, currentPos + signature.size, signature.serialize());
 		currentPos += signature.size;
-		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());
+		buffer.setRange(currentPos, currentPos + fee.size, fee.serialize());
 		currentPos += fee.size;
-		buffer.setRange(currentPos, currentPos + _deadline.size, _deadline.serialize());
+		buffer.setRange(currentPos, currentPos + deadline.size, deadline.serialize());
 		currentPos += deadline.size;
 		return buffer.buffer.asUint8List();
 	}
@@ -440,14 +376,14 @@ class Transaction extends StructBase implements IDeserializable {
 	@override
 	String toString() {
 		var result = 'Transaction(';
-		result += 'type: "${_type.toString()}", ';
-		result += 'version: "0x${_version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
-		result += 'network: "${_network.toString()}", ';
-		result += 'timestamp: "${_timestamp.toString()}", ';
-		result += 'signerPublicKey: "${_signerPublicKey.toString()}", ';
-		result += 'signature: "${_signature.toString()}", ';
-		result += 'fee: "${_fee.toString()}", ';
-		result += 'deadline: "${_deadline.toString()}", ';
+		result += 'type: "${type.toString()}", ';
+		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'network: "${network.toString()}", ';
+		result += 'timestamp: "${timestamp.toString()}", ';
+		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
+		result += 'signature: "${signature.toString()}", ';
+		result += 'fee: "${fee.toString()}", ';
+		result += 'deadline: "${deadline.toString()}", ';
 		result += ')';
 		return result;
 	}
@@ -465,15 +401,15 @@ class NonVerifiableTransaction extends StructBase implements IDeserializable, IN
 		'deadline': 'pod:Timestamp'
 	};
 
-	TransactionType _type = TransactionType.TRANSFER;
-	int _version = 0;
-	NetworkType _network = NetworkType.MAINNET;
-	Timestamp _timestamp = Timestamp();
-	PublicKey _signerPublicKey = PublicKey();
-	Amount _fee = Amount();
-	Timestamp _deadline = Timestamp();
-	final int _entityBodyReserved_1 = 0; // reserved field
-	final int _signerPublicKeySize = 32; // reserved field
+	TransactionType type = TransactionType.TRANSFER;
+	int version = 0;
+	NetworkType network = NetworkType.MAINNET;
+	Timestamp timestamp = Timestamp();
+	PublicKey signerPublicKey = PublicKey();
+	Amount fee = Amount();
+	Timestamp deadline = Timestamp();
+	final int entityBodyReserved_1 = 0; // reserved field
+	final int signerPublicKeySize = 32; // reserved field
 
 	NonVerifiableTransaction({ 
 	TransactionType? type,
@@ -486,73 +422,17 @@ class NonVerifiableTransaction extends StructBase implements IDeserializable, IN
 	}) 
 		: super(type == null && version == null && network == null && timestamp == null && signerPublicKey == null && fee == null && deadline == null )
 	{
-		_type = type ?? TransactionType.TRANSFER;
-		_version = version ?? 0;
-		_network = network ?? NetworkType.MAINNET;
-		_timestamp = timestamp ?? Timestamp();
-		_signerPublicKey = signerPublicKey ?? PublicKey();
-		_fee = fee ?? Amount();
-		_deadline = deadline ?? Timestamp();
+		this.type = type ?? TransactionType.TRANSFER;
+		this.version = version ?? 0;
+		this.network = network ?? NetworkType.MAINNET;
+		this.timestamp = timestamp ?? Timestamp();
+		this.signerPublicKey = signerPublicKey ?? PublicKey();
+		this.fee = fee ?? Amount();
+		this.deadline = deadline ?? Timestamp();
 	}
 
 	void sort() {
 		// empty body
-	}
-
-	TransactionType get type {
-		return _type;
-	}
-
-	int get version {
-		return _version;
-	}
-
-	NetworkType get network {
-		return _network;
-	}
-
-	Timestamp get timestamp {
-		return _timestamp;
-	}
-
-	PublicKey get signerPublicKey {
-		return _signerPublicKey;
-	}
-
-	Amount get fee {
-		return _fee;
-	}
-
-	Timestamp get deadline {
-		return _deadline;
-	}
-
-	set type(TransactionType value) {
-		_type = value;
-	}
-
-	set version(int value) {
-		_version = value;
-	}
-
-	set network(NetworkType value) {
-		_network = value;
-	}
-
-	set timestamp(Timestamp value) {
-		_timestamp = value;
-	}
-
-	set signerPublicKey(PublicKey value) {
-		_signerPublicKey = value;
-	}
-
-	set fee(Amount value) {
-		_fee = value;
-	}
-
-	set deadline(Timestamp value) {
-		_deadline = value;
 	}
 
 	int get size {
@@ -612,23 +492,23 @@ class NonVerifiableTransaction extends StructBase implements IDeserializable, IN
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
-		buffer.setRange(currentPos, currentPos + _type.size, _type.serialize());
+		buffer.setRange(currentPos, currentPos + type.size, type.serialize());
 		currentPos += type.size;
-		buffer.setRange(currentPos, currentPos + 1, intToBytes(_version, 1));
+		buffer.setRange(currentPos, currentPos + 1, intToBytes(version, 1));
 		currentPos += 1;
-		buffer.setRange(currentPos, currentPos + 2, intToBytes(_entityBodyReserved_1, 2));
+		buffer.setRange(currentPos, currentPos + 2, intToBytes(entityBodyReserved_1, 2));
 		currentPos += 2;
-		buffer.setRange(currentPos, currentPos + _network.size, _network.serialize());
+		buffer.setRange(currentPos, currentPos + network.size, network.serialize());
 		currentPos += network.size;
-		buffer.setRange(currentPos, currentPos + _timestamp.size, _timestamp.serialize());
+		buffer.setRange(currentPos, currentPos + timestamp.size, timestamp.serialize());
 		currentPos += timestamp.size;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_signerPublicKeySize, 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(signerPublicKeySize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _signerPublicKey.size, _signerPublicKey.serialize());
+		buffer.setRange(currentPos, currentPos + signerPublicKey.size, signerPublicKey.serialize());
 		currentPos += signerPublicKey.size;
-		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());
+		buffer.setRange(currentPos, currentPos + fee.size, fee.serialize());
 		currentPos += fee.size;
-		buffer.setRange(currentPos, currentPos + _deadline.size, _deadline.serialize());
+		buffer.setRange(currentPos, currentPos + deadline.size, deadline.serialize());
 		currentPos += deadline.size;
 		return buffer.buffer.asUint8List();
 	}
@@ -636,13 +516,13 @@ class NonVerifiableTransaction extends StructBase implements IDeserializable, IN
 	@override
 	String toString() {
 		var result = 'NonVerifiableTransaction(';
-		result += 'type: "${_type.toString()}", ';
-		result += 'version: "0x${_version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
-		result += 'network: "${_network.toString()}", ';
-		result += 'timestamp: "${_timestamp.toString()}", ';
-		result += 'signerPublicKey: "${_signerPublicKey.toString()}", ';
-		result += 'fee: "${_fee.toString()}", ';
-		result += 'deadline: "${_deadline.toString()}", ';
+		result += 'type: "${type.toString()}", ';
+		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'network: "${network.toString()}", ';
+		result += 'timestamp: "${timestamp.toString()}", ';
+		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
+		result += 'fee: "${fee.toString()}", ';
+		result += 'deadline: "${deadline.toString()}", ';
 		result += ')';
 		return result;
 	}
@@ -700,20 +580,20 @@ class AccountKeyLinkTransactionV1 extends StructBase implements IDeserializable 
 		'remotePublicKey': 'pod:PublicKey'
 	};
 
-	TransactionType _type = TransactionType.TRANSFER;
-	int _version = 0;
-	NetworkType _network = NetworkType.MAINNET;
-	Timestamp _timestamp = Timestamp();
-	PublicKey _signerPublicKey = PublicKey();
-	Signature _signature = Signature();
-	Amount _fee = Amount();
-	Timestamp _deadline = Timestamp();
-	LinkAction _linkAction = LinkAction.LINK;
-	PublicKey _remotePublicKey = PublicKey();
-	final int _entityBodyReserved_1 = 0; // reserved field
-	final int _signerPublicKeySize = 32; // reserved field
-	final int _signatureSize = 64; // reserved field
-	final int _remotePublicKeySize = 32; // reserved field
+	TransactionType type = TransactionType.TRANSFER;
+	int version = 0;
+	NetworkType network = NetworkType.MAINNET;
+	Timestamp timestamp = Timestamp();
+	PublicKey signerPublicKey = PublicKey();
+	Signature signature = Signature();
+	Amount fee = Amount();
+	Timestamp deadline = Timestamp();
+	LinkAction linkAction = LinkAction.LINK;
+	PublicKey remotePublicKey = PublicKey();
+	final int entityBodyReserved_1 = 0; // reserved field
+	final int signerPublicKeySize = 32; // reserved field
+	final int signatureSize = 64; // reserved field
+	final int remotePublicKeySize = 32; // reserved field
 
 	AccountKeyLinkTransactionV1({ 
 	TransactionType? type,
@@ -729,100 +609,20 @@ class AccountKeyLinkTransactionV1 extends StructBase implements IDeserializable 
 	}) 
 		: super(type == null && version == null && network == null && timestamp == null && signerPublicKey == null && signature == null && fee == null && deadline == null && linkAction == null && remotePublicKey == null )
 	{
-		_type = type ?? AccountKeyLinkTransactionV1.TRANSACTION_TYPE;
-		_version = version ?? AccountKeyLinkTransactionV1.TRANSACTION_VERSION;
-		_network = network ?? NetworkType.MAINNET;
-		_timestamp = timestamp ?? Timestamp();
-		_signerPublicKey = signerPublicKey ?? PublicKey();
-		_signature = signature ?? Signature();
-		_fee = fee ?? Amount();
-		_deadline = deadline ?? Timestamp();
-		_linkAction = linkAction ?? LinkAction.LINK;
-		_remotePublicKey = remotePublicKey ?? PublicKey();
+		this.type = type ?? AccountKeyLinkTransactionV1.TRANSACTION_TYPE;
+		this.version = version ?? AccountKeyLinkTransactionV1.TRANSACTION_VERSION;
+		this.network = network ?? NetworkType.MAINNET;
+		this.timestamp = timestamp ?? Timestamp();
+		this.signerPublicKey = signerPublicKey ?? PublicKey();
+		this.signature = signature ?? Signature();
+		this.fee = fee ?? Amount();
+		this.deadline = deadline ?? Timestamp();
+		this.linkAction = linkAction ?? LinkAction.LINK;
+		this.remotePublicKey = remotePublicKey ?? PublicKey();
 	}
 
 	void sort() {
 		// empty body
-	}
-
-	TransactionType get type {
-		return _type;
-	}
-
-	int get version {
-		return _version;
-	}
-
-	NetworkType get network {
-		return _network;
-	}
-
-	Timestamp get timestamp {
-		return _timestamp;
-	}
-
-	PublicKey get signerPublicKey {
-		return _signerPublicKey;
-	}
-
-	Signature get signature {
-		return _signature;
-	}
-
-	Amount get fee {
-		return _fee;
-	}
-
-	Timestamp get deadline {
-		return _deadline;
-	}
-
-	LinkAction get linkAction {
-		return _linkAction;
-	}
-
-	PublicKey get remotePublicKey {
-		return _remotePublicKey;
-	}
-
-	set type(TransactionType value) {
-		_type = value;
-	}
-
-	set version(int value) {
-		_version = value;
-	}
-
-	set network(NetworkType value) {
-		_network = value;
-	}
-
-	set timestamp(Timestamp value) {
-		_timestamp = value;
-	}
-
-	set signerPublicKey(PublicKey value) {
-		_signerPublicKey = value;
-	}
-
-	set signature(Signature value) {
-		_signature = value;
-	}
-
-	set fee(Amount value) {
-		_fee = value;
-	}
-
-	set deadline(Timestamp value) {
-		_deadline = value;
-	}
-
-	set linkAction(LinkAction value) {
-		_linkAction = value;
-	}
-
-	set remotePublicKey(PublicKey value) {
-		_remotePublicKey = value;
 	}
 
 	int get size {
@@ -906,33 +706,33 @@ class AccountKeyLinkTransactionV1 extends StructBase implements IDeserializable 
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
-		buffer.setRange(currentPos, currentPos + _type.size, _type.serialize());
+		buffer.setRange(currentPos, currentPos + type.size, type.serialize());
 		currentPos += type.size;
-		buffer.setRange(currentPos, currentPos + 1, intToBytes(_version, 1));
+		buffer.setRange(currentPos, currentPos + 1, intToBytes(version, 1));
 		currentPos += 1;
-		buffer.setRange(currentPos, currentPos + 2, intToBytes(_entityBodyReserved_1, 2));
+		buffer.setRange(currentPos, currentPos + 2, intToBytes(entityBodyReserved_1, 2));
 		currentPos += 2;
-		buffer.setRange(currentPos, currentPos + _network.size, _network.serialize());
+		buffer.setRange(currentPos, currentPos + network.size, network.serialize());
 		currentPos += network.size;
-		buffer.setRange(currentPos, currentPos + _timestamp.size, _timestamp.serialize());
+		buffer.setRange(currentPos, currentPos + timestamp.size, timestamp.serialize());
 		currentPos += timestamp.size;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_signerPublicKeySize, 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(signerPublicKeySize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _signerPublicKey.size, _signerPublicKey.serialize());
+		buffer.setRange(currentPos, currentPos + signerPublicKey.size, signerPublicKey.serialize());
 		currentPos += signerPublicKey.size;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_signatureSize, 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(signatureSize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _signature.size, _signature.serialize());
+		buffer.setRange(currentPos, currentPos + signature.size, signature.serialize());
 		currentPos += signature.size;
-		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());
+		buffer.setRange(currentPos, currentPos + fee.size, fee.serialize());
 		currentPos += fee.size;
-		buffer.setRange(currentPos, currentPos + _deadline.size, _deadline.serialize());
+		buffer.setRange(currentPos, currentPos + deadline.size, deadline.serialize());
 		currentPos += deadline.size;
-		buffer.setRange(currentPos, currentPos + _linkAction.size, _linkAction.serialize());
+		buffer.setRange(currentPos, currentPos + linkAction.size, linkAction.serialize());
 		currentPos += linkAction.size;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_remotePublicKeySize, 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(remotePublicKeySize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _remotePublicKey.size, _remotePublicKey.serialize());
+		buffer.setRange(currentPos, currentPos + remotePublicKey.size, remotePublicKey.serialize());
 		currentPos += remotePublicKey.size;
 		return buffer.buffer.asUint8List();
 	}
@@ -940,16 +740,16 @@ class AccountKeyLinkTransactionV1 extends StructBase implements IDeserializable 
 	@override
 	String toString() {
 		var result = 'AccountKeyLinkTransactionV1(';
-		result += 'type: "${_type.toString()}", ';
-		result += 'version: "0x${_version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
-		result += 'network: "${_network.toString()}", ';
-		result += 'timestamp: "${_timestamp.toString()}", ';
-		result += 'signerPublicKey: "${_signerPublicKey.toString()}", ';
-		result += 'signature: "${_signature.toString()}", ';
-		result += 'fee: "${_fee.toString()}", ';
-		result += 'deadline: "${_deadline.toString()}", ';
-		result += 'linkAction: "${_linkAction.toString()}", ';
-		result += 'remotePublicKey: "${_remotePublicKey.toString()}", ';
+		result += 'type: "${type.toString()}", ';
+		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'network: "${network.toString()}", ';
+		result += 'timestamp: "${timestamp.toString()}", ';
+		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
+		result += 'signature: "${signature.toString()}", ';
+		result += 'fee: "${fee.toString()}", ';
+		result += 'deadline: "${deadline.toString()}", ';
+		result += 'linkAction: "${linkAction.toString()}", ';
+		result += 'remotePublicKey: "${remotePublicKey.toString()}", ';
 		result += ')';
 		return result;
 	}
@@ -971,18 +771,18 @@ class NonVerifiableAccountKeyLinkTransactionV1 extends StructBase implements IDe
 		'remotePublicKey': 'pod:PublicKey'
 	};
 
-	TransactionType _type = TransactionType.TRANSFER;
-	int _version = 0;
-	NetworkType _network = NetworkType.MAINNET;
-	Timestamp _timestamp = Timestamp();
-	PublicKey _signerPublicKey = PublicKey();
-	Amount _fee = Amount();
-	Timestamp _deadline = Timestamp();
-	LinkAction _linkAction = LinkAction.LINK;
-	PublicKey _remotePublicKey = PublicKey();
-	final int _entityBodyReserved_1 = 0; // reserved field
-	final int _signerPublicKeySize = 32; // reserved field
-	final int _remotePublicKeySize = 32; // reserved field
+	TransactionType type = TransactionType.TRANSFER;
+	int version = 0;
+	NetworkType network = NetworkType.MAINNET;
+	Timestamp timestamp = Timestamp();
+	PublicKey signerPublicKey = PublicKey();
+	Amount fee = Amount();
+	Timestamp deadline = Timestamp();
+	LinkAction linkAction = LinkAction.LINK;
+	PublicKey remotePublicKey = PublicKey();
+	final int entityBodyReserved_1 = 0; // reserved field
+	final int signerPublicKeySize = 32; // reserved field
+	final int remotePublicKeySize = 32; // reserved field
 
 	NonVerifiableAccountKeyLinkTransactionV1({ 
 	TransactionType? type,
@@ -997,91 +797,19 @@ class NonVerifiableAccountKeyLinkTransactionV1 extends StructBase implements IDe
 	}) 
 		: super(type == null && version == null && network == null && timestamp == null && signerPublicKey == null && fee == null && deadline == null && linkAction == null && remotePublicKey == null )
 	{
-		_type = type ?? NonVerifiableAccountKeyLinkTransactionV1.TRANSACTION_TYPE;
-		_version = version ?? NonVerifiableAccountKeyLinkTransactionV1.TRANSACTION_VERSION;
-		_network = network ?? NetworkType.MAINNET;
-		_timestamp = timestamp ?? Timestamp();
-		_signerPublicKey = signerPublicKey ?? PublicKey();
-		_fee = fee ?? Amount();
-		_deadline = deadline ?? Timestamp();
-		_linkAction = linkAction ?? LinkAction.LINK;
-		_remotePublicKey = remotePublicKey ?? PublicKey();
+		this.type = type ?? NonVerifiableAccountKeyLinkTransactionV1.TRANSACTION_TYPE;
+		this.version = version ?? NonVerifiableAccountKeyLinkTransactionV1.TRANSACTION_VERSION;
+		this.network = network ?? NetworkType.MAINNET;
+		this.timestamp = timestamp ?? Timestamp();
+		this.signerPublicKey = signerPublicKey ?? PublicKey();
+		this.fee = fee ?? Amount();
+		this.deadline = deadline ?? Timestamp();
+		this.linkAction = linkAction ?? LinkAction.LINK;
+		this.remotePublicKey = remotePublicKey ?? PublicKey();
 	}
 
 	void sort() {
 		// empty body
-	}
-
-	TransactionType get type {
-		return _type;
-	}
-
-	int get version {
-		return _version;
-	}
-
-	NetworkType get network {
-		return _network;
-	}
-
-	Timestamp get timestamp {
-		return _timestamp;
-	}
-
-	PublicKey get signerPublicKey {
-		return _signerPublicKey;
-	}
-
-	Amount get fee {
-		return _fee;
-	}
-
-	Timestamp get deadline {
-		return _deadline;
-	}
-
-	LinkAction get linkAction {
-		return _linkAction;
-	}
-
-	PublicKey get remotePublicKey {
-		return _remotePublicKey;
-	}
-
-	set type(TransactionType value) {
-		_type = value;
-	}
-
-	set version(int value) {
-		_version = value;
-	}
-
-	set network(NetworkType value) {
-		_network = value;
-	}
-
-	set timestamp(Timestamp value) {
-		_timestamp = value;
-	}
-
-	set signerPublicKey(PublicKey value) {
-		_signerPublicKey = value;
-	}
-
-	set fee(Amount value) {
-		_fee = value;
-	}
-
-	set deadline(Timestamp value) {
-		_deadline = value;
-	}
-
-	set linkAction(LinkAction value) {
-		_linkAction = value;
-	}
-
-	set remotePublicKey(PublicKey value) {
-		_remotePublicKey = value;
 	}
 
 	int get size {
@@ -1155,29 +883,29 @@ class NonVerifiableAccountKeyLinkTransactionV1 extends StructBase implements IDe
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
-		buffer.setRange(currentPos, currentPos + _type.size, _type.serialize());
+		buffer.setRange(currentPos, currentPos + type.size, type.serialize());
 		currentPos += type.size;
-		buffer.setRange(currentPos, currentPos + 1, intToBytes(_version, 1));
+		buffer.setRange(currentPos, currentPos + 1, intToBytes(version, 1));
 		currentPos += 1;
-		buffer.setRange(currentPos, currentPos + 2, intToBytes(_entityBodyReserved_1, 2));
+		buffer.setRange(currentPos, currentPos + 2, intToBytes(entityBodyReserved_1, 2));
 		currentPos += 2;
-		buffer.setRange(currentPos, currentPos + _network.size, _network.serialize());
+		buffer.setRange(currentPos, currentPos + network.size, network.serialize());
 		currentPos += network.size;
-		buffer.setRange(currentPos, currentPos + _timestamp.size, _timestamp.serialize());
+		buffer.setRange(currentPos, currentPos + timestamp.size, timestamp.serialize());
 		currentPos += timestamp.size;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_signerPublicKeySize, 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(signerPublicKeySize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _signerPublicKey.size, _signerPublicKey.serialize());
+		buffer.setRange(currentPos, currentPos + signerPublicKey.size, signerPublicKey.serialize());
 		currentPos += signerPublicKey.size;
-		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());
+		buffer.setRange(currentPos, currentPos + fee.size, fee.serialize());
 		currentPos += fee.size;
-		buffer.setRange(currentPos, currentPos + _deadline.size, _deadline.serialize());
+		buffer.setRange(currentPos, currentPos + deadline.size, deadline.serialize());
 		currentPos += deadline.size;
-		buffer.setRange(currentPos, currentPos + _linkAction.size, _linkAction.serialize());
+		buffer.setRange(currentPos, currentPos + linkAction.size, linkAction.serialize());
 		currentPos += linkAction.size;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_remotePublicKeySize, 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(remotePublicKeySize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _remotePublicKey.size, _remotePublicKey.serialize());
+		buffer.setRange(currentPos, currentPos + remotePublicKey.size, remotePublicKey.serialize());
 		currentPos += remotePublicKey.size;
 		return buffer.buffer.asUint8List();
 	}
@@ -1185,15 +913,15 @@ class NonVerifiableAccountKeyLinkTransactionV1 extends StructBase implements IDe
 	@override
 	String toString() {
 		var result = 'NonVerifiableAccountKeyLinkTransactionV1(';
-		result += 'type: "${_type.toString()}", ';
-		result += 'version: "0x${_version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
-		result += 'network: "${_network.toString()}", ';
-		result += 'timestamp: "${_timestamp.toString()}", ';
-		result += 'signerPublicKey: "${_signerPublicKey.toString()}", ';
-		result += 'fee: "${_fee.toString()}", ';
-		result += 'deadline: "${_deadline.toString()}", ';
-		result += 'linkAction: "${_linkAction.toString()}", ';
-		result += 'remotePublicKey: "${_remotePublicKey.toString()}", ';
+		result += 'type: "${type.toString()}", ';
+		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'network: "${network.toString()}", ';
+		result += 'timestamp: "${timestamp.toString()}", ';
+		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
+		result += 'fee: "${fee.toString()}", ';
+		result += 'deadline: "${deadline.toString()}", ';
+		result += 'linkAction: "${linkAction.toString()}", ';
+		result += 'remotePublicKey: "${remotePublicKey.toString()}", ';
 		result += ')';
 		return result;
 	}
@@ -1206,24 +934,16 @@ class NamespaceId extends StructBase implements IDeserializable {
 		'name': 'bytes_array'
 	};
 
-	Uint8List _name = Uint8List(0);
+	Uint8List name = Uint8List(0);
 
 	NamespaceId([name]) 
 		: super(name == null )
 	{
-		_name = name ?? Uint8List(0);
+		this.name = name ?? Uint8List(0);
 	}
 
 	void sort() {
 		// empty body
-	}
-
-	Uint8List get name {
-		return _name;
-	}
-
-	set name(Uint8List value) {
-		_name = value;
 	}
 
 	int get size {
@@ -1248,9 +968,9 @@ class NamespaceId extends StructBase implements IDeserializable {
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_name.length, 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(name.length, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _name.lengthInBytes, _name);
+		buffer.setRange(currentPos, currentPos + name.lengthInBytes, name);
 		currentPos += name.lengthInBytes;
 		return buffer.buffer.asUint8List();
 	}
@@ -1258,7 +978,7 @@ class NamespaceId extends StructBase implements IDeserializable {
 	@override
 	String toString() {
 		var result = 'NamespaceId(';
-		result += 'name: "${hex.encode(_name.toList()).toUpperCase()}", ';
+		result += 'name: "${hex.encode(name.toList()).toUpperCase()}", ';
 		result += ')';
 		return result;
 	}
@@ -1272,34 +992,18 @@ class MosaicId extends StructBase implements IDeserializable {
 		'name': 'bytes_array'
 	};
 
-	NamespaceId _namespaceId = NamespaceId();
-	Uint8List _name = Uint8List(0);
+	NamespaceId namespaceId = NamespaceId();
+	Uint8List name = Uint8List(0);
 
 	MosaicId({ NamespaceId? namespaceId, Uint8List? name}) 
 		: super(namespaceId == null && name == null )
 	{
-		_namespaceId = namespaceId ?? NamespaceId();
-		_name = name ?? Uint8List(0);
+		this.namespaceId = namespaceId ?? NamespaceId();
+		this.name = name ?? Uint8List(0);
 	}
 
 	void sort() {
-		_namespaceId.sort();
-	}
-
-	NamespaceId get namespaceId {
-		return _namespaceId;
-	}
-
-	Uint8List get name {
-		return _name;
-	}
-
-	set namespaceId(NamespaceId value) {
-		_namespaceId = value;
-	}
-
-	set name(Uint8List value) {
-		_name = value;
+		namespaceId.sort();
 	}
 
 	int get size {
@@ -1330,11 +1034,11 @@ class MosaicId extends StructBase implements IDeserializable {
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
-		buffer.setRange(currentPos, currentPos + _namespaceId.size, _namespaceId.serialize());
+		buffer.setRange(currentPos, currentPos + namespaceId.size, namespaceId.serialize());
 		currentPos += namespaceId.size;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_name.length, 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(name.length, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _name.lengthInBytes, _name);
+		buffer.setRange(currentPos, currentPos + name.lengthInBytes, name);
 		currentPos += name.lengthInBytes;
 		return buffer.buffer.asUint8List();
 	}
@@ -1342,8 +1046,8 @@ class MosaicId extends StructBase implements IDeserializable {
 	@override
 	String toString() {
 		var result = 'MosaicId(';
-		result += 'namespaceId: "${_namespaceId.toString()}", ';
-		result += 'name: "${hex.encode(_name.toList()).toUpperCase()}", ';
+		result += 'namespaceId: "${namespaceId.toString()}", ';
+		result += 'name: "${hex.encode(name.toList()).toUpperCase()}", ';
 		result += ')';
 		return result;
 	}
@@ -1357,34 +1061,18 @@ class Mosaic extends StructBase implements IDeserializable {
 		'amount': 'pod:Amount'
 	};
 
-	MosaicId _mosaicId = MosaicId();
-	Amount _amount = Amount();
+	MosaicId mosaicId = MosaicId();
+	Amount amount = Amount();
 
 	Mosaic({ MosaicId? mosaicId, Amount? amount}) 
 		: super(mosaicId == null && amount == null )
 	{
-		_mosaicId = mosaicId ?? MosaicId();
-		_amount = amount ?? Amount();
+		this.mosaicId = mosaicId ?? MosaicId();
+		this.amount = amount ?? Amount();
 	}
 
 	void sort() {
-		_mosaicId.sort();
-	}
-
-	MosaicId get mosaicId {
-		return _mosaicId;
-	}
-
-	Amount get amount {
-		return _amount;
-	}
-
-	set mosaicId(MosaicId value) {
-		_mosaicId = value;
-	}
-
-	set amount(Amount value) {
-		_amount = value;
+		mosaicId.sort();
 	}
 
 	int get size {
@@ -1418,9 +1106,9 @@ class Mosaic extends StructBase implements IDeserializable {
 		var currentPos = 0;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(mosaicId.size, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _mosaicId.size, _mosaicId.serialize());
+		buffer.setRange(currentPos, currentPos + mosaicId.size, mosaicId.serialize());
 		currentPos += mosaicId.size;
-		buffer.setRange(currentPos, currentPos + _amount.size, _amount.serialize());
+		buffer.setRange(currentPos, currentPos + amount.size, amount.serialize());
 		currentPos += amount.size;
 		return buffer.buffer.asUint8List();
 	}
@@ -1428,8 +1116,8 @@ class Mosaic extends StructBase implements IDeserializable {
 	@override
 	String toString() {
 		var result = 'Mosaic(';
-		result += 'mosaicId: "${_mosaicId.toString()}", ';
-		result += 'amount: "${_amount.toString()}", ';
+		result += 'mosaicId: "${mosaicId.toString()}", ';
+		result += 'amount: "${amount.toString()}", ';
 		result += ')';
 		return result;
 	}
@@ -1442,24 +1130,16 @@ class SizePrefixedMosaic extends StructBase implements IDeserializable {
 		'mosaic': 'struct:Mosaic'
 	};
 
-	Mosaic _mosaic = Mosaic();
+	Mosaic mosaic = Mosaic();
 
 	SizePrefixedMosaic([mosaic]) 
 		: super(mosaic == null )
 	{
-		_mosaic = mosaic ?? Mosaic();
+		this.mosaic = mosaic ?? Mosaic();
 	}
 
 	void sort() {
-		_mosaic.sort();
-	}
-
-	Mosaic get mosaic {
-		return _mosaic;
-	}
-
-	set mosaic(Mosaic value) {
-		_mosaic = value;
+		mosaic.sort();
 	}
 
 	int get size {
@@ -1487,7 +1167,7 @@ class SizePrefixedMosaic extends StructBase implements IDeserializable {
 		var currentPos = 0;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(mosaic.size, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _mosaic.size, _mosaic.serialize());
+		buffer.setRange(currentPos, currentPos + mosaic.size, mosaic.serialize());
 		currentPos += mosaic.size;
 		return buffer.buffer.asUint8List();
 	}
@@ -1495,7 +1175,7 @@ class SizePrefixedMosaic extends StructBase implements IDeserializable {
 	@override
 	String toString() {
 		var result = 'SizePrefixedMosaic(';
-		result += 'mosaic: "${_mosaic.toString()}", ';
+		result += 'mosaic: "${mosaic.toString()}", ';
 		result += ')';
 		return result;
 	}
@@ -1546,55 +1226,23 @@ class MosaicLevy extends StructBase implements IDeserializable {
 		'fee': 'pod:Amount'
 	};
 
-	MosaicTransferFeeType _transferFeeType = MosaicTransferFeeType.ABSOLUTE;
-	Address _recipientAddress = Address();
-	MosaicId _mosaicId = MosaicId();
-	Amount _fee = Amount();
-	final int _recipientAddressSize = 40; // reserved field
+	MosaicTransferFeeType transferFeeType = MosaicTransferFeeType.ABSOLUTE;
+	Address recipientAddress = Address();
+	MosaicId mosaicId = MosaicId();
+	Amount fee = Amount();
+	final int recipientAddressSize = 40; // reserved field
 
 	MosaicLevy({ MosaicTransferFeeType? transferFeeType, Address? recipientAddress, MosaicId? mosaicId, Amount? fee}) 
 		: super(transferFeeType == null && recipientAddress == null && mosaicId == null && fee == null )
 	{
-		_transferFeeType = transferFeeType ?? MosaicTransferFeeType.ABSOLUTE;
-		_recipientAddress = recipientAddress ?? Address();
-		_mosaicId = mosaicId ?? MosaicId();
-		_fee = fee ?? Amount();
+		this.transferFeeType = transferFeeType ?? MosaicTransferFeeType.ABSOLUTE;
+		this.recipientAddress = recipientAddress ?? Address();
+		this.mosaicId = mosaicId ?? MosaicId();
+		this.fee = fee ?? Amount();
 	}
 
 	void sort() {
-		_mosaicId.sort();
-	}
-
-	MosaicTransferFeeType get transferFeeType {
-		return _transferFeeType;
-	}
-
-	Address get recipientAddress {
-		return _recipientAddress;
-	}
-
-	MosaicId get mosaicId {
-		return _mosaicId;
-	}
-
-	Amount get fee {
-		return _fee;
-	}
-
-	set transferFeeType(MosaicTransferFeeType value) {
-		_transferFeeType = value;
-	}
-
-	set recipientAddress(Address value) {
-		_recipientAddress = value;
-	}
-
-	set mosaicId(MosaicId value) {
-		_mosaicId = value;
-	}
-
-	set fee(Amount value) {
-		_fee = value;
+		mosaicId.sort();
 	}
 
 	int get size {
@@ -1640,17 +1288,17 @@ class MosaicLevy extends StructBase implements IDeserializable {
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
-		buffer.setRange(currentPos, currentPos + _transferFeeType.size, _transferFeeType.serialize());
+		buffer.setRange(currentPos, currentPos + transferFeeType.size, transferFeeType.serialize());
 		currentPos += transferFeeType.size;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_recipientAddressSize, 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(recipientAddressSize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _recipientAddress.size, _recipientAddress.serialize());
+		buffer.setRange(currentPos, currentPos + recipientAddress.size, recipientAddress.serialize());
 		currentPos += recipientAddress.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(mosaicId.size, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _mosaicId.size, _mosaicId.serialize());
+		buffer.setRange(currentPos, currentPos + mosaicId.size, mosaicId.serialize());
 		currentPos += mosaicId.size;
-		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());
+		buffer.setRange(currentPos, currentPos + fee.size, fee.serialize());
 		currentPos += fee.size;
 		return buffer.buffer.asUint8List();
 	}
@@ -1658,10 +1306,10 @@ class MosaicLevy extends StructBase implements IDeserializable {
 	@override
 	String toString() {
 		var result = 'MosaicLevy(';
-		result += 'transferFeeType: "${_transferFeeType.toString()}", ';
-		result += 'recipientAddress: "${_recipientAddress.toString()}", ';
-		result += 'mosaicId: "${_mosaicId.toString()}", ';
-		result += 'fee: "${_fee.toString()}", ';
+		result += 'transferFeeType: "${transferFeeType.toString()}", ';
+		result += 'recipientAddress: "${recipientAddress.toString()}", ';
+		result += 'mosaicId: "${mosaicId.toString()}", ';
+		result += 'fee: "${fee.toString()}", ';
 		result += ')';
 		return result;
 	}
@@ -1675,34 +1323,18 @@ class MosaicProperty extends StructBase implements IDeserializable {
 		'value': 'bytes_array'
 	};
 
-	Uint8List _name = Uint8List(0);
-	Uint8List _value = Uint8List(0);
+	Uint8List name = Uint8List(0);
+	Uint8List value = Uint8List(0);
 
 	MosaicProperty({ Uint8List? name, Uint8List? value}) 
 		: super(name == null && value == null )
 	{
-		_name = name ?? Uint8List(0);
-		_value = value ?? Uint8List(0);
+		this.name = name ?? Uint8List(0);
+		this.value = value ?? Uint8List(0);
 	}
 
 	void sort() {
 		// empty body
-	}
-
-	Uint8List get name {
-		return _name;
-	}
-
-	Uint8List get value {
-		return _value;
-	}
-
-	set name(Uint8List value) {
-		_name = value;
-	}
-
-	set value(Uint8List value) {
-		_value = value;
 	}
 
 	int get size {
@@ -1736,13 +1368,13 @@ class MosaicProperty extends StructBase implements IDeserializable {
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_name.length, 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(name.length, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _name.lengthInBytes, _name);
+		buffer.setRange(currentPos, currentPos + name.lengthInBytes, name);
 		currentPos += name.lengthInBytes;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_value.length, 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(value.length, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _value.lengthInBytes, _value);
+		buffer.setRange(currentPos, currentPos + value.lengthInBytes, value);
 		currentPos += value.lengthInBytes;
 		return buffer.buffer.asUint8List();
 	}
@@ -1750,8 +1382,8 @@ class MosaicProperty extends StructBase implements IDeserializable {
 	@override
 	String toString() {
 		var result = 'MosaicProperty(';
-		result += 'name: "${hex.encode(_name.toList()).toUpperCase()}", ';
-		result += 'value: "${hex.encode(_value.toList()).toUpperCase()}", ';
+		result += 'name: "${hex.encode(name.toList()).toUpperCase()}", ';
+		result += 'value: "${hex.encode(value.toList()).toUpperCase()}", ';
 		result += ')';
 		return result;
 	}
@@ -1764,24 +1396,16 @@ class SizePrefixedMosaicProperty extends StructBase implements IDeserializable {
 		'property': 'struct:MosaicProperty'
 	};
 
-	MosaicProperty _property = MosaicProperty();
+	MosaicProperty property = MosaicProperty();
 
 	SizePrefixedMosaicProperty([property]) 
 		: super(property == null )
 	{
-		_property = property ?? MosaicProperty();
+		this.property = property ?? MosaicProperty();
 	}
 
 	void sort() {
-		_property.sort();
-	}
-
-	MosaicProperty get property {
-		return _property;
-	}
-
-	set property(MosaicProperty value) {
-		_property = value;
+		property.sort();
 	}
 
 	int get size {
@@ -1809,7 +1433,7 @@ class SizePrefixedMosaicProperty extends StructBase implements IDeserializable {
 		var currentPos = 0;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(property.size, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _property.size, _property.serialize());
+		buffer.setRange(currentPos, currentPos + property.size, property.serialize());
 		currentPos += property.size;
 		return buffer.buffer.asUint8List();
 	}
@@ -1817,7 +1441,7 @@ class SizePrefixedMosaicProperty extends StructBase implements IDeserializable {
 	@override
 	String toString() {
 		var result = 'SizePrefixedMosaicProperty(';
-		result += 'property: "${_property.toString()}", ';
+		result += 'property: "${property.toString()}", ';
 		result += ')';
 		return result;
 	}
@@ -1834,12 +1458,12 @@ class MosaicDefinition extends StructBase implements IDeserializable {
 		'levy': 'struct:MosaicLevy'
 	};
 
-	PublicKey _ownerPublicKey = PublicKey();
-	MosaicId _id = MosaicId();
-	Uint8List _description = Uint8List(0);
-	List<SizePrefixedMosaicProperty> _properties = [];
-	MosaicLevy _levy = MosaicLevy();
-	final int _ownerPublicKeySize = 32; // reserved field
+	PublicKey ownerPublicKey = PublicKey();
+	MosaicId id = MosaicId();
+	Uint8List description = Uint8List(0);
+	List<SizePrefixedMosaicProperty> properties = [];
+	MosaicLevy levy = MosaicLevy();
+	final int ownerPublicKeySize = 32; // reserved field
 
 	MosaicDefinition({ 
 	PublicKey? ownerPublicKey,
@@ -1850,63 +1474,23 @@ class MosaicDefinition extends StructBase implements IDeserializable {
 	}) 
 		: super(ownerPublicKey == null && id == null && description == null && properties == null && levy == null )
 	{
-		_ownerPublicKey = ownerPublicKey ?? PublicKey();
-		_id = id ?? MosaicId();
-		_description = description ?? Uint8List(0);
-		_properties = properties ?? [];
-		_levy = levy ?? MosaicLevy();
+		this.ownerPublicKey = ownerPublicKey ?? PublicKey();
+		this.id = id ?? MosaicId();
+		this.description = description ?? Uint8List(0);
+		this.properties = properties ?? [];
+		this.levy = levy ?? MosaicLevy();
 	}
 
 	void sort() {
-		_id.sort();
+		id.sort();
 		if (0 != levySizeComputed)
 		{
-			_levy.sort();
+			levy.sort();
 		}
-	}
-
-	PublicKey get ownerPublicKey {
-		return _ownerPublicKey;
-	}
-
-	MosaicId get id {
-		return _id;
-	}
-
-	Uint8List get description {
-		return _description;
-	}
-
-	List<SizePrefixedMosaicProperty> get properties {
-		return _properties;
-	}
-
-	MosaicLevy get levy {
-		return _levy;
 	}
 
 	int get levySizeComputed {
 		return levy.isDefault ? 0 : levy.size + 0;
-	}
-
-	set ownerPublicKey(PublicKey value) {
-		_ownerPublicKey = value;
-	}
-
-	set id(MosaicId value) {
-		_id = value;
-	}
-
-	set description(Uint8List value) {
-		_description = value;
-	}
-
-	set properties(List<SizePrefixedMosaicProperty> value) {
-		_properties = value;
-	}
-
-	set levy(MosaicLevy value) {
-		_levy = value;
 	}
 
 	int get size {
@@ -1972,29 +1556,29 @@ class MosaicDefinition extends StructBase implements IDeserializable {
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_ownerPublicKeySize, 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(ownerPublicKeySize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _ownerPublicKey.size, _ownerPublicKey.serialize());
+		buffer.setRange(currentPos, currentPos + ownerPublicKey.size, ownerPublicKey.serialize());
 		currentPos += ownerPublicKey.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(id.size, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _id.size, _id.serialize());
+		buffer.setRange(currentPos, currentPos + id.size, id.serialize());
 		currentPos += id.size;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_description.length, 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(description.length, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _description.lengthInBytes, _description);
+		buffer.setRange(currentPos, currentPos + description.lengthInBytes, description);
 		currentPos += description.lengthInBytes;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_properties.length, 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(properties.length, 4));
 		currentPos += 4;
 		sort();
-		var res_properties = ArrayHelpers.writeArray(buffer, _properties, currentPos);
+		var res_properties = ArrayHelpers.writeArray(buffer, properties, currentPos);
 		currentPos = res_properties.item2;
 		buffer = res_properties.item1;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(levySizeComputed, 4));
 		currentPos += 4;
 		if (0 != levySizeComputed)
 		{
-			buffer.setRange(currentPos, currentPos + _levy.size, _levy.serialize());
+			buffer.setRange(currentPos, currentPos + levy.size, levy.serialize());
 			currentPos += levy.size;
 		}
 		return buffer.buffer.asUint8List();
@@ -2003,13 +1587,13 @@ class MosaicDefinition extends StructBase implements IDeserializable {
 	@override
 	String toString() {
 		var result = 'MosaicDefinition(';
-		result += 'ownerPublicKey: "${_ownerPublicKey.toString()}", ';
-		result += 'id: "${_id.toString()}", ';
-		result += 'description: "${hex.encode(_description.toList()).toUpperCase()}", ';
-		result += 'properties: "${_properties.map((e) => e.toString()).toList()}", ';
+		result += 'ownerPublicKey: "${ownerPublicKey.toString()}", ';
+		result += 'id: "${id.toString()}", ';
+		result += 'description: "${hex.encode(description.toList()).toUpperCase()}", ';
+		result += 'properties: "${properties.map((e) => e.toString()).toList()}", ';
 		if (0 != levySizeComputed)
 		{
-			result += 'levy: "${_levy.toString()}", ';
+			result += 'levy: "${levy.toString()}", ';
 		}
 		result += ')';
 		return result;
@@ -2034,21 +1618,21 @@ class MosaicDefinitionTransactionV1 extends StructBase implements IDeserializabl
 		'rentalFee': 'pod:Amount'
 	};
 
-	TransactionType _type = TransactionType.TRANSFER;
-	int _version = 0;
-	NetworkType _network = NetworkType.MAINNET;
-	Timestamp _timestamp = Timestamp();
-	PublicKey _signerPublicKey = PublicKey();
-	Signature _signature = Signature();
-	Amount _fee = Amount();
-	Timestamp _deadline = Timestamp();
-	MosaicDefinition _mosaicDefinition = MosaicDefinition();
-	Address _rentalFeeSink = Address();
-	Amount _rentalFee = Amount();
-	final int _entityBodyReserved_1 = 0; // reserved field
-	final int _signerPublicKeySize = 32; // reserved field
-	final int _signatureSize = 64; // reserved field
-	final int _rentalFeeSinkSize = 40; // reserved field
+	TransactionType type = TransactionType.TRANSFER;
+	int version = 0;
+	NetworkType network = NetworkType.MAINNET;
+	Timestamp timestamp = Timestamp();
+	PublicKey signerPublicKey = PublicKey();
+	Signature signature = Signature();
+	Amount fee = Amount();
+	Timestamp deadline = Timestamp();
+	MosaicDefinition mosaicDefinition = MosaicDefinition();
+	Address rentalFeeSink = Address();
+	Amount rentalFee = Amount();
+	final int entityBodyReserved_1 = 0; // reserved field
+	final int signerPublicKeySize = 32; // reserved field
+	final int signatureSize = 64; // reserved field
+	final int rentalFeeSinkSize = 40; // reserved field
 
 	MosaicDefinitionTransactionV1({ 
 	TransactionType? type,
@@ -2065,109 +1649,21 @@ class MosaicDefinitionTransactionV1 extends StructBase implements IDeserializabl
 	}) 
 		: super(type == null && version == null && network == null && timestamp == null && signerPublicKey == null && signature == null && fee == null && deadline == null && mosaicDefinition == null && rentalFeeSink == null && rentalFee == null )
 	{
-		_type = type ?? MosaicDefinitionTransactionV1.TRANSACTION_TYPE;
-		_version = version ?? MosaicDefinitionTransactionV1.TRANSACTION_VERSION;
-		_network = network ?? NetworkType.MAINNET;
-		_timestamp = timestamp ?? Timestamp();
-		_signerPublicKey = signerPublicKey ?? PublicKey();
-		_signature = signature ?? Signature();
-		_fee = fee ?? Amount();
-		_deadline = deadline ?? Timestamp();
-		_mosaicDefinition = mosaicDefinition ?? MosaicDefinition();
-		_rentalFeeSink = rentalFeeSink ?? Address();
-		_rentalFee = rentalFee ?? Amount();
+		this.type = type ?? MosaicDefinitionTransactionV1.TRANSACTION_TYPE;
+		this.version = version ?? MosaicDefinitionTransactionV1.TRANSACTION_VERSION;
+		this.network = network ?? NetworkType.MAINNET;
+		this.timestamp = timestamp ?? Timestamp();
+		this.signerPublicKey = signerPublicKey ?? PublicKey();
+		this.signature = signature ?? Signature();
+		this.fee = fee ?? Amount();
+		this.deadline = deadline ?? Timestamp();
+		this.mosaicDefinition = mosaicDefinition ?? MosaicDefinition();
+		this.rentalFeeSink = rentalFeeSink ?? Address();
+		this.rentalFee = rentalFee ?? Amount();
 	}
 
 	void sort() {
-		_mosaicDefinition.sort();
-	}
-
-	TransactionType get type {
-		return _type;
-	}
-
-	int get version {
-		return _version;
-	}
-
-	NetworkType get network {
-		return _network;
-	}
-
-	Timestamp get timestamp {
-		return _timestamp;
-	}
-
-	PublicKey get signerPublicKey {
-		return _signerPublicKey;
-	}
-
-	Signature get signature {
-		return _signature;
-	}
-
-	Amount get fee {
-		return _fee;
-	}
-
-	Timestamp get deadline {
-		return _deadline;
-	}
-
-	MosaicDefinition get mosaicDefinition {
-		return _mosaicDefinition;
-	}
-
-	Address get rentalFeeSink {
-		return _rentalFeeSink;
-	}
-
-	Amount get rentalFee {
-		return _rentalFee;
-	}
-
-	set type(TransactionType value) {
-		_type = value;
-	}
-
-	set version(int value) {
-		_version = value;
-	}
-
-	set network(NetworkType value) {
-		_network = value;
-	}
-
-	set timestamp(Timestamp value) {
-		_timestamp = value;
-	}
-
-	set signerPublicKey(PublicKey value) {
-		_signerPublicKey = value;
-	}
-
-	set signature(Signature value) {
-		_signature = value;
-	}
-
-	set fee(Amount value) {
-		_fee = value;
-	}
-
-	set deadline(Timestamp value) {
-		_deadline = value;
-	}
-
-	set mosaicDefinition(MosaicDefinition value) {
-		_mosaicDefinition = value;
-	}
-
-	set rentalFeeSink(Address value) {
-		_rentalFeeSink = value;
-	}
-
-	set rentalFee(Amount value) {
-		_rentalFee = value;
+		mosaicDefinition.sort();
 	}
 
 	int get size {
@@ -2259,37 +1755,37 @@ class MosaicDefinitionTransactionV1 extends StructBase implements IDeserializabl
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
-		buffer.setRange(currentPos, currentPos + _type.size, _type.serialize());
+		buffer.setRange(currentPos, currentPos + type.size, type.serialize());
 		currentPos += type.size;
-		buffer.setRange(currentPos, currentPos + 1, intToBytes(_version, 1));
+		buffer.setRange(currentPos, currentPos + 1, intToBytes(version, 1));
 		currentPos += 1;
-		buffer.setRange(currentPos, currentPos + 2, intToBytes(_entityBodyReserved_1, 2));
+		buffer.setRange(currentPos, currentPos + 2, intToBytes(entityBodyReserved_1, 2));
 		currentPos += 2;
-		buffer.setRange(currentPos, currentPos + _network.size, _network.serialize());
+		buffer.setRange(currentPos, currentPos + network.size, network.serialize());
 		currentPos += network.size;
-		buffer.setRange(currentPos, currentPos + _timestamp.size, _timestamp.serialize());
+		buffer.setRange(currentPos, currentPos + timestamp.size, timestamp.serialize());
 		currentPos += timestamp.size;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_signerPublicKeySize, 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(signerPublicKeySize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _signerPublicKey.size, _signerPublicKey.serialize());
+		buffer.setRange(currentPos, currentPos + signerPublicKey.size, signerPublicKey.serialize());
 		currentPos += signerPublicKey.size;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_signatureSize, 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(signatureSize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _signature.size, _signature.serialize());
+		buffer.setRange(currentPos, currentPos + signature.size, signature.serialize());
 		currentPos += signature.size;
-		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());
+		buffer.setRange(currentPos, currentPos + fee.size, fee.serialize());
 		currentPos += fee.size;
-		buffer.setRange(currentPos, currentPos + _deadline.size, _deadline.serialize());
+		buffer.setRange(currentPos, currentPos + deadline.size, deadline.serialize());
 		currentPos += deadline.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(mosaicDefinition.size, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _mosaicDefinition.size, _mosaicDefinition.serialize());
+		buffer.setRange(currentPos, currentPos + mosaicDefinition.size, mosaicDefinition.serialize());
 		currentPos += mosaicDefinition.size;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_rentalFeeSinkSize, 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(rentalFeeSinkSize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _rentalFeeSink.size, _rentalFeeSink.serialize());
+		buffer.setRange(currentPos, currentPos + rentalFeeSink.size, rentalFeeSink.serialize());
 		currentPos += rentalFeeSink.size;
-		buffer.setRange(currentPos, currentPos + _rentalFee.size, _rentalFee.serialize());
+		buffer.setRange(currentPos, currentPos + rentalFee.size, rentalFee.serialize());
 		currentPos += rentalFee.size;
 		return buffer.buffer.asUint8List();
 	}
@@ -2297,17 +1793,17 @@ class MosaicDefinitionTransactionV1 extends StructBase implements IDeserializabl
 	@override
 	String toString() {
 		var result = 'MosaicDefinitionTransactionV1(';
-		result += 'type: "${_type.toString()}", ';
-		result += 'version: "0x${_version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
-		result += 'network: "${_network.toString()}", ';
-		result += 'timestamp: "${_timestamp.toString()}", ';
-		result += 'signerPublicKey: "${_signerPublicKey.toString()}", ';
-		result += 'signature: "${_signature.toString()}", ';
-		result += 'fee: "${_fee.toString()}", ';
-		result += 'deadline: "${_deadline.toString()}", ';
-		result += 'mosaicDefinition: "${_mosaicDefinition.toString()}", ';
-		result += 'rentalFeeSink: "${_rentalFeeSink.toString()}", ';
-		result += 'rentalFee: "${_rentalFee.toString()}", ';
+		result += 'type: "${type.toString()}", ';
+		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'network: "${network.toString()}", ';
+		result += 'timestamp: "${timestamp.toString()}", ';
+		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
+		result += 'signature: "${signature.toString()}", ';
+		result += 'fee: "${fee.toString()}", ';
+		result += 'deadline: "${deadline.toString()}", ';
+		result += 'mosaicDefinition: "${mosaicDefinition.toString()}", ';
+		result += 'rentalFeeSink: "${rentalFeeSink.toString()}", ';
+		result += 'rentalFee: "${rentalFee.toString()}", ';
 		result += ')';
 		return result;
 	}
@@ -2330,19 +1826,19 @@ class NonVerifiableMosaicDefinitionTransactionV1 extends StructBase implements I
 		'rentalFee': 'pod:Amount'
 	};
 
-	TransactionType _type = TransactionType.TRANSFER;
-	int _version = 0;
-	NetworkType _network = NetworkType.MAINNET;
-	Timestamp _timestamp = Timestamp();
-	PublicKey _signerPublicKey = PublicKey();
-	Amount _fee = Amount();
-	Timestamp _deadline = Timestamp();
-	MosaicDefinition _mosaicDefinition = MosaicDefinition();
-	Address _rentalFeeSink = Address();
-	Amount _rentalFee = Amount();
-	final int _entityBodyReserved_1 = 0; // reserved field
-	final int _signerPublicKeySize = 32; // reserved field
-	final int _rentalFeeSinkSize = 40; // reserved field
+	TransactionType type = TransactionType.TRANSFER;
+	int version = 0;
+	NetworkType network = NetworkType.MAINNET;
+	Timestamp timestamp = Timestamp();
+	PublicKey signerPublicKey = PublicKey();
+	Amount fee = Amount();
+	Timestamp deadline = Timestamp();
+	MosaicDefinition mosaicDefinition = MosaicDefinition();
+	Address rentalFeeSink = Address();
+	Amount rentalFee = Amount();
+	final int entityBodyReserved_1 = 0; // reserved field
+	final int signerPublicKeySize = 32; // reserved field
+	final int rentalFeeSinkSize = 40; // reserved field
 
 	NonVerifiableMosaicDefinitionTransactionV1({ 
 	TransactionType? type,
@@ -2358,100 +1854,20 @@ class NonVerifiableMosaicDefinitionTransactionV1 extends StructBase implements I
 	}) 
 		: super(type == null && version == null && network == null && timestamp == null && signerPublicKey == null && fee == null && deadline == null && mosaicDefinition == null && rentalFeeSink == null && rentalFee == null )
 	{
-		_type = type ?? NonVerifiableMosaicDefinitionTransactionV1.TRANSACTION_TYPE;
-		_version = version ?? NonVerifiableMosaicDefinitionTransactionV1.TRANSACTION_VERSION;
-		_network = network ?? NetworkType.MAINNET;
-		_timestamp = timestamp ?? Timestamp();
-		_signerPublicKey = signerPublicKey ?? PublicKey();
-		_fee = fee ?? Amount();
-		_deadline = deadline ?? Timestamp();
-		_mosaicDefinition = mosaicDefinition ?? MosaicDefinition();
-		_rentalFeeSink = rentalFeeSink ?? Address();
-		_rentalFee = rentalFee ?? Amount();
+		this.type = type ?? NonVerifiableMosaicDefinitionTransactionV1.TRANSACTION_TYPE;
+		this.version = version ?? NonVerifiableMosaicDefinitionTransactionV1.TRANSACTION_VERSION;
+		this.network = network ?? NetworkType.MAINNET;
+		this.timestamp = timestamp ?? Timestamp();
+		this.signerPublicKey = signerPublicKey ?? PublicKey();
+		this.fee = fee ?? Amount();
+		this.deadline = deadline ?? Timestamp();
+		this.mosaicDefinition = mosaicDefinition ?? MosaicDefinition();
+		this.rentalFeeSink = rentalFeeSink ?? Address();
+		this.rentalFee = rentalFee ?? Amount();
 	}
 
 	void sort() {
-		_mosaicDefinition.sort();
-	}
-
-	TransactionType get type {
-		return _type;
-	}
-
-	int get version {
-		return _version;
-	}
-
-	NetworkType get network {
-		return _network;
-	}
-
-	Timestamp get timestamp {
-		return _timestamp;
-	}
-
-	PublicKey get signerPublicKey {
-		return _signerPublicKey;
-	}
-
-	Amount get fee {
-		return _fee;
-	}
-
-	Timestamp get deadline {
-		return _deadline;
-	}
-
-	MosaicDefinition get mosaicDefinition {
-		return _mosaicDefinition;
-	}
-
-	Address get rentalFeeSink {
-		return _rentalFeeSink;
-	}
-
-	Amount get rentalFee {
-		return _rentalFee;
-	}
-
-	set type(TransactionType value) {
-		_type = value;
-	}
-
-	set version(int value) {
-		_version = value;
-	}
-
-	set network(NetworkType value) {
-		_network = value;
-	}
-
-	set timestamp(Timestamp value) {
-		_timestamp = value;
-	}
-
-	set signerPublicKey(PublicKey value) {
-		_signerPublicKey = value;
-	}
-
-	set fee(Amount value) {
-		_fee = value;
-	}
-
-	set deadline(Timestamp value) {
-		_deadline = value;
-	}
-
-	set mosaicDefinition(MosaicDefinition value) {
-		_mosaicDefinition = value;
-	}
-
-	set rentalFeeSink(Address value) {
-		_rentalFeeSink = value;
-	}
-
-	set rentalFee(Amount value) {
-		_rentalFee = value;
+		mosaicDefinition.sort();
 	}
 
 	int get size {
@@ -2533,33 +1949,33 @@ class NonVerifiableMosaicDefinitionTransactionV1 extends StructBase implements I
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
-		buffer.setRange(currentPos, currentPos + _type.size, _type.serialize());
+		buffer.setRange(currentPos, currentPos + type.size, type.serialize());
 		currentPos += type.size;
-		buffer.setRange(currentPos, currentPos + 1, intToBytes(_version, 1));
+		buffer.setRange(currentPos, currentPos + 1, intToBytes(version, 1));
 		currentPos += 1;
-		buffer.setRange(currentPos, currentPos + 2, intToBytes(_entityBodyReserved_1, 2));
+		buffer.setRange(currentPos, currentPos + 2, intToBytes(entityBodyReserved_1, 2));
 		currentPos += 2;
-		buffer.setRange(currentPos, currentPos + _network.size, _network.serialize());
+		buffer.setRange(currentPos, currentPos + network.size, network.serialize());
 		currentPos += network.size;
-		buffer.setRange(currentPos, currentPos + _timestamp.size, _timestamp.serialize());
+		buffer.setRange(currentPos, currentPos + timestamp.size, timestamp.serialize());
 		currentPos += timestamp.size;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_signerPublicKeySize, 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(signerPublicKeySize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _signerPublicKey.size, _signerPublicKey.serialize());
+		buffer.setRange(currentPos, currentPos + signerPublicKey.size, signerPublicKey.serialize());
 		currentPos += signerPublicKey.size;
-		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());
+		buffer.setRange(currentPos, currentPos + fee.size, fee.serialize());
 		currentPos += fee.size;
-		buffer.setRange(currentPos, currentPos + _deadline.size, _deadline.serialize());
+		buffer.setRange(currentPos, currentPos + deadline.size, deadline.serialize());
 		currentPos += deadline.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(mosaicDefinition.size, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _mosaicDefinition.size, _mosaicDefinition.serialize());
+		buffer.setRange(currentPos, currentPos + mosaicDefinition.size, mosaicDefinition.serialize());
 		currentPos += mosaicDefinition.size;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_rentalFeeSinkSize, 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(rentalFeeSinkSize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _rentalFeeSink.size, _rentalFeeSink.serialize());
+		buffer.setRange(currentPos, currentPos + rentalFeeSink.size, rentalFeeSink.serialize());
 		currentPos += rentalFeeSink.size;
-		buffer.setRange(currentPos, currentPos + _rentalFee.size, _rentalFee.serialize());
+		buffer.setRange(currentPos, currentPos + rentalFee.size, rentalFee.serialize());
 		currentPos += rentalFee.size;
 		return buffer.buffer.asUint8List();
 	}
@@ -2567,16 +1983,16 @@ class NonVerifiableMosaicDefinitionTransactionV1 extends StructBase implements I
 	@override
 	String toString() {
 		var result = 'NonVerifiableMosaicDefinitionTransactionV1(';
-		result += 'type: "${_type.toString()}", ';
-		result += 'version: "0x${_version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
-		result += 'network: "${_network.toString()}", ';
-		result += 'timestamp: "${_timestamp.toString()}", ';
-		result += 'signerPublicKey: "${_signerPublicKey.toString()}", ';
-		result += 'fee: "${_fee.toString()}", ';
-		result += 'deadline: "${_deadline.toString()}", ';
-		result += 'mosaicDefinition: "${_mosaicDefinition.toString()}", ';
-		result += 'rentalFeeSink: "${_rentalFeeSink.toString()}", ';
-		result += 'rentalFee: "${_rentalFee.toString()}", ';
+		result += 'type: "${type.toString()}", ';
+		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'network: "${network.toString()}", ';
+		result += 'timestamp: "${timestamp.toString()}", ';
+		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
+		result += 'fee: "${fee.toString()}", ';
+		result += 'deadline: "${deadline.toString()}", ';
+		result += 'mosaicDefinition: "${mosaicDefinition.toString()}", ';
+		result += 'rentalFeeSink: "${rentalFeeSink.toString()}", ';
+		result += 'rentalFee: "${rentalFee.toString()}", ';
 		result += ')';
 		return result;
 	}
@@ -2635,20 +2051,20 @@ class MosaicSupplyChangeTransactionV1 extends StructBase implements IDeserializa
 		'delta': 'pod:Amount'
 	};
 
-	TransactionType _type = TransactionType.TRANSFER;
-	int _version = 0;
-	NetworkType _network = NetworkType.MAINNET;
-	Timestamp _timestamp = Timestamp();
-	PublicKey _signerPublicKey = PublicKey();
-	Signature _signature = Signature();
-	Amount _fee = Amount();
-	Timestamp _deadline = Timestamp();
-	MosaicId _mosaicId = MosaicId();
-	MosaicSupplyChangeAction _action = MosaicSupplyChangeAction.INCREASE;
-	Amount _delta = Amount();
-	final int _entityBodyReserved_1 = 0; // reserved field
-	final int _signerPublicKeySize = 32; // reserved field
-	final int _signatureSize = 64; // reserved field
+	TransactionType type = TransactionType.TRANSFER;
+	int version = 0;
+	NetworkType network = NetworkType.MAINNET;
+	Timestamp timestamp = Timestamp();
+	PublicKey signerPublicKey = PublicKey();
+	Signature signature = Signature();
+	Amount fee = Amount();
+	Timestamp deadline = Timestamp();
+	MosaicId mosaicId = MosaicId();
+	MosaicSupplyChangeAction action = MosaicSupplyChangeAction.INCREASE;
+	Amount delta = Amount();
+	final int entityBodyReserved_1 = 0; // reserved field
+	final int signerPublicKeySize = 32; // reserved field
+	final int signatureSize = 64; // reserved field
 
 	MosaicSupplyChangeTransactionV1({ 
 	TransactionType? type,
@@ -2665,109 +2081,21 @@ class MosaicSupplyChangeTransactionV1 extends StructBase implements IDeserializa
 	}) 
 		: super(type == null && version == null && network == null && timestamp == null && signerPublicKey == null && signature == null && fee == null && deadline == null && mosaicId == null && action == null && delta == null )
 	{
-		_type = type ?? MosaicSupplyChangeTransactionV1.TRANSACTION_TYPE;
-		_version = version ?? MosaicSupplyChangeTransactionV1.TRANSACTION_VERSION;
-		_network = network ?? NetworkType.MAINNET;
-		_timestamp = timestamp ?? Timestamp();
-		_signerPublicKey = signerPublicKey ?? PublicKey();
-		_signature = signature ?? Signature();
-		_fee = fee ?? Amount();
-		_deadline = deadline ?? Timestamp();
-		_mosaicId = mosaicId ?? MosaicId();
-		_action = action ?? MosaicSupplyChangeAction.INCREASE;
-		_delta = delta ?? Amount();
+		this.type = type ?? MosaicSupplyChangeTransactionV1.TRANSACTION_TYPE;
+		this.version = version ?? MosaicSupplyChangeTransactionV1.TRANSACTION_VERSION;
+		this.network = network ?? NetworkType.MAINNET;
+		this.timestamp = timestamp ?? Timestamp();
+		this.signerPublicKey = signerPublicKey ?? PublicKey();
+		this.signature = signature ?? Signature();
+		this.fee = fee ?? Amount();
+		this.deadline = deadline ?? Timestamp();
+		this.mosaicId = mosaicId ?? MosaicId();
+		this.action = action ?? MosaicSupplyChangeAction.INCREASE;
+		this.delta = delta ?? Amount();
 	}
 
 	void sort() {
-		_mosaicId.sort();
-	}
-
-	TransactionType get type {
-		return _type;
-	}
-
-	int get version {
-		return _version;
-	}
-
-	NetworkType get network {
-		return _network;
-	}
-
-	Timestamp get timestamp {
-		return _timestamp;
-	}
-
-	PublicKey get signerPublicKey {
-		return _signerPublicKey;
-	}
-
-	Signature get signature {
-		return _signature;
-	}
-
-	Amount get fee {
-		return _fee;
-	}
-
-	Timestamp get deadline {
-		return _deadline;
-	}
-
-	MosaicId get mosaicId {
-		return _mosaicId;
-	}
-
-	MosaicSupplyChangeAction get action {
-		return _action;
-	}
-
-	Amount get delta {
-		return _delta;
-	}
-
-	set type(TransactionType value) {
-		_type = value;
-	}
-
-	set version(int value) {
-		_version = value;
-	}
-
-	set network(NetworkType value) {
-		_network = value;
-	}
-
-	set timestamp(Timestamp value) {
-		_timestamp = value;
-	}
-
-	set signerPublicKey(PublicKey value) {
-		_signerPublicKey = value;
-	}
-
-	set signature(Signature value) {
-		_signature = value;
-	}
-
-	set fee(Amount value) {
-		_fee = value;
-	}
-
-	set deadline(Timestamp value) {
-		_deadline = value;
-	}
-
-	set mosaicId(MosaicId value) {
-		_mosaicId = value;
-	}
-
-	set action(MosaicSupplyChangeAction value) {
-		_action = value;
-	}
-
-	set delta(Amount value) {
-		_delta = value;
+		mosaicId.sort();
 	}
 
 	int get size {
@@ -2853,35 +2181,35 @@ class MosaicSupplyChangeTransactionV1 extends StructBase implements IDeserializa
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
-		buffer.setRange(currentPos, currentPos + _type.size, _type.serialize());
+		buffer.setRange(currentPos, currentPos + type.size, type.serialize());
 		currentPos += type.size;
-		buffer.setRange(currentPos, currentPos + 1, intToBytes(_version, 1));
+		buffer.setRange(currentPos, currentPos + 1, intToBytes(version, 1));
 		currentPos += 1;
-		buffer.setRange(currentPos, currentPos + 2, intToBytes(_entityBodyReserved_1, 2));
+		buffer.setRange(currentPos, currentPos + 2, intToBytes(entityBodyReserved_1, 2));
 		currentPos += 2;
-		buffer.setRange(currentPos, currentPos + _network.size, _network.serialize());
+		buffer.setRange(currentPos, currentPos + network.size, network.serialize());
 		currentPos += network.size;
-		buffer.setRange(currentPos, currentPos + _timestamp.size, _timestamp.serialize());
+		buffer.setRange(currentPos, currentPos + timestamp.size, timestamp.serialize());
 		currentPos += timestamp.size;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_signerPublicKeySize, 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(signerPublicKeySize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _signerPublicKey.size, _signerPublicKey.serialize());
+		buffer.setRange(currentPos, currentPos + signerPublicKey.size, signerPublicKey.serialize());
 		currentPos += signerPublicKey.size;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_signatureSize, 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(signatureSize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _signature.size, _signature.serialize());
+		buffer.setRange(currentPos, currentPos + signature.size, signature.serialize());
 		currentPos += signature.size;
-		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());
+		buffer.setRange(currentPos, currentPos + fee.size, fee.serialize());
 		currentPos += fee.size;
-		buffer.setRange(currentPos, currentPos + _deadline.size, _deadline.serialize());
+		buffer.setRange(currentPos, currentPos + deadline.size, deadline.serialize());
 		currentPos += deadline.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(mosaicId.size, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _mosaicId.size, _mosaicId.serialize());
+		buffer.setRange(currentPos, currentPos + mosaicId.size, mosaicId.serialize());
 		currentPos += mosaicId.size;
-		buffer.setRange(currentPos, currentPos + _action.size, _action.serialize());
+		buffer.setRange(currentPos, currentPos + action.size, action.serialize());
 		currentPos += action.size;
-		buffer.setRange(currentPos, currentPos + _delta.size, _delta.serialize());
+		buffer.setRange(currentPos, currentPos + delta.size, delta.serialize());
 		currentPos += delta.size;
 		return buffer.buffer.asUint8List();
 	}
@@ -2889,17 +2217,17 @@ class MosaicSupplyChangeTransactionV1 extends StructBase implements IDeserializa
 	@override
 	String toString() {
 		var result = 'MosaicSupplyChangeTransactionV1(';
-		result += 'type: "${_type.toString()}", ';
-		result += 'version: "0x${_version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
-		result += 'network: "${_network.toString()}", ';
-		result += 'timestamp: "${_timestamp.toString()}", ';
-		result += 'signerPublicKey: "${_signerPublicKey.toString()}", ';
-		result += 'signature: "${_signature.toString()}", ';
-		result += 'fee: "${_fee.toString()}", ';
-		result += 'deadline: "${_deadline.toString()}", ';
-		result += 'mosaicId: "${_mosaicId.toString()}", ';
-		result += 'action: "${_action.toString()}", ';
-		result += 'delta: "${_delta.toString()}", ';
+		result += 'type: "${type.toString()}", ';
+		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'network: "${network.toString()}", ';
+		result += 'timestamp: "${timestamp.toString()}", ';
+		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
+		result += 'signature: "${signature.toString()}", ';
+		result += 'fee: "${fee.toString()}", ';
+		result += 'deadline: "${deadline.toString()}", ';
+		result += 'mosaicId: "${mosaicId.toString()}", ';
+		result += 'action: "${action.toString()}", ';
+		result += 'delta: "${delta.toString()}", ';
 		result += ')';
 		return result;
 	}
@@ -2922,18 +2250,18 @@ class NonVerifiableMosaicSupplyChangeTransactionV1 extends StructBase implements
 		'delta': 'pod:Amount'
 	};
 
-	TransactionType _type = TransactionType.TRANSFER;
-	int _version = 0;
-	NetworkType _network = NetworkType.MAINNET;
-	Timestamp _timestamp = Timestamp();
-	PublicKey _signerPublicKey = PublicKey();
-	Amount _fee = Amount();
-	Timestamp _deadline = Timestamp();
-	MosaicId _mosaicId = MosaicId();
-	MosaicSupplyChangeAction _action = MosaicSupplyChangeAction.INCREASE;
-	Amount _delta = Amount();
-	final int _entityBodyReserved_1 = 0; // reserved field
-	final int _signerPublicKeySize = 32; // reserved field
+	TransactionType type = TransactionType.TRANSFER;
+	int version = 0;
+	NetworkType network = NetworkType.MAINNET;
+	Timestamp timestamp = Timestamp();
+	PublicKey signerPublicKey = PublicKey();
+	Amount fee = Amount();
+	Timestamp deadline = Timestamp();
+	MosaicId mosaicId = MosaicId();
+	MosaicSupplyChangeAction action = MosaicSupplyChangeAction.INCREASE;
+	Amount delta = Amount();
+	final int entityBodyReserved_1 = 0; // reserved field
+	final int signerPublicKeySize = 32; // reserved field
 
 	NonVerifiableMosaicSupplyChangeTransactionV1({ 
 	TransactionType? type,
@@ -2949,100 +2277,20 @@ class NonVerifiableMosaicSupplyChangeTransactionV1 extends StructBase implements
 	}) 
 		: super(type == null && version == null && network == null && timestamp == null && signerPublicKey == null && fee == null && deadline == null && mosaicId == null && action == null && delta == null )
 	{
-		_type = type ?? NonVerifiableMosaicSupplyChangeTransactionV1.TRANSACTION_TYPE;
-		_version = version ?? NonVerifiableMosaicSupplyChangeTransactionV1.TRANSACTION_VERSION;
-		_network = network ?? NetworkType.MAINNET;
-		_timestamp = timestamp ?? Timestamp();
-		_signerPublicKey = signerPublicKey ?? PublicKey();
-		_fee = fee ?? Amount();
-		_deadline = deadline ?? Timestamp();
-		_mosaicId = mosaicId ?? MosaicId();
-		_action = action ?? MosaicSupplyChangeAction.INCREASE;
-		_delta = delta ?? Amount();
+		this.type = type ?? NonVerifiableMosaicSupplyChangeTransactionV1.TRANSACTION_TYPE;
+		this.version = version ?? NonVerifiableMosaicSupplyChangeTransactionV1.TRANSACTION_VERSION;
+		this.network = network ?? NetworkType.MAINNET;
+		this.timestamp = timestamp ?? Timestamp();
+		this.signerPublicKey = signerPublicKey ?? PublicKey();
+		this.fee = fee ?? Amount();
+		this.deadline = deadline ?? Timestamp();
+		this.mosaicId = mosaicId ?? MosaicId();
+		this.action = action ?? MosaicSupplyChangeAction.INCREASE;
+		this.delta = delta ?? Amount();
 	}
 
 	void sort() {
-		_mosaicId.sort();
-	}
-
-	TransactionType get type {
-		return _type;
-	}
-
-	int get version {
-		return _version;
-	}
-
-	NetworkType get network {
-		return _network;
-	}
-
-	Timestamp get timestamp {
-		return _timestamp;
-	}
-
-	PublicKey get signerPublicKey {
-		return _signerPublicKey;
-	}
-
-	Amount get fee {
-		return _fee;
-	}
-
-	Timestamp get deadline {
-		return _deadline;
-	}
-
-	MosaicId get mosaicId {
-		return _mosaicId;
-	}
-
-	MosaicSupplyChangeAction get action {
-		return _action;
-	}
-
-	Amount get delta {
-		return _delta;
-	}
-
-	set type(TransactionType value) {
-		_type = value;
-	}
-
-	set version(int value) {
-		_version = value;
-	}
-
-	set network(NetworkType value) {
-		_network = value;
-	}
-
-	set timestamp(Timestamp value) {
-		_timestamp = value;
-	}
-
-	set signerPublicKey(PublicKey value) {
-		_signerPublicKey = value;
-	}
-
-	set fee(Amount value) {
-		_fee = value;
-	}
-
-	set deadline(Timestamp value) {
-		_deadline = value;
-	}
-
-	set mosaicId(MosaicId value) {
-		_mosaicId = value;
-	}
-
-	set action(MosaicSupplyChangeAction value) {
-		_action = value;
-	}
-
-	set delta(Amount value) {
-		_delta = value;
+		mosaicId.sort();
 	}
 
 	int get size {
@@ -3118,31 +2366,31 @@ class NonVerifiableMosaicSupplyChangeTransactionV1 extends StructBase implements
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
-		buffer.setRange(currentPos, currentPos + _type.size, _type.serialize());
+		buffer.setRange(currentPos, currentPos + type.size, type.serialize());
 		currentPos += type.size;
-		buffer.setRange(currentPos, currentPos + 1, intToBytes(_version, 1));
+		buffer.setRange(currentPos, currentPos + 1, intToBytes(version, 1));
 		currentPos += 1;
-		buffer.setRange(currentPos, currentPos + 2, intToBytes(_entityBodyReserved_1, 2));
+		buffer.setRange(currentPos, currentPos + 2, intToBytes(entityBodyReserved_1, 2));
 		currentPos += 2;
-		buffer.setRange(currentPos, currentPos + _network.size, _network.serialize());
+		buffer.setRange(currentPos, currentPos + network.size, network.serialize());
 		currentPos += network.size;
-		buffer.setRange(currentPos, currentPos + _timestamp.size, _timestamp.serialize());
+		buffer.setRange(currentPos, currentPos + timestamp.size, timestamp.serialize());
 		currentPos += timestamp.size;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_signerPublicKeySize, 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(signerPublicKeySize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _signerPublicKey.size, _signerPublicKey.serialize());
+		buffer.setRange(currentPos, currentPos + signerPublicKey.size, signerPublicKey.serialize());
 		currentPos += signerPublicKey.size;
-		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());
+		buffer.setRange(currentPos, currentPos + fee.size, fee.serialize());
 		currentPos += fee.size;
-		buffer.setRange(currentPos, currentPos + _deadline.size, _deadline.serialize());
+		buffer.setRange(currentPos, currentPos + deadline.size, deadline.serialize());
 		currentPos += deadline.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(mosaicId.size, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _mosaicId.size, _mosaicId.serialize());
+		buffer.setRange(currentPos, currentPos + mosaicId.size, mosaicId.serialize());
 		currentPos += mosaicId.size;
-		buffer.setRange(currentPos, currentPos + _action.size, _action.serialize());
+		buffer.setRange(currentPos, currentPos + action.size, action.serialize());
 		currentPos += action.size;
-		buffer.setRange(currentPos, currentPos + _delta.size, _delta.serialize());
+		buffer.setRange(currentPos, currentPos + delta.size, delta.serialize());
 		currentPos += delta.size;
 		return buffer.buffer.asUint8List();
 	}
@@ -3150,16 +2398,16 @@ class NonVerifiableMosaicSupplyChangeTransactionV1 extends StructBase implements
 	@override
 	String toString() {
 		var result = 'NonVerifiableMosaicSupplyChangeTransactionV1(';
-		result += 'type: "${_type.toString()}", ';
-		result += 'version: "0x${_version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
-		result += 'network: "${_network.toString()}", ';
-		result += 'timestamp: "${_timestamp.toString()}", ';
-		result += 'signerPublicKey: "${_signerPublicKey.toString()}", ';
-		result += 'fee: "${_fee.toString()}", ';
-		result += 'deadline: "${_deadline.toString()}", ';
-		result += 'mosaicId: "${_mosaicId.toString()}", ';
-		result += 'action: "${_action.toString()}", ';
-		result += 'delta: "${_delta.toString()}", ';
+		result += 'type: "${type.toString()}", ';
+		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'network: "${network.toString()}", ';
+		result += 'timestamp: "${timestamp.toString()}", ';
+		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
+		result += 'fee: "${fee.toString()}", ';
+		result += 'deadline: "${deadline.toString()}", ';
+		result += 'mosaicId: "${mosaicId.toString()}", ';
+		result += 'action: "${action.toString()}", ';
+		result += 'delta: "${delta.toString()}", ';
 		result += ')';
 		return result;
 	}
@@ -3208,15 +2456,15 @@ class MultisigAccountModification extends StructBase implements IDeserializable 
 		'cosignatoryPublicKey': 'pod:PublicKey'
 	};
 
-	MultisigAccountModificationType _modificationType = MultisigAccountModificationType.ADD_COSIGNATORY;
-	PublicKey _cosignatoryPublicKey = PublicKey();
-	final int _cosignatoryPublicKeySize = 32; // reserved field
+	MultisigAccountModificationType modificationType = MultisigAccountModificationType.ADD_COSIGNATORY;
+	PublicKey cosignatoryPublicKey = PublicKey();
+	final int cosignatoryPublicKeySize = 32; // reserved field
 
 	MultisigAccountModification({ MultisigAccountModificationType? modificationType, PublicKey? cosignatoryPublicKey}) 
 		: super(modificationType == null && cosignatoryPublicKey == null )
 	{
-		_modificationType = modificationType ?? MultisigAccountModificationType.ADD_COSIGNATORY;
-		_cosignatoryPublicKey = cosignatoryPublicKey ?? PublicKey();
+		this.modificationType = modificationType ?? MultisigAccountModificationType.ADD_COSIGNATORY;
+		this.cosignatoryPublicKey = cosignatoryPublicKey ?? PublicKey();
 	}
 
 	Tuple2 comparer() {
@@ -3228,22 +2476,6 @@ class MultisigAccountModification extends StructBase implements IDeserializable 
 
 	void sort() {
 		// empty body
-	}
-
-	MultisigAccountModificationType get modificationType {
-		return _modificationType;
-	}
-
-	PublicKey get cosignatoryPublicKey {
-		return _cosignatoryPublicKey;
-	}
-
-	set modificationType(MultisigAccountModificationType value) {
-		_modificationType = value;
-	}
-
-	set cosignatoryPublicKey(PublicKey value) {
-		_cosignatoryPublicKey = value;
 	}
 
 	int get size {
@@ -3277,11 +2509,11 @@ class MultisigAccountModification extends StructBase implements IDeserializable 
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
-		buffer.setRange(currentPos, currentPos + _modificationType.size, _modificationType.serialize());
+		buffer.setRange(currentPos, currentPos + modificationType.size, modificationType.serialize());
 		currentPos += modificationType.size;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_cosignatoryPublicKeySize, 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(cosignatoryPublicKeySize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _cosignatoryPublicKey.size, _cosignatoryPublicKey.serialize());
+		buffer.setRange(currentPos, currentPos + cosignatoryPublicKey.size, cosignatoryPublicKey.serialize());
 		currentPos += cosignatoryPublicKey.size;
 		return buffer.buffer.asUint8List();
 	}
@@ -3289,8 +2521,8 @@ class MultisigAccountModification extends StructBase implements IDeserializable 
 	@override
 	String toString() {
 		var result = 'MultisigAccountModification(';
-		result += 'modificationType: "${_modificationType.toString()}", ';
-		result += 'cosignatoryPublicKey: "${_cosignatoryPublicKey.toString()}", ';
+		result += 'modificationType: "${modificationType.toString()}", ';
+		result += 'cosignatoryPublicKey: "${cosignatoryPublicKey.toString()}", ';
 		result += ')';
 		return result;
 	}
@@ -3303,24 +2535,16 @@ class SizePrefixedMultisigAccountModification extends StructBase implements IDes
 		'modification': 'struct:MultisigAccountModification'
 	};
 
-	MultisigAccountModification _modification = MultisigAccountModification();
+	MultisigAccountModification modification = MultisigAccountModification();
 
 	SizePrefixedMultisigAccountModification([modification]) 
 		: super(modification == null )
 	{
-		_modification = modification ?? MultisigAccountModification();
+		this.modification = modification ?? MultisigAccountModification();
 	}
 
 	void sort() {
-		_modification.sort();
-	}
-
-	MultisigAccountModification get modification {
-		return _modification;
-	}
-
-	set modification(MultisigAccountModification value) {
-		_modification = value;
+		modification.sort();
 	}
 
 	int get size {
@@ -3348,7 +2572,7 @@ class SizePrefixedMultisigAccountModification extends StructBase implements IDes
 		var currentPos = 0;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(modification.size, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _modification.size, _modification.serialize());
+		buffer.setRange(currentPos, currentPos + modification.size, modification.serialize());
 		currentPos += modification.size;
 		return buffer.buffer.asUint8List();
 	}
@@ -3356,7 +2580,7 @@ class SizePrefixedMultisigAccountModification extends StructBase implements IDes
 	@override
 	String toString() {
 		var result = 'SizePrefixedMultisigAccountModification(';
-		result += 'modification: "${_modification.toString()}", ';
+		result += 'modification: "${modification.toString()}", ';
 		result += ')';
 		return result;
 	}
@@ -3378,18 +2602,18 @@ class MultisigAccountModificationTransactionV1 extends StructBase implements IDe
 		'modifications': 'array[SizePrefixedMultisigAccountModification]'
 	};
 
-	TransactionType _type = TransactionType.TRANSFER;
-	int _version = 0;
-	NetworkType _network = NetworkType.MAINNET;
-	Timestamp _timestamp = Timestamp();
-	PublicKey _signerPublicKey = PublicKey();
-	Signature _signature = Signature();
-	Amount _fee = Amount();
-	Timestamp _deadline = Timestamp();
-	List<SizePrefixedMultisigAccountModification> _modifications = [];
-	final int _entityBodyReserved_1 = 0; // reserved field
-	final int _signerPublicKeySize = 32; // reserved field
-	final int _signatureSize = 64; // reserved field
+	TransactionType type = TransactionType.TRANSFER;
+	int version = 0;
+	NetworkType network = NetworkType.MAINNET;
+	Timestamp timestamp = Timestamp();
+	PublicKey signerPublicKey = PublicKey();
+	Signature signature = Signature();
+	Amount fee = Amount();
+	Timestamp deadline = Timestamp();
+	List<SizePrefixedMultisigAccountModification> modifications = [];
+	final int entityBodyReserved_1 = 0; // reserved field
+	final int signerPublicKeySize = 32; // reserved field
+	final int signatureSize = 64; // reserved field
 
 	MultisigAccountModificationTransactionV1({ 
 	TransactionType? type,
@@ -3404,93 +2628,21 @@ class MultisigAccountModificationTransactionV1 extends StructBase implements IDe
 	}) 
 		: super(type == null && version == null && network == null && timestamp == null && signerPublicKey == null && signature == null && fee == null && deadline == null && modifications == null )
 	{
-		_type = type ?? MultisigAccountModificationTransactionV1.TRANSACTION_TYPE;
-		_version = version ?? MultisigAccountModificationTransactionV1.TRANSACTION_VERSION;
-		_network = network ?? NetworkType.MAINNET;
-		_timestamp = timestamp ?? Timestamp();
-		_signerPublicKey = signerPublicKey ?? PublicKey();
-		_signature = signature ?? Signature();
-		_fee = fee ?? Amount();
-		_deadline = deadline ?? Timestamp();
-		_modifications = modifications ?? [];
+		this.type = type ?? MultisigAccountModificationTransactionV1.TRANSACTION_TYPE;
+		this.version = version ?? MultisigAccountModificationTransactionV1.TRANSACTION_VERSION;
+		this.network = network ?? NetworkType.MAINNET;
+		this.timestamp = timestamp ?? Timestamp();
+		this.signerPublicKey = signerPublicKey ?? PublicKey();
+		this.signature = signature ?? Signature();
+		this.fee = fee ?? Amount();
+		this.deadline = deadline ?? Timestamp();
+		this.modifications = modifications ?? [];
 	}
 
 	void sort() {
-		_modifications.sort((lhs, rhs) {
+		modifications.sort((lhs, rhs) {
 			return ArrayHelpers.deepCompare(ArrayHelpers.getValue(lhs.modification), ArrayHelpers.getValue(rhs.modification));
 		});
-	}
-
-	TransactionType get type {
-		return _type;
-	}
-
-	int get version {
-		return _version;
-	}
-
-	NetworkType get network {
-		return _network;
-	}
-
-	Timestamp get timestamp {
-		return _timestamp;
-	}
-
-	PublicKey get signerPublicKey {
-		return _signerPublicKey;
-	}
-
-	Signature get signature {
-		return _signature;
-	}
-
-	Amount get fee {
-		return _fee;
-	}
-
-	Timestamp get deadline {
-		return _deadline;
-	}
-
-	List<SizePrefixedMultisigAccountModification> get modifications {
-		return _modifications;
-	}
-
-	set type(TransactionType value) {
-		_type = value;
-	}
-
-	set version(int value) {
-		_version = value;
-	}
-
-	set network(NetworkType value) {
-		_network = value;
-	}
-
-	set timestamp(Timestamp value) {
-		_timestamp = value;
-	}
-
-	set signerPublicKey(PublicKey value) {
-		_signerPublicKey = value;
-	}
-
-	set signature(Signature value) {
-		_signature = value;
-	}
-
-	set fee(Amount value) {
-		_fee = value;
-	}
-
-	set deadline(Timestamp value) {
-		_deadline = value;
-	}
-
-	set modifications(List<SizePrefixedMultisigAccountModification> value) {
-		_modifications = value;
 	}
 
 	int get size {
@@ -3567,32 +2719,32 @@ class MultisigAccountModificationTransactionV1 extends StructBase implements IDe
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
-		buffer.setRange(currentPos, currentPos + _type.size, _type.serialize());
+		buffer.setRange(currentPos, currentPos + type.size, type.serialize());
 		currentPos += type.size;
-		buffer.setRange(currentPos, currentPos + 1, intToBytes(_version, 1));
+		buffer.setRange(currentPos, currentPos + 1, intToBytes(version, 1));
 		currentPos += 1;
-		buffer.setRange(currentPos, currentPos + 2, intToBytes(_entityBodyReserved_1, 2));
+		buffer.setRange(currentPos, currentPos + 2, intToBytes(entityBodyReserved_1, 2));
 		currentPos += 2;
-		buffer.setRange(currentPos, currentPos + _network.size, _network.serialize());
+		buffer.setRange(currentPos, currentPos + network.size, network.serialize());
 		currentPos += network.size;
-		buffer.setRange(currentPos, currentPos + _timestamp.size, _timestamp.serialize());
+		buffer.setRange(currentPos, currentPos + timestamp.size, timestamp.serialize());
 		currentPos += timestamp.size;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_signerPublicKeySize, 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(signerPublicKeySize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _signerPublicKey.size, _signerPublicKey.serialize());
+		buffer.setRange(currentPos, currentPos + signerPublicKey.size, signerPublicKey.serialize());
 		currentPos += signerPublicKey.size;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_signatureSize, 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(signatureSize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _signature.size, _signature.serialize());
+		buffer.setRange(currentPos, currentPos + signature.size, signature.serialize());
 		currentPos += signature.size;
-		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());
+		buffer.setRange(currentPos, currentPos + fee.size, fee.serialize());
 		currentPos += fee.size;
-		buffer.setRange(currentPos, currentPos + _deadline.size, _deadline.serialize());
+		buffer.setRange(currentPos, currentPos + deadline.size, deadline.serialize());
 		currentPos += deadline.size;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_modifications.length, 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(modifications.length, 4));
 		currentPos += 4;
 		sort();
-		var res_modifications = ArrayHelpers.writeArray(buffer, _modifications, currentPos, (e) { return ArrayHelpers.getValue(e.modification);});
+		var res_modifications = ArrayHelpers.writeArray(buffer, modifications, currentPos, (e) { return ArrayHelpers.getValue(e.modification);});
 		currentPos = res_modifications.item2;
 		buffer = res_modifications.item1;
 		return buffer.buffer.asUint8List();
@@ -3601,15 +2753,15 @@ class MultisigAccountModificationTransactionV1 extends StructBase implements IDe
 	@override
 	String toString() {
 		var result = 'MultisigAccountModificationTransactionV1(';
-		result += 'type: "${_type.toString()}", ';
-		result += 'version: "0x${_version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
-		result += 'network: "${_network.toString()}", ';
-		result += 'timestamp: "${_timestamp.toString()}", ';
-		result += 'signerPublicKey: "${_signerPublicKey.toString()}", ';
-		result += 'signature: "${_signature.toString()}", ';
-		result += 'fee: "${_fee.toString()}", ';
-		result += 'deadline: "${_deadline.toString()}", ';
-		result += 'modifications: "${_modifications.map((e) => e.toString()).toList()}", ';
+		result += 'type: "${type.toString()}", ';
+		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'network: "${network.toString()}", ';
+		result += 'timestamp: "${timestamp.toString()}", ';
+		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
+		result += 'signature: "${signature.toString()}", ';
+		result += 'fee: "${fee.toString()}", ';
+		result += 'deadline: "${deadline.toString()}", ';
+		result += 'modifications: "${modifications.map((e) => e.toString()).toList()}", ';
 		result += ')';
 		return result;
 	}
@@ -3630,16 +2782,16 @@ class NonVerifiableMultisigAccountModificationTransactionV1 extends StructBase i
 		'modifications': 'array[SizePrefixedMultisigAccountModification]'
 	};
 
-	TransactionType _type = TransactionType.TRANSFER;
-	int _version = 0;
-	NetworkType _network = NetworkType.MAINNET;
-	Timestamp _timestamp = Timestamp();
-	PublicKey _signerPublicKey = PublicKey();
-	Amount _fee = Amount();
-	Timestamp _deadline = Timestamp();
-	List<SizePrefixedMultisigAccountModification> _modifications = [];
-	final int _entityBodyReserved_1 = 0; // reserved field
-	final int _signerPublicKeySize = 32; // reserved field
+	TransactionType type = TransactionType.TRANSFER;
+	int version = 0;
+	NetworkType network = NetworkType.MAINNET;
+	Timestamp timestamp = Timestamp();
+	PublicKey signerPublicKey = PublicKey();
+	Amount fee = Amount();
+	Timestamp deadline = Timestamp();
+	List<SizePrefixedMultisigAccountModification> modifications = [];
+	final int entityBodyReserved_1 = 0; // reserved field
+	final int signerPublicKeySize = 32; // reserved field
 
 	NonVerifiableMultisigAccountModificationTransactionV1({ 
 	TransactionType? type,
@@ -3653,84 +2805,20 @@ class NonVerifiableMultisigAccountModificationTransactionV1 extends StructBase i
 	}) 
 		: super(type == null && version == null && network == null && timestamp == null && signerPublicKey == null && fee == null && deadline == null && modifications == null )
 	{
-		_type = type ?? NonVerifiableMultisigAccountModificationTransactionV1.TRANSACTION_TYPE;
-		_version = version ?? NonVerifiableMultisigAccountModificationTransactionV1.TRANSACTION_VERSION;
-		_network = network ?? NetworkType.MAINNET;
-		_timestamp = timestamp ?? Timestamp();
-		_signerPublicKey = signerPublicKey ?? PublicKey();
-		_fee = fee ?? Amount();
-		_deadline = deadline ?? Timestamp();
-		_modifications = modifications ?? [];
+		this.type = type ?? NonVerifiableMultisigAccountModificationTransactionV1.TRANSACTION_TYPE;
+		this.version = version ?? NonVerifiableMultisigAccountModificationTransactionV1.TRANSACTION_VERSION;
+		this.network = network ?? NetworkType.MAINNET;
+		this.timestamp = timestamp ?? Timestamp();
+		this.signerPublicKey = signerPublicKey ?? PublicKey();
+		this.fee = fee ?? Amount();
+		this.deadline = deadline ?? Timestamp();
+		this.modifications = modifications ?? [];
 	}
 
 	void sort() {
-		_modifications.sort((lhs, rhs) {
+		modifications.sort((lhs, rhs) {
 			return ArrayHelpers.deepCompare(ArrayHelpers.getValue(lhs.modification), ArrayHelpers.getValue(rhs.modification));
 		});
-	}
-
-	TransactionType get type {
-		return _type;
-	}
-
-	int get version {
-		return _version;
-	}
-
-	NetworkType get network {
-		return _network;
-	}
-
-	Timestamp get timestamp {
-		return _timestamp;
-	}
-
-	PublicKey get signerPublicKey {
-		return _signerPublicKey;
-	}
-
-	Amount get fee {
-		return _fee;
-	}
-
-	Timestamp get deadline {
-		return _deadline;
-	}
-
-	List<SizePrefixedMultisigAccountModification> get modifications {
-		return _modifications;
-	}
-
-	set type(TransactionType value) {
-		_type = value;
-	}
-
-	set version(int value) {
-		_version = value;
-	}
-
-	set network(NetworkType value) {
-		_network = value;
-	}
-
-	set timestamp(Timestamp value) {
-		_timestamp = value;
-	}
-
-	set signerPublicKey(PublicKey value) {
-		_signerPublicKey = value;
-	}
-
-	set fee(Amount value) {
-		_fee = value;
-	}
-
-	set deadline(Timestamp value) {
-		_deadline = value;
-	}
-
-	set modifications(List<SizePrefixedMultisigAccountModification> value) {
-		_modifications = value;
 	}
 
 	int get size {
@@ -3797,28 +2885,28 @@ class NonVerifiableMultisigAccountModificationTransactionV1 extends StructBase i
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
-		buffer.setRange(currentPos, currentPos + _type.size, _type.serialize());
+		buffer.setRange(currentPos, currentPos + type.size, type.serialize());
 		currentPos += type.size;
-		buffer.setRange(currentPos, currentPos + 1, intToBytes(_version, 1));
+		buffer.setRange(currentPos, currentPos + 1, intToBytes(version, 1));
 		currentPos += 1;
-		buffer.setRange(currentPos, currentPos + 2, intToBytes(_entityBodyReserved_1, 2));
+		buffer.setRange(currentPos, currentPos + 2, intToBytes(entityBodyReserved_1, 2));
 		currentPos += 2;
-		buffer.setRange(currentPos, currentPos + _network.size, _network.serialize());
+		buffer.setRange(currentPos, currentPos + network.size, network.serialize());
 		currentPos += network.size;
-		buffer.setRange(currentPos, currentPos + _timestamp.size, _timestamp.serialize());
+		buffer.setRange(currentPos, currentPos + timestamp.size, timestamp.serialize());
 		currentPos += timestamp.size;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_signerPublicKeySize, 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(signerPublicKeySize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _signerPublicKey.size, _signerPublicKey.serialize());
+		buffer.setRange(currentPos, currentPos + signerPublicKey.size, signerPublicKey.serialize());
 		currentPos += signerPublicKey.size;
-		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());
+		buffer.setRange(currentPos, currentPos + fee.size, fee.serialize());
 		currentPos += fee.size;
-		buffer.setRange(currentPos, currentPos + _deadline.size, _deadline.serialize());
+		buffer.setRange(currentPos, currentPos + deadline.size, deadline.serialize());
 		currentPos += deadline.size;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_modifications.length, 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(modifications.length, 4));
 		currentPos += 4;
 		sort();
-		var res_modifications = ArrayHelpers.writeArray(buffer, _modifications, currentPos, (e) { return ArrayHelpers.getValue(e.modification);});
+		var res_modifications = ArrayHelpers.writeArray(buffer, modifications, currentPos, (e) { return ArrayHelpers.getValue(e.modification);});
 		currentPos = res_modifications.item2;
 		buffer = res_modifications.item1;
 		return buffer.buffer.asUint8List();
@@ -3827,14 +2915,14 @@ class NonVerifiableMultisigAccountModificationTransactionV1 extends StructBase i
 	@override
 	String toString() {
 		var result = 'NonVerifiableMultisigAccountModificationTransactionV1(';
-		result += 'type: "${_type.toString()}", ';
-		result += 'version: "0x${_version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
-		result += 'network: "${_network.toString()}", ';
-		result += 'timestamp: "${_timestamp.toString()}", ';
-		result += 'signerPublicKey: "${_signerPublicKey.toString()}", ';
-		result += 'fee: "${_fee.toString()}", ';
-		result += 'deadline: "${_deadline.toString()}", ';
-		result += 'modifications: "${_modifications.map((e) => e.toString()).toList()}", ';
+		result += 'type: "${type.toString()}", ';
+		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'network: "${network.toString()}", ';
+		result += 'timestamp: "${timestamp.toString()}", ';
+		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
+		result += 'fee: "${fee.toString()}", ';
+		result += 'deadline: "${deadline.toString()}", ';
+		result += 'modifications: "${modifications.map((e) => e.toString()).toList()}", ';
 		result += ')';
 		return result;
 	}
@@ -3856,20 +2944,20 @@ class MultisigAccountModificationTransactionV2 extends StructBase implements IDe
 		'modifications': 'array[SizePrefixedMultisigAccountModification]'
 	};
 
-	TransactionType _type = TransactionType.TRANSFER;
-	int _version = 0;
-	NetworkType _network = NetworkType.MAINNET;
-	Timestamp _timestamp = Timestamp();
-	PublicKey _signerPublicKey = PublicKey();
-	Signature _signature = Signature();
-	Amount _fee = Amount();
-	Timestamp _deadline = Timestamp();
-	List<SizePrefixedMultisigAccountModification> _modifications = [];
-	int _minApprovalDelta = 0;
-	final int _entityBodyReserved_1 = 0; // reserved field
-	final int _signerPublicKeySize = 32; // reserved field
-	final int _signatureSize = 64; // reserved field
-	final int _minApprovalDeltaSize = 4; // reserved field
+	TransactionType type = TransactionType.TRANSFER;
+	int version = 0;
+	NetworkType network = NetworkType.MAINNET;
+	Timestamp timestamp = Timestamp();
+	PublicKey signerPublicKey = PublicKey();
+	Signature signature = Signature();
+	Amount fee = Amount();
+	Timestamp deadline = Timestamp();
+	List<SizePrefixedMultisigAccountModification> modifications = [];
+	int minApprovalDelta = 0;
+	final int entityBodyReserved_1 = 0; // reserved field
+	final int signerPublicKeySize = 32; // reserved field
+	final int signatureSize = 64; // reserved field
+	final int minApprovalDeltaSize = 4; // reserved field
 
 	MultisigAccountModificationTransactionV2({ 
 	TransactionType? type,
@@ -3885,102 +2973,22 @@ class MultisigAccountModificationTransactionV2 extends StructBase implements IDe
 	}) 
 		: super(type == null && version == null && network == null && timestamp == null && signerPublicKey == null && signature == null && fee == null && deadline == null && modifications == null && minApprovalDelta == null )
 	{
-		_type = type ?? MultisigAccountModificationTransactionV2.TRANSACTION_TYPE;
-		_version = version ?? MultisigAccountModificationTransactionV2.TRANSACTION_VERSION;
-		_network = network ?? NetworkType.MAINNET;
-		_timestamp = timestamp ?? Timestamp();
-		_signerPublicKey = signerPublicKey ?? PublicKey();
-		_signature = signature ?? Signature();
-		_fee = fee ?? Amount();
-		_deadline = deadline ?? Timestamp();
-		_modifications = modifications ?? [];
-		_minApprovalDelta = minApprovalDelta ?? 0;
+		this.type = type ?? MultisigAccountModificationTransactionV2.TRANSACTION_TYPE;
+		this.version = version ?? MultisigAccountModificationTransactionV2.TRANSACTION_VERSION;
+		this.network = network ?? NetworkType.MAINNET;
+		this.timestamp = timestamp ?? Timestamp();
+		this.signerPublicKey = signerPublicKey ?? PublicKey();
+		this.signature = signature ?? Signature();
+		this.fee = fee ?? Amount();
+		this.deadline = deadline ?? Timestamp();
+		this.modifications = modifications ?? [];
+		this.minApprovalDelta = minApprovalDelta ?? 0;
 	}
 
 	void sort() {
-		_modifications.sort((lhs, rhs) {
+		modifications.sort((lhs, rhs) {
 			return ArrayHelpers.deepCompare(ArrayHelpers.getValue(lhs.modification), ArrayHelpers.getValue(rhs.modification));
 		});
-	}
-
-	TransactionType get type {
-		return _type;
-	}
-
-	int get version {
-		return _version;
-	}
-
-	NetworkType get network {
-		return _network;
-	}
-
-	Timestamp get timestamp {
-		return _timestamp;
-	}
-
-	PublicKey get signerPublicKey {
-		return _signerPublicKey;
-	}
-
-	Signature get signature {
-		return _signature;
-	}
-
-	Amount get fee {
-		return _fee;
-	}
-
-	Timestamp get deadline {
-		return _deadline;
-	}
-
-	List<SizePrefixedMultisigAccountModification> get modifications {
-		return _modifications;
-	}
-
-	int get minApprovalDelta {
-		return _minApprovalDelta;
-	}
-
-	set type(TransactionType value) {
-		_type = value;
-	}
-
-	set version(int value) {
-		_version = value;
-	}
-
-	set network(NetworkType value) {
-		_network = value;
-	}
-
-	set timestamp(Timestamp value) {
-		_timestamp = value;
-	}
-
-	set signerPublicKey(PublicKey value) {
-		_signerPublicKey = value;
-	}
-
-	set signature(Signature value) {
-		_signature = value;
-	}
-
-	set fee(Amount value) {
-		_fee = value;
-	}
-
-	set deadline(Timestamp value) {
-		_deadline = value;
-	}
-
-	set modifications(List<SizePrefixedMultisigAccountModification> value) {
-		_modifications = value;
-	}
-
-	set minApprovalDelta(int value) {
-		_minApprovalDelta = value;
 	}
 
 	int get size {
@@ -4067,37 +3075,37 @@ class MultisigAccountModificationTransactionV2 extends StructBase implements IDe
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
-		buffer.setRange(currentPos, currentPos + _type.size, _type.serialize());
+		buffer.setRange(currentPos, currentPos + type.size, type.serialize());
 		currentPos += type.size;
-		buffer.setRange(currentPos, currentPos + 1, intToBytes(_version, 1));
+		buffer.setRange(currentPos, currentPos + 1, intToBytes(version, 1));
 		currentPos += 1;
-		buffer.setRange(currentPos, currentPos + 2, intToBytes(_entityBodyReserved_1, 2));
+		buffer.setRange(currentPos, currentPos + 2, intToBytes(entityBodyReserved_1, 2));
 		currentPos += 2;
-		buffer.setRange(currentPos, currentPos + _network.size, _network.serialize());
+		buffer.setRange(currentPos, currentPos + network.size, network.serialize());
 		currentPos += network.size;
-		buffer.setRange(currentPos, currentPos + _timestamp.size, _timestamp.serialize());
+		buffer.setRange(currentPos, currentPos + timestamp.size, timestamp.serialize());
 		currentPos += timestamp.size;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_signerPublicKeySize, 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(signerPublicKeySize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _signerPublicKey.size, _signerPublicKey.serialize());
+		buffer.setRange(currentPos, currentPos + signerPublicKey.size, signerPublicKey.serialize());
 		currentPos += signerPublicKey.size;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_signatureSize, 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(signatureSize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _signature.size, _signature.serialize());
+		buffer.setRange(currentPos, currentPos + signature.size, signature.serialize());
 		currentPos += signature.size;
-		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());
+		buffer.setRange(currentPos, currentPos + fee.size, fee.serialize());
 		currentPos += fee.size;
-		buffer.setRange(currentPos, currentPos + _deadline.size, _deadline.serialize());
+		buffer.setRange(currentPos, currentPos + deadline.size, deadline.serialize());
 		currentPos += deadline.size;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_modifications.length, 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(modifications.length, 4));
 		currentPos += 4;
 		sort();
-		var res_modifications = ArrayHelpers.writeArray(buffer, _modifications, currentPos, (e) { return ArrayHelpers.getValue(e.modification);});
+		var res_modifications = ArrayHelpers.writeArray(buffer, modifications, currentPos, (e) { return ArrayHelpers.getValue(e.modification);});
 		currentPos = res_modifications.item2;
 		buffer = res_modifications.item1;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_minApprovalDeltaSize, 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(minApprovalDeltaSize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_minApprovalDelta, 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(minApprovalDelta, 4));
 		currentPos += 4;
 		return buffer.buffer.asUint8List();
 	}
@@ -4105,16 +3113,16 @@ class MultisigAccountModificationTransactionV2 extends StructBase implements IDe
 	@override
 	String toString() {
 		var result = 'MultisigAccountModificationTransactionV2(';
-		result += 'type: "${_type.toString()}", ';
-		result += 'version: "0x${_version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
-		result += 'network: "${_network.toString()}", ';
-		result += 'timestamp: "${_timestamp.toString()}", ';
-		result += 'signerPublicKey: "${_signerPublicKey.toString()}", ';
-		result += 'signature: "${_signature.toString()}", ';
-		result += 'fee: "${_fee.toString()}", ';
-		result += 'deadline: "${_deadline.toString()}", ';
-		result += 'modifications: "${_modifications.map((e) => e.toString()).toList()}", ';
-		result += 'minApprovalDelta: "0x${_minApprovalDelta.toRadixString(16).padLeft(4 * 2, '0').toUpperCase()}", ';
+		result += 'type: "${type.toString()}", ';
+		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'network: "${network.toString()}", ';
+		result += 'timestamp: "${timestamp.toString()}", ';
+		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
+		result += 'signature: "${signature.toString()}", ';
+		result += 'fee: "${fee.toString()}", ';
+		result += 'deadline: "${deadline.toString()}", ';
+		result += 'modifications: "${modifications.map((e) => e.toString()).toList()}", ';
+		result += 'minApprovalDelta: "0x${minApprovalDelta.toRadixString(16).padLeft(4 * 2, '0').toUpperCase()}", ';
 		result += ')';
 		return result;
 	}
@@ -4135,18 +3143,18 @@ class NonVerifiableMultisigAccountModificationTransactionV2 extends StructBase i
 		'modifications': 'array[SizePrefixedMultisigAccountModification]'
 	};
 
-	TransactionType _type = TransactionType.TRANSFER;
-	int _version = 0;
-	NetworkType _network = NetworkType.MAINNET;
-	Timestamp _timestamp = Timestamp();
-	PublicKey _signerPublicKey = PublicKey();
-	Amount _fee = Amount();
-	Timestamp _deadline = Timestamp();
-	List<SizePrefixedMultisigAccountModification> _modifications = [];
-	int _minApprovalDelta = 0;
-	final int _entityBodyReserved_1 = 0; // reserved field
-	final int _signerPublicKeySize = 32; // reserved field
-	final int _minApprovalDeltaSize = 4; // reserved field
+	TransactionType type = TransactionType.TRANSFER;
+	int version = 0;
+	NetworkType network = NetworkType.MAINNET;
+	Timestamp timestamp = Timestamp();
+	PublicKey signerPublicKey = PublicKey();
+	Amount fee = Amount();
+	Timestamp deadline = Timestamp();
+	List<SizePrefixedMultisigAccountModification> modifications = [];
+	int minApprovalDelta = 0;
+	final int entityBodyReserved_1 = 0; // reserved field
+	final int signerPublicKeySize = 32; // reserved field
+	final int minApprovalDeltaSize = 4; // reserved field
 
 	NonVerifiableMultisigAccountModificationTransactionV2({ 
 	TransactionType? type,
@@ -4161,93 +3169,21 @@ class NonVerifiableMultisigAccountModificationTransactionV2 extends StructBase i
 	}) 
 		: super(type == null && version == null && network == null && timestamp == null && signerPublicKey == null && fee == null && deadline == null && modifications == null && minApprovalDelta == null )
 	{
-		_type = type ?? NonVerifiableMultisigAccountModificationTransactionV2.TRANSACTION_TYPE;
-		_version = version ?? NonVerifiableMultisigAccountModificationTransactionV2.TRANSACTION_VERSION;
-		_network = network ?? NetworkType.MAINNET;
-		_timestamp = timestamp ?? Timestamp();
-		_signerPublicKey = signerPublicKey ?? PublicKey();
-		_fee = fee ?? Amount();
-		_deadline = deadline ?? Timestamp();
-		_modifications = modifications ?? [];
-		_minApprovalDelta = minApprovalDelta ?? 0;
+		this.type = type ?? NonVerifiableMultisigAccountModificationTransactionV2.TRANSACTION_TYPE;
+		this.version = version ?? NonVerifiableMultisigAccountModificationTransactionV2.TRANSACTION_VERSION;
+		this.network = network ?? NetworkType.MAINNET;
+		this.timestamp = timestamp ?? Timestamp();
+		this.signerPublicKey = signerPublicKey ?? PublicKey();
+		this.fee = fee ?? Amount();
+		this.deadline = deadline ?? Timestamp();
+		this.modifications = modifications ?? [];
+		this.minApprovalDelta = minApprovalDelta ?? 0;
 	}
 
 	void sort() {
-		_modifications.sort((lhs, rhs) {
+		modifications.sort((lhs, rhs) {
 			return ArrayHelpers.deepCompare(ArrayHelpers.getValue(lhs.modification), ArrayHelpers.getValue(rhs.modification));
 		});
-	}
-
-	TransactionType get type {
-		return _type;
-	}
-
-	int get version {
-		return _version;
-	}
-
-	NetworkType get network {
-		return _network;
-	}
-
-	Timestamp get timestamp {
-		return _timestamp;
-	}
-
-	PublicKey get signerPublicKey {
-		return _signerPublicKey;
-	}
-
-	Amount get fee {
-		return _fee;
-	}
-
-	Timestamp get deadline {
-		return _deadline;
-	}
-
-	List<SizePrefixedMultisigAccountModification> get modifications {
-		return _modifications;
-	}
-
-	int get minApprovalDelta {
-		return _minApprovalDelta;
-	}
-
-	set type(TransactionType value) {
-		_type = value;
-	}
-
-	set version(int value) {
-		_version = value;
-	}
-
-	set network(NetworkType value) {
-		_network = value;
-	}
-
-	set timestamp(Timestamp value) {
-		_timestamp = value;
-	}
-
-	set signerPublicKey(PublicKey value) {
-		_signerPublicKey = value;
-	}
-
-	set fee(Amount value) {
-		_fee = value;
-	}
-
-	set deadline(Timestamp value) {
-		_deadline = value;
-	}
-
-	set modifications(List<SizePrefixedMultisigAccountModification> value) {
-		_modifications = value;
-	}
-
-	set minApprovalDelta(int value) {
-		_minApprovalDelta = value;
 	}
 
 	int get size {
@@ -4324,33 +3260,33 @@ class NonVerifiableMultisigAccountModificationTransactionV2 extends StructBase i
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
-		buffer.setRange(currentPos, currentPos + _type.size, _type.serialize());
+		buffer.setRange(currentPos, currentPos + type.size, type.serialize());
 		currentPos += type.size;
-		buffer.setRange(currentPos, currentPos + 1, intToBytes(_version, 1));
+		buffer.setRange(currentPos, currentPos + 1, intToBytes(version, 1));
 		currentPos += 1;
-		buffer.setRange(currentPos, currentPos + 2, intToBytes(_entityBodyReserved_1, 2));
+		buffer.setRange(currentPos, currentPos + 2, intToBytes(entityBodyReserved_1, 2));
 		currentPos += 2;
-		buffer.setRange(currentPos, currentPos + _network.size, _network.serialize());
+		buffer.setRange(currentPos, currentPos + network.size, network.serialize());
 		currentPos += network.size;
-		buffer.setRange(currentPos, currentPos + _timestamp.size, _timestamp.serialize());
+		buffer.setRange(currentPos, currentPos + timestamp.size, timestamp.serialize());
 		currentPos += timestamp.size;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_signerPublicKeySize, 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(signerPublicKeySize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _signerPublicKey.size, _signerPublicKey.serialize());
+		buffer.setRange(currentPos, currentPos + signerPublicKey.size, signerPublicKey.serialize());
 		currentPos += signerPublicKey.size;
-		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());
+		buffer.setRange(currentPos, currentPos + fee.size, fee.serialize());
 		currentPos += fee.size;
-		buffer.setRange(currentPos, currentPos + _deadline.size, _deadline.serialize());
+		buffer.setRange(currentPos, currentPos + deadline.size, deadline.serialize());
 		currentPos += deadline.size;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_modifications.length, 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(modifications.length, 4));
 		currentPos += 4;
 		sort();
-		var res_modifications = ArrayHelpers.writeArray(buffer, _modifications, currentPos, (e) { return ArrayHelpers.getValue(e.modification);});
+		var res_modifications = ArrayHelpers.writeArray(buffer, modifications, currentPos, (e) { return ArrayHelpers.getValue(e.modification);});
 		currentPos = res_modifications.item2;
 		buffer = res_modifications.item1;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_minApprovalDeltaSize, 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(minApprovalDeltaSize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_minApprovalDelta, 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(minApprovalDelta, 4));
 		currentPos += 4;
 		return buffer.buffer.asUint8List();
 	}
@@ -4358,15 +3294,15 @@ class NonVerifiableMultisigAccountModificationTransactionV2 extends StructBase i
 	@override
 	String toString() {
 		var result = 'NonVerifiableMultisigAccountModificationTransactionV2(';
-		result += 'type: "${_type.toString()}", ';
-		result += 'version: "0x${_version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
-		result += 'network: "${_network.toString()}", ';
-		result += 'timestamp: "${_timestamp.toString()}", ';
-		result += 'signerPublicKey: "${_signerPublicKey.toString()}", ';
-		result += 'fee: "${_fee.toString()}", ';
-		result += 'deadline: "${_deadline.toString()}", ';
-		result += 'modifications: "${_modifications.map((e) => e.toString()).toList()}", ';
-		result += 'minApprovalDelta: "0x${_minApprovalDelta.toRadixString(16).padLeft(4 * 2, '0').toUpperCase()}", ';
+		result += 'type: "${type.toString()}", ';
+		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'network: "${network.toString()}", ';
+		result += 'timestamp: "${timestamp.toString()}", ';
+		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
+		result += 'fee: "${fee.toString()}", ';
+		result += 'deadline: "${deadline.toString()}", ';
+		result += 'modifications: "${modifications.map((e) => e.toString()).toList()}", ';
+		result += 'minApprovalDelta: "0x${minApprovalDelta.toRadixString(16).padLeft(4 * 2, '0').toUpperCase()}", ';
 		result += ')';
 		return result;
 	}
@@ -4389,22 +3325,22 @@ class CosignatureV1 extends StructBase implements IDeserializable {
 		'multisigAccountAddress': 'pod:Address'
 	};
 
-	TransactionType _type = TransactionType.TRANSFER;
-	int _version = 0;
-	NetworkType _network = NetworkType.MAINNET;
-	Timestamp _timestamp = Timestamp();
-	PublicKey _signerPublicKey = PublicKey();
-	Signature _signature = Signature();
-	Amount _fee = Amount();
-	Timestamp _deadline = Timestamp();
-	Hash256 _multisigTransactionHash = Hash256();
-	Address _multisigAccountAddress = Address();
-	final int _entityBodyReserved_1 = 0; // reserved field
-	final int _signerPublicKeySize = 32; // reserved field
-	final int _signatureSize = 64; // reserved field
-	final int _multisigTransactionHashOuterSize = 36; // reserved field
-	final int _multisigTransactionHashSize = 32; // reserved field
-	final int _multisigAccountAddressSize = 40; // reserved field
+	TransactionType type = TransactionType.TRANSFER;
+	int version = 0;
+	NetworkType network = NetworkType.MAINNET;
+	Timestamp timestamp = Timestamp();
+	PublicKey signerPublicKey = PublicKey();
+	Signature signature = Signature();
+	Amount fee = Amount();
+	Timestamp deadline = Timestamp();
+	Hash256 multisigTransactionHash = Hash256();
+	Address multisigAccountAddress = Address();
+	final int entityBodyReserved_1 = 0; // reserved field
+	final int signerPublicKeySize = 32; // reserved field
+	final int signatureSize = 64; // reserved field
+	final int multisigTransactionHashOuterSize = 36; // reserved field
+	final int multisigTransactionHashSize = 32; // reserved field
+	final int multisigAccountAddressSize = 40; // reserved field
 
 	CosignatureV1({ 
 	TransactionType? type,
@@ -4420,100 +3356,20 @@ class CosignatureV1 extends StructBase implements IDeserializable {
 	}) 
 		: super(type == null && version == null && network == null && timestamp == null && signerPublicKey == null && signature == null && fee == null && deadline == null && multisigTransactionHash == null && multisigAccountAddress == null )
 	{
-		_type = type ?? CosignatureV1.TRANSACTION_TYPE;
-		_version = version ?? CosignatureV1.TRANSACTION_VERSION;
-		_network = network ?? NetworkType.MAINNET;
-		_timestamp = timestamp ?? Timestamp();
-		_signerPublicKey = signerPublicKey ?? PublicKey();
-		_signature = signature ?? Signature();
-		_fee = fee ?? Amount();
-		_deadline = deadline ?? Timestamp();
-		_multisigTransactionHash = multisigTransactionHash ?? Hash256();
-		_multisigAccountAddress = multisigAccountAddress ?? Address();
+		this.type = type ?? CosignatureV1.TRANSACTION_TYPE;
+		this.version = version ?? CosignatureV1.TRANSACTION_VERSION;
+		this.network = network ?? NetworkType.MAINNET;
+		this.timestamp = timestamp ?? Timestamp();
+		this.signerPublicKey = signerPublicKey ?? PublicKey();
+		this.signature = signature ?? Signature();
+		this.fee = fee ?? Amount();
+		this.deadline = deadline ?? Timestamp();
+		this.multisigTransactionHash = multisigTransactionHash ?? Hash256();
+		this.multisigAccountAddress = multisigAccountAddress ?? Address();
 	}
 
 	void sort() {
 		// empty body
-	}
-
-	TransactionType get type {
-		return _type;
-	}
-
-	int get version {
-		return _version;
-	}
-
-	NetworkType get network {
-		return _network;
-	}
-
-	Timestamp get timestamp {
-		return _timestamp;
-	}
-
-	PublicKey get signerPublicKey {
-		return _signerPublicKey;
-	}
-
-	Signature get signature {
-		return _signature;
-	}
-
-	Amount get fee {
-		return _fee;
-	}
-
-	Timestamp get deadline {
-		return _deadline;
-	}
-
-	Hash256 get multisigTransactionHash {
-		return _multisigTransactionHash;
-	}
-
-	Address get multisigAccountAddress {
-		return _multisigAccountAddress;
-	}
-
-	set type(TransactionType value) {
-		_type = value;
-	}
-
-	set version(int value) {
-		_version = value;
-	}
-
-	set network(NetworkType value) {
-		_network = value;
-	}
-
-	set timestamp(Timestamp value) {
-		_timestamp = value;
-	}
-
-	set signerPublicKey(PublicKey value) {
-		_signerPublicKey = value;
-	}
-
-	set signature(Signature value) {
-		_signature = value;
-	}
-
-	set fee(Amount value) {
-		_fee = value;
-	}
-
-	set deadline(Timestamp value) {
-		_deadline = value;
-	}
-
-	set multisigTransactionHash(Hash256 value) {
-		_multisigTransactionHash = value;
-	}
-
-	set multisigAccountAddress(Address value) {
-		_multisigAccountAddress = value;
 	}
 
 	int get size {
@@ -4609,37 +3465,37 @@ class CosignatureV1 extends StructBase implements IDeserializable {
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
-		buffer.setRange(currentPos, currentPos + _type.size, _type.serialize());
+		buffer.setRange(currentPos, currentPos + type.size, type.serialize());
 		currentPos += type.size;
-		buffer.setRange(currentPos, currentPos + 1, intToBytes(_version, 1));
+		buffer.setRange(currentPos, currentPos + 1, intToBytes(version, 1));
 		currentPos += 1;
-		buffer.setRange(currentPos, currentPos + 2, intToBytes(_entityBodyReserved_1, 2));
+		buffer.setRange(currentPos, currentPos + 2, intToBytes(entityBodyReserved_1, 2));
 		currentPos += 2;
-		buffer.setRange(currentPos, currentPos + _network.size, _network.serialize());
+		buffer.setRange(currentPos, currentPos + network.size, network.serialize());
 		currentPos += network.size;
-		buffer.setRange(currentPos, currentPos + _timestamp.size, _timestamp.serialize());
+		buffer.setRange(currentPos, currentPos + timestamp.size, timestamp.serialize());
 		currentPos += timestamp.size;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_signerPublicKeySize, 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(signerPublicKeySize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _signerPublicKey.size, _signerPublicKey.serialize());
+		buffer.setRange(currentPos, currentPos + signerPublicKey.size, signerPublicKey.serialize());
 		currentPos += signerPublicKey.size;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_signatureSize, 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(signatureSize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _signature.size, _signature.serialize());
+		buffer.setRange(currentPos, currentPos + signature.size, signature.serialize());
 		currentPos += signature.size;
-		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());
+		buffer.setRange(currentPos, currentPos + fee.size, fee.serialize());
 		currentPos += fee.size;
-		buffer.setRange(currentPos, currentPos + _deadline.size, _deadline.serialize());
+		buffer.setRange(currentPos, currentPos + deadline.size, deadline.serialize());
 		currentPos += deadline.size;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_multisigTransactionHashOuterSize, 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(multisigTransactionHashOuterSize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_multisigTransactionHashSize, 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(multisigTransactionHashSize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _multisigTransactionHash.size, _multisigTransactionHash.serialize());
+		buffer.setRange(currentPos, currentPos + multisigTransactionHash.size, multisigTransactionHash.serialize());
 		currentPos += multisigTransactionHash.size;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_multisigAccountAddressSize, 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(multisigAccountAddressSize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _multisigAccountAddress.size, _multisigAccountAddress.serialize());
+		buffer.setRange(currentPos, currentPos + multisigAccountAddress.size, multisigAccountAddress.serialize());
 		currentPos += multisigAccountAddress.size;
 		return buffer.buffer.asUint8List();
 	}
@@ -4647,16 +3503,16 @@ class CosignatureV1 extends StructBase implements IDeserializable {
 	@override
 	String toString() {
 		var result = 'CosignatureV1(';
-		result += 'type: "${_type.toString()}", ';
-		result += 'version: "0x${_version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
-		result += 'network: "${_network.toString()}", ';
-		result += 'timestamp: "${_timestamp.toString()}", ';
-		result += 'signerPublicKey: "${_signerPublicKey.toString()}", ';
-		result += 'signature: "${_signature.toString()}", ';
-		result += 'fee: "${_fee.toString()}", ';
-		result += 'deadline: "${_deadline.toString()}", ';
-		result += 'multisigTransactionHash: "${_multisigTransactionHash.toString()}", ';
-		result += 'multisigAccountAddress: "${_multisigAccountAddress.toString()}", ';
+		result += 'type: "${type.toString()}", ';
+		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'network: "${network.toString()}", ';
+		result += 'timestamp: "${timestamp.toString()}", ';
+		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
+		result += 'signature: "${signature.toString()}", ';
+		result += 'fee: "${fee.toString()}", ';
+		result += 'deadline: "${deadline.toString()}", ';
+		result += 'multisigTransactionHash: "${multisigTransactionHash.toString()}", ';
+		result += 'multisigAccountAddress: "${multisigAccountAddress.toString()}", ';
 		result += ')';
 		return result;
 	}
@@ -4669,24 +3525,16 @@ class SizePrefixedCosignatureV1 extends StructBase implements IDeserializable {
 		'cosignature': 'struct:CosignatureV1'
 	};
 
-	CosignatureV1 _cosignature = CosignatureV1();
+	CosignatureV1 cosignature = CosignatureV1();
 
 	SizePrefixedCosignatureV1([cosignature]) 
 		: super(cosignature == null )
 	{
-		_cosignature = cosignature ?? CosignatureV1();
+		this.cosignature = cosignature ?? CosignatureV1();
 	}
 
 	void sort() {
-		_cosignature.sort();
-	}
-
-	CosignatureV1 get cosignature {
-		return _cosignature;
-	}
-
-	set cosignature(CosignatureV1 value) {
-		_cosignature = value;
+		cosignature.sort();
 	}
 
 	int get size {
@@ -4714,7 +3562,7 @@ class SizePrefixedCosignatureV1 extends StructBase implements IDeserializable {
 		var currentPos = 0;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(cosignature.size, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _cosignature.size, _cosignature.serialize());
+		buffer.setRange(currentPos, currentPos + cosignature.size, cosignature.serialize());
 		currentPos += cosignature.size;
 		return buffer.buffer.asUint8List();
 	}
@@ -4722,7 +3570,7 @@ class SizePrefixedCosignatureV1 extends StructBase implements IDeserializable {
 	@override
 	String toString() {
 		var result = 'SizePrefixedCosignatureV1(';
-		result += 'cosignature: "${_cosignature.toString()}", ';
+		result += 'cosignature: "${cosignature.toString()}", ';
 		result += ')';
 		return result;
 	}
@@ -4745,19 +3593,19 @@ class MultisigTransactionV1 extends StructBase implements IDeserializable {
 		'cosignatures': 'array[SizePrefixedCosignatureV1]'
 	};
 
-	TransactionType _type = TransactionType.TRANSFER;
-	int _version = 0;
-	NetworkType _network = NetworkType.MAINNET;
-	Timestamp _timestamp = Timestamp();
-	PublicKey _signerPublicKey = PublicKey();
-	Signature _signature = Signature();
-	Amount _fee = Amount();
-	Timestamp _deadline = Timestamp();
-	INonVerifiableTransaction _innerTransaction = INonVerifiableTransaction();
-	List<SizePrefixedCosignatureV1> _cosignatures = [];
-	final int _entityBodyReserved_1 = 0; // reserved field
-	final int _signerPublicKeySize = 32; // reserved field
-	final int _signatureSize = 64; // reserved field
+	TransactionType type = TransactionType.TRANSFER;
+	int version = 0;
+	NetworkType network = NetworkType.MAINNET;
+	Timestamp timestamp = Timestamp();
+	PublicKey signerPublicKey = PublicKey();
+	Signature signature = Signature();
+	Amount fee = Amount();
+	Timestamp deadline = Timestamp();
+	INonVerifiableTransaction innerTransaction = INonVerifiableTransaction();
+	List<SizePrefixedCosignatureV1> cosignatures = [];
+	final int entityBodyReserved_1 = 0; // reserved field
+	final int signerPublicKeySize = 32; // reserved field
+	final int signatureSize = 64; // reserved field
 
 	MultisigTransactionV1({ 
 	TransactionType? type,
@@ -4773,100 +3621,20 @@ class MultisigTransactionV1 extends StructBase implements IDeserializable {
 	}) 
 		: super(type == null && version == null && network == null && timestamp == null && signerPublicKey == null && signature == null && fee == null && deadline == null && innerTransaction == null && cosignatures == null )
 	{
-		_type = type ?? MultisigTransactionV1.TRANSACTION_TYPE;
-		_version = version ?? MultisigTransactionV1.TRANSACTION_VERSION;
-		_network = network ?? NetworkType.MAINNET;
-		_timestamp = timestamp ?? Timestamp();
-		_signerPublicKey = signerPublicKey ?? PublicKey();
-		_signature = signature ?? Signature();
-		_fee = fee ?? Amount();
-		_deadline = deadline ?? Timestamp();
-		_innerTransaction = innerTransaction ?? NonVerifiableTransaction();
-		_cosignatures = cosignatures ?? [];
+		this.type = type ?? MultisigTransactionV1.TRANSACTION_TYPE;
+		this.version = version ?? MultisigTransactionV1.TRANSACTION_VERSION;
+		this.network = network ?? NetworkType.MAINNET;
+		this.timestamp = timestamp ?? Timestamp();
+		this.signerPublicKey = signerPublicKey ?? PublicKey();
+		this.signature = signature ?? Signature();
+		this.fee = fee ?? Amount();
+		this.deadline = deadline ?? Timestamp();
+		this.innerTransaction = innerTransaction ?? NonVerifiableTransaction();
+		this.cosignatures = cosignatures ?? [];
 	}
 
 	void sort() {
-		_innerTransaction.sort();
-	}
-
-	TransactionType get type {
-		return _type;
-	}
-
-	int get version {
-		return _version;
-	}
-
-	NetworkType get network {
-		return _network;
-	}
-
-	Timestamp get timestamp {
-		return _timestamp;
-	}
-
-	PublicKey get signerPublicKey {
-		return _signerPublicKey;
-	}
-
-	Signature get signature {
-		return _signature;
-	}
-
-	Amount get fee {
-		return _fee;
-	}
-
-	Timestamp get deadline {
-		return _deadline;
-	}
-
-	INonVerifiableTransaction get innerTransaction {
-		return _innerTransaction;
-	}
-
-	List<SizePrefixedCosignatureV1> get cosignatures {
-		return _cosignatures;
-	}
-
-	set type(TransactionType value) {
-		_type = value;
-	}
-
-	set version(int value) {
-		_version = value;
-	}
-
-	set network(NetworkType value) {
-		_network = value;
-	}
-
-	set timestamp(Timestamp value) {
-		_timestamp = value;
-	}
-
-	set signerPublicKey(PublicKey value) {
-		_signerPublicKey = value;
-	}
-
-	set signature(Signature value) {
-		_signature = value;
-	}
-
-	set fee(Amount value) {
-		_fee = value;
-	}
-
-	set deadline(Timestamp value) {
-		_deadline = value;
-	}
-
-	set innerTransaction(INonVerifiableTransaction value) {
-		_innerTransaction = value;
-	}
-
-	set cosignatures(List<SizePrefixedCosignatureV1> value) {
-		_cosignatures = value;
+		innerTransaction.sort();
 	}
 
 	int get size {
@@ -4951,36 +3719,36 @@ class MultisigTransactionV1 extends StructBase implements IDeserializable {
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
-		buffer.setRange(currentPos, currentPos + _type.size, _type.serialize());
+		buffer.setRange(currentPos, currentPos + type.size, type.serialize());
 		currentPos += type.size;
-		buffer.setRange(currentPos, currentPos + 1, intToBytes(_version, 1));
+		buffer.setRange(currentPos, currentPos + 1, intToBytes(version, 1));
 		currentPos += 1;
-		buffer.setRange(currentPos, currentPos + 2, intToBytes(_entityBodyReserved_1, 2));
+		buffer.setRange(currentPos, currentPos + 2, intToBytes(entityBodyReserved_1, 2));
 		currentPos += 2;
-		buffer.setRange(currentPos, currentPos + _network.size, _network.serialize());
+		buffer.setRange(currentPos, currentPos + network.size, network.serialize());
 		currentPos += network.size;
-		buffer.setRange(currentPos, currentPos + _timestamp.size, _timestamp.serialize());
+		buffer.setRange(currentPos, currentPos + timestamp.size, timestamp.serialize());
 		currentPos += timestamp.size;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_signerPublicKeySize, 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(signerPublicKeySize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _signerPublicKey.size, _signerPublicKey.serialize());
+		buffer.setRange(currentPos, currentPos + signerPublicKey.size, signerPublicKey.serialize());
 		currentPos += signerPublicKey.size;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_signatureSize, 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(signatureSize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _signature.size, _signature.serialize());
+		buffer.setRange(currentPos, currentPos + signature.size, signature.serialize());
 		currentPos += signature.size;
-		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());
+		buffer.setRange(currentPos, currentPos + fee.size, fee.serialize());
 		currentPos += fee.size;
-		buffer.setRange(currentPos, currentPos + _deadline.size, _deadline.serialize());
+		buffer.setRange(currentPos, currentPos + deadline.size, deadline.serialize());
 		currentPos += deadline.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(innerTransaction.size, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _innerTransaction.size, _innerTransaction.serialize());
+		buffer.setRange(currentPos, currentPos + innerTransaction.size, innerTransaction.serialize());
 		currentPos += innerTransaction.size;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_cosignatures.length, 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(cosignatures.length, 4));
 		currentPos += 4;
 		sort();
-		var res_cosignatures = ArrayHelpers.writeArray(buffer, _cosignatures, currentPos);
+		var res_cosignatures = ArrayHelpers.writeArray(buffer, cosignatures, currentPos);
 		currentPos = res_cosignatures.item2;
 		buffer = res_cosignatures.item1;
 		return buffer.buffer.asUint8List();
@@ -4989,16 +3757,16 @@ class MultisigTransactionV1 extends StructBase implements IDeserializable {
 	@override
 	String toString() {
 		var result = 'MultisigTransactionV1(';
-		result += 'type: "${_type.toString()}", ';
-		result += 'version: "0x${_version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
-		result += 'network: "${_network.toString()}", ';
-		result += 'timestamp: "${_timestamp.toString()}", ';
-		result += 'signerPublicKey: "${_signerPublicKey.toString()}", ';
-		result += 'signature: "${_signature.toString()}", ';
-		result += 'fee: "${_fee.toString()}", ';
-		result += 'deadline: "${_deadline.toString()}", ';
-		result += 'innerTransaction: "${_innerTransaction.toString()}", ';
-		result += 'cosignatures: "${_cosignatures.map((e) => e.toString()).toList()}", ';
+		result += 'type: "${type.toString()}", ';
+		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'network: "${network.toString()}", ';
+		result += 'timestamp: "${timestamp.toString()}", ';
+		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
+		result += 'signature: "${signature.toString()}", ';
+		result += 'fee: "${fee.toString()}", ';
+		result += 'deadline: "${deadline.toString()}", ';
+		result += 'innerTransaction: "${innerTransaction.toString()}", ';
+		result += 'cosignatures: "${cosignatures.map((e) => e.toString()).toList()}", ';
 		result += ')';
 		return result;
 	}
@@ -5019,16 +3787,16 @@ class NonVerifiableMultisigTransactionV1 extends StructBase implements IDeserial
 		'innerTransaction': 'struct:NonVerifiableTransaction'
 	};
 
-	TransactionType _type = TransactionType.TRANSFER;
-	int _version = 0;
-	NetworkType _network = NetworkType.MAINNET;
-	Timestamp _timestamp = Timestamp();
-	PublicKey _signerPublicKey = PublicKey();
-	Amount _fee = Amount();
-	Timestamp _deadline = Timestamp();
-	INonVerifiableTransaction _innerTransaction = INonVerifiableTransaction();
-	final int _entityBodyReserved_1 = 0; // reserved field
-	final int _signerPublicKeySize = 32; // reserved field
+	TransactionType type = TransactionType.TRANSFER;
+	int version = 0;
+	NetworkType network = NetworkType.MAINNET;
+	Timestamp timestamp = Timestamp();
+	PublicKey signerPublicKey = PublicKey();
+	Amount fee = Amount();
+	Timestamp deadline = Timestamp();
+	INonVerifiableTransaction innerTransaction = INonVerifiableTransaction();
+	final int entityBodyReserved_1 = 0; // reserved field
+	final int signerPublicKeySize = 32; // reserved field
 
 	NonVerifiableMultisigTransactionV1({ 
 	TransactionType? type,
@@ -5042,82 +3810,18 @@ class NonVerifiableMultisigTransactionV1 extends StructBase implements IDeserial
 	}) 
 		: super(type == null && version == null && network == null && timestamp == null && signerPublicKey == null && fee == null && deadline == null && innerTransaction == null )
 	{
-		_type = type ?? NonVerifiableMultisigTransactionV1.TRANSACTION_TYPE;
-		_version = version ?? NonVerifiableMultisigTransactionV1.TRANSACTION_VERSION;
-		_network = network ?? NetworkType.MAINNET;
-		_timestamp = timestamp ?? Timestamp();
-		_signerPublicKey = signerPublicKey ?? PublicKey();
-		_fee = fee ?? Amount();
-		_deadline = deadline ?? Timestamp();
-		_innerTransaction = innerTransaction ?? NonVerifiableTransaction();
+		this.type = type ?? NonVerifiableMultisigTransactionV1.TRANSACTION_TYPE;
+		this.version = version ?? NonVerifiableMultisigTransactionV1.TRANSACTION_VERSION;
+		this.network = network ?? NetworkType.MAINNET;
+		this.timestamp = timestamp ?? Timestamp();
+		this.signerPublicKey = signerPublicKey ?? PublicKey();
+		this.fee = fee ?? Amount();
+		this.deadline = deadline ?? Timestamp();
+		this.innerTransaction = innerTransaction ?? NonVerifiableTransaction();
 	}
 
 	void sort() {
-		_innerTransaction.sort();
-	}
-
-	TransactionType get type {
-		return _type;
-	}
-
-	int get version {
-		return _version;
-	}
-
-	NetworkType get network {
-		return _network;
-	}
-
-	Timestamp get timestamp {
-		return _timestamp;
-	}
-
-	PublicKey get signerPublicKey {
-		return _signerPublicKey;
-	}
-
-	Amount get fee {
-		return _fee;
-	}
-
-	Timestamp get deadline {
-		return _deadline;
-	}
-
-	INonVerifiableTransaction get innerTransaction {
-		return _innerTransaction;
-	}
-
-	set type(TransactionType value) {
-		_type = value;
-	}
-
-	set version(int value) {
-		_version = value;
-	}
-
-	set network(NetworkType value) {
-		_network = value;
-	}
-
-	set timestamp(Timestamp value) {
-		_timestamp = value;
-	}
-
-	set signerPublicKey(PublicKey value) {
-		_signerPublicKey = value;
-	}
-
-	set fee(Amount value) {
-		_fee = value;
-	}
-
-	set deadline(Timestamp value) {
-		_deadline = value;
-	}
-
-	set innerTransaction(INonVerifiableTransaction value) {
-		_innerTransaction = value;
+		innerTransaction.sort();
 	}
 
 	int get size {
@@ -5185,27 +3889,27 @@ class NonVerifiableMultisigTransactionV1 extends StructBase implements IDeserial
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
-		buffer.setRange(currentPos, currentPos + _type.size, _type.serialize());
+		buffer.setRange(currentPos, currentPos + type.size, type.serialize());
 		currentPos += type.size;
-		buffer.setRange(currentPos, currentPos + 1, intToBytes(_version, 1));
+		buffer.setRange(currentPos, currentPos + 1, intToBytes(version, 1));
 		currentPos += 1;
-		buffer.setRange(currentPos, currentPos + 2, intToBytes(_entityBodyReserved_1, 2));
+		buffer.setRange(currentPos, currentPos + 2, intToBytes(entityBodyReserved_1, 2));
 		currentPos += 2;
-		buffer.setRange(currentPos, currentPos + _network.size, _network.serialize());
+		buffer.setRange(currentPos, currentPos + network.size, network.serialize());
 		currentPos += network.size;
-		buffer.setRange(currentPos, currentPos + _timestamp.size, _timestamp.serialize());
+		buffer.setRange(currentPos, currentPos + timestamp.size, timestamp.serialize());
 		currentPos += timestamp.size;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_signerPublicKeySize, 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(signerPublicKeySize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _signerPublicKey.size, _signerPublicKey.serialize());
+		buffer.setRange(currentPos, currentPos + signerPublicKey.size, signerPublicKey.serialize());
 		currentPos += signerPublicKey.size;
-		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());
+		buffer.setRange(currentPos, currentPos + fee.size, fee.serialize());
 		currentPos += fee.size;
-		buffer.setRange(currentPos, currentPos + _deadline.size, _deadline.serialize());
+		buffer.setRange(currentPos, currentPos + deadline.size, deadline.serialize());
 		currentPos += deadline.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(innerTransaction.size, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _innerTransaction.size, _innerTransaction.serialize());
+		buffer.setRange(currentPos, currentPos + innerTransaction.size, innerTransaction.serialize());
 		currentPos += innerTransaction.size;
 		return buffer.buffer.asUint8List();
 	}
@@ -5213,14 +3917,14 @@ class NonVerifiableMultisigTransactionV1 extends StructBase implements IDeserial
 	@override
 	String toString() {
 		var result = 'NonVerifiableMultisigTransactionV1(';
-		result += 'type: "${_type.toString()}", ';
-		result += 'version: "0x${_version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
-		result += 'network: "${_network.toString()}", ';
-		result += 'timestamp: "${_timestamp.toString()}", ';
-		result += 'signerPublicKey: "${_signerPublicKey.toString()}", ';
-		result += 'fee: "${_fee.toString()}", ';
-		result += 'deadline: "${_deadline.toString()}", ';
-		result += 'innerTransaction: "${_innerTransaction.toString()}", ';
+		result += 'type: "${type.toString()}", ';
+		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'network: "${network.toString()}", ';
+		result += 'timestamp: "${timestamp.toString()}", ';
+		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
+		result += 'fee: "${fee.toString()}", ';
+		result += 'deadline: "${deadline.toString()}", ';
+		result += 'innerTransaction: "${innerTransaction.toString()}", ';
 		result += ')';
 		return result;
 	}
@@ -5245,22 +3949,22 @@ class NamespaceRegistrationTransactionV1 extends StructBase implements IDeserial
 		'parentName': 'bytes_array'
 	};
 
-	TransactionType _type = TransactionType.TRANSFER;
-	int _version = 0;
-	NetworkType _network = NetworkType.MAINNET;
-	Timestamp _timestamp = Timestamp();
-	PublicKey _signerPublicKey = PublicKey();
-	Signature _signature = Signature();
-	Amount _fee = Amount();
-	Timestamp _deadline = Timestamp();
-	Address _rentalFeeSink = Address();
-	Amount _rentalFee = Amount();
-	Uint8List _name = Uint8List(0);
-	Uint8List _parentName = Uint8List(0);
-	final int _entityBodyReserved_1 = 0; // reserved field
-	final int _signerPublicKeySize = 32; // reserved field
-	final int _signatureSize = 64; // reserved field
-	final int _rentalFeeSinkSize = 40; // reserved field
+	TransactionType type = TransactionType.TRANSFER;
+	int version = 0;
+	NetworkType network = NetworkType.MAINNET;
+	Timestamp timestamp = Timestamp();
+	PublicKey signerPublicKey = PublicKey();
+	Signature signature = Signature();
+	Amount fee = Amount();
+	Timestamp deadline = Timestamp();
+	Address rentalFeeSink = Address();
+	Amount rentalFee = Amount();
+	Uint8List name = Uint8List(0);
+	Uint8List parentName = Uint8List(0);
+	final int entityBodyReserved_1 = 0; // reserved field
+	final int signerPublicKeySize = 32; // reserved field
+	final int signatureSize = 64; // reserved field
+	final int rentalFeeSinkSize = 40; // reserved field
 
 	NamespaceRegistrationTransactionV1({ 
 	TransactionType? type,
@@ -5278,118 +3982,22 @@ class NamespaceRegistrationTransactionV1 extends StructBase implements IDeserial
 	}) 
 		: super(type == null && version == null && network == null && timestamp == null && signerPublicKey == null && signature == null && fee == null && deadline == null && rentalFeeSink == null && rentalFee == null && name == null && parentName == null )
 	{
-		_type = type ?? NamespaceRegistrationTransactionV1.TRANSACTION_TYPE;
-		_version = version ?? NamespaceRegistrationTransactionV1.TRANSACTION_VERSION;
-		_network = network ?? NetworkType.MAINNET;
-		_timestamp = timestamp ?? Timestamp();
-		_signerPublicKey = signerPublicKey ?? PublicKey();
-		_signature = signature ?? Signature();
-		_fee = fee ?? Amount();
-		_deadline = deadline ?? Timestamp();
-		_rentalFeeSink = rentalFeeSink ?? Address();
-		_rentalFee = rentalFee ?? Amount();
-		_name = name ?? Uint8List(0);
-		_parentName = parentName ?? Uint8List(0);
+		this.type = type ?? NamespaceRegistrationTransactionV1.TRANSACTION_TYPE;
+		this.version = version ?? NamespaceRegistrationTransactionV1.TRANSACTION_VERSION;
+		this.network = network ?? NetworkType.MAINNET;
+		this.timestamp = timestamp ?? Timestamp();
+		this.signerPublicKey = signerPublicKey ?? PublicKey();
+		this.signature = signature ?? Signature();
+		this.fee = fee ?? Amount();
+		this.deadline = deadline ?? Timestamp();
+		this.rentalFeeSink = rentalFeeSink ?? Address();
+		this.rentalFee = rentalFee ?? Amount();
+		this.name = name ?? Uint8List(0);
+		this.parentName = parentName ?? Uint8List(0);
 	}
 
 	void sort() {
 		// empty body
-	}
-
-	TransactionType get type {
-		return _type;
-	}
-
-	int get version {
-		return _version;
-	}
-
-	NetworkType get network {
-		return _network;
-	}
-
-	Timestamp get timestamp {
-		return _timestamp;
-	}
-
-	PublicKey get signerPublicKey {
-		return _signerPublicKey;
-	}
-
-	Signature get signature {
-		return _signature;
-	}
-
-	Amount get fee {
-		return _fee;
-	}
-
-	Timestamp get deadline {
-		return _deadline;
-	}
-
-	Address get rentalFeeSink {
-		return _rentalFeeSink;
-	}
-
-	Amount get rentalFee {
-		return _rentalFee;
-	}
-
-	Uint8List get name {
-		return _name;
-	}
-
-	Uint8List get parentName {
-		return _parentName;
-	}
-
-	set type(TransactionType value) {
-		_type = value;
-	}
-
-	set version(int value) {
-		_version = value;
-	}
-
-	set network(NetworkType value) {
-		_network = value;
-	}
-
-	set timestamp(Timestamp value) {
-		_timestamp = value;
-	}
-
-	set signerPublicKey(PublicKey value) {
-		_signerPublicKey = value;
-	}
-
-	set signature(Signature value) {
-		_signature = value;
-	}
-
-	set fee(Amount value) {
-		_fee = value;
-	}
-
-	set deadline(Timestamp value) {
-		_deadline = value;
-	}
-
-	set rentalFeeSink(Address value) {
-		_rentalFeeSink = value;
-	}
-
-	set rentalFee(Amount value) {
-		_rentalFee = value;
-	}
-
-	set name(Uint8List value) {
-		_name = value;
-	}
-
-	set parentName(Uint8List value) {
-		_parentName = value;
 	}
 
 	int get size {
@@ -5494,43 +4102,43 @@ class NamespaceRegistrationTransactionV1 extends StructBase implements IDeserial
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
-		buffer.setRange(currentPos, currentPos + _type.size, _type.serialize());
+		buffer.setRange(currentPos, currentPos + type.size, type.serialize());
 		currentPos += type.size;
-		buffer.setRange(currentPos, currentPos + 1, intToBytes(_version, 1));
+		buffer.setRange(currentPos, currentPos + 1, intToBytes(version, 1));
 		currentPos += 1;
-		buffer.setRange(currentPos, currentPos + 2, intToBytes(_entityBodyReserved_1, 2));
+		buffer.setRange(currentPos, currentPos + 2, intToBytes(entityBodyReserved_1, 2));
 		currentPos += 2;
-		buffer.setRange(currentPos, currentPos + _network.size, _network.serialize());
+		buffer.setRange(currentPos, currentPos + network.size, network.serialize());
 		currentPos += network.size;
-		buffer.setRange(currentPos, currentPos + _timestamp.size, _timestamp.serialize());
+		buffer.setRange(currentPos, currentPos + timestamp.size, timestamp.serialize());
 		currentPos += timestamp.size;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_signerPublicKeySize, 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(signerPublicKeySize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _signerPublicKey.size, _signerPublicKey.serialize());
+		buffer.setRange(currentPos, currentPos + signerPublicKey.size, signerPublicKey.serialize());
 		currentPos += signerPublicKey.size;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_signatureSize, 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(signatureSize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _signature.size, _signature.serialize());
+		buffer.setRange(currentPos, currentPos + signature.size, signature.serialize());
 		currentPos += signature.size;
-		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());
+		buffer.setRange(currentPos, currentPos + fee.size, fee.serialize());
 		currentPos += fee.size;
-		buffer.setRange(currentPos, currentPos + _deadline.size, _deadline.serialize());
+		buffer.setRange(currentPos, currentPos + deadline.size, deadline.serialize());
 		currentPos += deadline.size;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_rentalFeeSinkSize, 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(rentalFeeSinkSize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _rentalFeeSink.size, _rentalFeeSink.serialize());
+		buffer.setRange(currentPos, currentPos + rentalFeeSink.size, rentalFeeSink.serialize());
 		currentPos += rentalFeeSink.size;
-		buffer.setRange(currentPos, currentPos + _rentalFee.size, _rentalFee.serialize());
+		buffer.setRange(currentPos, currentPos + rentalFee.size, rentalFee.serialize());
 		currentPos += rentalFee.size;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_name.length, 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(name.length, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _name.lengthInBytes, _name);
+		buffer.setRange(currentPos, currentPos + name.lengthInBytes, name);
 		currentPos += name.lengthInBytes;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes((_parentName.isNotEmpty ? _parentName.length : 4294967295), 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes((parentName.isNotEmpty ? parentName.length : 4294967295), 4));
 		currentPos += 4;
 		if (parentName.isNotEmpty)
 		{
-			buffer.setRange(currentPos, currentPos + _parentName.lengthInBytes, _parentName);
+			buffer.setRange(currentPos, currentPos + parentName.lengthInBytes, parentName);
 			currentPos += parentName.lengthInBytes;
 		}
 		return buffer.buffer.asUint8List();
@@ -5539,20 +4147,20 @@ class NamespaceRegistrationTransactionV1 extends StructBase implements IDeserial
 	@override
 	String toString() {
 		var result = 'NamespaceRegistrationTransactionV1(';
-		result += 'type: "${_type.toString()}", ';
-		result += 'version: "0x${_version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
-		result += 'network: "${_network.toString()}", ';
-		result += 'timestamp: "${_timestamp.toString()}", ';
-		result += 'signerPublicKey: "${_signerPublicKey.toString()}", ';
-		result += 'signature: "${_signature.toString()}", ';
-		result += 'fee: "${_fee.toString()}", ';
-		result += 'deadline: "${_deadline.toString()}", ';
-		result += 'rentalFeeSink: "${_rentalFeeSink.toString()}", ';
-		result += 'rentalFee: "${_rentalFee.toString()}", ';
-		result += 'name: "${hex.encode(_name.toList()).toUpperCase()}", ';
+		result += 'type: "${type.toString()}", ';
+		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'network: "${network.toString()}", ';
+		result += 'timestamp: "${timestamp.toString()}", ';
+		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
+		result += 'signature: "${signature.toString()}", ';
+		result += 'fee: "${fee.toString()}", ';
+		result += 'deadline: "${deadline.toString()}", ';
+		result += 'rentalFeeSink: "${rentalFeeSink.toString()}", ';
+		result += 'rentalFee: "${rentalFee.toString()}", ';
+		result += 'name: "${hex.encode(name.toList()).toUpperCase()}", ';
 		if (parentName.isNotEmpty)
 		{
-			result += 'parentName: "${hex.encode(_parentName.toList()).toUpperCase()}", ';
+			result += 'parentName: "${hex.encode(parentName.toList()).toUpperCase()}", ';
 		}
 		result += ')';
 		return result;
@@ -5577,20 +4185,20 @@ class NonVerifiableNamespaceRegistrationTransactionV1 extends StructBase impleme
 		'parentName': 'bytes_array'
 	};
 
-	TransactionType _type = TransactionType.TRANSFER;
-	int _version = 0;
-	NetworkType _network = NetworkType.MAINNET;
-	Timestamp _timestamp = Timestamp();
-	PublicKey _signerPublicKey = PublicKey();
-	Amount _fee = Amount();
-	Timestamp _deadline = Timestamp();
-	Address _rentalFeeSink = Address();
-	Amount _rentalFee = Amount();
-	Uint8List _name = Uint8List(0);
-	Uint8List _parentName = Uint8List(0);
-	final int _entityBodyReserved_1 = 0; // reserved field
-	final int _signerPublicKeySize = 32; // reserved field
-	final int _rentalFeeSinkSize = 40; // reserved field
+	TransactionType type = TransactionType.TRANSFER;
+	int version = 0;
+	NetworkType network = NetworkType.MAINNET;
+	Timestamp timestamp = Timestamp();
+	PublicKey signerPublicKey = PublicKey();
+	Amount fee = Amount();
+	Timestamp deadline = Timestamp();
+	Address rentalFeeSink = Address();
+	Amount rentalFee = Amount();
+	Uint8List name = Uint8List(0);
+	Uint8List parentName = Uint8List(0);
+	final int entityBodyReserved_1 = 0; // reserved field
+	final int signerPublicKeySize = 32; // reserved field
+	final int rentalFeeSinkSize = 40; // reserved field
 
 	NonVerifiableNamespaceRegistrationTransactionV1({ 
 	TransactionType? type,
@@ -5607,109 +4215,21 @@ class NonVerifiableNamespaceRegistrationTransactionV1 extends StructBase impleme
 	}) 
 		: super(type == null && version == null && network == null && timestamp == null && signerPublicKey == null && fee == null && deadline == null && rentalFeeSink == null && rentalFee == null && name == null && parentName == null )
 	{
-		_type = type ?? NonVerifiableNamespaceRegistrationTransactionV1.TRANSACTION_TYPE;
-		_version = version ?? NonVerifiableNamespaceRegistrationTransactionV1.TRANSACTION_VERSION;
-		_network = network ?? NetworkType.MAINNET;
-		_timestamp = timestamp ?? Timestamp();
-		_signerPublicKey = signerPublicKey ?? PublicKey();
-		_fee = fee ?? Amount();
-		_deadline = deadline ?? Timestamp();
-		_rentalFeeSink = rentalFeeSink ?? Address();
-		_rentalFee = rentalFee ?? Amount();
-		_name = name ?? Uint8List(0);
-		_parentName = parentName ?? Uint8List(0);
+		this.type = type ?? NonVerifiableNamespaceRegistrationTransactionV1.TRANSACTION_TYPE;
+		this.version = version ?? NonVerifiableNamespaceRegistrationTransactionV1.TRANSACTION_VERSION;
+		this.network = network ?? NetworkType.MAINNET;
+		this.timestamp = timestamp ?? Timestamp();
+		this.signerPublicKey = signerPublicKey ?? PublicKey();
+		this.fee = fee ?? Amount();
+		this.deadline = deadline ?? Timestamp();
+		this.rentalFeeSink = rentalFeeSink ?? Address();
+		this.rentalFee = rentalFee ?? Amount();
+		this.name = name ?? Uint8List(0);
+		this.parentName = parentName ?? Uint8List(0);
 	}
 
 	void sort() {
 		// empty body
-	}
-
-	TransactionType get type {
-		return _type;
-	}
-
-	int get version {
-		return _version;
-	}
-
-	NetworkType get network {
-		return _network;
-	}
-
-	Timestamp get timestamp {
-		return _timestamp;
-	}
-
-	PublicKey get signerPublicKey {
-		return _signerPublicKey;
-	}
-
-	Amount get fee {
-		return _fee;
-	}
-
-	Timestamp get deadline {
-		return _deadline;
-	}
-
-	Address get rentalFeeSink {
-		return _rentalFeeSink;
-	}
-
-	Amount get rentalFee {
-		return _rentalFee;
-	}
-
-	Uint8List get name {
-		return _name;
-	}
-
-	Uint8List get parentName {
-		return _parentName;
-	}
-
-	set type(TransactionType value) {
-		_type = value;
-	}
-
-	set version(int value) {
-		_version = value;
-	}
-
-	set network(NetworkType value) {
-		_network = value;
-	}
-
-	set timestamp(Timestamp value) {
-		_timestamp = value;
-	}
-
-	set signerPublicKey(PublicKey value) {
-		_signerPublicKey = value;
-	}
-
-	set fee(Amount value) {
-		_fee = value;
-	}
-
-	set deadline(Timestamp value) {
-		_deadline = value;
-	}
-
-	set rentalFeeSink(Address value) {
-		_rentalFeeSink = value;
-	}
-
-	set rentalFee(Amount value) {
-		_rentalFee = value;
-	}
-
-	set name(Uint8List value) {
-		_name = value;
-	}
-
-	set parentName(Uint8List value) {
-		_parentName = value;
 	}
 
 	int get size {
@@ -5804,39 +4324,39 @@ class NonVerifiableNamespaceRegistrationTransactionV1 extends StructBase impleme
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
-		buffer.setRange(currentPos, currentPos + _type.size, _type.serialize());
+		buffer.setRange(currentPos, currentPos + type.size, type.serialize());
 		currentPos += type.size;
-		buffer.setRange(currentPos, currentPos + 1, intToBytes(_version, 1));
+		buffer.setRange(currentPos, currentPos + 1, intToBytes(version, 1));
 		currentPos += 1;
-		buffer.setRange(currentPos, currentPos + 2, intToBytes(_entityBodyReserved_1, 2));
+		buffer.setRange(currentPos, currentPos + 2, intToBytes(entityBodyReserved_1, 2));
 		currentPos += 2;
-		buffer.setRange(currentPos, currentPos + _network.size, _network.serialize());
+		buffer.setRange(currentPos, currentPos + network.size, network.serialize());
 		currentPos += network.size;
-		buffer.setRange(currentPos, currentPos + _timestamp.size, _timestamp.serialize());
+		buffer.setRange(currentPos, currentPos + timestamp.size, timestamp.serialize());
 		currentPos += timestamp.size;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_signerPublicKeySize, 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(signerPublicKeySize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _signerPublicKey.size, _signerPublicKey.serialize());
+		buffer.setRange(currentPos, currentPos + signerPublicKey.size, signerPublicKey.serialize());
 		currentPos += signerPublicKey.size;
-		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());
+		buffer.setRange(currentPos, currentPos + fee.size, fee.serialize());
 		currentPos += fee.size;
-		buffer.setRange(currentPos, currentPos + _deadline.size, _deadline.serialize());
+		buffer.setRange(currentPos, currentPos + deadline.size, deadline.serialize());
 		currentPos += deadline.size;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_rentalFeeSinkSize, 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(rentalFeeSinkSize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _rentalFeeSink.size, _rentalFeeSink.serialize());
+		buffer.setRange(currentPos, currentPos + rentalFeeSink.size, rentalFeeSink.serialize());
 		currentPos += rentalFeeSink.size;
-		buffer.setRange(currentPos, currentPos + _rentalFee.size, _rentalFee.serialize());
+		buffer.setRange(currentPos, currentPos + rentalFee.size, rentalFee.serialize());
 		currentPos += rentalFee.size;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_name.length, 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(name.length, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _name.lengthInBytes, _name);
+		buffer.setRange(currentPos, currentPos + name.lengthInBytes, name);
 		currentPos += name.lengthInBytes;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes((_parentName.isNotEmpty ? _parentName.length : 4294967295), 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes((parentName.isNotEmpty ? parentName.length : 4294967295), 4));
 		currentPos += 4;
 		if (parentName.isNotEmpty)
 		{
-			buffer.setRange(currentPos, currentPos + _parentName.lengthInBytes, _parentName);
+			buffer.setRange(currentPos, currentPos + parentName.lengthInBytes, parentName);
 			currentPos += parentName.lengthInBytes;
 		}
 		return buffer.buffer.asUint8List();
@@ -5845,19 +4365,19 @@ class NonVerifiableNamespaceRegistrationTransactionV1 extends StructBase impleme
 	@override
 	String toString() {
 		var result = 'NonVerifiableNamespaceRegistrationTransactionV1(';
-		result += 'type: "${_type.toString()}", ';
-		result += 'version: "0x${_version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
-		result += 'network: "${_network.toString()}", ';
-		result += 'timestamp: "${_timestamp.toString()}", ';
-		result += 'signerPublicKey: "${_signerPublicKey.toString()}", ';
-		result += 'fee: "${_fee.toString()}", ';
-		result += 'deadline: "${_deadline.toString()}", ';
-		result += 'rentalFeeSink: "${_rentalFeeSink.toString()}", ';
-		result += 'rentalFee: "${_rentalFee.toString()}", ';
-		result += 'name: "${hex.encode(_name.toList()).toUpperCase()}", ';
+		result += 'type: "${type.toString()}", ';
+		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'network: "${network.toString()}", ';
+		result += 'timestamp: "${timestamp.toString()}", ';
+		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
+		result += 'fee: "${fee.toString()}", ';
+		result += 'deadline: "${deadline.toString()}", ';
+		result += 'rentalFeeSink: "${rentalFeeSink.toString()}", ';
+		result += 'rentalFee: "${rentalFee.toString()}", ';
+		result += 'name: "${hex.encode(name.toList()).toUpperCase()}", ';
 		if (parentName.isNotEmpty)
 		{
-			result += 'parentName: "${hex.encode(_parentName.toList()).toUpperCase()}", ';
+			result += 'parentName: "${hex.encode(parentName.toList()).toUpperCase()}", ';
 		}
 		result += ')';
 		return result;
@@ -5907,34 +4427,18 @@ class Message extends StructBase implements IDeserializable {
 		'message': 'bytes_array'
 	};
 
-	MessageType _messageType = MessageType.PLAIN;
-	Uint8List _message = Uint8List(0);
+	MessageType messageType = MessageType.PLAIN;
+	Uint8List message = Uint8List(0);
 
 	Message({ MessageType? messageType, Uint8List? message}) 
 		: super(messageType == null && message == null )
 	{
-		_messageType = messageType ?? MessageType.PLAIN;
-		_message = message ?? Uint8List(0);
+		this.messageType = messageType ?? MessageType.PLAIN;
+		this.message = message ?? Uint8List(0);
 	}
 
 	void sort() {
 		// empty body
-	}
-
-	MessageType get messageType {
-		return _messageType;
-	}
-
-	Uint8List get message {
-		return _message;
-	}
-
-	set messageType(MessageType value) {
-		_messageType = value;
-	}
-
-	set message(Uint8List value) {
-		_message = value;
 	}
 
 	int get size {
@@ -5965,11 +4469,11 @@ class Message extends StructBase implements IDeserializable {
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
-		buffer.setRange(currentPos, currentPos + _messageType.size, _messageType.serialize());
+		buffer.setRange(currentPos, currentPos + messageType.size, messageType.serialize());
 		currentPos += messageType.size;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_message.length, 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(message.length, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _message.lengthInBytes, _message);
+		buffer.setRange(currentPos, currentPos + message.lengthInBytes, message);
 		currentPos += message.lengthInBytes;
 		return buffer.buffer.asUint8List();
 	}
@@ -5977,8 +4481,8 @@ class Message extends StructBase implements IDeserializable {
 	@override
 	String toString() {
 		var result = 'Message(';
-		result += 'messageType: "${_messageType.toString()}", ';
-		result += 'message: "${hex.encode(_message.toList()).toUpperCase()}", ';
+		result += 'messageType: "${messageType.toString()}", ';
+		result += 'message: "${hex.encode(message.toList()).toUpperCase()}", ';
 		result += ')';
 		return result;
 	}
@@ -6002,21 +4506,21 @@ class TransferTransactionV1 extends StructBase implements IDeserializable {
 		'message': 'struct:Message'
 	};
 
-	TransactionType _type = TransactionType.TRANSFER;
-	int _version = 0;
-	NetworkType _network = NetworkType.MAINNET;
-	Timestamp _timestamp = Timestamp();
-	PublicKey _signerPublicKey = PublicKey();
-	Signature _signature = Signature();
-	Amount _fee = Amount();
-	Timestamp _deadline = Timestamp();
-	Address _recipientAddress = Address();
-	Amount _amount = Amount();
-	Message _message = Message();
-	final int _entityBodyReserved_1 = 0; // reserved field
-	final int _signerPublicKeySize = 32; // reserved field
-	final int _signatureSize = 64; // reserved field
-	final int _recipientAddressSize = 40; // reserved field
+	TransactionType type = TransactionType.TRANSFER;
+	int version = 0;
+	NetworkType network = NetworkType.MAINNET;
+	Timestamp timestamp = Timestamp();
+	PublicKey signerPublicKey = PublicKey();
+	Signature signature = Signature();
+	Amount fee = Amount();
+	Timestamp deadline = Timestamp();
+	Address recipientAddress = Address();
+	Amount amount = Amount();
+	Message message = Message();
+	final int entityBodyReserved_1 = 0; // reserved field
+	final int signerPublicKeySize = 32; // reserved field
+	final int signatureSize = 64; // reserved field
+	final int recipientAddressSize = 40; // reserved field
 
 	TransferTransactionV1({ 
 	TransactionType? type,
@@ -6033,116 +4537,28 @@ class TransferTransactionV1 extends StructBase implements IDeserializable {
 	}) 
 		: super(type == null && version == null && network == null && timestamp == null && signerPublicKey == null && signature == null && fee == null && deadline == null && recipientAddress == null && amount == null && message == null )
 	{
-		_type = type ?? TransferTransactionV1.TRANSACTION_TYPE;
-		_version = version ?? TransferTransactionV1.TRANSACTION_VERSION;
-		_network = network ?? NetworkType.MAINNET;
-		_timestamp = timestamp ?? Timestamp();
-		_signerPublicKey = signerPublicKey ?? PublicKey();
-		_signature = signature ?? Signature();
-		_fee = fee ?? Amount();
-		_deadline = deadline ?? Timestamp();
-		_recipientAddress = recipientAddress ?? Address();
-		_amount = amount ?? Amount();
-		_message = message ?? Message();
+		this.type = type ?? TransferTransactionV1.TRANSACTION_TYPE;
+		this.version = version ?? TransferTransactionV1.TRANSACTION_VERSION;
+		this.network = network ?? NetworkType.MAINNET;
+		this.timestamp = timestamp ?? Timestamp();
+		this.signerPublicKey = signerPublicKey ?? PublicKey();
+		this.signature = signature ?? Signature();
+		this.fee = fee ?? Amount();
+		this.deadline = deadline ?? Timestamp();
+		this.recipientAddress = recipientAddress ?? Address();
+		this.amount = amount ?? Amount();
+		this.message = message ?? Message();
 	}
 
 	void sort() {
 		if (0 != messageEnvelopeSizeComputed)
 		{
-			_message.sort();
+			message.sort();
 		}
-	}
-
-	TransactionType get type {
-		return _type;
-	}
-
-	int get version {
-		return _version;
-	}
-
-	NetworkType get network {
-		return _network;
-	}
-
-	Timestamp get timestamp {
-		return _timestamp;
-	}
-
-	PublicKey get signerPublicKey {
-		return _signerPublicKey;
-	}
-
-	Signature get signature {
-		return _signature;
-	}
-
-	Amount get fee {
-		return _fee;
-	}
-
-	Timestamp get deadline {
-		return _deadline;
-	}
-
-	Address get recipientAddress {
-		return _recipientAddress;
-	}
-
-	Amount get amount {
-		return _amount;
-	}
-
-	Message get message {
-		return _message;
 	}
 
 	int get messageEnvelopeSizeComputed {
 		return message.isDefault ? 0 : message.size + 0;
-	}
-
-	set type(TransactionType value) {
-		_type = value;
-	}
-
-	set version(int value) {
-		_version = value;
-	}
-
-	set network(NetworkType value) {
-		_network = value;
-	}
-
-	set timestamp(Timestamp value) {
-		_timestamp = value;
-	}
-
-	set signerPublicKey(PublicKey value) {
-		_signerPublicKey = value;
-	}
-
-	set signature(Signature value) {
-		_signature = value;
-	}
-
-	set fee(Amount value) {
-		_fee = value;
-	}
-
-	set deadline(Timestamp value) {
-		_deadline = value;
-	}
-
-	set recipientAddress(Address value) {
-		_recipientAddress = value;
-	}
-
-	set amount(Amount value) {
-		_amount = value;
-	}
-
-	set message(Message value) {
-		_message = value;
 	}
 
 	int get size {
@@ -6240,39 +4656,39 @@ class TransferTransactionV1 extends StructBase implements IDeserializable {
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
-		buffer.setRange(currentPos, currentPos + _type.size, _type.serialize());
+		buffer.setRange(currentPos, currentPos + type.size, type.serialize());
 		currentPos += type.size;
-		buffer.setRange(currentPos, currentPos + 1, intToBytes(_version, 1));
+		buffer.setRange(currentPos, currentPos + 1, intToBytes(version, 1));
 		currentPos += 1;
-		buffer.setRange(currentPos, currentPos + 2, intToBytes(_entityBodyReserved_1, 2));
+		buffer.setRange(currentPos, currentPos + 2, intToBytes(entityBodyReserved_1, 2));
 		currentPos += 2;
-		buffer.setRange(currentPos, currentPos + _network.size, _network.serialize());
+		buffer.setRange(currentPos, currentPos + network.size, network.serialize());
 		currentPos += network.size;
-		buffer.setRange(currentPos, currentPos + _timestamp.size, _timestamp.serialize());
+		buffer.setRange(currentPos, currentPos + timestamp.size, timestamp.serialize());
 		currentPos += timestamp.size;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_signerPublicKeySize, 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(signerPublicKeySize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _signerPublicKey.size, _signerPublicKey.serialize());
+		buffer.setRange(currentPos, currentPos + signerPublicKey.size, signerPublicKey.serialize());
 		currentPos += signerPublicKey.size;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_signatureSize, 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(signatureSize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _signature.size, _signature.serialize());
+		buffer.setRange(currentPos, currentPos + signature.size, signature.serialize());
 		currentPos += signature.size;
-		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());
+		buffer.setRange(currentPos, currentPos + fee.size, fee.serialize());
 		currentPos += fee.size;
-		buffer.setRange(currentPos, currentPos + _deadline.size, _deadline.serialize());
+		buffer.setRange(currentPos, currentPos + deadline.size, deadline.serialize());
 		currentPos += deadline.size;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_recipientAddressSize, 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(recipientAddressSize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _recipientAddress.size, _recipientAddress.serialize());
+		buffer.setRange(currentPos, currentPos + recipientAddress.size, recipientAddress.serialize());
 		currentPos += recipientAddress.size;
-		buffer.setRange(currentPos, currentPos + _amount.size, _amount.serialize());
+		buffer.setRange(currentPos, currentPos + amount.size, amount.serialize());
 		currentPos += amount.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(messageEnvelopeSizeComputed, 4));
 		currentPos += 4;
 		if (0 != messageEnvelopeSizeComputed)
 		{
-			buffer.setRange(currentPos, currentPos + _message.size, _message.serialize());
+			buffer.setRange(currentPos, currentPos + message.size, message.serialize());
 			currentPos += message.size;
 		}
 		return buffer.buffer.asUint8List();
@@ -6281,19 +4697,19 @@ class TransferTransactionV1 extends StructBase implements IDeserializable {
 	@override
 	String toString() {
 		var result = 'TransferTransactionV1(';
-		result += 'type: "${_type.toString()}", ';
-		result += 'version: "0x${_version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
-		result += 'network: "${_network.toString()}", ';
-		result += 'timestamp: "${_timestamp.toString()}", ';
-		result += 'signerPublicKey: "${_signerPublicKey.toString()}", ';
-		result += 'signature: "${_signature.toString()}", ';
-		result += 'fee: "${_fee.toString()}", ';
-		result += 'deadline: "${_deadline.toString()}", ';
-		result += 'recipientAddress: "${_recipientAddress.toString()}", ';
-		result += 'amount: "${_amount.toString()}", ';
+		result += 'type: "${type.toString()}", ';
+		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'network: "${network.toString()}", ';
+		result += 'timestamp: "${timestamp.toString()}", ';
+		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
+		result += 'signature: "${signature.toString()}", ';
+		result += 'fee: "${fee.toString()}", ';
+		result += 'deadline: "${deadline.toString()}", ';
+		result += 'recipientAddress: "${recipientAddress.toString()}", ';
+		result += 'amount: "${amount.toString()}", ';
 		if (0 != messageEnvelopeSizeComputed)
 		{
-			result += 'message: "${_message.toString()}", ';
+			result += 'message: "${message.toString()}", ';
 		}
 		result += ')';
 		return result;
@@ -6317,19 +4733,19 @@ class NonVerifiableTransferTransactionV1 extends StructBase implements IDeserial
 		'message': 'struct:Message'
 	};
 
-	TransactionType _type = TransactionType.TRANSFER;
-	int _version = 0;
-	NetworkType _network = NetworkType.MAINNET;
-	Timestamp _timestamp = Timestamp();
-	PublicKey _signerPublicKey = PublicKey();
-	Amount _fee = Amount();
-	Timestamp _deadline = Timestamp();
-	Address _recipientAddress = Address();
-	Amount _amount = Amount();
-	Message _message = Message();
-	final int _entityBodyReserved_1 = 0; // reserved field
-	final int _signerPublicKeySize = 32; // reserved field
-	final int _recipientAddressSize = 40; // reserved field
+	TransactionType type = TransactionType.TRANSFER;
+	int version = 0;
+	NetworkType network = NetworkType.MAINNET;
+	Timestamp timestamp = Timestamp();
+	PublicKey signerPublicKey = PublicKey();
+	Amount fee = Amount();
+	Timestamp deadline = Timestamp();
+	Address recipientAddress = Address();
+	Amount amount = Amount();
+	Message message = Message();
+	final int entityBodyReserved_1 = 0; // reserved field
+	final int signerPublicKeySize = 32; // reserved field
+	final int recipientAddressSize = 40; // reserved field
 
 	NonVerifiableTransferTransactionV1({ 
 	TransactionType? type,
@@ -6345,107 +4761,27 @@ class NonVerifiableTransferTransactionV1 extends StructBase implements IDeserial
 	}) 
 		: super(type == null && version == null && network == null && timestamp == null && signerPublicKey == null && fee == null && deadline == null && recipientAddress == null && amount == null && message == null )
 	{
-		_type = type ?? NonVerifiableTransferTransactionV1.TRANSACTION_TYPE;
-		_version = version ?? NonVerifiableTransferTransactionV1.TRANSACTION_VERSION;
-		_network = network ?? NetworkType.MAINNET;
-		_timestamp = timestamp ?? Timestamp();
-		_signerPublicKey = signerPublicKey ?? PublicKey();
-		_fee = fee ?? Amount();
-		_deadline = deadline ?? Timestamp();
-		_recipientAddress = recipientAddress ?? Address();
-		_amount = amount ?? Amount();
-		_message = message ?? Message();
+		this.type = type ?? NonVerifiableTransferTransactionV1.TRANSACTION_TYPE;
+		this.version = version ?? NonVerifiableTransferTransactionV1.TRANSACTION_VERSION;
+		this.network = network ?? NetworkType.MAINNET;
+		this.timestamp = timestamp ?? Timestamp();
+		this.signerPublicKey = signerPublicKey ?? PublicKey();
+		this.fee = fee ?? Amount();
+		this.deadline = deadline ?? Timestamp();
+		this.recipientAddress = recipientAddress ?? Address();
+		this.amount = amount ?? Amount();
+		this.message = message ?? Message();
 	}
 
 	void sort() {
 		if (0 != messageEnvelopeSizeComputed)
 		{
-			_message.sort();
+			message.sort();
 		}
-	}
-
-	TransactionType get type {
-		return _type;
-	}
-
-	int get version {
-		return _version;
-	}
-
-	NetworkType get network {
-		return _network;
-	}
-
-	Timestamp get timestamp {
-		return _timestamp;
-	}
-
-	PublicKey get signerPublicKey {
-		return _signerPublicKey;
-	}
-
-	Amount get fee {
-		return _fee;
-	}
-
-	Timestamp get deadline {
-		return _deadline;
-	}
-
-	Address get recipientAddress {
-		return _recipientAddress;
-	}
-
-	Amount get amount {
-		return _amount;
-	}
-
-	Message get message {
-		return _message;
 	}
 
 	int get messageEnvelopeSizeComputed {
 		return message.isDefault ? 0 : message.size + 0;
-	}
-
-	set type(TransactionType value) {
-		_type = value;
-	}
-
-	set version(int value) {
-		_version = value;
-	}
-
-	set network(NetworkType value) {
-		_network = value;
-	}
-
-	set timestamp(Timestamp value) {
-		_timestamp = value;
-	}
-
-	set signerPublicKey(PublicKey value) {
-		_signerPublicKey = value;
-	}
-
-	set fee(Amount value) {
-		_fee = value;
-	}
-
-	set deadline(Timestamp value) {
-		_deadline = value;
-	}
-
-	set recipientAddress(Address value) {
-		_recipientAddress = value;
-	}
-
-	set amount(Amount value) {
-		_amount = value;
-	}
-
-	set message(Message value) {
-		_message = value;
 	}
 
 	int get size {
@@ -6533,35 +4869,35 @@ class NonVerifiableTransferTransactionV1 extends StructBase implements IDeserial
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
-		buffer.setRange(currentPos, currentPos + _type.size, _type.serialize());
+		buffer.setRange(currentPos, currentPos + type.size, type.serialize());
 		currentPos += type.size;
-		buffer.setRange(currentPos, currentPos + 1, intToBytes(_version, 1));
+		buffer.setRange(currentPos, currentPos + 1, intToBytes(version, 1));
 		currentPos += 1;
-		buffer.setRange(currentPos, currentPos + 2, intToBytes(_entityBodyReserved_1, 2));
+		buffer.setRange(currentPos, currentPos + 2, intToBytes(entityBodyReserved_1, 2));
 		currentPos += 2;
-		buffer.setRange(currentPos, currentPos + _network.size, _network.serialize());
+		buffer.setRange(currentPos, currentPos + network.size, network.serialize());
 		currentPos += network.size;
-		buffer.setRange(currentPos, currentPos + _timestamp.size, _timestamp.serialize());
+		buffer.setRange(currentPos, currentPos + timestamp.size, timestamp.serialize());
 		currentPos += timestamp.size;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_signerPublicKeySize, 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(signerPublicKeySize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _signerPublicKey.size, _signerPublicKey.serialize());
+		buffer.setRange(currentPos, currentPos + signerPublicKey.size, signerPublicKey.serialize());
 		currentPos += signerPublicKey.size;
-		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());
+		buffer.setRange(currentPos, currentPos + fee.size, fee.serialize());
 		currentPos += fee.size;
-		buffer.setRange(currentPos, currentPos + _deadline.size, _deadline.serialize());
+		buffer.setRange(currentPos, currentPos + deadline.size, deadline.serialize());
 		currentPos += deadline.size;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_recipientAddressSize, 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(recipientAddressSize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _recipientAddress.size, _recipientAddress.serialize());
+		buffer.setRange(currentPos, currentPos + recipientAddress.size, recipientAddress.serialize());
 		currentPos += recipientAddress.size;
-		buffer.setRange(currentPos, currentPos + _amount.size, _amount.serialize());
+		buffer.setRange(currentPos, currentPos + amount.size, amount.serialize());
 		currentPos += amount.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(messageEnvelopeSizeComputed, 4));
 		currentPos += 4;
 		if (0 != messageEnvelopeSizeComputed)
 		{
-			buffer.setRange(currentPos, currentPos + _message.size, _message.serialize());
+			buffer.setRange(currentPos, currentPos + message.size, message.serialize());
 			currentPos += message.size;
 		}
 		return buffer.buffer.asUint8List();
@@ -6570,18 +4906,18 @@ class NonVerifiableTransferTransactionV1 extends StructBase implements IDeserial
 	@override
 	String toString() {
 		var result = 'NonVerifiableTransferTransactionV1(';
-		result += 'type: "${_type.toString()}", ';
-		result += 'version: "0x${_version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
-		result += 'network: "${_network.toString()}", ';
-		result += 'timestamp: "${_timestamp.toString()}", ';
-		result += 'signerPublicKey: "${_signerPublicKey.toString()}", ';
-		result += 'fee: "${_fee.toString()}", ';
-		result += 'deadline: "${_deadline.toString()}", ';
-		result += 'recipientAddress: "${_recipientAddress.toString()}", ';
-		result += 'amount: "${_amount.toString()}", ';
+		result += 'type: "${type.toString()}", ';
+		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'network: "${network.toString()}", ';
+		result += 'timestamp: "${timestamp.toString()}", ';
+		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
+		result += 'fee: "${fee.toString()}", ';
+		result += 'deadline: "${deadline.toString()}", ';
+		result += 'recipientAddress: "${recipientAddress.toString()}", ';
+		result += 'amount: "${amount.toString()}", ';
 		if (0 != messageEnvelopeSizeComputed)
 		{
-			result += 'message: "${_message.toString()}", ';
+			result += 'message: "${message.toString()}", ';
 		}
 		result += ')';
 		return result;
@@ -6607,22 +4943,22 @@ class TransferTransactionV2 extends StructBase implements IDeserializable {
 		'mosaics': 'array[SizePrefixedMosaic]'
 	};
 
-	TransactionType _type = TransactionType.TRANSFER;
-	int _version = 0;
-	NetworkType _network = NetworkType.MAINNET;
-	Timestamp _timestamp = Timestamp();
-	PublicKey _signerPublicKey = PublicKey();
-	Signature _signature = Signature();
-	Amount _fee = Amount();
-	Timestamp _deadline = Timestamp();
-	Address _recipientAddress = Address();
-	Amount _amount = Amount();
-	Message _message = Message();
-	List<SizePrefixedMosaic> _mosaics = [];
-	final int _entityBodyReserved_1 = 0; // reserved field
-	final int _signerPublicKeySize = 32; // reserved field
-	final int _signatureSize = 64; // reserved field
-	final int _recipientAddressSize = 40; // reserved field
+	TransactionType type = TransactionType.TRANSFER;
+	int version = 0;
+	NetworkType network = NetworkType.MAINNET;
+	Timestamp timestamp = Timestamp();
+	PublicKey signerPublicKey = PublicKey();
+	Signature signature = Signature();
+	Amount fee = Amount();
+	Timestamp deadline = Timestamp();
+	Address recipientAddress = Address();
+	Amount amount = Amount();
+	Message message = Message();
+	List<SizePrefixedMosaic> mosaics = [];
+	final int entityBodyReserved_1 = 0; // reserved field
+	final int signerPublicKeySize = 32; // reserved field
+	final int signatureSize = 64; // reserved field
+	final int recipientAddressSize = 40; // reserved field
 
 	TransferTransactionV2({ 
 	TransactionType? type,
@@ -6640,125 +4976,29 @@ class TransferTransactionV2 extends StructBase implements IDeserializable {
 	}) 
 		: super(type == null && version == null && network == null && timestamp == null && signerPublicKey == null && signature == null && fee == null && deadline == null && recipientAddress == null && amount == null && message == null && mosaics == null )
 	{
-		_type = type ?? TransferTransactionV2.TRANSACTION_TYPE;
-		_version = version ?? TransferTransactionV2.TRANSACTION_VERSION;
-		_network = network ?? NetworkType.MAINNET;
-		_timestamp = timestamp ?? Timestamp();
-		_signerPublicKey = signerPublicKey ?? PublicKey();
-		_signature = signature ?? Signature();
-		_fee = fee ?? Amount();
-		_deadline = deadline ?? Timestamp();
-		_recipientAddress = recipientAddress ?? Address();
-		_amount = amount ?? Amount();
-		_message = message ?? Message();
-		_mosaics = mosaics ?? [];
+		this.type = type ?? TransferTransactionV2.TRANSACTION_TYPE;
+		this.version = version ?? TransferTransactionV2.TRANSACTION_VERSION;
+		this.network = network ?? NetworkType.MAINNET;
+		this.timestamp = timestamp ?? Timestamp();
+		this.signerPublicKey = signerPublicKey ?? PublicKey();
+		this.signature = signature ?? Signature();
+		this.fee = fee ?? Amount();
+		this.deadline = deadline ?? Timestamp();
+		this.recipientAddress = recipientAddress ?? Address();
+		this.amount = amount ?? Amount();
+		this.message = message ?? Message();
+		this.mosaics = mosaics ?? [];
 	}
 
 	void sort() {
 		if (0 != messageEnvelopeSizeComputed)
 		{
-			_message.sort();
+			message.sort();
 		}
-	}
-
-	TransactionType get type {
-		return _type;
-	}
-
-	int get version {
-		return _version;
-	}
-
-	NetworkType get network {
-		return _network;
-	}
-
-	Timestamp get timestamp {
-		return _timestamp;
-	}
-
-	PublicKey get signerPublicKey {
-		return _signerPublicKey;
-	}
-
-	Signature get signature {
-		return _signature;
-	}
-
-	Amount get fee {
-		return _fee;
-	}
-
-	Timestamp get deadline {
-		return _deadline;
-	}
-
-	Address get recipientAddress {
-		return _recipientAddress;
-	}
-
-	Amount get amount {
-		return _amount;
-	}
-
-	Message get message {
-		return _message;
-	}
-
-	List<SizePrefixedMosaic> get mosaics {
-		return _mosaics;
 	}
 
 	int get messageEnvelopeSizeComputed {
 		return message.isDefault ? 0 : message.size + 0;
-	}
-
-	set type(TransactionType value) {
-		_type = value;
-	}
-
-	set version(int value) {
-		_version = value;
-	}
-
-	set network(NetworkType value) {
-		_network = value;
-	}
-
-	set timestamp(Timestamp value) {
-		_timestamp = value;
-	}
-
-	set signerPublicKey(PublicKey value) {
-		_signerPublicKey = value;
-	}
-
-	set signature(Signature value) {
-		_signature = value;
-	}
-
-	set fee(Amount value) {
-		_fee = value;
-	}
-
-	set deadline(Timestamp value) {
-		_deadline = value;
-	}
-
-	set recipientAddress(Address value) {
-		_recipientAddress = value;
-	}
-
-	set amount(Amount value) {
-		_amount = value;
-	}
-
-	set message(Message value) {
-		_message = value;
-	}
-
-	set mosaics(List<SizePrefixedMosaic> value) {
-		_mosaics = value;
 	}
 
 	int get size {
@@ -6863,45 +5103,45 @@ class TransferTransactionV2 extends StructBase implements IDeserializable {
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
-		buffer.setRange(currentPos, currentPos + _type.size, _type.serialize());
+		buffer.setRange(currentPos, currentPos + type.size, type.serialize());
 		currentPos += type.size;
-		buffer.setRange(currentPos, currentPos + 1, intToBytes(_version, 1));
+		buffer.setRange(currentPos, currentPos + 1, intToBytes(version, 1));
 		currentPos += 1;
-		buffer.setRange(currentPos, currentPos + 2, intToBytes(_entityBodyReserved_1, 2));
+		buffer.setRange(currentPos, currentPos + 2, intToBytes(entityBodyReserved_1, 2));
 		currentPos += 2;
-		buffer.setRange(currentPos, currentPos + _network.size, _network.serialize());
+		buffer.setRange(currentPos, currentPos + network.size, network.serialize());
 		currentPos += network.size;
-		buffer.setRange(currentPos, currentPos + _timestamp.size, _timestamp.serialize());
+		buffer.setRange(currentPos, currentPos + timestamp.size, timestamp.serialize());
 		currentPos += timestamp.size;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_signerPublicKeySize, 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(signerPublicKeySize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _signerPublicKey.size, _signerPublicKey.serialize());
+		buffer.setRange(currentPos, currentPos + signerPublicKey.size, signerPublicKey.serialize());
 		currentPos += signerPublicKey.size;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_signatureSize, 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(signatureSize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _signature.size, _signature.serialize());
+		buffer.setRange(currentPos, currentPos + signature.size, signature.serialize());
 		currentPos += signature.size;
-		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());
+		buffer.setRange(currentPos, currentPos + fee.size, fee.serialize());
 		currentPos += fee.size;
-		buffer.setRange(currentPos, currentPos + _deadline.size, _deadline.serialize());
+		buffer.setRange(currentPos, currentPos + deadline.size, deadline.serialize());
 		currentPos += deadline.size;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_recipientAddressSize, 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(recipientAddressSize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _recipientAddress.size, _recipientAddress.serialize());
+		buffer.setRange(currentPos, currentPos + recipientAddress.size, recipientAddress.serialize());
 		currentPos += recipientAddress.size;
-		buffer.setRange(currentPos, currentPos + _amount.size, _amount.serialize());
+		buffer.setRange(currentPos, currentPos + amount.size, amount.serialize());
 		currentPos += amount.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(messageEnvelopeSizeComputed, 4));
 		currentPos += 4;
 		if (0 != messageEnvelopeSizeComputed)
 		{
-			buffer.setRange(currentPos, currentPos + _message.size, _message.serialize());
+			buffer.setRange(currentPos, currentPos + message.size, message.serialize());
 			currentPos += message.size;
 		}
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_mosaics.length, 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(mosaics.length, 4));
 		currentPos += 4;
 		sort();
-		var res_mosaics = ArrayHelpers.writeArray(buffer, _mosaics, currentPos);
+		var res_mosaics = ArrayHelpers.writeArray(buffer, mosaics, currentPos);
 		currentPos = res_mosaics.item2;
 		buffer = res_mosaics.item1;
 		return buffer.buffer.asUint8List();
@@ -6910,21 +5150,21 @@ class TransferTransactionV2 extends StructBase implements IDeserializable {
 	@override
 	String toString() {
 		var result = 'TransferTransactionV2(';
-		result += 'type: "${_type.toString()}", ';
-		result += 'version: "0x${_version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
-		result += 'network: "${_network.toString()}", ';
-		result += 'timestamp: "${_timestamp.toString()}", ';
-		result += 'signerPublicKey: "${_signerPublicKey.toString()}", ';
-		result += 'signature: "${_signature.toString()}", ';
-		result += 'fee: "${_fee.toString()}", ';
-		result += 'deadline: "${_deadline.toString()}", ';
-		result += 'recipientAddress: "${_recipientAddress.toString()}", ';
-		result += 'amount: "${_amount.toString()}", ';
+		result += 'type: "${type.toString()}", ';
+		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'network: "${network.toString()}", ';
+		result += 'timestamp: "${timestamp.toString()}", ';
+		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
+		result += 'signature: "${signature.toString()}", ';
+		result += 'fee: "${fee.toString()}", ';
+		result += 'deadline: "${deadline.toString()}", ';
+		result += 'recipientAddress: "${recipientAddress.toString()}", ';
+		result += 'amount: "${amount.toString()}", ';
 		if (0 != messageEnvelopeSizeComputed)
 		{
-			result += 'message: "${_message.toString()}", ';
+			result += 'message: "${message.toString()}", ';
 		}
-		result += 'mosaics: "${_mosaics.map((e) => e.toString()).toList()}", ';
+		result += 'mosaics: "${mosaics.map((e) => e.toString()).toList()}", ';
 		result += ')';
 		return result;
 	}
@@ -6948,20 +5188,20 @@ class NonVerifiableTransferTransactionV2 extends StructBase implements IDeserial
 		'mosaics': 'array[SizePrefixedMosaic]'
 	};
 
-	TransactionType _type = TransactionType.TRANSFER;
-	int _version = 0;
-	NetworkType _network = NetworkType.MAINNET;
-	Timestamp _timestamp = Timestamp();
-	PublicKey _signerPublicKey = PublicKey();
-	Amount _fee = Amount();
-	Timestamp _deadline = Timestamp();
-	Address _recipientAddress = Address();
-	Amount _amount = Amount();
-	Message _message = Message();
-	List<SizePrefixedMosaic> _mosaics = [];
-	final int _entityBodyReserved_1 = 0; // reserved field
-	final int _signerPublicKeySize = 32; // reserved field
-	final int _recipientAddressSize = 40; // reserved field
+	TransactionType type = TransactionType.TRANSFER;
+	int version = 0;
+	NetworkType network = NetworkType.MAINNET;
+	Timestamp timestamp = Timestamp();
+	PublicKey signerPublicKey = PublicKey();
+	Amount fee = Amount();
+	Timestamp deadline = Timestamp();
+	Address recipientAddress = Address();
+	Amount amount = Amount();
+	Message message = Message();
+	List<SizePrefixedMosaic> mosaics = [];
+	final int entityBodyReserved_1 = 0; // reserved field
+	final int signerPublicKeySize = 32; // reserved field
+	final int recipientAddressSize = 40; // reserved field
 
 	NonVerifiableTransferTransactionV2({ 
 	TransactionType? type,
@@ -6978,116 +5218,28 @@ class NonVerifiableTransferTransactionV2 extends StructBase implements IDeserial
 	}) 
 		: super(type == null && version == null && network == null && timestamp == null && signerPublicKey == null && fee == null && deadline == null && recipientAddress == null && amount == null && message == null && mosaics == null )
 	{
-		_type = type ?? NonVerifiableTransferTransactionV2.TRANSACTION_TYPE;
-		_version = version ?? NonVerifiableTransferTransactionV2.TRANSACTION_VERSION;
-		_network = network ?? NetworkType.MAINNET;
-		_timestamp = timestamp ?? Timestamp();
-		_signerPublicKey = signerPublicKey ?? PublicKey();
-		_fee = fee ?? Amount();
-		_deadline = deadline ?? Timestamp();
-		_recipientAddress = recipientAddress ?? Address();
-		_amount = amount ?? Amount();
-		_message = message ?? Message();
-		_mosaics = mosaics ?? [];
+		this.type = type ?? NonVerifiableTransferTransactionV2.TRANSACTION_TYPE;
+		this.version = version ?? NonVerifiableTransferTransactionV2.TRANSACTION_VERSION;
+		this.network = network ?? NetworkType.MAINNET;
+		this.timestamp = timestamp ?? Timestamp();
+		this.signerPublicKey = signerPublicKey ?? PublicKey();
+		this.fee = fee ?? Amount();
+		this.deadline = deadline ?? Timestamp();
+		this.recipientAddress = recipientAddress ?? Address();
+		this.amount = amount ?? Amount();
+		this.message = message ?? Message();
+		this.mosaics = mosaics ?? [];
 	}
 
 	void sort() {
 		if (0 != messageEnvelopeSizeComputed)
 		{
-			_message.sort();
+			message.sort();
 		}
-	}
-
-	TransactionType get type {
-		return _type;
-	}
-
-	int get version {
-		return _version;
-	}
-
-	NetworkType get network {
-		return _network;
-	}
-
-	Timestamp get timestamp {
-		return _timestamp;
-	}
-
-	PublicKey get signerPublicKey {
-		return _signerPublicKey;
-	}
-
-	Amount get fee {
-		return _fee;
-	}
-
-	Timestamp get deadline {
-		return _deadline;
-	}
-
-	Address get recipientAddress {
-		return _recipientAddress;
-	}
-
-	Amount get amount {
-		return _amount;
-	}
-
-	Message get message {
-		return _message;
-	}
-
-	List<SizePrefixedMosaic> get mosaics {
-		return _mosaics;
 	}
 
 	int get messageEnvelopeSizeComputed {
 		return message.isDefault ? 0 : message.size + 0;
-	}
-
-	set type(TransactionType value) {
-		_type = value;
-	}
-
-	set version(int value) {
-		_version = value;
-	}
-
-	set network(NetworkType value) {
-		_network = value;
-	}
-
-	set timestamp(Timestamp value) {
-		_timestamp = value;
-	}
-
-	set signerPublicKey(PublicKey value) {
-		_signerPublicKey = value;
-	}
-
-	set fee(Amount value) {
-		_fee = value;
-	}
-
-	set deadline(Timestamp value) {
-		_deadline = value;
-	}
-
-	set recipientAddress(Address value) {
-		_recipientAddress = value;
-	}
-
-	set amount(Amount value) {
-		_amount = value;
-	}
-
-	set message(Message value) {
-		_message = value;
-	}
-
-	set mosaics(List<SizePrefixedMosaic> value) {
-		_mosaics = value;
 	}
 
 	int get size {
@@ -7182,41 +5334,41 @@ class NonVerifiableTransferTransactionV2 extends StructBase implements IDeserial
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
-		buffer.setRange(currentPos, currentPos + _type.size, _type.serialize());
+		buffer.setRange(currentPos, currentPos + type.size, type.serialize());
 		currentPos += type.size;
-		buffer.setRange(currentPos, currentPos + 1, intToBytes(_version, 1));
+		buffer.setRange(currentPos, currentPos + 1, intToBytes(version, 1));
 		currentPos += 1;
-		buffer.setRange(currentPos, currentPos + 2, intToBytes(_entityBodyReserved_1, 2));
+		buffer.setRange(currentPos, currentPos + 2, intToBytes(entityBodyReserved_1, 2));
 		currentPos += 2;
-		buffer.setRange(currentPos, currentPos + _network.size, _network.serialize());
+		buffer.setRange(currentPos, currentPos + network.size, network.serialize());
 		currentPos += network.size;
-		buffer.setRange(currentPos, currentPos + _timestamp.size, _timestamp.serialize());
+		buffer.setRange(currentPos, currentPos + timestamp.size, timestamp.serialize());
 		currentPos += timestamp.size;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_signerPublicKeySize, 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(signerPublicKeySize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _signerPublicKey.size, _signerPublicKey.serialize());
+		buffer.setRange(currentPos, currentPos + signerPublicKey.size, signerPublicKey.serialize());
 		currentPos += signerPublicKey.size;
-		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());
+		buffer.setRange(currentPos, currentPos + fee.size, fee.serialize());
 		currentPos += fee.size;
-		buffer.setRange(currentPos, currentPos + _deadline.size, _deadline.serialize());
+		buffer.setRange(currentPos, currentPos + deadline.size, deadline.serialize());
 		currentPos += deadline.size;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_recipientAddressSize, 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(recipientAddressSize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _recipientAddress.size, _recipientAddress.serialize());
+		buffer.setRange(currentPos, currentPos + recipientAddress.size, recipientAddress.serialize());
 		currentPos += recipientAddress.size;
-		buffer.setRange(currentPos, currentPos + _amount.size, _amount.serialize());
+		buffer.setRange(currentPos, currentPos + amount.size, amount.serialize());
 		currentPos += amount.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(messageEnvelopeSizeComputed, 4));
 		currentPos += 4;
 		if (0 != messageEnvelopeSizeComputed)
 		{
-			buffer.setRange(currentPos, currentPos + _message.size, _message.serialize());
+			buffer.setRange(currentPos, currentPos + message.size, message.serialize());
 			currentPos += message.size;
 		}
-		buffer.setRange(currentPos, currentPos + 4, intToBytes(_mosaics.length, 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(mosaics.length, 4));
 		currentPos += 4;
 		sort();
-		var res_mosaics = ArrayHelpers.writeArray(buffer, _mosaics, currentPos);
+		var res_mosaics = ArrayHelpers.writeArray(buffer, mosaics, currentPos);
 		currentPos = res_mosaics.item2;
 		buffer = res_mosaics.item1;
 		return buffer.buffer.asUint8List();
@@ -7225,20 +5377,20 @@ class NonVerifiableTransferTransactionV2 extends StructBase implements IDeserial
 	@override
 	String toString() {
 		var result = 'NonVerifiableTransferTransactionV2(';
-		result += 'type: "${_type.toString()}", ';
-		result += 'version: "0x${_version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
-		result += 'network: "${_network.toString()}", ';
-		result += 'timestamp: "${_timestamp.toString()}", ';
-		result += 'signerPublicKey: "${_signerPublicKey.toString()}", ';
-		result += 'fee: "${_fee.toString()}", ';
-		result += 'deadline: "${_deadline.toString()}", ';
-		result += 'recipientAddress: "${_recipientAddress.toString()}", ';
-		result += 'amount: "${_amount.toString()}", ';
+		result += 'type: "${type.toString()}", ';
+		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'network: "${network.toString()}", ';
+		result += 'timestamp: "${timestamp.toString()}", ';
+		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
+		result += 'fee: "${fee.toString()}", ';
+		result += 'deadline: "${deadline.toString()}", ';
+		result += 'recipientAddress: "${recipientAddress.toString()}", ';
+		result += 'amount: "${amount.toString()}", ';
 		if (0 != messageEnvelopeSizeComputed)
 		{
-			result += 'message: "${_message.toString()}", ';
+			result += 'message: "${message.toString()}", ';
 		}
-		result += 'mosaics: "${_mosaics.map((e) => e.toString()).toList()}", ';
+		result += 'mosaics: "${mosaics.map((e) => e.toString()).toList()}", ';
 		result += ')';
 		return result;
 	}
