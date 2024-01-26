@@ -290,10 +290,7 @@ class StructFormatter(AbstractTypeFormatter):
 		return indent_if_conditional(condition, deserialize_field)
 
 	def get_deserialize_descriptor(self):
-		body = 'if(payload is String) {\n'
-		body += '\tpayload = hex.decode(payload);\n'
-		body += '}\n'
-		body += 'Uint8List buffer = payload.buffer.asUint8List();\n'
+		body = 'Uint8List buffer = payload;\n'
 
 		# special treatment for condition-guarded fields,
 		# where condition is behind the fields...

@@ -106,7 +106,7 @@ class TypeFormatter(ClassFormatter):
 		# 'deserialize'
 		method_descriptor = self.provider.get_deserialize_descriptor()
 		method_descriptor.method_name = 'deserialize'
-		method_descriptor.arguments = ['dynamic payload']
+		method_descriptor.arguments = ['Uint8List payload']
 		method_descriptor.result = self.provider.typename
 		method_descriptor.annotations = ['@override']
 		return self.generate_method(method_descriptor)

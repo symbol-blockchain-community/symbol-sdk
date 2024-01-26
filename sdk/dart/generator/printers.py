@@ -37,7 +37,7 @@ class IntPrinter(Printer):
 
 	def load(self, buffer_name='buffer'):
 		data_size = self.get_size()
-		return f'bytesToInt(({buffer_name} as Uint8List).sublist(0, {data_size}), {data_size})'
+		return f'bytesToInt({buffer_name}.sublist(0, {data_size}), {data_size})'
 
 	def advancement_size(self):
 		return self.get_size()
