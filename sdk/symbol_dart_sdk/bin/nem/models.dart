@@ -16,8 +16,8 @@ class Amount extends BaseValue implements IDeserializable {
 	Amount([dynamic amount]) : super(SIZE, amount ?? 0);
 
 	@override
-	Amount deserialize(dynamic payload) {
-		return Amount(bytesToInt((payload as Uint8List).sublist(0, 8), 8));
+	Amount deserialize(Uint8List payload) {
+		return Amount(bytesToInt(payload.sublist(0, 8), 8));
 	}
 
 	Uint8List serialize() {
@@ -34,8 +34,8 @@ class Height extends BaseValue implements IDeserializable {
 	Height([dynamic height]) : super(SIZE, height ?? 0);
 
 	@override
-	Height deserialize(dynamic payload) {
-		return Height(bytesToInt((payload as Uint8List).sublist(0, 8), 8));
+	Height deserialize(Uint8List payload) {
+		return Height(bytesToInt(payload.sublist(0, 8), 8));
 	}
 
 	Uint8List serialize() {
@@ -52,8 +52,8 @@ class Timestamp extends BaseValue implements IDeserializable {
 	Timestamp([dynamic timestamp]) : super(SIZE, timestamp ?? 0);
 
 	@override
-	Timestamp deserialize(dynamic payload) {
-		return Timestamp(bytesToInt((payload as Uint8List).sublist(0, 4), 4));
+	Timestamp deserialize(Uint8List payload) {
+		return Timestamp(bytesToInt(payload.sublist(0, 4), 4));
 	}
 
 	Uint8List serialize() {
@@ -74,7 +74,7 @@ class Address extends ByteArray implements IDeserializable {
 	}
 
 	@override
-	Address deserialize(dynamic payload) {
+	Address deserialize(Uint8List payload) {
 		payload = payload.sublist(0, SIZE);
 		return Address(Uint8List.fromList(payload));
 	}
@@ -95,7 +95,7 @@ class Hash256 extends ByteArray implements IDeserializable {
 	}
 
 	@override
-	Hash256 deserialize(dynamic payload) {
+	Hash256 deserialize(Uint8List payload) {
 		payload = payload.sublist(0, SIZE);
 		return Hash256(Uint8List.fromList(payload));
 	}
@@ -116,7 +116,7 @@ class PublicKey extends ByteArray implements IDeserializable {
 	}
 
 	@override
-	PublicKey deserialize(dynamic payload) {
+	PublicKey deserialize(Uint8List payload) {
 		payload = payload.sublist(0, SIZE);
 		return PublicKey(Uint8List.fromList(payload));
 	}
@@ -137,7 +137,7 @@ class Signature extends ByteArray implements IDeserializable {
 	}
 
 	@override
-	Signature deserialize(dynamic payload) {
+	Signature deserialize(Uint8List payload) {
 		payload = payload.sublist(0, SIZE);
 		return Signature(Uint8List.fromList(payload));
 	}
@@ -166,7 +166,7 @@ class NetworkType implements IDeserializable {
 	}
 
 	@override
-	NetworkType deserialize(dynamic payload) {
+	NetworkType deserialize(Uint8List payload) {
 		var byteData = ByteData.sublistView(payload);
 		return NetworkType(byteData.getUint8(0));
 	}
@@ -213,7 +213,7 @@ class TransactionType implements IDeserializable {
 	}
 
 	@override
-	TransactionType deserialize(dynamic payload) {
+	TransactionType deserialize(Uint8List payload) {
 		var byteData = ByteData.sublistView(payload);
 		return TransactionType(byteData.getUint32(0, Endian.little));
 	}
@@ -361,16 +361,13 @@ class Transaction extends StructBase implements IDeserializable {
 	}
 
 	@override
-	Transaction deserialize(dynamic payload) {
-		if(payload is String) {
-			payload = hex.decode(payload);
-		}
-		Uint8List buffer = payload.buffer.asUint8List();
+	Transaction deserialize(Uint8List payload) {
+		var buffer = payload;
 		var type = TransactionType().deserialize(buffer);
 		buffer = buffer.sublist(type.size);
-		var version = bytesToInt((buffer.sublist(0, 1) as Uint8List).sublist(0, 1), 1);
+		var version = bytesToInt(buffer.sublist(0, 1), 1);
 		buffer = buffer.sublist(1);
-		var entityBodyReserved_1 = bytesToInt((buffer.sublist(0, 2) as Uint8List).sublist(0, 2), 2);
+		var entityBodyReserved_1 = bytesToInt(buffer.sublist(0, 2), 2);
 		buffer = buffer.sublist(2);
 		if (0 != entityBodyReserved_1) {
 			throw RangeError('Invalid value of reserved field ($entityBodyReserved_1)');
@@ -379,14 +376,14 @@ class Transaction extends StructBase implements IDeserializable {
 		buffer = buffer.sublist(network.size);
 		var timestamp = Timestamp().deserialize(buffer);
 		buffer = buffer.sublist(timestamp.size);
-		var signerPublicKeySize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var signerPublicKeySize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		if (32 != signerPublicKeySize) {
 			throw RangeError('Invalid value of reserved field ($signerPublicKeySize)');
 		}
 		var signerPublicKey = PublicKey().deserialize(buffer);
 		buffer = buffer.sublist(signerPublicKey.size);
-		var signatureSize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var signatureSize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		if (64 != signatureSize) {
 			throw RangeError('Invalid value of reserved field ($signatureSize)');
@@ -414,27 +411,27 @@ class Transaction extends StructBase implements IDeserializable {
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
-		buffer.setRange(currentPos, currentPos + _type.size, _type.serialize());;
+		buffer.setRange(currentPos, currentPos + _type.size, _type.serialize());
 		currentPos += type.size;
 		buffer.setRange(currentPos, currentPos + 1, intToBytes(_version, 1));
 		currentPos += 1;
 		buffer.setRange(currentPos, currentPos + 2, intToBytes(_entityBodyReserved_1, 2));
 		currentPos += 2;
-		buffer.setRange(currentPos, currentPos + _network.size, _network.serialize());;
+		buffer.setRange(currentPos, currentPos + _network.size, _network.serialize());
 		currentPos += network.size;
-		buffer.setRange(currentPos, currentPos + _timestamp.size, _timestamp.serialize());;
+		buffer.setRange(currentPos, currentPos + _timestamp.size, _timestamp.serialize());
 		currentPos += timestamp.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(_signerPublicKeySize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _signerPublicKey.size, _signerPublicKey.serialize());;
+		buffer.setRange(currentPos, currentPos + _signerPublicKey.size, _signerPublicKey.serialize());
 		currentPos += signerPublicKey.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(_signatureSize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _signature.size, _signature.serialize());;
+		buffer.setRange(currentPos, currentPos + _signature.size, _signature.serialize());
 		currentPos += signature.size;
-		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());;
+		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());
 		currentPos += fee.size;
-		buffer.setRange(currentPos, currentPos + _deadline.size, _deadline.serialize());;
+		buffer.setRange(currentPos, currentPos + _deadline.size, _deadline.serialize());
 		currentPos += deadline.size;
 		return buffer.buffer.asUint8List();
 	}
@@ -572,16 +569,13 @@ class NonVerifiableTransaction extends StructBase implements IDeserializable {
 	}
 
 	@override
-	NonVerifiableTransaction deserialize(dynamic payload) {
-		if(payload is String) {
-			payload = hex.decode(payload);
-		}
-		Uint8List buffer = payload.buffer.asUint8List();
+	NonVerifiableTransaction deserialize(Uint8List payload) {
+		var buffer = payload;
 		var type = TransactionType().deserialize(buffer);
 		buffer = buffer.sublist(type.size);
-		var version = bytesToInt((buffer.sublist(0, 1) as Uint8List).sublist(0, 1), 1);
+		var version = bytesToInt(buffer.sublist(0, 1), 1);
 		buffer = buffer.sublist(1);
-		var entityBodyReserved_1 = bytesToInt((buffer.sublist(0, 2) as Uint8List).sublist(0, 2), 2);
+		var entityBodyReserved_1 = bytesToInt(buffer.sublist(0, 2), 2);
 		buffer = buffer.sublist(2);
 		if (0 != entityBodyReserved_1) {
 			throw RangeError('Invalid value of reserved field ($entityBodyReserved_1)');
@@ -590,7 +584,7 @@ class NonVerifiableTransaction extends StructBase implements IDeserializable {
 		buffer = buffer.sublist(network.size);
 		var timestamp = Timestamp().deserialize(buffer);
 		buffer = buffer.sublist(timestamp.size);
-		var signerPublicKeySize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var signerPublicKeySize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		if (32 != signerPublicKeySize) {
 			throw RangeError('Invalid value of reserved field ($signerPublicKeySize)');
@@ -617,23 +611,23 @@ class NonVerifiableTransaction extends StructBase implements IDeserializable {
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
-		buffer.setRange(currentPos, currentPos + _type.size, _type.serialize());;
+		buffer.setRange(currentPos, currentPos + _type.size, _type.serialize());
 		currentPos += type.size;
 		buffer.setRange(currentPos, currentPos + 1, intToBytes(_version, 1));
 		currentPos += 1;
 		buffer.setRange(currentPos, currentPos + 2, intToBytes(_entityBodyReserved_1, 2));
 		currentPos += 2;
-		buffer.setRange(currentPos, currentPos + _network.size, _network.serialize());;
+		buffer.setRange(currentPos, currentPos + _network.size, _network.serialize());
 		currentPos += network.size;
-		buffer.setRange(currentPos, currentPos + _timestamp.size, _timestamp.serialize());;
+		buffer.setRange(currentPos, currentPos + _timestamp.size, _timestamp.serialize());
 		currentPos += timestamp.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(_signerPublicKeySize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _signerPublicKey.size, _signerPublicKey.serialize());;
+		buffer.setRange(currentPos, currentPos + _signerPublicKey.size, _signerPublicKey.serialize());
 		currentPos += signerPublicKey.size;
-		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());;
+		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());
 		currentPos += fee.size;
-		buffer.setRange(currentPos, currentPos + _deadline.size, _deadline.serialize());;
+		buffer.setRange(currentPos, currentPos + _deadline.size, _deadline.serialize());
 		currentPos += deadline.size;
 		return buffer.buffer.asUint8List();
 	}
@@ -672,7 +666,7 @@ class LinkAction implements IDeserializable {
 	}
 
 	@override
-	LinkAction deserialize(dynamic payload) {
+	LinkAction deserialize(Uint8List payload) {
 		var byteData = ByteData.sublistView(payload);
 		return LinkAction(byteData.getUint32(0, Endian.little));
 	}
@@ -850,16 +844,13 @@ class AccountKeyLinkTransactionV1 extends StructBase implements IDeserializable 
 	}
 
 	@override
-	AccountKeyLinkTransactionV1 deserialize(dynamic payload) {
-		if(payload is String) {
-			payload = hex.decode(payload);
-		}
-		Uint8List buffer = payload.buffer.asUint8List();
+	AccountKeyLinkTransactionV1 deserialize(Uint8List payload) {
+		var buffer = payload;
 		var type = TransactionType().deserialize(buffer);
 		buffer = buffer.sublist(type.size);
-		var version = bytesToInt((buffer.sublist(0, 1) as Uint8List).sublist(0, 1), 1);
+		var version = bytesToInt(buffer.sublist(0, 1), 1);
 		buffer = buffer.sublist(1);
-		var entityBodyReserved_1 = bytesToInt((buffer.sublist(0, 2) as Uint8List).sublist(0, 2), 2);
+		var entityBodyReserved_1 = bytesToInt(buffer.sublist(0, 2), 2);
 		buffer = buffer.sublist(2);
 		if (0 != entityBodyReserved_1) {
 			throw RangeError('Invalid value of reserved field ($entityBodyReserved_1)');
@@ -868,14 +859,14 @@ class AccountKeyLinkTransactionV1 extends StructBase implements IDeserializable 
 		buffer = buffer.sublist(network.size);
 		var timestamp = Timestamp().deserialize(buffer);
 		buffer = buffer.sublist(timestamp.size);
-		var signerPublicKeySize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var signerPublicKeySize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		if (32 != signerPublicKeySize) {
 			throw RangeError('Invalid value of reserved field ($signerPublicKeySize)');
 		}
 		var signerPublicKey = PublicKey().deserialize(buffer);
 		buffer = buffer.sublist(signerPublicKey.size);
-		var signatureSize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var signatureSize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		if (64 != signatureSize) {
 			throw RangeError('Invalid value of reserved field ($signatureSize)');
@@ -888,7 +879,7 @@ class AccountKeyLinkTransactionV1 extends StructBase implements IDeserializable 
 		buffer = buffer.sublist(deadline.size);
 		var linkAction = LinkAction().deserialize(buffer);
 		buffer = buffer.sublist(linkAction.size);
-		var remotePublicKeySize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var remotePublicKeySize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		if (32 != remotePublicKeySize) {
 			throw RangeError('Invalid value of reserved field ($remotePublicKeySize)');
@@ -914,33 +905,33 @@ class AccountKeyLinkTransactionV1 extends StructBase implements IDeserializable 
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
-		buffer.setRange(currentPos, currentPos + _type.size, _type.serialize());;
+		buffer.setRange(currentPos, currentPos + _type.size, _type.serialize());
 		currentPos += type.size;
 		buffer.setRange(currentPos, currentPos + 1, intToBytes(_version, 1));
 		currentPos += 1;
 		buffer.setRange(currentPos, currentPos + 2, intToBytes(_entityBodyReserved_1, 2));
 		currentPos += 2;
-		buffer.setRange(currentPos, currentPos + _network.size, _network.serialize());;
+		buffer.setRange(currentPos, currentPos + _network.size, _network.serialize());
 		currentPos += network.size;
-		buffer.setRange(currentPos, currentPos + _timestamp.size, _timestamp.serialize());;
+		buffer.setRange(currentPos, currentPos + _timestamp.size, _timestamp.serialize());
 		currentPos += timestamp.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(_signerPublicKeySize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _signerPublicKey.size, _signerPublicKey.serialize());;
+		buffer.setRange(currentPos, currentPos + _signerPublicKey.size, _signerPublicKey.serialize());
 		currentPos += signerPublicKey.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(_signatureSize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _signature.size, _signature.serialize());;
+		buffer.setRange(currentPos, currentPos + _signature.size, _signature.serialize());
 		currentPos += signature.size;
-		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());;
+		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());
 		currentPos += fee.size;
-		buffer.setRange(currentPos, currentPos + _deadline.size, _deadline.serialize());;
+		buffer.setRange(currentPos, currentPos + _deadline.size, _deadline.serialize());
 		currentPos += deadline.size;
-		buffer.setRange(currentPos, currentPos + _linkAction.size, _linkAction.serialize());;
+		buffer.setRange(currentPos, currentPos + _linkAction.size, _linkAction.serialize());
 		currentPos += linkAction.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(_remotePublicKeySize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _remotePublicKey.size, _remotePublicKey.serialize());;
+		buffer.setRange(currentPos, currentPos + _remotePublicKey.size, _remotePublicKey.serialize());
 		currentPos += remotePublicKey.size;
 		return buffer.buffer.asUint8List();
 	}
@@ -1110,16 +1101,13 @@ class NonVerifiableAccountKeyLinkTransactionV1 extends StructBase implements IDe
 	}
 
 	@override
-	NonVerifiableAccountKeyLinkTransactionV1 deserialize(dynamic payload) {
-		if(payload is String) {
-			payload = hex.decode(payload);
-		}
-		Uint8List buffer = payload.buffer.asUint8List();
+	NonVerifiableAccountKeyLinkTransactionV1 deserialize(Uint8List payload) {
+		var buffer = payload;
 		var type = TransactionType().deserialize(buffer);
 		buffer = buffer.sublist(type.size);
-		var version = bytesToInt((buffer.sublist(0, 1) as Uint8List).sublist(0, 1), 1);
+		var version = bytesToInt(buffer.sublist(0, 1), 1);
 		buffer = buffer.sublist(1);
-		var entityBodyReserved_1 = bytesToInt((buffer.sublist(0, 2) as Uint8List).sublist(0, 2), 2);
+		var entityBodyReserved_1 = bytesToInt(buffer.sublist(0, 2), 2);
 		buffer = buffer.sublist(2);
 		if (0 != entityBodyReserved_1) {
 			throw RangeError('Invalid value of reserved field ($entityBodyReserved_1)');
@@ -1128,7 +1116,7 @@ class NonVerifiableAccountKeyLinkTransactionV1 extends StructBase implements IDe
 		buffer = buffer.sublist(network.size);
 		var timestamp = Timestamp().deserialize(buffer);
 		buffer = buffer.sublist(timestamp.size);
-		var signerPublicKeySize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var signerPublicKeySize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		if (32 != signerPublicKeySize) {
 			throw RangeError('Invalid value of reserved field ($signerPublicKeySize)');
@@ -1141,7 +1129,7 @@ class NonVerifiableAccountKeyLinkTransactionV1 extends StructBase implements IDe
 		buffer = buffer.sublist(deadline.size);
 		var linkAction = LinkAction().deserialize(buffer);
 		buffer = buffer.sublist(linkAction.size);
-		var remotePublicKeySize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var remotePublicKeySize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		if (32 != remotePublicKeySize) {
 			throw RangeError('Invalid value of reserved field ($remotePublicKeySize)');
@@ -1166,29 +1154,29 @@ class NonVerifiableAccountKeyLinkTransactionV1 extends StructBase implements IDe
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
-		buffer.setRange(currentPos, currentPos + _type.size, _type.serialize());;
+		buffer.setRange(currentPos, currentPos + _type.size, _type.serialize());
 		currentPos += type.size;
 		buffer.setRange(currentPos, currentPos + 1, intToBytes(_version, 1));
 		currentPos += 1;
 		buffer.setRange(currentPos, currentPos + 2, intToBytes(_entityBodyReserved_1, 2));
 		currentPos += 2;
-		buffer.setRange(currentPos, currentPos + _network.size, _network.serialize());;
+		buffer.setRange(currentPos, currentPos + _network.size, _network.serialize());
 		currentPos += network.size;
-		buffer.setRange(currentPos, currentPos + _timestamp.size, _timestamp.serialize());;
+		buffer.setRange(currentPos, currentPos + _timestamp.size, _timestamp.serialize());
 		currentPos += timestamp.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(_signerPublicKeySize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _signerPublicKey.size, _signerPublicKey.serialize());;
+		buffer.setRange(currentPos, currentPos + _signerPublicKey.size, _signerPublicKey.serialize());
 		currentPos += signerPublicKey.size;
-		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());;
+		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());
 		currentPos += fee.size;
-		buffer.setRange(currentPos, currentPos + _deadline.size, _deadline.serialize());;
+		buffer.setRange(currentPos, currentPos + _deadline.size, _deadline.serialize());
 		currentPos += deadline.size;
-		buffer.setRange(currentPos, currentPos + _linkAction.size, _linkAction.serialize());;
+		buffer.setRange(currentPos, currentPos + _linkAction.size, _linkAction.serialize());
 		currentPos += linkAction.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(_remotePublicKeySize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _remotePublicKey.size, _remotePublicKey.serialize());;
+		buffer.setRange(currentPos, currentPos + _remotePublicKey.size, _remotePublicKey.serialize());
 		currentPos += remotePublicKey.size;
 		return buffer.buffer.asUint8List();
 	}
@@ -1245,12 +1233,9 @@ class NamespaceId extends StructBase implements IDeserializable {
 	}
 
 	@override
-	NamespaceId deserialize(dynamic payload) {
-		if(payload is String) {
-			payload = hex.decode(payload);
-		}
-		Uint8List buffer = payload.buffer.asUint8List();
-		var nameSize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+	NamespaceId deserialize(Uint8List payload) {
+		var buffer = payload;
+		var nameSize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		var name = Uint8List.fromList(buffer.sublist(0, nameSize));
 		buffer = buffer.sublist(nameSize);
@@ -1325,14 +1310,11 @@ class MosaicId extends StructBase implements IDeserializable {
 	}
 
 	@override
-	MosaicId deserialize(dynamic payload) {
-		if(payload is String) {
-			payload = hex.decode(payload);
-		}
-		Uint8List buffer = payload.buffer.asUint8List();
+	MosaicId deserialize(Uint8List payload) {
+		var buffer = payload;
 		var namespaceId = NamespaceId().deserialize(buffer);
 		buffer = buffer.sublist(namespaceId.size);
-		var nameSize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var nameSize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		var name = Uint8List.fromList(buffer.sublist(0, nameSize));
 		buffer = buffer.sublist(nameSize);
@@ -1347,7 +1329,7 @@ class MosaicId extends StructBase implements IDeserializable {
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
-		buffer.setRange(currentPos, currentPos + _namespaceId.size, _namespaceId.serialize());;
+		buffer.setRange(currentPos, currentPos + _namespaceId.size, _namespaceId.serialize());
 		currentPos += namespaceId.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(_name.length, 4));
 		currentPos += 4;
@@ -1413,12 +1395,9 @@ class Mosaic extends StructBase implements IDeserializable {
 	}
 
 	@override
-	Mosaic deserialize(dynamic payload) {
-		if(payload is String) {
-			payload = hex.decode(payload);
-		}
-		Uint8List buffer = payload.buffer.asUint8List();
-		var mosaicIdSize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+	Mosaic deserialize(Uint8List payload) {
+		var buffer = payload;
+		var mosaicIdSize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		//marking sizeof field
 		var mosaicId = MosaicId().deserialize(buffer);
@@ -1438,9 +1417,9 @@ class Mosaic extends StructBase implements IDeserializable {
 		var currentPos = 0;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(mosaicId.size, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _mosaicId.size, _mosaicId.serialize());;
+		buffer.setRange(currentPos, currentPos + _mosaicId.size, _mosaicId.serialize());
 		currentPos += mosaicId.size;
-		buffer.setRange(currentPos, currentPos + _amount.size, _amount.serialize());;
+		buffer.setRange(currentPos, currentPos + _amount.size, _amount.serialize());
 		currentPos += amount.size;
 		return buffer.buffer.asUint8List();
 	}
@@ -1490,12 +1469,9 @@ class SizePrefixedMosaic extends StructBase implements IDeserializable {
 	}
 
 	@override
-	SizePrefixedMosaic deserialize(dynamic payload) {
-		if(payload is String) {
-			payload = hex.decode(payload);
-		}
-		Uint8List buffer = payload.buffer.asUint8List();
-		var mosaicSize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+	SizePrefixedMosaic deserialize(Uint8List payload) {
+		var buffer = payload;
+		var mosaicSize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		//marking sizeof field
 		var mosaic = Mosaic().deserialize(buffer);
@@ -1510,7 +1486,7 @@ class SizePrefixedMosaic extends StructBase implements IDeserializable {
 		var currentPos = 0;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(mosaic.size, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _mosaic.size, _mosaic.serialize());;
+		buffer.setRange(currentPos, currentPos + _mosaic.size, _mosaic.serialize());
 		currentPos += mosaic.size;
 		return buffer.buffer.asUint8List();
 	}
@@ -1543,7 +1519,7 @@ class MosaicTransferFeeType implements IDeserializable {
 	}
 
 	@override
-	MosaicTransferFeeType deserialize(dynamic payload) {
+	MosaicTransferFeeType deserialize(Uint8List payload) {
 		var byteData = ByteData.sublistView(payload);
 		return MosaicTransferFeeType(byteData.getUint32(0, Endian.little));
 	}
@@ -1632,21 +1608,18 @@ class MosaicLevy extends StructBase implements IDeserializable {
 	}
 
 	@override
-	MosaicLevy deserialize(dynamic payload) {
-		if(payload is String) {
-			payload = hex.decode(payload);
-		}
-		Uint8List buffer = payload.buffer.asUint8List();
+	MosaicLevy deserialize(Uint8List payload) {
+		var buffer = payload;
 		var transferFeeType = MosaicTransferFeeType().deserialize(buffer);
 		buffer = buffer.sublist(transferFeeType.size);
-		var recipientAddressSize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var recipientAddressSize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		if (40 != recipientAddressSize) {
 			throw RangeError('Invalid value of reserved field ($recipientAddressSize)');
 		}
 		var recipientAddress = Address().deserialize(buffer);
 		buffer = buffer.sublist(recipientAddress.size);
-		var mosaicIdSize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var mosaicIdSize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		//marking sizeof field
 		var mosaicId = MosaicId().deserialize(buffer);
@@ -1666,17 +1639,17 @@ class MosaicLevy extends StructBase implements IDeserializable {
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
-		buffer.setRange(currentPos, currentPos + _transferFeeType.size, _transferFeeType.serialize());;
+		buffer.setRange(currentPos, currentPos + _transferFeeType.size, _transferFeeType.serialize());
 		currentPos += transferFeeType.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(_recipientAddressSize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _recipientAddress.size, _recipientAddress.serialize());;
+		buffer.setRange(currentPos, currentPos + _recipientAddress.size, _recipientAddress.serialize());
 		currentPos += recipientAddress.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(mosaicId.size, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _mosaicId.size, _mosaicId.serialize());;
+		buffer.setRange(currentPos, currentPos + _mosaicId.size, _mosaicId.serialize());
 		currentPos += mosaicId.size;
-		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());;
+		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());
 		currentPos += fee.size;
 		return buffer.buffer.asUint8List();
 	}
@@ -1741,16 +1714,13 @@ class MosaicProperty extends StructBase implements IDeserializable {
 	}
 
 	@override
-	MosaicProperty deserialize(dynamic payload) {
-		if(payload is String) {
-			payload = hex.decode(payload);
-		}
-		Uint8List buffer = payload.buffer.asUint8List();
-		var nameSize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+	MosaicProperty deserialize(Uint8List payload) {
+		var buffer = payload;
+		var nameSize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		var name = Uint8List.fromList(buffer.sublist(0, nameSize));
 		buffer = buffer.sublist(nameSize);
-		var valueSize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var valueSize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		var value = Uint8List.fromList(buffer.sublist(0, valueSize));
 		buffer = buffer.sublist(valueSize);
@@ -1821,12 +1791,9 @@ class SizePrefixedMosaicProperty extends StructBase implements IDeserializable {
 	}
 
 	@override
-	SizePrefixedMosaicProperty deserialize(dynamic payload) {
-		if(payload is String) {
-			payload = hex.decode(payload);
-		}
-		Uint8List buffer = payload.buffer.asUint8List();
-		var propertySize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+	SizePrefixedMosaicProperty deserialize(Uint8List payload) {
+		var buffer = payload;
+		var propertySize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		//marking sizeof field
 		var property = MosaicProperty().deserialize(buffer);
@@ -1841,7 +1808,7 @@ class SizePrefixedMosaicProperty extends StructBase implements IDeserializable {
 		var currentPos = 0;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(property.size, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _property.size, _property.serialize());;
+		buffer.setRange(currentPos, currentPos + _property.size, _property.serialize());
 		currentPos += property.size;
 		return buffer.buffer.asUint8List();
 	}
@@ -1960,32 +1927,29 @@ class MosaicDefinition extends StructBase implements IDeserializable {
 	}
 
 	@override
-	MosaicDefinition deserialize(dynamic payload) {
-		if(payload is String) {
-			payload = hex.decode(payload);
-		}
-		Uint8List buffer = payload.buffer.asUint8List();
-		var ownerPublicKeySize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+	MosaicDefinition deserialize(Uint8List payload) {
+		var buffer = payload;
+		var ownerPublicKeySize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		if (32 != ownerPublicKeySize) {
 			throw RangeError('Invalid value of reserved field ($ownerPublicKeySize)');
 		}
 		var ownerPublicKey = PublicKey().deserialize(buffer);
 		buffer = buffer.sublist(ownerPublicKey.size);
-		var idSize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var idSize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		//marking sizeof field
 		var id = MosaicId().deserialize(buffer);
 		buffer = buffer.sublist(id.size);
-		var descriptionSize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var descriptionSize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		var description = Uint8List.fromList(buffer.sublist(0, descriptionSize));
 		buffer = buffer.sublist(descriptionSize);
-		var propertiesCount = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var propertiesCount = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		var properties = ArrayHelpers.readArrayCount(buffer, SizePrefixedMosaicProperty(), propertiesCount).map((item) => item as SizePrefixedMosaicProperty).toList();
 		buffer = buffer.sublist(ArrayHelpers.size(properties));
-		var levySize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var levySize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		var levy = MosaicLevy();
 		if (0 != levySize)
@@ -2009,11 +1973,11 @@ class MosaicDefinition extends StructBase implements IDeserializable {
 		var currentPos = 0;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(_ownerPublicKeySize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _ownerPublicKey.size, _ownerPublicKey.serialize());;
+		buffer.setRange(currentPos, currentPos + _ownerPublicKey.size, _ownerPublicKey.serialize());
 		currentPos += ownerPublicKey.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(id.size, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _id.size, _id.serialize());;
+		buffer.setRange(currentPos, currentPos + _id.size, _id.serialize());
 		currentPos += id.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(_description.length, 4));
 		currentPos += 4;
@@ -2029,7 +1993,7 @@ class MosaicDefinition extends StructBase implements IDeserializable {
 		currentPos += 4;
 		if (0 != levySizeComputed)
 		{
-			buffer.setRange(currentPos, currentPos + _levy.size, _levy.serialize());;
+			buffer.setRange(currentPos, currentPos + _levy.size, _levy.serialize());
 			currentPos += levy.size;
 		}
 		return buffer.buffer.asUint8List();
@@ -2227,16 +2191,13 @@ class MosaicDefinitionTransactionV1 extends StructBase implements IDeserializabl
 	}
 
 	@override
-	MosaicDefinitionTransactionV1 deserialize(dynamic payload) {
-		if(payload is String) {
-			payload = hex.decode(payload);
-		}
-		Uint8List buffer = payload.buffer.asUint8List();
+	MosaicDefinitionTransactionV1 deserialize(Uint8List payload) {
+		var buffer = payload;
 		var type = TransactionType().deserialize(buffer);
 		buffer = buffer.sublist(type.size);
-		var version = bytesToInt((buffer.sublist(0, 1) as Uint8List).sublist(0, 1), 1);
+		var version = bytesToInt(buffer.sublist(0, 1), 1);
 		buffer = buffer.sublist(1);
-		var entityBodyReserved_1 = bytesToInt((buffer.sublist(0, 2) as Uint8List).sublist(0, 2), 2);
+		var entityBodyReserved_1 = bytesToInt(buffer.sublist(0, 2), 2);
 		buffer = buffer.sublist(2);
 		if (0 != entityBodyReserved_1) {
 			throw RangeError('Invalid value of reserved field ($entityBodyReserved_1)');
@@ -2245,14 +2206,14 @@ class MosaicDefinitionTransactionV1 extends StructBase implements IDeserializabl
 		buffer = buffer.sublist(network.size);
 		var timestamp = Timestamp().deserialize(buffer);
 		buffer = buffer.sublist(timestamp.size);
-		var signerPublicKeySize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var signerPublicKeySize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		if (32 != signerPublicKeySize) {
 			throw RangeError('Invalid value of reserved field ($signerPublicKeySize)');
 		}
 		var signerPublicKey = PublicKey().deserialize(buffer);
 		buffer = buffer.sublist(signerPublicKey.size);
-		var signatureSize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var signatureSize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		if (64 != signatureSize) {
 			throw RangeError('Invalid value of reserved field ($signatureSize)');
@@ -2263,12 +2224,12 @@ class MosaicDefinitionTransactionV1 extends StructBase implements IDeserializabl
 		buffer = buffer.sublist(fee.size);
 		var deadline = Timestamp().deserialize(buffer);
 		buffer = buffer.sublist(deadline.size);
-		var mosaicDefinitionSize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var mosaicDefinitionSize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		//marking sizeof field
 		var mosaicDefinition = MosaicDefinition().deserialize(buffer);
 		buffer = buffer.sublist(mosaicDefinition.size);
-		var rentalFeeSinkSize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var rentalFeeSinkSize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		if (40 != rentalFeeSinkSize) {
 			throw RangeError('Invalid value of reserved field ($rentalFeeSinkSize)');
@@ -2297,37 +2258,37 @@ class MosaicDefinitionTransactionV1 extends StructBase implements IDeserializabl
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
-		buffer.setRange(currentPos, currentPos + _type.size, _type.serialize());;
+		buffer.setRange(currentPos, currentPos + _type.size, _type.serialize());
 		currentPos += type.size;
 		buffer.setRange(currentPos, currentPos + 1, intToBytes(_version, 1));
 		currentPos += 1;
 		buffer.setRange(currentPos, currentPos + 2, intToBytes(_entityBodyReserved_1, 2));
 		currentPos += 2;
-		buffer.setRange(currentPos, currentPos + _network.size, _network.serialize());;
+		buffer.setRange(currentPos, currentPos + _network.size, _network.serialize());
 		currentPos += network.size;
-		buffer.setRange(currentPos, currentPos + _timestamp.size, _timestamp.serialize());;
+		buffer.setRange(currentPos, currentPos + _timestamp.size, _timestamp.serialize());
 		currentPos += timestamp.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(_signerPublicKeySize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _signerPublicKey.size, _signerPublicKey.serialize());;
+		buffer.setRange(currentPos, currentPos + _signerPublicKey.size, _signerPublicKey.serialize());
 		currentPos += signerPublicKey.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(_signatureSize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _signature.size, _signature.serialize());;
+		buffer.setRange(currentPos, currentPos + _signature.size, _signature.serialize());
 		currentPos += signature.size;
-		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());;
+		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());
 		currentPos += fee.size;
-		buffer.setRange(currentPos, currentPos + _deadline.size, _deadline.serialize());;
+		buffer.setRange(currentPos, currentPos + _deadline.size, _deadline.serialize());
 		currentPos += deadline.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(mosaicDefinition.size, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _mosaicDefinition.size, _mosaicDefinition.serialize());;
+		buffer.setRange(currentPos, currentPos + _mosaicDefinition.size, _mosaicDefinition.serialize());
 		currentPos += mosaicDefinition.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(_rentalFeeSinkSize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _rentalFeeSink.size, _rentalFeeSink.serialize());;
+		buffer.setRange(currentPos, currentPos + _rentalFeeSink.size, _rentalFeeSink.serialize());
 		currentPos += rentalFeeSink.size;
-		buffer.setRange(currentPos, currentPos + _rentalFee.size, _rentalFee.serialize());;
+		buffer.setRange(currentPos, currentPos + _rentalFee.size, _rentalFee.serialize());
 		currentPos += rentalFee.size;
 		return buffer.buffer.asUint8List();
 	}
@@ -2512,16 +2473,13 @@ class NonVerifiableMosaicDefinitionTransactionV1 extends StructBase implements I
 	}
 
 	@override
-	NonVerifiableMosaicDefinitionTransactionV1 deserialize(dynamic payload) {
-		if(payload is String) {
-			payload = hex.decode(payload);
-		}
-		Uint8List buffer = payload.buffer.asUint8List();
+	NonVerifiableMosaicDefinitionTransactionV1 deserialize(Uint8List payload) {
+		var buffer = payload;
 		var type = TransactionType().deserialize(buffer);
 		buffer = buffer.sublist(type.size);
-		var version = bytesToInt((buffer.sublist(0, 1) as Uint8List).sublist(0, 1), 1);
+		var version = bytesToInt(buffer.sublist(0, 1), 1);
 		buffer = buffer.sublist(1);
-		var entityBodyReserved_1 = bytesToInt((buffer.sublist(0, 2) as Uint8List).sublist(0, 2), 2);
+		var entityBodyReserved_1 = bytesToInt(buffer.sublist(0, 2), 2);
 		buffer = buffer.sublist(2);
 		if (0 != entityBodyReserved_1) {
 			throw RangeError('Invalid value of reserved field ($entityBodyReserved_1)');
@@ -2530,7 +2488,7 @@ class NonVerifiableMosaicDefinitionTransactionV1 extends StructBase implements I
 		buffer = buffer.sublist(network.size);
 		var timestamp = Timestamp().deserialize(buffer);
 		buffer = buffer.sublist(timestamp.size);
-		var signerPublicKeySize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var signerPublicKeySize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		if (32 != signerPublicKeySize) {
 			throw RangeError('Invalid value of reserved field ($signerPublicKeySize)');
@@ -2541,12 +2499,12 @@ class NonVerifiableMosaicDefinitionTransactionV1 extends StructBase implements I
 		buffer = buffer.sublist(fee.size);
 		var deadline = Timestamp().deserialize(buffer);
 		buffer = buffer.sublist(deadline.size);
-		var mosaicDefinitionSize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var mosaicDefinitionSize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		//marking sizeof field
 		var mosaicDefinition = MosaicDefinition().deserialize(buffer);
 		buffer = buffer.sublist(mosaicDefinition.size);
-		var rentalFeeSinkSize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var rentalFeeSinkSize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		if (40 != rentalFeeSinkSize) {
 			throw RangeError('Invalid value of reserved field ($rentalFeeSinkSize)');
@@ -2574,33 +2532,33 @@ class NonVerifiableMosaicDefinitionTransactionV1 extends StructBase implements I
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
-		buffer.setRange(currentPos, currentPos + _type.size, _type.serialize());;
+		buffer.setRange(currentPos, currentPos + _type.size, _type.serialize());
 		currentPos += type.size;
 		buffer.setRange(currentPos, currentPos + 1, intToBytes(_version, 1));
 		currentPos += 1;
 		buffer.setRange(currentPos, currentPos + 2, intToBytes(_entityBodyReserved_1, 2));
 		currentPos += 2;
-		buffer.setRange(currentPos, currentPos + _network.size, _network.serialize());;
+		buffer.setRange(currentPos, currentPos + _network.size, _network.serialize());
 		currentPos += network.size;
-		buffer.setRange(currentPos, currentPos + _timestamp.size, _timestamp.serialize());;
+		buffer.setRange(currentPos, currentPos + _timestamp.size, _timestamp.serialize());
 		currentPos += timestamp.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(_signerPublicKeySize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _signerPublicKey.size, _signerPublicKey.serialize());;
+		buffer.setRange(currentPos, currentPos + _signerPublicKey.size, _signerPublicKey.serialize());
 		currentPos += signerPublicKey.size;
-		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());;
+		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());
 		currentPos += fee.size;
-		buffer.setRange(currentPos, currentPos + _deadline.size, _deadline.serialize());;
+		buffer.setRange(currentPos, currentPos + _deadline.size, _deadline.serialize());
 		currentPos += deadline.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(mosaicDefinition.size, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _mosaicDefinition.size, _mosaicDefinition.serialize());;
+		buffer.setRange(currentPos, currentPos + _mosaicDefinition.size, _mosaicDefinition.serialize());
 		currentPos += mosaicDefinition.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(_rentalFeeSinkSize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _rentalFeeSink.size, _rentalFeeSink.serialize());;
+		buffer.setRange(currentPos, currentPos + _rentalFeeSink.size, _rentalFeeSink.serialize());
 		currentPos += rentalFeeSink.size;
-		buffer.setRange(currentPos, currentPos + _rentalFee.size, _rentalFee.serialize());;
+		buffer.setRange(currentPos, currentPos + _rentalFee.size, _rentalFee.serialize());
 		currentPos += rentalFee.size;
 		return buffer.buffer.asUint8List();
 	}
@@ -2642,7 +2600,7 @@ class MosaicSupplyChangeAction implements IDeserializable {
 	}
 
 	@override
-	MosaicSupplyChangeAction deserialize(dynamic payload) {
+	MosaicSupplyChangeAction deserialize(Uint8List payload) {
 		var byteData = ByteData.sublistView(payload);
 		return MosaicSupplyChangeAction(byteData.getUint32(0, Endian.little));
 	}
@@ -2832,16 +2790,13 @@ class MosaicSupplyChangeTransactionV1 extends StructBase implements IDeserializa
 	}
 
 	@override
-	MosaicSupplyChangeTransactionV1 deserialize(dynamic payload) {
-		if(payload is String) {
-			payload = hex.decode(payload);
-		}
-		Uint8List buffer = payload.buffer.asUint8List();
+	MosaicSupplyChangeTransactionV1 deserialize(Uint8List payload) {
+		var buffer = payload;
 		var type = TransactionType().deserialize(buffer);
 		buffer = buffer.sublist(type.size);
-		var version = bytesToInt((buffer.sublist(0, 1) as Uint8List).sublist(0, 1), 1);
+		var version = bytesToInt(buffer.sublist(0, 1), 1);
 		buffer = buffer.sublist(1);
-		var entityBodyReserved_1 = bytesToInt((buffer.sublist(0, 2) as Uint8List).sublist(0, 2), 2);
+		var entityBodyReserved_1 = bytesToInt(buffer.sublist(0, 2), 2);
 		buffer = buffer.sublist(2);
 		if (0 != entityBodyReserved_1) {
 			throw RangeError('Invalid value of reserved field ($entityBodyReserved_1)');
@@ -2850,14 +2805,14 @@ class MosaicSupplyChangeTransactionV1 extends StructBase implements IDeserializa
 		buffer = buffer.sublist(network.size);
 		var timestamp = Timestamp().deserialize(buffer);
 		buffer = buffer.sublist(timestamp.size);
-		var signerPublicKeySize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var signerPublicKeySize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		if (32 != signerPublicKeySize) {
 			throw RangeError('Invalid value of reserved field ($signerPublicKeySize)');
 		}
 		var signerPublicKey = PublicKey().deserialize(buffer);
 		buffer = buffer.sublist(signerPublicKey.size);
-		var signatureSize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var signatureSize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		if (64 != signatureSize) {
 			throw RangeError('Invalid value of reserved field ($signatureSize)');
@@ -2868,7 +2823,7 @@ class MosaicSupplyChangeTransactionV1 extends StructBase implements IDeserializa
 		buffer = buffer.sublist(fee.size);
 		var deadline = Timestamp().deserialize(buffer);
 		buffer = buffer.sublist(deadline.size);
-		var mosaicIdSize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var mosaicIdSize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		//marking sizeof field
 		var mosaicId = MosaicId().deserialize(buffer);
@@ -2897,35 +2852,35 @@ class MosaicSupplyChangeTransactionV1 extends StructBase implements IDeserializa
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
-		buffer.setRange(currentPos, currentPos + _type.size, _type.serialize());;
+		buffer.setRange(currentPos, currentPos + _type.size, _type.serialize());
 		currentPos += type.size;
 		buffer.setRange(currentPos, currentPos + 1, intToBytes(_version, 1));
 		currentPos += 1;
 		buffer.setRange(currentPos, currentPos + 2, intToBytes(_entityBodyReserved_1, 2));
 		currentPos += 2;
-		buffer.setRange(currentPos, currentPos + _network.size, _network.serialize());;
+		buffer.setRange(currentPos, currentPos + _network.size, _network.serialize());
 		currentPos += network.size;
-		buffer.setRange(currentPos, currentPos + _timestamp.size, _timestamp.serialize());;
+		buffer.setRange(currentPos, currentPos + _timestamp.size, _timestamp.serialize());
 		currentPos += timestamp.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(_signerPublicKeySize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _signerPublicKey.size, _signerPublicKey.serialize());;
+		buffer.setRange(currentPos, currentPos + _signerPublicKey.size, _signerPublicKey.serialize());
 		currentPos += signerPublicKey.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(_signatureSize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _signature.size, _signature.serialize());;
+		buffer.setRange(currentPos, currentPos + _signature.size, _signature.serialize());
 		currentPos += signature.size;
-		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());;
+		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());
 		currentPos += fee.size;
-		buffer.setRange(currentPos, currentPos + _deadline.size, _deadline.serialize());;
+		buffer.setRange(currentPos, currentPos + _deadline.size, _deadline.serialize());
 		currentPos += deadline.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(mosaicId.size, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _mosaicId.size, _mosaicId.serialize());;
+		buffer.setRange(currentPos, currentPos + _mosaicId.size, _mosaicId.serialize());
 		currentPos += mosaicId.size;
-		buffer.setRange(currentPos, currentPos + _action.size, _action.serialize());;
+		buffer.setRange(currentPos, currentPos + _action.size, _action.serialize());
 		currentPos += action.size;
-		buffer.setRange(currentPos, currentPos + _delta.size, _delta.serialize());;
+		buffer.setRange(currentPos, currentPos + _delta.size, _delta.serialize());
 		currentPos += delta.size;
 		return buffer.buffer.asUint8List();
 	}
@@ -3108,16 +3063,13 @@ class NonVerifiableMosaicSupplyChangeTransactionV1 extends StructBase implements
 	}
 
 	@override
-	NonVerifiableMosaicSupplyChangeTransactionV1 deserialize(dynamic payload) {
-		if(payload is String) {
-			payload = hex.decode(payload);
-		}
-		Uint8List buffer = payload.buffer.asUint8List();
+	NonVerifiableMosaicSupplyChangeTransactionV1 deserialize(Uint8List payload) {
+		var buffer = payload;
 		var type = TransactionType().deserialize(buffer);
 		buffer = buffer.sublist(type.size);
-		var version = bytesToInt((buffer.sublist(0, 1) as Uint8List).sublist(0, 1), 1);
+		var version = bytesToInt(buffer.sublist(0, 1), 1);
 		buffer = buffer.sublist(1);
-		var entityBodyReserved_1 = bytesToInt((buffer.sublist(0, 2) as Uint8List).sublist(0, 2), 2);
+		var entityBodyReserved_1 = bytesToInt(buffer.sublist(0, 2), 2);
 		buffer = buffer.sublist(2);
 		if (0 != entityBodyReserved_1) {
 			throw RangeError('Invalid value of reserved field ($entityBodyReserved_1)');
@@ -3126,7 +3078,7 @@ class NonVerifiableMosaicSupplyChangeTransactionV1 extends StructBase implements
 		buffer = buffer.sublist(network.size);
 		var timestamp = Timestamp().deserialize(buffer);
 		buffer = buffer.sublist(timestamp.size);
-		var signerPublicKeySize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var signerPublicKeySize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		if (32 != signerPublicKeySize) {
 			throw RangeError('Invalid value of reserved field ($signerPublicKeySize)');
@@ -3137,7 +3089,7 @@ class NonVerifiableMosaicSupplyChangeTransactionV1 extends StructBase implements
 		buffer = buffer.sublist(fee.size);
 		var deadline = Timestamp().deserialize(buffer);
 		buffer = buffer.sublist(deadline.size);
-		var mosaicIdSize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var mosaicIdSize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		//marking sizeof field
 		var mosaicId = MosaicId().deserialize(buffer);
@@ -3165,31 +3117,31 @@ class NonVerifiableMosaicSupplyChangeTransactionV1 extends StructBase implements
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
-		buffer.setRange(currentPos, currentPos + _type.size, _type.serialize());;
+		buffer.setRange(currentPos, currentPos + _type.size, _type.serialize());
 		currentPos += type.size;
 		buffer.setRange(currentPos, currentPos + 1, intToBytes(_version, 1));
 		currentPos += 1;
 		buffer.setRange(currentPos, currentPos + 2, intToBytes(_entityBodyReserved_1, 2));
 		currentPos += 2;
-		buffer.setRange(currentPos, currentPos + _network.size, _network.serialize());;
+		buffer.setRange(currentPos, currentPos + _network.size, _network.serialize());
 		currentPos += network.size;
-		buffer.setRange(currentPos, currentPos + _timestamp.size, _timestamp.serialize());;
+		buffer.setRange(currentPos, currentPos + _timestamp.size, _timestamp.serialize());
 		currentPos += timestamp.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(_signerPublicKeySize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _signerPublicKey.size, _signerPublicKey.serialize());;
+		buffer.setRange(currentPos, currentPos + _signerPublicKey.size, _signerPublicKey.serialize());
 		currentPos += signerPublicKey.size;
-		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());;
+		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());
 		currentPos += fee.size;
-		buffer.setRange(currentPos, currentPos + _deadline.size, _deadline.serialize());;
+		buffer.setRange(currentPos, currentPos + _deadline.size, _deadline.serialize());
 		currentPos += deadline.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(mosaicId.size, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _mosaicId.size, _mosaicId.serialize());;
+		buffer.setRange(currentPos, currentPos + _mosaicId.size, _mosaicId.serialize());
 		currentPos += mosaicId.size;
-		buffer.setRange(currentPos, currentPos + _action.size, _action.serialize());;
+		buffer.setRange(currentPos, currentPos + _action.size, _action.serialize());
 		currentPos += action.size;
-		buffer.setRange(currentPos, currentPos + _delta.size, _delta.serialize());;
+		buffer.setRange(currentPos, currentPos + _delta.size, _delta.serialize());
 		currentPos += delta.size;
 		return buffer.buffer.asUint8List();
 	}
@@ -3231,7 +3183,7 @@ class MultisigAccountModificationType implements IDeserializable {
 	}
 
 	@override
-	MultisigAccountModificationType deserialize(dynamic payload) {
+	MultisigAccountModificationType deserialize(Uint8List payload) {
 		var byteData = ByteData.sublistView(payload);
 		return MultisigAccountModificationType(byteData.getUint32(0, Endian.little));
 	}
@@ -3302,14 +3254,11 @@ class MultisigAccountModification extends StructBase implements IDeserializable 
 	}
 
 	@override
-	MultisigAccountModification deserialize(dynamic payload) {
-		if(payload is String) {
-			payload = hex.decode(payload);
-		}
-		Uint8List buffer = payload.buffer.asUint8List();
+	MultisigAccountModification deserialize(Uint8List payload) {
+		var buffer = payload;
 		var modificationType = MultisigAccountModificationType().deserialize(buffer);
 		buffer = buffer.sublist(modificationType.size);
-		var cosignatoryPublicKeySize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var cosignatoryPublicKeySize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		if (32 != cosignatoryPublicKeySize) {
 			throw RangeError('Invalid value of reserved field ($cosignatoryPublicKeySize)');
@@ -3327,11 +3276,11 @@ class MultisigAccountModification extends StructBase implements IDeserializable 
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
-		buffer.setRange(currentPos, currentPos + _modificationType.size, _modificationType.serialize());;
+		buffer.setRange(currentPos, currentPos + _modificationType.size, _modificationType.serialize());
 		currentPos += modificationType.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(_cosignatoryPublicKeySize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _cosignatoryPublicKey.size, _cosignatoryPublicKey.serialize());;
+		buffer.setRange(currentPos, currentPos + _cosignatoryPublicKey.size, _cosignatoryPublicKey.serialize());
 		currentPos += cosignatoryPublicKey.size;
 		return buffer.buffer.asUint8List();
 	}
@@ -3381,12 +3330,9 @@ class SizePrefixedMultisigAccountModification extends StructBase implements IDes
 	}
 
 	@override
-	SizePrefixedMultisigAccountModification deserialize(dynamic payload) {
-		if(payload is String) {
-			payload = hex.decode(payload);
-		}
-		Uint8List buffer = payload.buffer.asUint8List();
-		var modificationSize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+	SizePrefixedMultisigAccountModification deserialize(Uint8List payload) {
+		var buffer = payload;
+		var modificationSize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		//marking sizeof field
 		var modification = MultisigAccountModification().deserialize(buffer);
@@ -3401,7 +3347,7 @@ class SizePrefixedMultisigAccountModification extends StructBase implements IDes
 		var currentPos = 0;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(modification.size, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _modification.size, _modification.serialize());;
+		buffer.setRange(currentPos, currentPos + _modification.size, _modification.serialize());
 		currentPos += modification.size;
 		return buffer.buffer.asUint8List();
 	}
@@ -3565,16 +3511,13 @@ class MultisigAccountModificationTransactionV1 extends StructBase implements IDe
 	}
 
 	@override
-	MultisigAccountModificationTransactionV1 deserialize(dynamic payload) {
-		if(payload is String) {
-			payload = hex.decode(payload);
-		}
-		Uint8List buffer = payload.buffer.asUint8List();
+	MultisigAccountModificationTransactionV1 deserialize(Uint8List payload) {
+		var buffer = payload;
 		var type = TransactionType().deserialize(buffer);
 		buffer = buffer.sublist(type.size);
-		var version = bytesToInt((buffer.sublist(0, 1) as Uint8List).sublist(0, 1), 1);
+		var version = bytesToInt(buffer.sublist(0, 1), 1);
 		buffer = buffer.sublist(1);
-		var entityBodyReserved_1 = bytesToInt((buffer.sublist(0, 2) as Uint8List).sublist(0, 2), 2);
+		var entityBodyReserved_1 = bytesToInt(buffer.sublist(0, 2), 2);
 		buffer = buffer.sublist(2);
 		if (0 != entityBodyReserved_1) {
 			throw RangeError('Invalid value of reserved field ($entityBodyReserved_1)');
@@ -3583,14 +3526,14 @@ class MultisigAccountModificationTransactionV1 extends StructBase implements IDe
 		buffer = buffer.sublist(network.size);
 		var timestamp = Timestamp().deserialize(buffer);
 		buffer = buffer.sublist(timestamp.size);
-		var signerPublicKeySize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var signerPublicKeySize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		if (32 != signerPublicKeySize) {
 			throw RangeError('Invalid value of reserved field ($signerPublicKeySize)');
 		}
 		var signerPublicKey = PublicKey().deserialize(buffer);
 		buffer = buffer.sublist(signerPublicKey.size);
-		var signatureSize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var signatureSize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		if (64 != signatureSize) {
 			throw RangeError('Invalid value of reserved field ($signatureSize)');
@@ -3601,7 +3544,7 @@ class MultisigAccountModificationTransactionV1 extends StructBase implements IDe
 		buffer = buffer.sublist(fee.size);
 		var deadline = Timestamp().deserialize(buffer);
 		buffer = buffer.sublist(deadline.size);
-		var modificationsCount = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var modificationsCount = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		var modifications = ArrayHelpers.readArrayCount(buffer, SizePrefixedMultisigAccountModification(), modificationsCount, (e) { return ArrayHelpers.getValue(e.modification);}).map((item) => item as SizePrefixedMultisigAccountModification).toList();
 		buffer = buffer.sublist(ArrayHelpers.size(modifications));
@@ -3623,27 +3566,27 @@ class MultisigAccountModificationTransactionV1 extends StructBase implements IDe
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
-		buffer.setRange(currentPos, currentPos + _type.size, _type.serialize());;
+		buffer.setRange(currentPos, currentPos + _type.size, _type.serialize());
 		currentPos += type.size;
 		buffer.setRange(currentPos, currentPos + 1, intToBytes(_version, 1));
 		currentPos += 1;
 		buffer.setRange(currentPos, currentPos + 2, intToBytes(_entityBodyReserved_1, 2));
 		currentPos += 2;
-		buffer.setRange(currentPos, currentPos + _network.size, _network.serialize());;
+		buffer.setRange(currentPos, currentPos + _network.size, _network.serialize());
 		currentPos += network.size;
-		buffer.setRange(currentPos, currentPos + _timestamp.size, _timestamp.serialize());;
+		buffer.setRange(currentPos, currentPos + _timestamp.size, _timestamp.serialize());
 		currentPos += timestamp.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(_signerPublicKeySize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _signerPublicKey.size, _signerPublicKey.serialize());;
+		buffer.setRange(currentPos, currentPos + _signerPublicKey.size, _signerPublicKey.serialize());
 		currentPos += signerPublicKey.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(_signatureSize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _signature.size, _signature.serialize());;
+		buffer.setRange(currentPos, currentPos + _signature.size, _signature.serialize());
 		currentPos += signature.size;
-		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());;
+		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());
 		currentPos += fee.size;
-		buffer.setRange(currentPos, currentPos + _deadline.size, _deadline.serialize());;
+		buffer.setRange(currentPos, currentPos + _deadline.size, _deadline.serialize());
 		currentPos += deadline.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(_modifications.length, 4));
 		currentPos += 4;
@@ -3806,16 +3749,13 @@ class NonVerifiableMultisigAccountModificationTransactionV1 extends StructBase i
 	}
 
 	@override
-	NonVerifiableMultisigAccountModificationTransactionV1 deserialize(dynamic payload) {
-		if(payload is String) {
-			payload = hex.decode(payload);
-		}
-		Uint8List buffer = payload.buffer.asUint8List();
+	NonVerifiableMultisigAccountModificationTransactionV1 deserialize(Uint8List payload) {
+		var buffer = payload;
 		var type = TransactionType().deserialize(buffer);
 		buffer = buffer.sublist(type.size);
-		var version = bytesToInt((buffer.sublist(0, 1) as Uint8List).sublist(0, 1), 1);
+		var version = bytesToInt(buffer.sublist(0, 1), 1);
 		buffer = buffer.sublist(1);
-		var entityBodyReserved_1 = bytesToInt((buffer.sublist(0, 2) as Uint8List).sublist(0, 2), 2);
+		var entityBodyReserved_1 = bytesToInt(buffer.sublist(0, 2), 2);
 		buffer = buffer.sublist(2);
 		if (0 != entityBodyReserved_1) {
 			throw RangeError('Invalid value of reserved field ($entityBodyReserved_1)');
@@ -3824,7 +3764,7 @@ class NonVerifiableMultisigAccountModificationTransactionV1 extends StructBase i
 		buffer = buffer.sublist(network.size);
 		var timestamp = Timestamp().deserialize(buffer);
 		buffer = buffer.sublist(timestamp.size);
-		var signerPublicKeySize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var signerPublicKeySize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		if (32 != signerPublicKeySize) {
 			throw RangeError('Invalid value of reserved field ($signerPublicKeySize)');
@@ -3835,7 +3775,7 @@ class NonVerifiableMultisigAccountModificationTransactionV1 extends StructBase i
 		buffer = buffer.sublist(fee.size);
 		var deadline = Timestamp().deserialize(buffer);
 		buffer = buffer.sublist(deadline.size);
-		var modificationsCount = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var modificationsCount = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		var modifications = ArrayHelpers.readArrayCount(buffer, SizePrefixedMultisigAccountModification(), modificationsCount, (e) { return ArrayHelpers.getValue(e.modification);}).map((item) => item as SizePrefixedMultisigAccountModification).toList();
 		buffer = buffer.sublist(ArrayHelpers.size(modifications));
@@ -3856,23 +3796,23 @@ class NonVerifiableMultisigAccountModificationTransactionV1 extends StructBase i
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
-		buffer.setRange(currentPos, currentPos + _type.size, _type.serialize());;
+		buffer.setRange(currentPos, currentPos + _type.size, _type.serialize());
 		currentPos += type.size;
 		buffer.setRange(currentPos, currentPos + 1, intToBytes(_version, 1));
 		currentPos += 1;
 		buffer.setRange(currentPos, currentPos + 2, intToBytes(_entityBodyReserved_1, 2));
 		currentPos += 2;
-		buffer.setRange(currentPos, currentPos + _network.size, _network.serialize());;
+		buffer.setRange(currentPos, currentPos + _network.size, _network.serialize());
 		currentPos += network.size;
-		buffer.setRange(currentPos, currentPos + _timestamp.size, _timestamp.serialize());;
+		buffer.setRange(currentPos, currentPos + _timestamp.size, _timestamp.serialize());
 		currentPos += timestamp.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(_signerPublicKeySize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _signerPublicKey.size, _signerPublicKey.serialize());;
+		buffer.setRange(currentPos, currentPos + _signerPublicKey.size, _signerPublicKey.serialize());
 		currentPos += signerPublicKey.size;
-		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());;
+		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());
 		currentPos += fee.size;
-		buffer.setRange(currentPos, currentPos + _deadline.size, _deadline.serialize());;
+		buffer.setRange(currentPos, currentPos + _deadline.size, _deadline.serialize());
 		currentPos += deadline.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(_modifications.length, 4));
 		currentPos += 4;
@@ -4063,16 +4003,13 @@ class MultisigAccountModificationTransactionV2 extends StructBase implements IDe
 	}
 
 	@override
-	MultisigAccountModificationTransactionV2 deserialize(dynamic payload) {
-		if(payload is String) {
-			payload = hex.decode(payload);
-		}
-		Uint8List buffer = payload.buffer.asUint8List();
+	MultisigAccountModificationTransactionV2 deserialize(Uint8List payload) {
+		var buffer = payload;
 		var type = TransactionType().deserialize(buffer);
 		buffer = buffer.sublist(type.size);
-		var version = bytesToInt((buffer.sublist(0, 1) as Uint8List).sublist(0, 1), 1);
+		var version = bytesToInt(buffer.sublist(0, 1), 1);
 		buffer = buffer.sublist(1);
-		var entityBodyReserved_1 = bytesToInt((buffer.sublist(0, 2) as Uint8List).sublist(0, 2), 2);
+		var entityBodyReserved_1 = bytesToInt(buffer.sublist(0, 2), 2);
 		buffer = buffer.sublist(2);
 		if (0 != entityBodyReserved_1) {
 			throw RangeError('Invalid value of reserved field ($entityBodyReserved_1)');
@@ -4081,14 +4018,14 @@ class MultisigAccountModificationTransactionV2 extends StructBase implements IDe
 		buffer = buffer.sublist(network.size);
 		var timestamp = Timestamp().deserialize(buffer);
 		buffer = buffer.sublist(timestamp.size);
-		var signerPublicKeySize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var signerPublicKeySize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		if (32 != signerPublicKeySize) {
 			throw RangeError('Invalid value of reserved field ($signerPublicKeySize)');
 		}
 		var signerPublicKey = PublicKey().deserialize(buffer);
 		buffer = buffer.sublist(signerPublicKey.size);
-		var signatureSize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var signatureSize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		if (64 != signatureSize) {
 			throw RangeError('Invalid value of reserved field ($signatureSize)');
@@ -4099,16 +4036,16 @@ class MultisigAccountModificationTransactionV2 extends StructBase implements IDe
 		buffer = buffer.sublist(fee.size);
 		var deadline = Timestamp().deserialize(buffer);
 		buffer = buffer.sublist(deadline.size);
-		var modificationsCount = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var modificationsCount = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		var modifications = ArrayHelpers.readArrayCount(buffer, SizePrefixedMultisigAccountModification(), modificationsCount, (e) { return ArrayHelpers.getValue(e.modification);}).map((item) => item as SizePrefixedMultisigAccountModification).toList();
 		buffer = buffer.sublist(ArrayHelpers.size(modifications));
-		var minApprovalDeltaSize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var minApprovalDeltaSize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		if (4 != minApprovalDeltaSize) {
 			throw RangeError('Invalid value of reserved field ($minApprovalDeltaSize)');
 		}
-		var minApprovalDelta = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var minApprovalDelta = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 
 		var instance = MultisigAccountModificationTransactionV2(
@@ -4129,27 +4066,27 @@ class MultisigAccountModificationTransactionV2 extends StructBase implements IDe
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
-		buffer.setRange(currentPos, currentPos + _type.size, _type.serialize());;
+		buffer.setRange(currentPos, currentPos + _type.size, _type.serialize());
 		currentPos += type.size;
 		buffer.setRange(currentPos, currentPos + 1, intToBytes(_version, 1));
 		currentPos += 1;
 		buffer.setRange(currentPos, currentPos + 2, intToBytes(_entityBodyReserved_1, 2));
 		currentPos += 2;
-		buffer.setRange(currentPos, currentPos + _network.size, _network.serialize());;
+		buffer.setRange(currentPos, currentPos + _network.size, _network.serialize());
 		currentPos += network.size;
-		buffer.setRange(currentPos, currentPos + _timestamp.size, _timestamp.serialize());;
+		buffer.setRange(currentPos, currentPos + _timestamp.size, _timestamp.serialize());
 		currentPos += timestamp.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(_signerPublicKeySize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _signerPublicKey.size, _signerPublicKey.serialize());;
+		buffer.setRange(currentPos, currentPos + _signerPublicKey.size, _signerPublicKey.serialize());
 		currentPos += signerPublicKey.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(_signatureSize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _signature.size, _signature.serialize());;
+		buffer.setRange(currentPos, currentPos + _signature.size, _signature.serialize());
 		currentPos += signature.size;
-		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());;
+		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());
 		currentPos += fee.size;
-		buffer.setRange(currentPos, currentPos + _deadline.size, _deadline.serialize());;
+		buffer.setRange(currentPos, currentPos + _deadline.size, _deadline.serialize());
 		currentPos += deadline.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(_modifications.length, 4));
 		currentPos += 4;
@@ -4331,16 +4268,13 @@ class NonVerifiableMultisigAccountModificationTransactionV2 extends StructBase i
 	}
 
 	@override
-	NonVerifiableMultisigAccountModificationTransactionV2 deserialize(dynamic payload) {
-		if(payload is String) {
-			payload = hex.decode(payload);
-		}
-		Uint8List buffer = payload.buffer.asUint8List();
+	NonVerifiableMultisigAccountModificationTransactionV2 deserialize(Uint8List payload) {
+		var buffer = payload;
 		var type = TransactionType().deserialize(buffer);
 		buffer = buffer.sublist(type.size);
-		var version = bytesToInt((buffer.sublist(0, 1) as Uint8List).sublist(0, 1), 1);
+		var version = bytesToInt(buffer.sublist(0, 1), 1);
 		buffer = buffer.sublist(1);
-		var entityBodyReserved_1 = bytesToInt((buffer.sublist(0, 2) as Uint8List).sublist(0, 2), 2);
+		var entityBodyReserved_1 = bytesToInt(buffer.sublist(0, 2), 2);
 		buffer = buffer.sublist(2);
 		if (0 != entityBodyReserved_1) {
 			throw RangeError('Invalid value of reserved field ($entityBodyReserved_1)');
@@ -4349,7 +4283,7 @@ class NonVerifiableMultisigAccountModificationTransactionV2 extends StructBase i
 		buffer = buffer.sublist(network.size);
 		var timestamp = Timestamp().deserialize(buffer);
 		buffer = buffer.sublist(timestamp.size);
-		var signerPublicKeySize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var signerPublicKeySize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		if (32 != signerPublicKeySize) {
 			throw RangeError('Invalid value of reserved field ($signerPublicKeySize)');
@@ -4360,16 +4294,16 @@ class NonVerifiableMultisigAccountModificationTransactionV2 extends StructBase i
 		buffer = buffer.sublist(fee.size);
 		var deadline = Timestamp().deserialize(buffer);
 		buffer = buffer.sublist(deadline.size);
-		var modificationsCount = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var modificationsCount = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		var modifications = ArrayHelpers.readArrayCount(buffer, SizePrefixedMultisigAccountModification(), modificationsCount, (e) { return ArrayHelpers.getValue(e.modification);}).map((item) => item as SizePrefixedMultisigAccountModification).toList();
 		buffer = buffer.sublist(ArrayHelpers.size(modifications));
-		var minApprovalDeltaSize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var minApprovalDeltaSize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		if (4 != minApprovalDeltaSize) {
 			throw RangeError('Invalid value of reserved field ($minApprovalDeltaSize)');
 		}
-		var minApprovalDelta = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var minApprovalDelta = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 
 		var instance = NonVerifiableMultisigAccountModificationTransactionV2(
@@ -4389,23 +4323,23 @@ class NonVerifiableMultisigAccountModificationTransactionV2 extends StructBase i
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
-		buffer.setRange(currentPos, currentPos + _type.size, _type.serialize());;
+		buffer.setRange(currentPos, currentPos + _type.size, _type.serialize());
 		currentPos += type.size;
 		buffer.setRange(currentPos, currentPos + 1, intToBytes(_version, 1));
 		currentPos += 1;
 		buffer.setRange(currentPos, currentPos + 2, intToBytes(_entityBodyReserved_1, 2));
 		currentPos += 2;
-		buffer.setRange(currentPos, currentPos + _network.size, _network.serialize());;
+		buffer.setRange(currentPos, currentPos + _network.size, _network.serialize());
 		currentPos += network.size;
-		buffer.setRange(currentPos, currentPos + _timestamp.size, _timestamp.serialize());;
+		buffer.setRange(currentPos, currentPos + _timestamp.size, _timestamp.serialize());
 		currentPos += timestamp.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(_signerPublicKeySize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _signerPublicKey.size, _signerPublicKey.serialize());;
+		buffer.setRange(currentPos, currentPos + _signerPublicKey.size, _signerPublicKey.serialize());
 		currentPos += signerPublicKey.size;
-		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());;
+		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());
 		currentPos += fee.size;
-		buffer.setRange(currentPos, currentPos + _deadline.size, _deadline.serialize());;
+		buffer.setRange(currentPos, currentPos + _deadline.size, _deadline.serialize());
 		currentPos += deadline.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(_modifications.length, 4));
 		currentPos += 4;
@@ -4603,16 +4537,13 @@ class CosignatureV1 extends StructBase implements IDeserializable {
 	}
 
 	@override
-	CosignatureV1 deserialize(dynamic payload) {
-		if(payload is String) {
-			payload = hex.decode(payload);
-		}
-		Uint8List buffer = payload.buffer.asUint8List();
+	CosignatureV1 deserialize(Uint8List payload) {
+		var buffer = payload;
 		var type = TransactionType().deserialize(buffer);
 		buffer = buffer.sublist(type.size);
-		var version = bytesToInt((buffer.sublist(0, 1) as Uint8List).sublist(0, 1), 1);
+		var version = bytesToInt(buffer.sublist(0, 1), 1);
 		buffer = buffer.sublist(1);
-		var entityBodyReserved_1 = bytesToInt((buffer.sublist(0, 2) as Uint8List).sublist(0, 2), 2);
+		var entityBodyReserved_1 = bytesToInt(buffer.sublist(0, 2), 2);
 		buffer = buffer.sublist(2);
 		if (0 != entityBodyReserved_1) {
 			throw RangeError('Invalid value of reserved field ($entityBodyReserved_1)');
@@ -4621,14 +4552,14 @@ class CosignatureV1 extends StructBase implements IDeserializable {
 		buffer = buffer.sublist(network.size);
 		var timestamp = Timestamp().deserialize(buffer);
 		buffer = buffer.sublist(timestamp.size);
-		var signerPublicKeySize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var signerPublicKeySize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		if (32 != signerPublicKeySize) {
 			throw RangeError('Invalid value of reserved field ($signerPublicKeySize)');
 		}
 		var signerPublicKey = PublicKey().deserialize(buffer);
 		buffer = buffer.sublist(signerPublicKey.size);
-		var signatureSize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var signatureSize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		if (64 != signatureSize) {
 			throw RangeError('Invalid value of reserved field ($signatureSize)');
@@ -4639,19 +4570,19 @@ class CosignatureV1 extends StructBase implements IDeserializable {
 		buffer = buffer.sublist(fee.size);
 		var deadline = Timestamp().deserialize(buffer);
 		buffer = buffer.sublist(deadline.size);
-		var multisigTransactionHashOuterSize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var multisigTransactionHashOuterSize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		if (36 != multisigTransactionHashOuterSize) {
 			throw RangeError('Invalid value of reserved field ($multisigTransactionHashOuterSize)');
 		}
-		var multisigTransactionHashSize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var multisigTransactionHashSize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		if (32 != multisigTransactionHashSize) {
 			throw RangeError('Invalid value of reserved field ($multisigTransactionHashSize)');
 		}
 		var multisigTransactionHash = Hash256().deserialize(buffer);
 		buffer = buffer.sublist(multisigTransactionHash.size);
-		var multisigAccountAddressSize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var multisigAccountAddressSize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		if (40 != multisigAccountAddressSize) {
 			throw RangeError('Invalid value of reserved field ($multisigAccountAddressSize)');
@@ -4677,37 +4608,37 @@ class CosignatureV1 extends StructBase implements IDeserializable {
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
-		buffer.setRange(currentPos, currentPos + _type.size, _type.serialize());;
+		buffer.setRange(currentPos, currentPos + _type.size, _type.serialize());
 		currentPos += type.size;
 		buffer.setRange(currentPos, currentPos + 1, intToBytes(_version, 1));
 		currentPos += 1;
 		buffer.setRange(currentPos, currentPos + 2, intToBytes(_entityBodyReserved_1, 2));
 		currentPos += 2;
-		buffer.setRange(currentPos, currentPos + _network.size, _network.serialize());;
+		buffer.setRange(currentPos, currentPos + _network.size, _network.serialize());
 		currentPos += network.size;
-		buffer.setRange(currentPos, currentPos + _timestamp.size, _timestamp.serialize());;
+		buffer.setRange(currentPos, currentPos + _timestamp.size, _timestamp.serialize());
 		currentPos += timestamp.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(_signerPublicKeySize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _signerPublicKey.size, _signerPublicKey.serialize());;
+		buffer.setRange(currentPos, currentPos + _signerPublicKey.size, _signerPublicKey.serialize());
 		currentPos += signerPublicKey.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(_signatureSize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _signature.size, _signature.serialize());;
+		buffer.setRange(currentPos, currentPos + _signature.size, _signature.serialize());
 		currentPos += signature.size;
-		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());;
+		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());
 		currentPos += fee.size;
-		buffer.setRange(currentPos, currentPos + _deadline.size, _deadline.serialize());;
+		buffer.setRange(currentPos, currentPos + _deadline.size, _deadline.serialize());
 		currentPos += deadline.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(_multisigTransactionHashOuterSize, 4));
 		currentPos += 4;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(_multisigTransactionHashSize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _multisigTransactionHash.size, _multisigTransactionHash.serialize());;
+		buffer.setRange(currentPos, currentPos + _multisigTransactionHash.size, _multisigTransactionHash.serialize());
 		currentPos += multisigTransactionHash.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(_multisigAccountAddressSize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _multisigAccountAddress.size, _multisigAccountAddress.serialize());;
+		buffer.setRange(currentPos, currentPos + _multisigAccountAddress.size, _multisigAccountAddress.serialize());
 		currentPos += multisigAccountAddress.size;
 		return buffer.buffer.asUint8List();
 	}
@@ -4765,12 +4696,9 @@ class SizePrefixedCosignatureV1 extends StructBase implements IDeserializable {
 	}
 
 	@override
-	SizePrefixedCosignatureV1 deserialize(dynamic payload) {
-		if(payload is String) {
-			payload = hex.decode(payload);
-		}
-		Uint8List buffer = payload.buffer.asUint8List();
-		var cosignatureSize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+	SizePrefixedCosignatureV1 deserialize(Uint8List payload) {
+		var buffer = payload;
+		var cosignatureSize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		//marking sizeof field
 		var cosignature = CosignatureV1().deserialize(buffer);
@@ -4785,7 +4713,7 @@ class SizePrefixedCosignatureV1 extends StructBase implements IDeserializable {
 		var currentPos = 0;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(cosignature.size, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _cosignature.size, _cosignature.serialize());;
+		buffer.setRange(currentPos, currentPos + _cosignature.size, _cosignature.serialize());
 		currentPos += cosignature.size;
 		return buffer.buffer.asUint8List();
 	}
@@ -4961,16 +4889,13 @@ class MultisigTransactionV1 extends StructBase implements IDeserializable {
 	}
 
 	@override
-	MultisigTransactionV1 deserialize(dynamic payload) {
-		if(payload is String) {
-			payload = hex.decode(payload);
-		}
-		Uint8List buffer = payload.buffer.asUint8List();
+	MultisigTransactionV1 deserialize(Uint8List payload) {
+		var buffer = payload;
 		var type = TransactionType().deserialize(buffer);
 		buffer = buffer.sublist(type.size);
-		var version = bytesToInt((buffer.sublist(0, 1) as Uint8List).sublist(0, 1), 1);
+		var version = bytesToInt(buffer.sublist(0, 1), 1);
 		buffer = buffer.sublist(1);
-		var entityBodyReserved_1 = bytesToInt((buffer.sublist(0, 2) as Uint8List).sublist(0, 2), 2);
+		var entityBodyReserved_1 = bytesToInt(buffer.sublist(0, 2), 2);
 		buffer = buffer.sublist(2);
 		if (0 != entityBodyReserved_1) {
 			throw RangeError('Invalid value of reserved field ($entityBodyReserved_1)');
@@ -4979,14 +4904,14 @@ class MultisigTransactionV1 extends StructBase implements IDeserializable {
 		buffer = buffer.sublist(network.size);
 		var timestamp = Timestamp().deserialize(buffer);
 		buffer = buffer.sublist(timestamp.size);
-		var signerPublicKeySize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var signerPublicKeySize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		if (32 != signerPublicKeySize) {
 			throw RangeError('Invalid value of reserved field ($signerPublicKeySize)');
 		}
 		var signerPublicKey = PublicKey().deserialize(buffer);
 		buffer = buffer.sublist(signerPublicKey.size);
-		var signatureSize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var signatureSize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		if (64 != signatureSize) {
 			throw RangeError('Invalid value of reserved field ($signatureSize)');
@@ -4997,12 +4922,12 @@ class MultisigTransactionV1 extends StructBase implements IDeserializable {
 		buffer = buffer.sublist(fee.size);
 		var deadline = Timestamp().deserialize(buffer);
 		buffer = buffer.sublist(deadline.size);
-		var innerTransactionSize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var innerTransactionSize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		//marking sizeof field
 		var innerTransaction = NonVerifiableTransactionFactory().deserialize(buffer);
 		buffer = buffer.sublist(innerTransaction.size);
-		var cosignaturesCount = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var cosignaturesCount = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		var cosignatures = ArrayHelpers.readArrayCount(buffer, SizePrefixedCosignatureV1(), cosignaturesCount).map((item) => item as SizePrefixedCosignatureV1).toList();
 		buffer = buffer.sublist(ArrayHelpers.size(cosignatures));
@@ -5025,31 +4950,31 @@ class MultisigTransactionV1 extends StructBase implements IDeserializable {
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
-		buffer.setRange(currentPos, currentPos + _type.size, _type.serialize());;
+		buffer.setRange(currentPos, currentPos + _type.size, _type.serialize());
 		currentPos += type.size;
 		buffer.setRange(currentPos, currentPos + 1, intToBytes(_version, 1));
 		currentPos += 1;
 		buffer.setRange(currentPos, currentPos + 2, intToBytes(_entityBodyReserved_1, 2));
 		currentPos += 2;
-		buffer.setRange(currentPos, currentPos + _network.size, _network.serialize());;
+		buffer.setRange(currentPos, currentPos + _network.size, _network.serialize());
 		currentPos += network.size;
-		buffer.setRange(currentPos, currentPos + _timestamp.size, _timestamp.serialize());;
+		buffer.setRange(currentPos, currentPos + _timestamp.size, _timestamp.serialize());
 		currentPos += timestamp.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(_signerPublicKeySize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _signerPublicKey.size, _signerPublicKey.serialize());;
+		buffer.setRange(currentPos, currentPos + _signerPublicKey.size, _signerPublicKey.serialize());
 		currentPos += signerPublicKey.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(_signatureSize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _signature.size, _signature.serialize());;
+		buffer.setRange(currentPos, currentPos + _signature.size, _signature.serialize());
 		currentPos += signature.size;
-		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());;
+		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());
 		currentPos += fee.size;
-		buffer.setRange(currentPos, currentPos + _deadline.size, _deadline.serialize());;
+		buffer.setRange(currentPos, currentPos + _deadline.size, _deadline.serialize());
 		currentPos += deadline.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(innerTransaction.size, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _innerTransaction.size, _innerTransaction.serialize());;
+		buffer.setRange(currentPos, currentPos + _innerTransaction.size, _innerTransaction.serialize());
 		currentPos += innerTransaction.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(_cosignatures.length, 4));
 		currentPos += 4;
@@ -5211,16 +5136,13 @@ class NonVerifiableMultisigTransactionV1 extends StructBase implements IDeserial
 	}
 
 	@override
-	NonVerifiableMultisigTransactionV1 deserialize(dynamic payload) {
-		if(payload is String) {
-			payload = hex.decode(payload);
-		}
-		Uint8List buffer = payload.buffer.asUint8List();
+	NonVerifiableMultisigTransactionV1 deserialize(Uint8List payload) {
+		var buffer = payload;
 		var type = TransactionType().deserialize(buffer);
 		buffer = buffer.sublist(type.size);
-		var version = bytesToInt((buffer.sublist(0, 1) as Uint8List).sublist(0, 1), 1);
+		var version = bytesToInt(buffer.sublist(0, 1), 1);
 		buffer = buffer.sublist(1);
-		var entityBodyReserved_1 = bytesToInt((buffer.sublist(0, 2) as Uint8List).sublist(0, 2), 2);
+		var entityBodyReserved_1 = bytesToInt(buffer.sublist(0, 2), 2);
 		buffer = buffer.sublist(2);
 		if (0 != entityBodyReserved_1) {
 			throw RangeError('Invalid value of reserved field ($entityBodyReserved_1)');
@@ -5229,7 +5151,7 @@ class NonVerifiableMultisigTransactionV1 extends StructBase implements IDeserial
 		buffer = buffer.sublist(network.size);
 		var timestamp = Timestamp().deserialize(buffer);
 		buffer = buffer.sublist(timestamp.size);
-		var signerPublicKeySize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var signerPublicKeySize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		if (32 != signerPublicKeySize) {
 			throw RangeError('Invalid value of reserved field ($signerPublicKeySize)');
@@ -5240,7 +5162,7 @@ class NonVerifiableMultisigTransactionV1 extends StructBase implements IDeserial
 		buffer = buffer.sublist(fee.size);
 		var deadline = Timestamp().deserialize(buffer);
 		buffer = buffer.sublist(deadline.size);
-		var innerTransactionSize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var innerTransactionSize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		//marking sizeof field
 		var innerTransaction = NonVerifiableTransactionFactory().deserialize(buffer);
@@ -5262,27 +5184,27 @@ class NonVerifiableMultisigTransactionV1 extends StructBase implements IDeserial
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
-		buffer.setRange(currentPos, currentPos + _type.size, _type.serialize());;
+		buffer.setRange(currentPos, currentPos + _type.size, _type.serialize());
 		currentPos += type.size;
 		buffer.setRange(currentPos, currentPos + 1, intToBytes(_version, 1));
 		currentPos += 1;
 		buffer.setRange(currentPos, currentPos + 2, intToBytes(_entityBodyReserved_1, 2));
 		currentPos += 2;
-		buffer.setRange(currentPos, currentPos + _network.size, _network.serialize());;
+		buffer.setRange(currentPos, currentPos + _network.size, _network.serialize());
 		currentPos += network.size;
-		buffer.setRange(currentPos, currentPos + _timestamp.size, _timestamp.serialize());;
+		buffer.setRange(currentPos, currentPos + _timestamp.size, _timestamp.serialize());
 		currentPos += timestamp.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(_signerPublicKeySize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _signerPublicKey.size, _signerPublicKey.serialize());;
+		buffer.setRange(currentPos, currentPos + _signerPublicKey.size, _signerPublicKey.serialize());
 		currentPos += signerPublicKey.size;
-		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());;
+		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());
 		currentPos += fee.size;
-		buffer.setRange(currentPos, currentPos + _deadline.size, _deadline.serialize());;
+		buffer.setRange(currentPos, currentPos + _deadline.size, _deadline.serialize());
 		currentPos += deadline.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(innerTransaction.size, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _innerTransaction.size, _innerTransaction.serialize());;
+		buffer.setRange(currentPos, currentPos + _innerTransaction.size, _innerTransaction.serialize());
 		currentPos += innerTransaction.size;
 		return buffer.buffer.asUint8List();
 	}
@@ -5496,16 +5418,13 @@ class NamespaceRegistrationTransactionV1 extends StructBase implements IDeserial
 	}
 
 	@override
-	NamespaceRegistrationTransactionV1 deserialize(dynamic payload) {
-		if(payload is String) {
-			payload = hex.decode(payload);
-		}
-		Uint8List buffer = payload.buffer.asUint8List();
+	NamespaceRegistrationTransactionV1 deserialize(Uint8List payload) {
+		var buffer = payload;
 		var type = TransactionType().deserialize(buffer);
 		buffer = buffer.sublist(type.size);
-		var version = bytesToInt((buffer.sublist(0, 1) as Uint8List).sublist(0, 1), 1);
+		var version = bytesToInt(buffer.sublist(0, 1), 1);
 		buffer = buffer.sublist(1);
-		var entityBodyReserved_1 = bytesToInt((buffer.sublist(0, 2) as Uint8List).sublist(0, 2), 2);
+		var entityBodyReserved_1 = bytesToInt(buffer.sublist(0, 2), 2);
 		buffer = buffer.sublist(2);
 		if (0 != entityBodyReserved_1) {
 			throw RangeError('Invalid value of reserved field ($entityBodyReserved_1)');
@@ -5514,14 +5433,14 @@ class NamespaceRegistrationTransactionV1 extends StructBase implements IDeserial
 		buffer = buffer.sublist(network.size);
 		var timestamp = Timestamp().deserialize(buffer);
 		buffer = buffer.sublist(timestamp.size);
-		var signerPublicKeySize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var signerPublicKeySize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		if (32 != signerPublicKeySize) {
 			throw RangeError('Invalid value of reserved field ($signerPublicKeySize)');
 		}
 		var signerPublicKey = PublicKey().deserialize(buffer);
 		buffer = buffer.sublist(signerPublicKey.size);
-		var signatureSize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var signatureSize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		if (64 != signatureSize) {
 			throw RangeError('Invalid value of reserved field ($signatureSize)');
@@ -5532,7 +5451,7 @@ class NamespaceRegistrationTransactionV1 extends StructBase implements IDeserial
 		buffer = buffer.sublist(fee.size);
 		var deadline = Timestamp().deserialize(buffer);
 		buffer = buffer.sublist(deadline.size);
-		var rentalFeeSinkSize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var rentalFeeSinkSize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		if (40 != rentalFeeSinkSize) {
 			throw RangeError('Invalid value of reserved field ($rentalFeeSinkSize)');
@@ -5541,11 +5460,11 @@ class NamespaceRegistrationTransactionV1 extends StructBase implements IDeserial
 		buffer = buffer.sublist(rentalFeeSink.size);
 		var rentalFee = Amount().deserialize(buffer);
 		buffer = buffer.sublist(rentalFee.size);
-		var nameSize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var nameSize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		var name = Uint8List.fromList(buffer.sublist(0, nameSize));
 		buffer = buffer.sublist(nameSize);
-		var parentNameSize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var parentNameSize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		var parentName = Uint8List(0);
 		if (4294967295 != parentNameSize)
@@ -5574,33 +5493,33 @@ class NamespaceRegistrationTransactionV1 extends StructBase implements IDeserial
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
-		buffer.setRange(currentPos, currentPos + _type.size, _type.serialize());;
+		buffer.setRange(currentPos, currentPos + _type.size, _type.serialize());
 		currentPos += type.size;
 		buffer.setRange(currentPos, currentPos + 1, intToBytes(_version, 1));
 		currentPos += 1;
 		buffer.setRange(currentPos, currentPos + 2, intToBytes(_entityBodyReserved_1, 2));
 		currentPos += 2;
-		buffer.setRange(currentPos, currentPos + _network.size, _network.serialize());;
+		buffer.setRange(currentPos, currentPos + _network.size, _network.serialize());
 		currentPos += network.size;
-		buffer.setRange(currentPos, currentPos + _timestamp.size, _timestamp.serialize());;
+		buffer.setRange(currentPos, currentPos + _timestamp.size, _timestamp.serialize());
 		currentPos += timestamp.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(_signerPublicKeySize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _signerPublicKey.size, _signerPublicKey.serialize());;
+		buffer.setRange(currentPos, currentPos + _signerPublicKey.size, _signerPublicKey.serialize());
 		currentPos += signerPublicKey.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(_signatureSize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _signature.size, _signature.serialize());;
+		buffer.setRange(currentPos, currentPos + _signature.size, _signature.serialize());
 		currentPos += signature.size;
-		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());;
+		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());
 		currentPos += fee.size;
-		buffer.setRange(currentPos, currentPos + _deadline.size, _deadline.serialize());;
+		buffer.setRange(currentPos, currentPos + _deadline.size, _deadline.serialize());
 		currentPos += deadline.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(_rentalFeeSinkSize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _rentalFeeSink.size, _rentalFeeSink.serialize());;
+		buffer.setRange(currentPos, currentPos + _rentalFeeSink.size, _rentalFeeSink.serialize());
 		currentPos += rentalFeeSink.size;
-		buffer.setRange(currentPos, currentPos + _rentalFee.size, _rentalFee.serialize());;
+		buffer.setRange(currentPos, currentPos + _rentalFee.size, _rentalFee.serialize());
 		currentPos += rentalFee.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(_name.length, 4));
 		currentPos += 4;
@@ -5817,16 +5736,13 @@ class NonVerifiableNamespaceRegistrationTransactionV1 extends StructBase impleme
 	}
 
 	@override
-	NonVerifiableNamespaceRegistrationTransactionV1 deserialize(dynamic payload) {
-		if(payload is String) {
-			payload = hex.decode(payload);
-		}
-		Uint8List buffer = payload.buffer.asUint8List();
+	NonVerifiableNamespaceRegistrationTransactionV1 deserialize(Uint8List payload) {
+		var buffer = payload;
 		var type = TransactionType().deserialize(buffer);
 		buffer = buffer.sublist(type.size);
-		var version = bytesToInt((buffer.sublist(0, 1) as Uint8List).sublist(0, 1), 1);
+		var version = bytesToInt(buffer.sublist(0, 1), 1);
 		buffer = buffer.sublist(1);
-		var entityBodyReserved_1 = bytesToInt((buffer.sublist(0, 2) as Uint8List).sublist(0, 2), 2);
+		var entityBodyReserved_1 = bytesToInt(buffer.sublist(0, 2), 2);
 		buffer = buffer.sublist(2);
 		if (0 != entityBodyReserved_1) {
 			throw RangeError('Invalid value of reserved field ($entityBodyReserved_1)');
@@ -5835,7 +5751,7 @@ class NonVerifiableNamespaceRegistrationTransactionV1 extends StructBase impleme
 		buffer = buffer.sublist(network.size);
 		var timestamp = Timestamp().deserialize(buffer);
 		buffer = buffer.sublist(timestamp.size);
-		var signerPublicKeySize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var signerPublicKeySize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		if (32 != signerPublicKeySize) {
 			throw RangeError('Invalid value of reserved field ($signerPublicKeySize)');
@@ -5846,7 +5762,7 @@ class NonVerifiableNamespaceRegistrationTransactionV1 extends StructBase impleme
 		buffer = buffer.sublist(fee.size);
 		var deadline = Timestamp().deserialize(buffer);
 		buffer = buffer.sublist(deadline.size);
-		var rentalFeeSinkSize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var rentalFeeSinkSize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		if (40 != rentalFeeSinkSize) {
 			throw RangeError('Invalid value of reserved field ($rentalFeeSinkSize)');
@@ -5855,11 +5771,11 @@ class NonVerifiableNamespaceRegistrationTransactionV1 extends StructBase impleme
 		buffer = buffer.sublist(rentalFeeSink.size);
 		var rentalFee = Amount().deserialize(buffer);
 		buffer = buffer.sublist(rentalFee.size);
-		var nameSize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var nameSize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		var name = Uint8List.fromList(buffer.sublist(0, nameSize));
 		buffer = buffer.sublist(nameSize);
-		var parentNameSize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var parentNameSize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		var parentName = Uint8List(0);
 		if (4294967295 != parentNameSize)
@@ -5887,29 +5803,29 @@ class NonVerifiableNamespaceRegistrationTransactionV1 extends StructBase impleme
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
-		buffer.setRange(currentPos, currentPos + _type.size, _type.serialize());;
+		buffer.setRange(currentPos, currentPos + _type.size, _type.serialize());
 		currentPos += type.size;
 		buffer.setRange(currentPos, currentPos + 1, intToBytes(_version, 1));
 		currentPos += 1;
 		buffer.setRange(currentPos, currentPos + 2, intToBytes(_entityBodyReserved_1, 2));
 		currentPos += 2;
-		buffer.setRange(currentPos, currentPos + _network.size, _network.serialize());;
+		buffer.setRange(currentPos, currentPos + _network.size, _network.serialize());
 		currentPos += network.size;
-		buffer.setRange(currentPos, currentPos + _timestamp.size, _timestamp.serialize());;
+		buffer.setRange(currentPos, currentPos + _timestamp.size, _timestamp.serialize());
 		currentPos += timestamp.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(_signerPublicKeySize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _signerPublicKey.size, _signerPublicKey.serialize());;
+		buffer.setRange(currentPos, currentPos + _signerPublicKey.size, _signerPublicKey.serialize());
 		currentPos += signerPublicKey.size;
-		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());;
+		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());
 		currentPos += fee.size;
-		buffer.setRange(currentPos, currentPos + _deadline.size, _deadline.serialize());;
+		buffer.setRange(currentPos, currentPos + _deadline.size, _deadline.serialize());
 		currentPos += deadline.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(_rentalFeeSinkSize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _rentalFeeSink.size, _rentalFeeSink.serialize());;
+		buffer.setRange(currentPos, currentPos + _rentalFeeSink.size, _rentalFeeSink.serialize());
 		currentPos += rentalFeeSink.size;
-		buffer.setRange(currentPos, currentPos + _rentalFee.size, _rentalFee.serialize());;
+		buffer.setRange(currentPos, currentPos + _rentalFee.size, _rentalFee.serialize());
 		currentPos += rentalFee.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(_name.length, 4));
 		currentPos += 4;
@@ -5966,7 +5882,7 @@ class MessageType implements IDeserializable {
 	}
 
 	@override
-	MessageType deserialize(dynamic payload) {
+	MessageType deserialize(Uint8List payload) {
 		var byteData = ByteData.sublistView(payload);
 		return MessageType(byteData.getUint32(0, Endian.little));
 	}
@@ -6029,14 +5945,11 @@ class Message extends StructBase implements IDeserializable {
 	}
 
 	@override
-	Message deserialize(dynamic payload) {
-		if(payload is String) {
-			payload = hex.decode(payload);
-		}
-		Uint8List buffer = payload.buffer.asUint8List();
+	Message deserialize(Uint8List payload) {
+		var buffer = payload;
 		var messageType = MessageType().deserialize(buffer);
 		buffer = buffer.sublist(messageType.size);
-		var messageSize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var messageSize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		var message = Uint8List.fromList(buffer.sublist(0, messageSize));
 		buffer = buffer.sublist(messageSize);
@@ -6051,7 +5964,7 @@ class Message extends StructBase implements IDeserializable {
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
-		buffer.setRange(currentPos, currentPos + _messageType.size, _messageType.serialize());;
+		buffer.setRange(currentPos, currentPos + _messageType.size, _messageType.serialize());
 		currentPos += messageType.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(_message.length, 4));
 		currentPos += 4;
@@ -6256,16 +6169,13 @@ class TransferTransactionV1 extends StructBase implements IDeserializable {
 	}
 
 	@override
-	TransferTransactionV1 deserialize(dynamic payload) {
-		if(payload is String) {
-			payload = hex.decode(payload);
-		}
-		Uint8List buffer = payload.buffer.asUint8List();
+	TransferTransactionV1 deserialize(Uint8List payload) {
+		var buffer = payload;
 		var type = TransactionType().deserialize(buffer);
 		buffer = buffer.sublist(type.size);
-		var version = bytesToInt((buffer.sublist(0, 1) as Uint8List).sublist(0, 1), 1);
+		var version = bytesToInt(buffer.sublist(0, 1), 1);
 		buffer = buffer.sublist(1);
-		var entityBodyReserved_1 = bytesToInt((buffer.sublist(0, 2) as Uint8List).sublist(0, 2), 2);
+		var entityBodyReserved_1 = bytesToInt(buffer.sublist(0, 2), 2);
 		buffer = buffer.sublist(2);
 		if (0 != entityBodyReserved_1) {
 			throw RangeError('Invalid value of reserved field ($entityBodyReserved_1)');
@@ -6274,14 +6184,14 @@ class TransferTransactionV1 extends StructBase implements IDeserializable {
 		buffer = buffer.sublist(network.size);
 		var timestamp = Timestamp().deserialize(buffer);
 		buffer = buffer.sublist(timestamp.size);
-		var signerPublicKeySize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var signerPublicKeySize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		if (32 != signerPublicKeySize) {
 			throw RangeError('Invalid value of reserved field ($signerPublicKeySize)');
 		}
 		var signerPublicKey = PublicKey().deserialize(buffer);
 		buffer = buffer.sublist(signerPublicKey.size);
-		var signatureSize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var signatureSize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		if (64 != signatureSize) {
 			throw RangeError('Invalid value of reserved field ($signatureSize)');
@@ -6292,7 +6202,7 @@ class TransferTransactionV1 extends StructBase implements IDeserializable {
 		buffer = buffer.sublist(fee.size);
 		var deadline = Timestamp().deserialize(buffer);
 		buffer = buffer.sublist(deadline.size);
-		var recipientAddressSize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var recipientAddressSize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		if (40 != recipientAddressSize) {
 			throw RangeError('Invalid value of reserved field ($recipientAddressSize)');
@@ -6301,7 +6211,7 @@ class TransferTransactionV1 extends StructBase implements IDeserializable {
 		buffer = buffer.sublist(recipientAddress.size);
 		var amount = Amount().deserialize(buffer);
 		buffer = buffer.sublist(amount.size);
-		var messageEnvelopeSize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var messageEnvelopeSize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		var message = Message();
 		if (0 != messageEnvelopeSize)
@@ -6329,39 +6239,39 @@ class TransferTransactionV1 extends StructBase implements IDeserializable {
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
-		buffer.setRange(currentPos, currentPos + _type.size, _type.serialize());;
+		buffer.setRange(currentPos, currentPos + _type.size, _type.serialize());
 		currentPos += type.size;
 		buffer.setRange(currentPos, currentPos + 1, intToBytes(_version, 1));
 		currentPos += 1;
 		buffer.setRange(currentPos, currentPos + 2, intToBytes(_entityBodyReserved_1, 2));
 		currentPos += 2;
-		buffer.setRange(currentPos, currentPos + _network.size, _network.serialize());;
+		buffer.setRange(currentPos, currentPos + _network.size, _network.serialize());
 		currentPos += network.size;
-		buffer.setRange(currentPos, currentPos + _timestamp.size, _timestamp.serialize());;
+		buffer.setRange(currentPos, currentPos + _timestamp.size, _timestamp.serialize());
 		currentPos += timestamp.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(_signerPublicKeySize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _signerPublicKey.size, _signerPublicKey.serialize());;
+		buffer.setRange(currentPos, currentPos + _signerPublicKey.size, _signerPublicKey.serialize());
 		currentPos += signerPublicKey.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(_signatureSize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _signature.size, _signature.serialize());;
+		buffer.setRange(currentPos, currentPos + _signature.size, _signature.serialize());
 		currentPos += signature.size;
-		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());;
+		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());
 		currentPos += fee.size;
-		buffer.setRange(currentPos, currentPos + _deadline.size, _deadline.serialize());;
+		buffer.setRange(currentPos, currentPos + _deadline.size, _deadline.serialize());
 		currentPos += deadline.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(_recipientAddressSize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _recipientAddress.size, _recipientAddress.serialize());;
+		buffer.setRange(currentPos, currentPos + _recipientAddress.size, _recipientAddress.serialize());
 		currentPos += recipientAddress.size;
-		buffer.setRange(currentPos, currentPos + _amount.size, _amount.serialize());;
+		buffer.setRange(currentPos, currentPos + _amount.size, _amount.serialize());
 		currentPos += amount.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(messageEnvelopeSizeComputed, 4));
 		currentPos += 4;
 		if (0 != messageEnvelopeSizeComputed)
 		{
-			buffer.setRange(currentPos, currentPos + _message.size, _message.serialize());;
+			buffer.setRange(currentPos, currentPos + _message.size, _message.serialize());
 			currentPos += message.size;
 		}
 		return buffer.buffer.asUint8List();
@@ -6560,16 +6470,13 @@ class NonVerifiableTransferTransactionV1 extends StructBase implements IDeserial
 	}
 
 	@override
-	NonVerifiableTransferTransactionV1 deserialize(dynamic payload) {
-		if(payload is String) {
-			payload = hex.decode(payload);
-		}
-		Uint8List buffer = payload.buffer.asUint8List();
+	NonVerifiableTransferTransactionV1 deserialize(Uint8List payload) {
+		var buffer = payload;
 		var type = TransactionType().deserialize(buffer);
 		buffer = buffer.sublist(type.size);
-		var version = bytesToInt((buffer.sublist(0, 1) as Uint8List).sublist(0, 1), 1);
+		var version = bytesToInt(buffer.sublist(0, 1), 1);
 		buffer = buffer.sublist(1);
-		var entityBodyReserved_1 = bytesToInt((buffer.sublist(0, 2) as Uint8List).sublist(0, 2), 2);
+		var entityBodyReserved_1 = bytesToInt(buffer.sublist(0, 2), 2);
 		buffer = buffer.sublist(2);
 		if (0 != entityBodyReserved_1) {
 			throw RangeError('Invalid value of reserved field ($entityBodyReserved_1)');
@@ -6578,7 +6485,7 @@ class NonVerifiableTransferTransactionV1 extends StructBase implements IDeserial
 		buffer = buffer.sublist(network.size);
 		var timestamp = Timestamp().deserialize(buffer);
 		buffer = buffer.sublist(timestamp.size);
-		var signerPublicKeySize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var signerPublicKeySize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		if (32 != signerPublicKeySize) {
 			throw RangeError('Invalid value of reserved field ($signerPublicKeySize)');
@@ -6589,7 +6496,7 @@ class NonVerifiableTransferTransactionV1 extends StructBase implements IDeserial
 		buffer = buffer.sublist(fee.size);
 		var deadline = Timestamp().deserialize(buffer);
 		buffer = buffer.sublist(deadline.size);
-		var recipientAddressSize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var recipientAddressSize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		if (40 != recipientAddressSize) {
 			throw RangeError('Invalid value of reserved field ($recipientAddressSize)');
@@ -6598,7 +6505,7 @@ class NonVerifiableTransferTransactionV1 extends StructBase implements IDeserial
 		buffer = buffer.sublist(recipientAddress.size);
 		var amount = Amount().deserialize(buffer);
 		buffer = buffer.sublist(amount.size);
-		var messageEnvelopeSize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var messageEnvelopeSize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		var message = Message();
 		if (0 != messageEnvelopeSize)
@@ -6625,35 +6532,35 @@ class NonVerifiableTransferTransactionV1 extends StructBase implements IDeserial
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
-		buffer.setRange(currentPos, currentPos + _type.size, _type.serialize());;
+		buffer.setRange(currentPos, currentPos + _type.size, _type.serialize());
 		currentPos += type.size;
 		buffer.setRange(currentPos, currentPos + 1, intToBytes(_version, 1));
 		currentPos += 1;
 		buffer.setRange(currentPos, currentPos + 2, intToBytes(_entityBodyReserved_1, 2));
 		currentPos += 2;
-		buffer.setRange(currentPos, currentPos + _network.size, _network.serialize());;
+		buffer.setRange(currentPos, currentPos + _network.size, _network.serialize());
 		currentPos += network.size;
-		buffer.setRange(currentPos, currentPos + _timestamp.size, _timestamp.serialize());;
+		buffer.setRange(currentPos, currentPos + _timestamp.size, _timestamp.serialize());
 		currentPos += timestamp.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(_signerPublicKeySize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _signerPublicKey.size, _signerPublicKey.serialize());;
+		buffer.setRange(currentPos, currentPos + _signerPublicKey.size, _signerPublicKey.serialize());
 		currentPos += signerPublicKey.size;
-		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());;
+		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());
 		currentPos += fee.size;
-		buffer.setRange(currentPos, currentPos + _deadline.size, _deadline.serialize());;
+		buffer.setRange(currentPos, currentPos + _deadline.size, _deadline.serialize());
 		currentPos += deadline.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(_recipientAddressSize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _recipientAddress.size, _recipientAddress.serialize());;
+		buffer.setRange(currentPos, currentPos + _recipientAddress.size, _recipientAddress.serialize());
 		currentPos += recipientAddress.size;
-		buffer.setRange(currentPos, currentPos + _amount.size, _amount.serialize());;
+		buffer.setRange(currentPos, currentPos + _amount.size, _amount.serialize());
 		currentPos += amount.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(messageEnvelopeSizeComputed, 4));
 		currentPos += 4;
 		if (0 != messageEnvelopeSizeComputed)
 		{
-			buffer.setRange(currentPos, currentPos + _message.size, _message.serialize());;
+			buffer.setRange(currentPos, currentPos + _message.size, _message.serialize());
 			currentPos += message.size;
 		}
 		return buffer.buffer.asUint8List();
@@ -6880,16 +6787,13 @@ class TransferTransactionV2 extends StructBase implements IDeserializable {
 	}
 
 	@override
-	TransferTransactionV2 deserialize(dynamic payload) {
-		if(payload is String) {
-			payload = hex.decode(payload);
-		}
-		Uint8List buffer = payload.buffer.asUint8List();
+	TransferTransactionV2 deserialize(Uint8List payload) {
+		var buffer = payload;
 		var type = TransactionType().deserialize(buffer);
 		buffer = buffer.sublist(type.size);
-		var version = bytesToInt((buffer.sublist(0, 1) as Uint8List).sublist(0, 1), 1);
+		var version = bytesToInt(buffer.sublist(0, 1), 1);
 		buffer = buffer.sublist(1);
-		var entityBodyReserved_1 = bytesToInt((buffer.sublist(0, 2) as Uint8List).sublist(0, 2), 2);
+		var entityBodyReserved_1 = bytesToInt(buffer.sublist(0, 2), 2);
 		buffer = buffer.sublist(2);
 		if (0 != entityBodyReserved_1) {
 			throw RangeError('Invalid value of reserved field ($entityBodyReserved_1)');
@@ -6898,14 +6802,14 @@ class TransferTransactionV2 extends StructBase implements IDeserializable {
 		buffer = buffer.sublist(network.size);
 		var timestamp = Timestamp().deserialize(buffer);
 		buffer = buffer.sublist(timestamp.size);
-		var signerPublicKeySize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var signerPublicKeySize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		if (32 != signerPublicKeySize) {
 			throw RangeError('Invalid value of reserved field ($signerPublicKeySize)');
 		}
 		var signerPublicKey = PublicKey().deserialize(buffer);
 		buffer = buffer.sublist(signerPublicKey.size);
-		var signatureSize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var signatureSize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		if (64 != signatureSize) {
 			throw RangeError('Invalid value of reserved field ($signatureSize)');
@@ -6916,7 +6820,7 @@ class TransferTransactionV2 extends StructBase implements IDeserializable {
 		buffer = buffer.sublist(fee.size);
 		var deadline = Timestamp().deserialize(buffer);
 		buffer = buffer.sublist(deadline.size);
-		var recipientAddressSize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var recipientAddressSize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		if (40 != recipientAddressSize) {
 			throw RangeError('Invalid value of reserved field ($recipientAddressSize)');
@@ -6925,7 +6829,7 @@ class TransferTransactionV2 extends StructBase implements IDeserializable {
 		buffer = buffer.sublist(recipientAddress.size);
 		var amount = Amount().deserialize(buffer);
 		buffer = buffer.sublist(amount.size);
-		var messageEnvelopeSize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var messageEnvelopeSize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		var message = Message();
 		if (0 != messageEnvelopeSize)
@@ -6933,7 +6837,7 @@ class TransferTransactionV2 extends StructBase implements IDeserializable {
 			message = Message().deserialize(buffer);
 			buffer = buffer.sublist(message.size);
 		}
-		var mosaicsCount = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var mosaicsCount = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		var mosaics = ArrayHelpers.readArrayCount(buffer, SizePrefixedMosaic(), mosaicsCount).map((item) => item as SizePrefixedMosaic).toList();
 		buffer = buffer.sublist(ArrayHelpers.size(mosaics));
@@ -6958,39 +6862,39 @@ class TransferTransactionV2 extends StructBase implements IDeserializable {
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
-		buffer.setRange(currentPos, currentPos + _type.size, _type.serialize());;
+		buffer.setRange(currentPos, currentPos + _type.size, _type.serialize());
 		currentPos += type.size;
 		buffer.setRange(currentPos, currentPos + 1, intToBytes(_version, 1));
 		currentPos += 1;
 		buffer.setRange(currentPos, currentPos + 2, intToBytes(_entityBodyReserved_1, 2));
 		currentPos += 2;
-		buffer.setRange(currentPos, currentPos + _network.size, _network.serialize());;
+		buffer.setRange(currentPos, currentPos + _network.size, _network.serialize());
 		currentPos += network.size;
-		buffer.setRange(currentPos, currentPos + _timestamp.size, _timestamp.serialize());;
+		buffer.setRange(currentPos, currentPos + _timestamp.size, _timestamp.serialize());
 		currentPos += timestamp.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(_signerPublicKeySize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _signerPublicKey.size, _signerPublicKey.serialize());;
+		buffer.setRange(currentPos, currentPos + _signerPublicKey.size, _signerPublicKey.serialize());
 		currentPos += signerPublicKey.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(_signatureSize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _signature.size, _signature.serialize());;
+		buffer.setRange(currentPos, currentPos + _signature.size, _signature.serialize());
 		currentPos += signature.size;
-		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());;
+		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());
 		currentPos += fee.size;
-		buffer.setRange(currentPos, currentPos + _deadline.size, _deadline.serialize());;
+		buffer.setRange(currentPos, currentPos + _deadline.size, _deadline.serialize());
 		currentPos += deadline.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(_recipientAddressSize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _recipientAddress.size, _recipientAddress.serialize());;
+		buffer.setRange(currentPos, currentPos + _recipientAddress.size, _recipientAddress.serialize());
 		currentPos += recipientAddress.size;
-		buffer.setRange(currentPos, currentPos + _amount.size, _amount.serialize());;
+		buffer.setRange(currentPos, currentPos + _amount.size, _amount.serialize());
 		currentPos += amount.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(messageEnvelopeSizeComputed, 4));
 		currentPos += 4;
 		if (0 != messageEnvelopeSizeComputed)
 		{
-			buffer.setRange(currentPos, currentPos + _message.size, _message.serialize());;
+			buffer.setRange(currentPos, currentPos + _message.size, _message.serialize());
 			currentPos += message.size;
 		}
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(_mosaics.length, 4));
@@ -7210,16 +7114,13 @@ class NonVerifiableTransferTransactionV2 extends StructBase implements IDeserial
 	}
 
 	@override
-	NonVerifiableTransferTransactionV2 deserialize(dynamic payload) {
-		if(payload is String) {
-			payload = hex.decode(payload);
-		}
-		Uint8List buffer = payload.buffer.asUint8List();
+	NonVerifiableTransferTransactionV2 deserialize(Uint8List payload) {
+		var buffer = payload;
 		var type = TransactionType().deserialize(buffer);
 		buffer = buffer.sublist(type.size);
-		var version = bytesToInt((buffer.sublist(0, 1) as Uint8List).sublist(0, 1), 1);
+		var version = bytesToInt(buffer.sublist(0, 1), 1);
 		buffer = buffer.sublist(1);
-		var entityBodyReserved_1 = bytesToInt((buffer.sublist(0, 2) as Uint8List).sublist(0, 2), 2);
+		var entityBodyReserved_1 = bytesToInt(buffer.sublist(0, 2), 2);
 		buffer = buffer.sublist(2);
 		if (0 != entityBodyReserved_1) {
 			throw RangeError('Invalid value of reserved field ($entityBodyReserved_1)');
@@ -7228,7 +7129,7 @@ class NonVerifiableTransferTransactionV2 extends StructBase implements IDeserial
 		buffer = buffer.sublist(network.size);
 		var timestamp = Timestamp().deserialize(buffer);
 		buffer = buffer.sublist(timestamp.size);
-		var signerPublicKeySize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var signerPublicKeySize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		if (32 != signerPublicKeySize) {
 			throw RangeError('Invalid value of reserved field ($signerPublicKeySize)');
@@ -7239,7 +7140,7 @@ class NonVerifiableTransferTransactionV2 extends StructBase implements IDeserial
 		buffer = buffer.sublist(fee.size);
 		var deadline = Timestamp().deserialize(buffer);
 		buffer = buffer.sublist(deadline.size);
-		var recipientAddressSize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var recipientAddressSize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		if (40 != recipientAddressSize) {
 			throw RangeError('Invalid value of reserved field ($recipientAddressSize)');
@@ -7248,7 +7149,7 @@ class NonVerifiableTransferTransactionV2 extends StructBase implements IDeserial
 		buffer = buffer.sublist(recipientAddress.size);
 		var amount = Amount().deserialize(buffer);
 		buffer = buffer.sublist(amount.size);
-		var messageEnvelopeSize = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var messageEnvelopeSize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		var message = Message();
 		if (0 != messageEnvelopeSize)
@@ -7256,7 +7157,7 @@ class NonVerifiableTransferTransactionV2 extends StructBase implements IDeserial
 			message = Message().deserialize(buffer);
 			buffer = buffer.sublist(message.size);
 		}
-		var mosaicsCount = bytesToInt((buffer.sublist(0, 4) as Uint8List).sublist(0, 4), 4);
+		var mosaicsCount = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		var mosaics = ArrayHelpers.readArrayCount(buffer, SizePrefixedMosaic(), mosaicsCount).map((item) => item as SizePrefixedMosaic).toList();
 		buffer = buffer.sublist(ArrayHelpers.size(mosaics));
@@ -7280,35 +7181,35 @@ class NonVerifiableTransferTransactionV2 extends StructBase implements IDeserial
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
-		buffer.setRange(currentPos, currentPos + _type.size, _type.serialize());;
+		buffer.setRange(currentPos, currentPos + _type.size, _type.serialize());
 		currentPos += type.size;
 		buffer.setRange(currentPos, currentPos + 1, intToBytes(_version, 1));
 		currentPos += 1;
 		buffer.setRange(currentPos, currentPos + 2, intToBytes(_entityBodyReserved_1, 2));
 		currentPos += 2;
-		buffer.setRange(currentPos, currentPos + _network.size, _network.serialize());;
+		buffer.setRange(currentPos, currentPos + _network.size, _network.serialize());
 		currentPos += network.size;
-		buffer.setRange(currentPos, currentPos + _timestamp.size, _timestamp.serialize());;
+		buffer.setRange(currentPos, currentPos + _timestamp.size, _timestamp.serialize());
 		currentPos += timestamp.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(_signerPublicKeySize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _signerPublicKey.size, _signerPublicKey.serialize());;
+		buffer.setRange(currentPos, currentPos + _signerPublicKey.size, _signerPublicKey.serialize());
 		currentPos += signerPublicKey.size;
-		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());;
+		buffer.setRange(currentPos, currentPos + _fee.size, _fee.serialize());
 		currentPos += fee.size;
-		buffer.setRange(currentPos, currentPos + _deadline.size, _deadline.serialize());;
+		buffer.setRange(currentPos, currentPos + _deadline.size, _deadline.serialize());
 		currentPos += deadline.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(_recipientAddressSize, 4));
 		currentPos += 4;
-		buffer.setRange(currentPos, currentPos + _recipientAddress.size, _recipientAddress.serialize());;
+		buffer.setRange(currentPos, currentPos + _recipientAddress.size, _recipientAddress.serialize());
 		currentPos += recipientAddress.size;
-		buffer.setRange(currentPos, currentPos + _amount.size, _amount.serialize());;
+		buffer.setRange(currentPos, currentPos + _amount.size, _amount.serialize());
 		currentPos += amount.size;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(messageEnvelopeSizeComputed, 4));
 		currentPos += 4;
 		if (0 != messageEnvelopeSizeComputed)
 		{
-			buffer.setRange(currentPos, currentPos + _message.size, _message.serialize());;
+			buffer.setRange(currentPos, currentPos + _message.size, _message.serialize());
 			currentPos += message.size;
 		}
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(_mosaics.length, 4));
@@ -7346,7 +7247,8 @@ class NonVerifiableTransferTransactionV2 extends StructBase implements IDeserial
 class TransactionFactory implements IDeserializable {
 	@override
 	dynamic deserialize(dynamic payload) {
-		if(payload is String) {
+		if(payload is String){
+			tryHexString(payload);
 			payload = hex.decode(payload);
 		}
 		Uint8List buffer = payload.buffer.asUint8List();
@@ -7398,7 +7300,8 @@ class TransactionFactory implements IDeserializable {
 class NonVerifiableTransactionFactory implements IDeserializable {
 	@override
 	dynamic deserialize(dynamic payload) {
-		if(payload is String) {
+		if(payload is String){
+			tryHexString(payload);
 			payload = hex.decode(payload);
 		}
 		Uint8List buffer = payload.buffer.asUint8List();

@@ -53,6 +53,19 @@ int bytesToInt(Uint8List input, int size) {
   }
 }
 
+
+BigInt intToUnsignedInt(int i) {
+  var signedInt = BigInt.from(i);
+  BigInt unsignedInt;
+
+  if (signedInt < BigInt.zero) {
+    unsignedInt = signedInt + (BigInt.two.pow(64));
+  } else {
+    unsignedInt = signedInt;
+  }
+  return unsignedInt;
+}
+
 Uint8List stringToAddress(String encoded) {
   if (_constants['sizes']!['symbolAddressEncoded'] == encoded.length) {
     var bytes = base32.decode(encoded + 'A');

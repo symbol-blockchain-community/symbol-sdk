@@ -63,11 +63,7 @@ class BaseValue {
 
   @override
   String toString() {
-    int unsignedValue;
-
-    var upperBoundPlusOne = 1 << (size * 8);
-    unsignedValue = value + upperBoundPlusOne;
-
+    var unsignedValue = intToUnsignedInt(value);
     return '0x' + unsignedValue.toRadixString(16).padLeft(size * 2, '0').toUpperCase();
   }
 }

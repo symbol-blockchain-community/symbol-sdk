@@ -212,7 +212,7 @@ class StructFormatter(AbstractTypeFormatter):
 		if prefix_field and DisplayType.UNSET != field.display_type:
 			return f'if ({lang_field_name(field.name)} == Uint8List(0))\n'
 
-		field_postfix = 'Computed' if prefix_field and is_computed(condition_field) else ''
+		field_postfix = 'Computed' if prefix_field and is_computed(condition_field) else '' if DisplayType.INTEGER == condition_model.display_type else '.value'
 		field_prefix = '' if field_prefix and is_computed(condition_field) else field_prefix
 
 		return f'if ({yoda_value} {condition_operator} {field_prefix}{lang_field_name(condition_field_name)}{field_postfix})\n'
@@ -264,7 +264,7 @@ class StructFormatter(AbstractTypeFormatter):
 		else:
 			field_size = field.extensions.printer.advancement_size()
 			if field.display_type == DisplayType.INTEGER:
-				buffer_load_name = f'buffer.sublist(0, {field.size})'
+				buffer_load_name = 'buffer'#f'buffer.sublist(0, {field.size})'
 			elif field.display_type == DisplayType.BYTE_ARRAY:
 				buffer_load_name = f'buffer.sublist(0, {lang_field_name(field.size)})'
 				field_size = lang_field_name(field.size)
@@ -290,7 +290,7 @@ class StructFormatter(AbstractTypeFormatter):
 		return indent_if_conditional(condition, deserialize_field)
 
 	def get_deserialize_descriptor(self):
-		body = 'Uint8List buffer = payload;\n'
+		body = 'var buffer = payload;\n'
 
 		# special treatment for condition-guarded fields,
 		# where condition is behind the fields...

@@ -102,13 +102,14 @@ class TypedArrayPrinter(Printer):
 			element_type = f'{element_type}Factory'
 
 		if self.is_variable_size:
-			buffer = 'buffer'
-			if self.descriptor.field_type.is_expandable:
-				buffer = 'buffer'
+			buffer_view = 'buffer'
+			if not self.descriptor.field_type.is_expandable:
+				data_size = lang_field_name(self.descriptor.size)
+				buffer_view = f'buffer.sublist(0, {data_size})'
 
 			alignment = self.descriptor.field_type.alignment
 			skip_last_element_padding = f'{not self.descriptor.field_type.is_last_element_padded}'
-			return f'ArrayHelpers.readVariableSizeElements(buffer, {element_type}(), {alignment}, {str(skip_last_element_padding).lower()}).map((item) => item as {embedded_name(self.descriptor.field_type.element_type)}).toList()'
+			return f'ArrayHelpers.readVariableSizeElements({buffer_view}, {element_type}(), {alignment}, {str(skip_last_element_padding).lower()}).map((item) => item as {embedded_name(self.descriptor.field_type.element_type)}).toList()'
 
 		if self.descriptor.field_type.is_expandable:
 			return f'ArrayHelpers.readArray(buffer, {element_type}()).map((item) => item as {self.descriptor.field_type.element_type}).toList()'
@@ -137,9 +138,10 @@ class TypedArrayPrinter(Printer):
 
 	def store(self, field_name, pos):
 		if self.is_variable_size:
+			buffer_view = 'buffer'
 			alignment = self.descriptor.field_type.alignment
 			skip_last_element_padding = not self.descriptor.field_type.is_last_element_padded
-			return f'ArrayHelpers.writeVariableSizeElements(buffer, {field_name}, {alignment}, {pos}, {str(skip_last_element_padding).lower()})'
+			return f'ArrayHelpers.writeVariableSizeElements({buffer_view}, {field_name}, {alignment}, {pos}, {str(skip_last_element_padding).lower()})'
 
 		if self.descriptor.field_type.is_expandable:
 			return f'ArrayHelpers.writeArray(buffer, {field_name}, {pos})'
@@ -249,7 +251,7 @@ class BuiltinPrinter(Printer):
 
 	@staticmethod
 	def store(field_name, pos):
-		return f'buffer.setRange(currentPos, currentPos + {field_name}.size, {field_name}.serialize());'
+		return f'buffer.setRange(currentPos, currentPos + {field_name}.size, {field_name}.serialize())'
 
 	def sort(self, field_name):
 		return f'{field_name}.sort()' if DisplayType.STRUCT == self.descriptor.display_type else None

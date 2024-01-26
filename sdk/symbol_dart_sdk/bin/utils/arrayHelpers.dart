@@ -14,6 +14,9 @@ class ArrayHelpers {
   }
 
   static int deepCompare(dynamic lhs, dynamic rhs) {
+    if(lhs is int) lhs = intToUnsignedInt(lhs);
+    if(rhs is int) rhs = intToUnsignedInt(rhs);
+
     if (!(lhs is List) && !(lhs is Uint8List)) {
       if (lhs == rhs) return 0;
       return lhs > rhs ? 1 : -1;
@@ -78,13 +81,12 @@ class ArrayHelpers {
   }
 
   static List readArray(Uint8List buffer, IDeserializable FactoryClass, [dynamic accessor]) =>
-      readArrayImpl(buffer, FactoryClass, accessor, (_, view) => 0 < buffer.lengthInBytes);
+      readArrayImpl(buffer, FactoryClass, accessor, (_, view) => 0 < view.lengthInBytes);
 
   static List readArrayCount(Uint8List buffer, IDeserializable FactoryClass, int count, [dynamic accessor]) =>
       readArrayImpl(buffer, FactoryClass, accessor, (index, _) => count > index);
 
-  static List readVariableSizeElements(Uint8List bufferInput, dynamic FactoryClass, int alignment, [bool skipLastElementPadding = false]) {
-    var buffer = ByteData.view(bufferInput.buffer);
+  static List readVariableSizeElements(Uint8List buffer, dynamic FactoryClass, int alignment, [bool skipLastElementPadding = false]) {
     final elements = <dynamic>[];
     while (0 < buffer.lengthInBytes) {
       final element = FactoryClass.deserialize(buffer);
@@ -97,7 +99,7 @@ class ArrayHelpers {
           ? element.size
           : alignUp(element.size, alignment);
       if (alignedSize > buffer.lengthInBytes) throw RangeError('unexpected buffer length');
-      buffer = ByteData.view(buffer.buffer, buffer.offsetInBytes + alignedSize as int);
+      buffer = buffer.sublist(alignedSize);
     }
     return elements;
   }
@@ -120,7 +122,7 @@ class ArrayHelpers {
         final alignedSize = alignUp(elementSize, alignment);
         if (alignedSize - elements[i].size > 0) {
           output.setRange(currentPos, currentPos + 1, List<int>.filled(alignedSize - elementSize, 0));
-          currentPos = currentPos + 1;
+          currentPos = currentPos + alignedSize - elementSize;
         }
       }
     }
