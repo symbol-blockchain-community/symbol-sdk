@@ -17,7 +17,10 @@ class ArrayHelpers {
     if(lhs is int) lhs = intToUnsignedInt(lhs);
     if(rhs is int) rhs = intToUnsignedInt(rhs);
 
-    if (!(lhs is List) && !(lhs is Uint8List)) {
+    if(lhs is Tuple2) lhs = [lhs.item1, lhs.item2];
+    if(rhs is Tuple2) rhs = [rhs.item1, rhs.item2];
+
+    if (!(lhs is List) && !(lhs is Uint8List) && !(lhs is Tuple2)) {
       if (lhs == rhs) return 0;
       return lhs > rhs ? 1 : -1;
     }
@@ -127,5 +130,9 @@ class ArrayHelpers {
       }
     }
     return Tuple2(output, currentPos);
+  }
+
+  static bool isDefaultUint8Array(Uint8List array) {
+    return array.lengthInBytes == 0 && array[0] == 0;
   }
 }

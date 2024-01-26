@@ -2,6 +2,7 @@ import '../BaseValue.dart';
 import '../ByteArray.dart';
 import '../models/IDeserializable.dart';
 import '../models/IEmbeddedTransaction.dart';
+import '../models/INonVerifiableTransaction.dart';
 import '../models/StructBase.dart';
 import '../utils/converter.dart';
 import '../utils/arrayHelpers.dart';
@@ -251,8 +252,8 @@ class Transaction extends StructBase implements IDeserializable {
 	Amount _fee = Amount();
 	Timestamp _deadline = Timestamp();
 	final int _entityBodyReserved_1 = 0; // reserved field
-	final int _signerPublicKeySize = 0; // reserved field
-	final int _signatureSize = 0; // reserved field
+	final int _signerPublicKeySize = 32; // reserved field
+	final int _signatureSize = 64; // reserved field
 
 	Transaction({ 
 	TransactionType? type,
@@ -453,7 +454,7 @@ class Transaction extends StructBase implements IDeserializable {
 }
 
 
-class NonVerifiableTransaction extends StructBase implements IDeserializable {
+class NonVerifiableTransaction extends StructBase implements IDeserializable, INonVerifiableTransaction {
 
 	static const Map<String, String> TYPE_HINTS = {
 		'type': 'enum:TransactionType',
@@ -472,7 +473,7 @@ class NonVerifiableTransaction extends StructBase implements IDeserializable {
 	Amount _fee = Amount();
 	Timestamp _deadline = Timestamp();
 	final int _entityBodyReserved_1 = 0; // reserved field
-	final int _signerPublicKeySize = 0; // reserved field
+	final int _signerPublicKeySize = 32; // reserved field
 
 	NonVerifiableTransaction({ 
 	TransactionType? type,
@@ -710,9 +711,9 @@ class AccountKeyLinkTransactionV1 extends StructBase implements IDeserializable 
 	LinkAction _linkAction = LinkAction.LINK;
 	PublicKey _remotePublicKey = PublicKey();
 	final int _entityBodyReserved_1 = 0; // reserved field
-	final int _signerPublicKeySize = 0; // reserved field
-	final int _signatureSize = 0; // reserved field
-	final int _remotePublicKeySize = 0; // reserved field
+	final int _signerPublicKeySize = 32; // reserved field
+	final int _signatureSize = 64; // reserved field
+	final int _remotePublicKeySize = 32; // reserved field
 
 	AccountKeyLinkTransactionV1({ 
 	TransactionType? type,
@@ -955,7 +956,7 @@ class AccountKeyLinkTransactionV1 extends StructBase implements IDeserializable 
 }
 
 
-class NonVerifiableAccountKeyLinkTransactionV1 extends StructBase implements IDeserializable {
+class NonVerifiableAccountKeyLinkTransactionV1 extends StructBase implements IDeserializable, INonVerifiableTransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.ACCOUNT_KEY_LINK.value);
 
@@ -980,8 +981,8 @@ class NonVerifiableAccountKeyLinkTransactionV1 extends StructBase implements IDe
 	LinkAction _linkAction = LinkAction.LINK;
 	PublicKey _remotePublicKey = PublicKey();
 	final int _entityBodyReserved_1 = 0; // reserved field
-	final int _signerPublicKeySize = 0; // reserved field
-	final int _remotePublicKeySize = 0; // reserved field
+	final int _signerPublicKeySize = 32; // reserved field
+	final int _remotePublicKeySize = 32; // reserved field
 
 	NonVerifiableAccountKeyLinkTransactionV1({ 
 	TransactionType? type,
@@ -1549,7 +1550,7 @@ class MosaicLevy extends StructBase implements IDeserializable {
 	Address _recipientAddress = Address();
 	MosaicId _mosaicId = MosaicId();
 	Amount _fee = Amount();
-	final int _recipientAddressSize = 0; // reserved field
+	final int _recipientAddressSize = 40; // reserved field
 
 	MosaicLevy({ MosaicTransferFeeType? transferFeeType, Address? recipientAddress, MosaicId? mosaicId, Amount? fee}) 
 		: super(transferFeeType == null && recipientAddress == null && mosaicId == null && fee == null )
@@ -1838,7 +1839,7 @@ class MosaicDefinition extends StructBase implements IDeserializable {
 	Uint8List _description = Uint8List(0);
 	List<SizePrefixedMosaicProperty> _properties = [];
 	MosaicLevy _levy = MosaicLevy();
-	final int _ownerPublicKeySize = 0; // reserved field
+	final int _ownerPublicKeySize = 32; // reserved field
 
 	MosaicDefinition({ 
 	PublicKey? ownerPublicKey,
@@ -2045,9 +2046,9 @@ class MosaicDefinitionTransactionV1 extends StructBase implements IDeserializabl
 	Address _rentalFeeSink = Address();
 	Amount _rentalFee = Amount();
 	final int _entityBodyReserved_1 = 0; // reserved field
-	final int _signerPublicKeySize = 0; // reserved field
-	final int _signatureSize = 0; // reserved field
-	final int _rentalFeeSinkSize = 0; // reserved field
+	final int _signerPublicKeySize = 32; // reserved field
+	final int _signatureSize = 64; // reserved field
+	final int _rentalFeeSinkSize = 40; // reserved field
 
 	MosaicDefinitionTransactionV1({ 
 	TransactionType? type,
@@ -2313,7 +2314,7 @@ class MosaicDefinitionTransactionV1 extends StructBase implements IDeserializabl
 }
 
 
-class NonVerifiableMosaicDefinitionTransactionV1 extends StructBase implements IDeserializable {
+class NonVerifiableMosaicDefinitionTransactionV1 extends StructBase implements IDeserializable, INonVerifiableTransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.MOSAIC_DEFINITION.value);
 
@@ -2340,8 +2341,8 @@ class NonVerifiableMosaicDefinitionTransactionV1 extends StructBase implements I
 	Address _rentalFeeSink = Address();
 	Amount _rentalFee = Amount();
 	final int _entityBodyReserved_1 = 0; // reserved field
-	final int _signerPublicKeySize = 0; // reserved field
-	final int _rentalFeeSinkSize = 0; // reserved field
+	final int _signerPublicKeySize = 32; // reserved field
+	final int _rentalFeeSinkSize = 40; // reserved field
 
 	NonVerifiableMosaicDefinitionTransactionV1({ 
 	TransactionType? type,
@@ -2646,8 +2647,8 @@ class MosaicSupplyChangeTransactionV1 extends StructBase implements IDeserializa
 	MosaicSupplyChangeAction _action = MosaicSupplyChangeAction.INCREASE;
 	Amount _delta = Amount();
 	final int _entityBodyReserved_1 = 0; // reserved field
-	final int _signerPublicKeySize = 0; // reserved field
-	final int _signatureSize = 0; // reserved field
+	final int _signerPublicKeySize = 32; // reserved field
+	final int _signatureSize = 64; // reserved field
 
 	MosaicSupplyChangeTransactionV1({ 
 	TransactionType? type,
@@ -2905,7 +2906,7 @@ class MosaicSupplyChangeTransactionV1 extends StructBase implements IDeserializa
 }
 
 
-class NonVerifiableMosaicSupplyChangeTransactionV1 extends StructBase implements IDeserializable {
+class NonVerifiableMosaicSupplyChangeTransactionV1 extends StructBase implements IDeserializable, INonVerifiableTransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.MOSAIC_SUPPLY_CHANGE.value);
 
@@ -2932,7 +2933,7 @@ class NonVerifiableMosaicSupplyChangeTransactionV1 extends StructBase implements
 	MosaicSupplyChangeAction _action = MosaicSupplyChangeAction.INCREASE;
 	Amount _delta = Amount();
 	final int _entityBodyReserved_1 = 0; // reserved field
-	final int _signerPublicKeySize = 0; // reserved field
+	final int _signerPublicKeySize = 32; // reserved field
 
 	NonVerifiableMosaicSupplyChangeTransactionV1({ 
 	TransactionType? type,
@@ -3209,7 +3210,7 @@ class MultisigAccountModification extends StructBase implements IDeserializable 
 
 	MultisigAccountModificationType _modificationType = MultisigAccountModificationType.ADD_COSIGNATORY;
 	PublicKey _cosignatoryPublicKey = PublicKey();
-	final int _cosignatoryPublicKeySize = 0; // reserved field
+	final int _cosignatoryPublicKeySize = 32; // reserved field
 
 	MultisigAccountModification({ MultisigAccountModificationType? modificationType, PublicKey? cosignatoryPublicKey}) 
 		: super(modificationType == null && cosignatoryPublicKey == null )
@@ -3220,7 +3221,7 @@ class MultisigAccountModification extends StructBase implements IDeserializable 
 
 	Tuple2 comparer() {
 		return Tuple2(
-			modificationType is Enum ? modificationType.value : modificationType,
+			modificationType.value,
 			ripemdKeccak256(cosignatoryPublicKey.bytes),
 		);
 	}
@@ -3387,8 +3388,8 @@ class MultisigAccountModificationTransactionV1 extends StructBase implements IDe
 	Timestamp _deadline = Timestamp();
 	List<SizePrefixedMultisigAccountModification> _modifications = [];
 	final int _entityBodyReserved_1 = 0; // reserved field
-	final int _signerPublicKeySize = 0; // reserved field
-	final int _signatureSize = 0; // reserved field
+	final int _signerPublicKeySize = 32; // reserved field
+	final int _signatureSize = 64; // reserved field
 
 	MultisigAccountModificationTransactionV1({ 
 	TransactionType? type,
@@ -3615,7 +3616,7 @@ class MultisigAccountModificationTransactionV1 extends StructBase implements IDe
 }
 
 
-class NonVerifiableMultisigAccountModificationTransactionV1 extends StructBase implements IDeserializable {
+class NonVerifiableMultisigAccountModificationTransactionV1 extends StructBase implements IDeserializable, INonVerifiableTransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.MULTISIG_ACCOUNT_MODIFICATION.value);
 
@@ -3638,7 +3639,7 @@ class NonVerifiableMultisigAccountModificationTransactionV1 extends StructBase i
 	Timestamp _deadline = Timestamp();
 	List<SizePrefixedMultisigAccountModification> _modifications = [];
 	final int _entityBodyReserved_1 = 0; // reserved field
-	final int _signerPublicKeySize = 0; // reserved field
+	final int _signerPublicKeySize = 32; // reserved field
 
 	NonVerifiableMultisigAccountModificationTransactionV1({ 
 	TransactionType? type,
@@ -3866,9 +3867,9 @@ class MultisigAccountModificationTransactionV2 extends StructBase implements IDe
 	List<SizePrefixedMultisigAccountModification> _modifications = [];
 	int _minApprovalDelta = 0;
 	final int _entityBodyReserved_1 = 0; // reserved field
-	final int _signerPublicKeySize = 0; // reserved field
-	final int _signatureSize = 0; // reserved field
-	final int _minApprovalDeltaSize = 0; // reserved field
+	final int _signerPublicKeySize = 32; // reserved field
+	final int _signatureSize = 64; // reserved field
+	final int _minApprovalDeltaSize = 4; // reserved field
 
 	MultisigAccountModificationTransactionV2({ 
 	TransactionType? type,
@@ -4120,7 +4121,7 @@ class MultisigAccountModificationTransactionV2 extends StructBase implements IDe
 }
 
 
-class NonVerifiableMultisigAccountModificationTransactionV2 extends StructBase implements IDeserializable {
+class NonVerifiableMultisigAccountModificationTransactionV2 extends StructBase implements IDeserializable, INonVerifiableTransaction {
 	static const int TRANSACTION_VERSION = 2;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.MULTISIG_ACCOUNT_MODIFICATION.value);
 
@@ -4144,8 +4145,8 @@ class NonVerifiableMultisigAccountModificationTransactionV2 extends StructBase i
 	List<SizePrefixedMultisigAccountModification> _modifications = [];
 	int _minApprovalDelta = 0;
 	final int _entityBodyReserved_1 = 0; // reserved field
-	final int _signerPublicKeySize = 0; // reserved field
-	final int _minApprovalDeltaSize = 0; // reserved field
+	final int _signerPublicKeySize = 32; // reserved field
+	final int _minApprovalDeltaSize = 4; // reserved field
 
 	NonVerifiableMultisigAccountModificationTransactionV2({ 
 	TransactionType? type,
@@ -4399,11 +4400,11 @@ class CosignatureV1 extends StructBase implements IDeserializable {
 	Hash256 _multisigTransactionHash = Hash256();
 	Address _multisigAccountAddress = Address();
 	final int _entityBodyReserved_1 = 0; // reserved field
-	final int _signerPublicKeySize = 0; // reserved field
-	final int _signatureSize = 0; // reserved field
-	final int _multisigTransactionHashOuterSize = 0; // reserved field
-	final int _multisigTransactionHashSize = 0; // reserved field
-	final int _multisigAccountAddressSize = 0; // reserved field
+	final int _signerPublicKeySize = 32; // reserved field
+	final int _signatureSize = 64; // reserved field
+	final int _multisigTransactionHashOuterSize = 36; // reserved field
+	final int _multisigTransactionHashSize = 32; // reserved field
+	final int _multisigAccountAddressSize = 40; // reserved field
 
 	CosignatureV1({ 
 	TransactionType? type,
@@ -4752,11 +4753,11 @@ class MultisigTransactionV1 extends StructBase implements IDeserializable {
 	Signature _signature = Signature();
 	Amount _fee = Amount();
 	Timestamp _deadline = Timestamp();
-	NonVerifiableTransaction _innerTransaction = NonVerifiableTransaction();
+	INonVerifiableTransaction _innerTransaction = INonVerifiableTransaction();
 	List<SizePrefixedCosignatureV1> _cosignatures = [];
 	final int _entityBodyReserved_1 = 0; // reserved field
-	final int _signerPublicKeySize = 0; // reserved field
-	final int _signatureSize = 0; // reserved field
+	final int _signerPublicKeySize = 32; // reserved field
+	final int _signatureSize = 64; // reserved field
 
 	MultisigTransactionV1({ 
 	TransactionType? type,
@@ -4767,7 +4768,7 @@ class MultisigTransactionV1 extends StructBase implements IDeserializable {
 	Signature? signature,
 	Amount? fee,
 	Timestamp? deadline,
-	NonVerifiableTransaction? innerTransaction,
+	INonVerifiableTransaction? innerTransaction,
 	List<SizePrefixedCosignatureV1>? cosignatures
 	}) 
 		: super(type == null && version == null && network == null && timestamp == null && signerPublicKey == null && signature == null && fee == null && deadline == null && innerTransaction == null && cosignatures == null )
@@ -4820,7 +4821,7 @@ class MultisigTransactionV1 extends StructBase implements IDeserializable {
 		return _deadline;
 	}
 
-	NonVerifiableTransaction get innerTransaction {
+	INonVerifiableTransaction get innerTransaction {
 		return _innerTransaction;
 	}
 
@@ -4860,7 +4861,7 @@ class MultisigTransactionV1 extends StructBase implements IDeserializable {
 		_deadline = value;
 	}
 
-	set innerTransaction(NonVerifiableTransaction value) {
+	set innerTransaction(INonVerifiableTransaction value) {
 		_innerTransaction = value;
 	}
 
@@ -5004,7 +5005,7 @@ class MultisigTransactionV1 extends StructBase implements IDeserializable {
 }
 
 
-class NonVerifiableMultisigTransactionV1 extends StructBase implements IDeserializable {
+class NonVerifiableMultisigTransactionV1 extends StructBase implements IDeserializable, INonVerifiableTransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.MULTISIG.value);
 
@@ -5025,9 +5026,9 @@ class NonVerifiableMultisigTransactionV1 extends StructBase implements IDeserial
 	PublicKey _signerPublicKey = PublicKey();
 	Amount _fee = Amount();
 	Timestamp _deadline = Timestamp();
-	NonVerifiableTransaction _innerTransaction = NonVerifiableTransaction();
+	INonVerifiableTransaction _innerTransaction = INonVerifiableTransaction();
 	final int _entityBodyReserved_1 = 0; // reserved field
-	final int _signerPublicKeySize = 0; // reserved field
+	final int _signerPublicKeySize = 32; // reserved field
 
 	NonVerifiableMultisigTransactionV1({ 
 	TransactionType? type,
@@ -5037,7 +5038,7 @@ class NonVerifiableMultisigTransactionV1 extends StructBase implements IDeserial
 	PublicKey? signerPublicKey,
 	Amount? fee,
 	Timestamp? deadline,
-	NonVerifiableTransaction? innerTransaction
+	INonVerifiableTransaction? innerTransaction
 	}) 
 		: super(type == null && version == null && network == null && timestamp == null && signerPublicKey == null && fee == null && deadline == null && innerTransaction == null )
 	{
@@ -5083,7 +5084,7 @@ class NonVerifiableMultisigTransactionV1 extends StructBase implements IDeserial
 		return _deadline;
 	}
 
-	NonVerifiableTransaction get innerTransaction {
+	INonVerifiableTransaction get innerTransaction {
 		return _innerTransaction;
 	}
 
@@ -5115,7 +5116,7 @@ class NonVerifiableMultisigTransactionV1 extends StructBase implements IDeserial
 		_deadline = value;
 	}
 
-	set innerTransaction(NonVerifiableTransaction value) {
+	set innerTransaction(INonVerifiableTransaction value) {
 		_innerTransaction = value;
 	}
 
@@ -5257,9 +5258,9 @@ class NamespaceRegistrationTransactionV1 extends StructBase implements IDeserial
 	Uint8List _name = Uint8List(0);
 	Uint8List _parentName = Uint8List(0);
 	final int _entityBodyReserved_1 = 0; // reserved field
-	final int _signerPublicKeySize = 0; // reserved field
-	final int _signatureSize = 0; // reserved field
-	final int _rentalFeeSinkSize = 0; // reserved field
+	final int _signerPublicKeySize = 32; // reserved field
+	final int _signatureSize = 64; // reserved field
+	final int _rentalFeeSinkSize = 40; // reserved field
 
 	NamespaceRegistrationTransactionV1({ 
 	TransactionType? type,
@@ -5410,7 +5411,7 @@ class NamespaceRegistrationTransactionV1 extends StructBase implements IDeserial
 		size += 4;
 		size += name.lengthInBytes;
 		size += 4;
-		if (parentName == Uint8List(0))
+		if (parentName.isNotEmpty)
 		{
 			size += parentName.lengthInBytes;
 		}
@@ -5467,7 +5468,7 @@ class NamespaceRegistrationTransactionV1 extends StructBase implements IDeserial
 		var parentNameSize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		var parentName = Uint8List(0);
-		if (4294967295 != parentNameSize)
+		if (-1 != parentNameSize)
 		{
 			parentName = Uint8List.fromList(buffer.sublist(0, parentNameSize));
 			buffer = buffer.sublist(parentNameSize);
@@ -5525,9 +5526,9 @@ class NamespaceRegistrationTransactionV1 extends StructBase implements IDeserial
 		currentPos += 4;
 		buffer.setRange(currentPos, currentPos + _name.lengthInBytes, _name);
 		currentPos += name.lengthInBytes;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes((_parentName != Uint8List ? _parentName.length : 4294967295), 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes((_parentName.isNotEmpty ? _parentName.length : 4294967295), 4));
 		currentPos += 4;
-		if (parentName == Uint8List(0))
+		if (parentName.isNotEmpty)
 		{
 			buffer.setRange(currentPos, currentPos + _parentName.lengthInBytes, _parentName);
 			currentPos += parentName.lengthInBytes;
@@ -5549,7 +5550,7 @@ class NamespaceRegistrationTransactionV1 extends StructBase implements IDeserial
 		result += 'rentalFeeSink: "${_rentalFeeSink.toString()}", ';
 		result += 'rentalFee: "${_rentalFee.toString()}", ';
 		result += 'name: "${hex.encode(_name.toList()).toUpperCase()}", ';
-		if (parentName == Uint8List(0))
+		if (parentName.isNotEmpty)
 		{
 			result += 'parentName: "${hex.encode(_parentName.toList()).toUpperCase()}", ';
 		}
@@ -5559,7 +5560,7 @@ class NamespaceRegistrationTransactionV1 extends StructBase implements IDeserial
 }
 
 
-class NonVerifiableNamespaceRegistrationTransactionV1 extends StructBase implements IDeserializable {
+class NonVerifiableNamespaceRegistrationTransactionV1 extends StructBase implements IDeserializable, INonVerifiableTransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.NAMESPACE_REGISTRATION.value);
 
@@ -5588,8 +5589,8 @@ class NonVerifiableNamespaceRegistrationTransactionV1 extends StructBase impleme
 	Uint8List _name = Uint8List(0);
 	Uint8List _parentName = Uint8List(0);
 	final int _entityBodyReserved_1 = 0; // reserved field
-	final int _signerPublicKeySize = 0; // reserved field
-	final int _rentalFeeSinkSize = 0; // reserved field
+	final int _signerPublicKeySize = 32; // reserved field
+	final int _rentalFeeSinkSize = 40; // reserved field
 
 	NonVerifiableNamespaceRegistrationTransactionV1({ 
 	TransactionType? type,
@@ -5728,7 +5729,7 @@ class NonVerifiableNamespaceRegistrationTransactionV1 extends StructBase impleme
 		size += 4;
 		size += name.lengthInBytes;
 		size += 4;
-		if (parentName == Uint8List(0))
+		if (parentName.isNotEmpty)
 		{
 			size += parentName.lengthInBytes;
 		}
@@ -5778,7 +5779,7 @@ class NonVerifiableNamespaceRegistrationTransactionV1 extends StructBase impleme
 		var parentNameSize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		var parentName = Uint8List(0);
-		if (4294967295 != parentNameSize)
+		if (-1 != parentNameSize)
 		{
 			parentName = Uint8List.fromList(buffer.sublist(0, parentNameSize));
 			buffer = buffer.sublist(parentNameSize);
@@ -5831,9 +5832,9 @@ class NonVerifiableNamespaceRegistrationTransactionV1 extends StructBase impleme
 		currentPos += 4;
 		buffer.setRange(currentPos, currentPos + _name.lengthInBytes, _name);
 		currentPos += name.lengthInBytes;
-		buffer.setRange(currentPos, currentPos + 4, intToBytes((_parentName != Uint8List ? _parentName.length : 4294967295), 4));
+		buffer.setRange(currentPos, currentPos + 4, intToBytes((_parentName.isNotEmpty ? _parentName.length : 4294967295), 4));
 		currentPos += 4;
-		if (parentName == Uint8List(0))
+		if (parentName.isNotEmpty)
 		{
 			buffer.setRange(currentPos, currentPos + _parentName.lengthInBytes, _parentName);
 			currentPos += parentName.lengthInBytes;
@@ -5854,7 +5855,7 @@ class NonVerifiableNamespaceRegistrationTransactionV1 extends StructBase impleme
 		result += 'rentalFeeSink: "${_rentalFeeSink.toString()}", ';
 		result += 'rentalFee: "${_rentalFee.toString()}", ';
 		result += 'name: "${hex.encode(_name.toList()).toUpperCase()}", ';
-		if (parentName == Uint8List(0))
+		if (parentName.isNotEmpty)
 		{
 			result += 'parentName: "${hex.encode(_parentName.toList()).toUpperCase()}", ';
 		}
@@ -6013,9 +6014,9 @@ class TransferTransactionV1 extends StructBase implements IDeserializable {
 	Amount _amount = Amount();
 	Message _message = Message();
 	final int _entityBodyReserved_1 = 0; // reserved field
-	final int _signerPublicKeySize = 0; // reserved field
-	final int _signatureSize = 0; // reserved field
-	final int _recipientAddressSize = 0; // reserved field
+	final int _signerPublicKeySize = 32; // reserved field
+	final int _signatureSize = 64; // reserved field
+	final int _recipientAddressSize = 40; // reserved field
 
 	TransferTransactionV1({ 
 	TransactionType? type,
@@ -6300,7 +6301,7 @@ class TransferTransactionV1 extends StructBase implements IDeserializable {
 }
 
 
-class NonVerifiableTransferTransactionV1 extends StructBase implements IDeserializable {
+class NonVerifiableTransferTransactionV1 extends StructBase implements IDeserializable, INonVerifiableTransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.TRANSFER.value);
 
@@ -6327,8 +6328,8 @@ class NonVerifiableTransferTransactionV1 extends StructBase implements IDeserial
 	Amount _amount = Amount();
 	Message _message = Message();
 	final int _entityBodyReserved_1 = 0; // reserved field
-	final int _signerPublicKeySize = 0; // reserved field
-	final int _recipientAddressSize = 0; // reserved field
+	final int _signerPublicKeySize = 32; // reserved field
+	final int _recipientAddressSize = 40; // reserved field
 
 	NonVerifiableTransferTransactionV1({ 
 	TransactionType? type,
@@ -6619,9 +6620,9 @@ class TransferTransactionV2 extends StructBase implements IDeserializable {
 	Message _message = Message();
 	List<SizePrefixedMosaic> _mosaics = [];
 	final int _entityBodyReserved_1 = 0; // reserved field
-	final int _signerPublicKeySize = 0; // reserved field
-	final int _signatureSize = 0; // reserved field
-	final int _recipientAddressSize = 0; // reserved field
+	final int _signerPublicKeySize = 32; // reserved field
+	final int _signatureSize = 64; // reserved field
+	final int _recipientAddressSize = 40; // reserved field
 
 	TransferTransactionV2({ 
 	TransactionType? type,
@@ -6930,7 +6931,7 @@ class TransferTransactionV2 extends StructBase implements IDeserializable {
 }
 
 
-class NonVerifiableTransferTransactionV2 extends StructBase implements IDeserializable {
+class NonVerifiableTransferTransactionV2 extends StructBase implements IDeserializable, INonVerifiableTransaction {
 	static const int TRANSACTION_VERSION = 2;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.TRANSFER.value);
 
@@ -6959,8 +6960,8 @@ class NonVerifiableTransferTransactionV2 extends StructBase implements IDeserial
 	Message _message = Message();
 	List<SizePrefixedMosaic> _mosaics = [];
 	final int _entityBodyReserved_1 = 0; // reserved field
-	final int _signerPublicKeySize = 0; // reserved field
-	final int _recipientAddressSize = 0; // reserved field
+	final int _signerPublicKeySize = 32; // reserved field
+	final int _recipientAddressSize = 40; // reserved field
 
 	NonVerifiableTransferTransactionV2({ 
 	TransactionType? type,

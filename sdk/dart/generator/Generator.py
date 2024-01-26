@@ -40,6 +40,7 @@ def generate_files(ast_models, output_directory: Path):
 import '../ByteArray.dart';
 import '../models/IDeserializable.dart';
 import '../models/IEmbeddedTransaction.dart';
+import '../models/INonVerifiableTransaction.dart';
 import '../models/StructBase.dart';
 import '../utils/converter.dart';
 import '../utils/arrayHelpers.dart';

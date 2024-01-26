@@ -3,13 +3,16 @@ from catparser.DisplayType import DisplayType
 from .name_formatting import fix_name, lang_field_name, fix_size_name, underline_name
 
 def plural_to_singular(word):
-    if word.endswith('s'):
-        return word[:-1]
-    else:
-        return word
+	if word.endswith('s'):
+			return word[:-1]
+	else:
+			return word
 
 def embedded_name(name):
 	return name.replace("Embedded", "IEmbedded")
+	name = name.replace("NonVerifiable", "INonVerifiable")
+	name = name.replace("Embedded", "IEmbedded")
+	return name
 
 class Printer:
 	def __init__(self, descriptor, name):

@@ -2,10 +2,10 @@ import 'dart:io';
 import 'dart:convert';
 import 'package:test/test.dart';
 import 'package:convert/convert.dart';
-import '../bin/symbol/models.dart';
+import '../bin/nem/models.dart';
 
-void main() async {
-  var file = File('/Users/matsukawatoshiya/Desktop/symbol-dart/symbol/tests/vectors/symbol/models/transactions.json');
+void transactionTest(String path) async {
+  var file = File(path);
   var contents = await file.readAsString();
   var jsonMap = jsonDecode(contents);
     (jsonMap as List).forEach((element) {
@@ -15,4 +15,8 @@ void main() async {
       expect(hex.encode(tx.serialize()).toUpperCase(), payload);
     });
   });
+}
+void main() async {
+  // transactionTest('/Users/matsukawatoshiya/Desktop/symbol-dart/symbol/tests/vectors/symbol/models/transactions.json');
+  transactionTest('/Users/matsukawatoshiya/Desktop/symbol-dart/symbol/tests/vectors/nem/models/transactions.json');
 }

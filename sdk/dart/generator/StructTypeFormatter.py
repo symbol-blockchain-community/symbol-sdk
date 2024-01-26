@@ -36,6 +36,9 @@ def filter_size_if_first(fields_iter):
 	for field in fields_iter:
 		yield field
 
+def uint32_to_int32(x):
+  return (x & 0xFFFFFFFF) - (1 << 32) if x & (1 << 31) else x
+
 class StructFormatter(AbstractTypeFormatter):
 	# pylint: disable=too-many-public-methods
 
@@ -48,7 +51,9 @@ class StructFormatter(AbstractTypeFormatter):
 		return 'StructBase'
 
 	def get_interface(self):
-		return ', IEmbeddedTransaction' if 'Embedded' in self.struct.name else ''
+		interface = ', IEmbeddedTransaction' if 'Embedded' in self.struct.name else ''
+		interface = interface + ', INonVerifiableTransaction' if 'NonVerifiable' in self.struct.name else interface
+		return interface
 	
 	def is_fields_one(self):
 		return len(list(self.non_reserved_fields())) == 1
@@ -70,7 +75,9 @@ class StructFormatter(AbstractTypeFormatter):
 	
 	@staticmethod
 	def embedded_name(name):
-		return name.replace("Embedded", "IEmbedded")
+		name = name.replace("NonVerifiable", "INonVerifiable")
+		name = name.replace("Embedded", "IEmbedded")
+		return name
 
 	@property
 	def typename(self):
@@ -98,11 +105,11 @@ class StructFormatter(AbstractTypeFormatter):
 		for field in self.non_reserved_fields():
 			field_name = self.field_name(field)
 			value = field.extensions.printer.get_default_value()
-			body += f'{self.embedded_name(field.extensions.printer.get_type())} {field_name} = {value};\n'
+			body += f'{self.embedded_name(field.extensions.printer.get_type())} {field_name} = {self.embedded_name(value)};\n'
 
 		for field in self.reserved_fields():
 			field_name = self.field_name(field)
-			value = field.extensions.printer.get_default_value()
+			value = field.value
 			body += f'final {field.extensions.printer.get_type()} {field_name} = {value}; // reserved field\n'
 		
 		return body
@@ -176,7 +183,7 @@ class StructFormatter(AbstractTypeFormatter):
 			property_name = lang_field_name(property_name)
 			if not transform:
 				# modificationType is Enum ? modificationType.value : modificationType,
-				body += f'{property_name} is Enum ? {property_name}.value : {property_name}'
+				body += f'{property_name}.value'
 			else:
 				body += f'{lang_field_name(transform).replace("_", "")}({property_name}.bytes)'
 
@@ -203,14 +210,14 @@ class StructFormatter(AbstractTypeFormatter):
 		}
 		condition_operator = condition_to_operator_map[conditional.operation]
 
-		value = f'{conditional.value}'
+		value = f'{conditional.value if not isinstance(conditional.value, int) else uint32_to_int32(conditional.value)}'
 		condition_model = condition_field.extensions.type_model
 		yoda_value = value if DisplayType.INTEGER == condition_model.display_type else f'{condition_model.name}.{value}.value'
 		field_prefix = '_' if prefix_field else ''
 
 		# HACK: instead of handling dumb magic value in namespace parent_name, generate slightly simpler condition
 		if prefix_field and DisplayType.UNSET != field.display_type:
-			return f'if ({lang_field_name(field.name)} == Uint8List(0))\n'
+			return f'if ({lang_field_name(field.name)}.isNotEmpty)\n'
 
 		field_postfix = 'Computed' if prefix_field and is_computed(condition_field) else '' if DisplayType.INTEGER == condition_model.display_type else '.value'
 		field_prefix = '' if field_prefix and is_computed(condition_field) else field_prefix
@@ -366,7 +373,7 @@ class StructFormatter(AbstractTypeFormatter):
 					# HACK: create inline if condition (for NEM namespace purposes)
 					if bound_condition:
 						condition_value = bound_field.value.value
-						field_value = f'({bound_field_name} != Uint8List ? {field_value} : {condition_value})'
+						field_value = f'({bound_field_name}.isNotEmpty ? {field_value} : {condition_value})'
 				else:
 					field_value = bound_field.extensions.printer.get_size()
 			elif field.is_size_reference:
@@ -394,8 +401,8 @@ class StructFormatter(AbstractTypeFormatter):
 		fields_iter = self.non_const_fields()
 		first_field = next(fields_iter)
 		if self.struct.size == first_field.extensions.printer.name:
-			body += f'buffer.setRange(currentPos, currentPos + 4, intToBytes(size, 4));\n'
-			body += 'currentPos += 4;\n'
+			body += f'buffer.setRange(currentPos, currentPos + {first_field.size}, intToBytes(size, {first_field.size}));\n'
+			body += f'currentPos += {first_field.size};\n'
 		else:
 			body += self.generate_serialize_field(first_field)
 
