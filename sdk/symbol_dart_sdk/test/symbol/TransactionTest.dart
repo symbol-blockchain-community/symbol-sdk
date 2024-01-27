@@ -2,7 +2,7 @@ import 'dart:io';
 import 'dart:convert';
 import 'package:test/test.dart';
 import 'package:convert/convert.dart';
-import '../bin/symbol/models.dart';
+import '../../bin/symbol/models.dart';
 
 void transactionTest(String path) async {
   var file = File(path);
@@ -17,5 +17,5 @@ void transactionTest(String path) async {
   });
 }
 void main() async {
-  transactionTest('/Users/matsukawatoshiya/Desktop/symbol-dart/symbol/tests/vectors/symbol/models/transactions.json');
+  transactionTest('../../../../../symbol/tests/vectors/symbol/models/transactions.json');
 }

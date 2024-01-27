@@ -70,7 +70,6 @@ class EnumTypeFormatter(AbstractTypeFormatter):
 	
 	def get_str_descriptor(self):
 		body = ''
-		#   return 'LinkAction.${LinkAction.valueToKey(this.value)}';
 		if not self.enum_type.is_bitwise:
 			body = f'return \'{self.typename}.${{_flags[value]}}\';'
 			return MethodDescriptor(body=body)
