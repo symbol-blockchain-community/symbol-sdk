@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'package:pointycastle/export.dart' as pc;
 import '../symbol/ITransaction.dart';
 import '../models/IInnerTransaction.dart';
 import '../symbol/Network.dart';
@@ -7,9 +8,6 @@ import '../symbol/KeyPair.dart';
 import '../symbol/models.dart' as sc;
 import '../symbol/merkle.dart';
 import '../Bip32.dart';
-
-import 'package:pointycastle/export.dart' as pc;
-
 import '../utils/converter.dart';
 
 const TRANSACTION_HEADER_SIZE = 4 + 4 + Signature.SIZE + PublicKey.SIZE + 4;
