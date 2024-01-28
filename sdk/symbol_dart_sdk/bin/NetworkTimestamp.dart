@@ -39,7 +39,7 @@ class NetworkTimestampDatetimeConverter {
   }
 
   DateTime toDatetime(int rawTimestamp) {
-    return DateTime.fromMillisecondsSinceEpoch(this.epoch.millisecondsSinceEpoch + (rawTimestamp * this.timeUnits));
+    return DateTime.fromMillisecondsSinceEpoch(epoch.millisecondsSinceEpoch + (rawTimestamp * timeUnits));
   }
 
   int getTimeUnits(String timeUnits){

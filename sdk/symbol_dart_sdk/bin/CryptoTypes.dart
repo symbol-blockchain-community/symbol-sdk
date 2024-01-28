@@ -18,7 +18,7 @@ class PrivateKey extends ByteArray {
   PrivateKey(dynamic privateKey) : super(SIZE, privateKey);
 
   static PrivateKey random() {
-    return PrivateKey(ed.generateKey().privateKey.bytes);
+    return PrivateKey(ed.generateKey().privateKey.bytes.sublist(SIZE));
   }
 }
 

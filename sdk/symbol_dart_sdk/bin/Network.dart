@@ -10,8 +10,8 @@ class Network {
   NetworkTimestampDatetimeConverter datetimeConverter;
   Function addressHasher;
   Function createAddress;
-  Type addressType;
-  Type networkTimestampClass;
+  Type addressClass;
+  NetworkTimestamp Function(int) networkTimestampFactory;
 
   Network(
     this.name, 
@@ -19,26 +19,45 @@ class Network {
     this.datetimeConverter,
     this.addressHasher,
     this.createAddress,
-    this.addressType,
-    this.networkTimestampClass
+    this.addressClass,
+    this.networkTimestampFactory,
   );
   
   Uint8List publicKeyToAddress(PublicKey publicKey) {
     var partOneHashBuilder = addressHasher();
     var partOneHash = partOneHashBuilder.process(publicKey.bytes);
-    var partTwoHash = RIPEMD160().update(Uint8List.fromList(partOneHash)).digest();
+    var partTwoHash = RIPEMD160().update(partOneHash).digest();
     var version = Uint8List.fromList([identifier, ...partTwoHash]);
     var partThreeHashBuilder = addressHasher();
-    var checksum = Uint8List.fromList(partThreeHashBuilder.process(version).sublist(0, 4));
+    var checksum = partThreeHashBuilder.process(version).sublist(0, 4);
     return createAddress(version, checksum);
+  }
+
+  DateTime toDatetime(NetworkTimestamp referenceNetworkTimestamp) {
+    return datetimeConverter.toDatetime(referenceNetworkTimestamp.timestamp);
+  }
+
+  NetworkTimestamp fromDatetime(DateTime referenceDatetime) {
+    return networkTimestampFactory(datetimeConverter.toDifference(referenceDatetime));
   }
 }
 
-abstract class AddressConstructable {
-  AddressConstructable();
-  static const int ENCODED_SIZE = 0;
-}
+class NetworkLocator {
+  static Network findByName(List<Network> networks, dynamic singleOrMultipleNames) {
+    var names = singleOrMultipleNames is List<String> ? singleOrMultipleNames : [singleOrMultipleNames];
+    try {
+      return networks.firstWhere((network) => names.any((name) => name == network.name));
+    } catch (e) {
+      throw RangeError('no network found with name ${names.join(', ')}');
+    }
+  }
 
-abstract class Constructable {
-  Constructable();
+  static Network findByIdentifier(List<Network> networks, dynamic singleOrMultipleIdentifiers) {
+    var identifiers = singleOrMultipleIdentifiers is List<int> ? singleOrMultipleIdentifiers : [singleOrMultipleIdentifiers];
+    try {
+      return networks.firstWhere((network) => identifiers.any((identifier) => identifier == network.identifier));
+    } catch (e) {
+      throw RangeError('no network found with identifier ${identifiers.join(', ')}');
+    }
+  }
 }

@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 import 'package:base32/base32.dart';
+import 'package:convert/convert.dart';
 
 final Map<String, Map<String, int>> _constants = {
   'sizes': {
@@ -12,6 +13,19 @@ final Map<String, Map<String, int>> _constants = {
     'checksum': 3,
   }
 };
+
+String intToHex(int num){
+  var unsigned = intToUnsignedInt(num);
+  return unsigned.toRadixString(16).padLeft(16, '0').toUpperCase();
+}
+
+String bytesToHex(Uint8List bytes) {
+  return hex.encode(bytes).toUpperCase();
+}
+
+Uint8List hexToBytes(String hexString) {
+  return Uint8List.fromList(hex.decode(hexString));
+}
 
 Uint8List intToBytes(int value, int byteSize) {
   var byteData = ByteData(byteSize);

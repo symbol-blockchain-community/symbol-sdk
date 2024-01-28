@@ -15,7 +15,6 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:typed_data';
 import 'package:hash/hash.dart';
-import 'package:sha3/sha3.dart';
 import 'package:base32/base32.dart';
 import 'package:ed25519_edwards/ed25519_edwards.dart' as ed;
 import 'package:tuple/tuple.dart';

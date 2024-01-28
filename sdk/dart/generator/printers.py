@@ -9,7 +9,7 @@ def plural_to_singular(word):
 			return word
 
 def embedded_name(name):
-	return name.replace("Embedded", "IEmbedded")
+	return name.replace("Embedded", "IInner")
 
 class Printer:
 	def __init__(self, descriptor, name):

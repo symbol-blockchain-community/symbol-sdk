@@ -1,9 +1,9 @@
 import '../BaseValue.dart';
 import '../ByteArray.dart';
 import '../models/IDeserializable.dart';
-import '../models/IEmbeddedTransaction.dart';
-import '../models/INonVerifiableTransaction.dart';
 import '../models/StructBase.dart';
+import './ITransaction.dart';
+import '../models/IInnerTransaction.dart';
 import '../utils/converter.dart';
 import '../utils/arrayHelpers.dart';
 import '../utils/transform.dart';
@@ -231,7 +231,7 @@ class TransactionType implements IDeserializable {
 }
 
 
-class Transaction extends StructBase implements IDeserializable {
+class Transaction extends StructBase implements IDeserializable, ITransaction {
 
 	static const Map<String, String> TYPE_HINTS = {
 		'type': 'enum:TransactionType',
@@ -390,7 +390,7 @@ class Transaction extends StructBase implements IDeserializable {
 }
 
 
-class NonVerifiableTransaction extends StructBase implements IDeserializable, INonVerifiableTransaction {
+class NonVerifiableTransaction extends StructBase implements IDeserializable, IInnerTransaction {
 
 	static const Map<String, String> TYPE_HINTS = {
 		'type': 'enum:TransactionType',
@@ -564,7 +564,7 @@ class LinkAction implements IDeserializable {
 }
 
 
-class AccountKeyLinkTransactionV1 extends StructBase implements IDeserializable {
+class AccountKeyLinkTransactionV1 extends StructBase implements IDeserializable, ITransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.ACCOUNT_KEY_LINK.value);
 
@@ -756,7 +756,7 @@ class AccountKeyLinkTransactionV1 extends StructBase implements IDeserializable 
 }
 
 
-class NonVerifiableAccountKeyLinkTransactionV1 extends StructBase implements IDeserializable, INonVerifiableTransaction {
+class NonVerifiableAccountKeyLinkTransactionV1 extends StructBase implements IDeserializable, IInnerTransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.ACCOUNT_KEY_LINK.value);
 
@@ -1601,7 +1601,7 @@ class MosaicDefinition extends StructBase implements IDeserializable {
 }
 
 
-class MosaicDefinitionTransactionV1 extends StructBase implements IDeserializable {
+class MosaicDefinitionTransactionV1 extends StructBase implements IDeserializable, ITransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.MOSAIC_DEFINITION.value);
 
@@ -1810,7 +1810,7 @@ class MosaicDefinitionTransactionV1 extends StructBase implements IDeserializabl
 }
 
 
-class NonVerifiableMosaicDefinitionTransactionV1 extends StructBase implements IDeserializable, INonVerifiableTransaction {
+class NonVerifiableMosaicDefinitionTransactionV1 extends StructBase implements IDeserializable, IInnerTransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.MOSAIC_DEFINITION.value);
 
@@ -2034,7 +2034,7 @@ class MosaicSupplyChangeAction implements IDeserializable {
 }
 
 
-class MosaicSupplyChangeTransactionV1 extends StructBase implements IDeserializable {
+class MosaicSupplyChangeTransactionV1 extends StructBase implements IDeserializable, ITransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.MOSAIC_SUPPLY_CHANGE.value);
 
@@ -2234,7 +2234,7 @@ class MosaicSupplyChangeTransactionV1 extends StructBase implements IDeserializa
 }
 
 
-class NonVerifiableMosaicSupplyChangeTransactionV1 extends StructBase implements IDeserializable, INonVerifiableTransaction {
+class NonVerifiableMosaicSupplyChangeTransactionV1 extends StructBase implements IDeserializable, IInnerTransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.MOSAIC_SUPPLY_CHANGE.value);
 
@@ -2587,7 +2587,7 @@ class SizePrefixedMultisigAccountModification extends StructBase implements IDes
 }
 
 
-class MultisigAccountModificationTransactionV1 extends StructBase implements IDeserializable {
+class MultisigAccountModificationTransactionV1 extends StructBase implements IDeserializable, ITransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.MULTISIG_ACCOUNT_MODIFICATION.value);
 
@@ -2768,7 +2768,7 @@ class MultisigAccountModificationTransactionV1 extends StructBase implements IDe
 }
 
 
-class NonVerifiableMultisigAccountModificationTransactionV1 extends StructBase implements IDeserializable, INonVerifiableTransaction {
+class NonVerifiableMultisigAccountModificationTransactionV1 extends StructBase implements IDeserializable, IInnerTransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.MULTISIG_ACCOUNT_MODIFICATION.value);
 
@@ -2929,7 +2929,7 @@ class NonVerifiableMultisigAccountModificationTransactionV1 extends StructBase i
 }
 
 
-class MultisigAccountModificationTransactionV2 extends StructBase implements IDeserializable {
+class MultisigAccountModificationTransactionV2 extends StructBase implements IDeserializable, ITransaction {
 	static const int TRANSACTION_VERSION = 2;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.MULTISIG_ACCOUNT_MODIFICATION.value);
 
@@ -3129,7 +3129,7 @@ class MultisigAccountModificationTransactionV2 extends StructBase implements IDe
 }
 
 
-class NonVerifiableMultisigAccountModificationTransactionV2 extends StructBase implements IDeserializable, INonVerifiableTransaction {
+class NonVerifiableMultisigAccountModificationTransactionV2 extends StructBase implements IDeserializable, IInnerTransaction {
 	static const int TRANSACTION_VERSION = 2;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.MULTISIG_ACCOUNT_MODIFICATION.value);
 
@@ -3577,7 +3577,7 @@ class SizePrefixedCosignatureV1 extends StructBase implements IDeserializable {
 }
 
 
-class MultisigTransactionV1 extends StructBase implements IDeserializable {
+class MultisigTransactionV1 extends StructBase implements IDeserializable, ITransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.MULTISIG.value);
 
@@ -3601,7 +3601,7 @@ class MultisigTransactionV1 extends StructBase implements IDeserializable {
 	Signature signature = Signature();
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
-	INonVerifiableTransaction innerTransaction = INonVerifiableTransaction();
+	IInnerTransaction innerTransaction = IInnerTransaction();
 	List<SizePrefixedCosignatureV1> cosignatures = [];
 	final int entityBodyReserved_1 = 0; // reserved field
 	final int signerPublicKeySize = 32; // reserved field
@@ -3616,7 +3616,7 @@ class MultisigTransactionV1 extends StructBase implements IDeserializable {
 	Signature? signature,
 	Amount? fee,
 	Timestamp? deadline,
-	INonVerifiableTransaction? innerTransaction,
+	IInnerTransaction? innerTransaction,
 	List<SizePrefixedCosignatureV1>? cosignatures
 	}) 
 		: super(type == null && version == null && network == null && timestamp == null && signerPublicKey == null && signature == null && fee == null && deadline == null && innerTransaction == null && cosignatures == null )
@@ -3773,7 +3773,7 @@ class MultisigTransactionV1 extends StructBase implements IDeserializable {
 }
 
 
-class NonVerifiableMultisigTransactionV1 extends StructBase implements IDeserializable, INonVerifiableTransaction {
+class NonVerifiableMultisigTransactionV1 extends StructBase implements IDeserializable, IInnerTransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.MULTISIG.value);
 
@@ -3794,7 +3794,7 @@ class NonVerifiableMultisigTransactionV1 extends StructBase implements IDeserial
 	PublicKey signerPublicKey = PublicKey();
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
-	INonVerifiableTransaction innerTransaction = INonVerifiableTransaction();
+	IInnerTransaction innerTransaction = IInnerTransaction();
 	final int entityBodyReserved_1 = 0; // reserved field
 	final int signerPublicKeySize = 32; // reserved field
 
@@ -3806,7 +3806,7 @@ class NonVerifiableMultisigTransactionV1 extends StructBase implements IDeserial
 	PublicKey? signerPublicKey,
 	Amount? fee,
 	Timestamp? deadline,
-	INonVerifiableTransaction? innerTransaction
+	IInnerTransaction? innerTransaction
 	}) 
 		: super(type == null && version == null && network == null && timestamp == null && signerPublicKey == null && fee == null && deadline == null && innerTransaction == null )
 	{
@@ -3931,7 +3931,7 @@ class NonVerifiableMultisigTransactionV1 extends StructBase implements IDeserial
 }
 
 
-class NamespaceRegistrationTransactionV1 extends StructBase implements IDeserializable {
+class NamespaceRegistrationTransactionV1 extends StructBase implements IDeserializable, ITransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.NAMESPACE_REGISTRATION.value);
 
@@ -4168,7 +4168,7 @@ class NamespaceRegistrationTransactionV1 extends StructBase implements IDeserial
 }
 
 
-class NonVerifiableNamespaceRegistrationTransactionV1 extends StructBase implements IDeserializable, INonVerifiableTransaction {
+class NonVerifiableNamespaceRegistrationTransactionV1 extends StructBase implements IDeserializable, IInnerTransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.NAMESPACE_REGISTRATION.value);
 
@@ -4489,7 +4489,7 @@ class Message extends StructBase implements IDeserializable {
 }
 
 
-class TransferTransactionV1 extends StructBase implements IDeserializable {
+class TransferTransactionV1 extends StructBase implements IDeserializable, ITransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.TRANSFER.value);
 
@@ -4717,7 +4717,7 @@ class TransferTransactionV1 extends StructBase implements IDeserializable {
 }
 
 
-class NonVerifiableTransferTransactionV1 extends StructBase implements IDeserializable, INonVerifiableTransaction {
+class NonVerifiableTransferTransactionV1 extends StructBase implements IDeserializable, IInnerTransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.TRANSFER.value);
 
@@ -4925,7 +4925,7 @@ class NonVerifiableTransferTransactionV1 extends StructBase implements IDeserial
 }
 
 
-class TransferTransactionV2 extends StructBase implements IDeserializable {
+class TransferTransactionV2 extends StructBase implements IDeserializable, ITransaction {
 	static const int TRANSACTION_VERSION = 2;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.TRANSFER.value);
 
@@ -5171,7 +5171,7 @@ class TransferTransactionV2 extends StructBase implements IDeserializable {
 }
 
 
-class NonVerifiableTransferTransactionV2 extends StructBase implements IDeserializable, INonVerifiableTransaction {
+class NonVerifiableTransferTransactionV2 extends StructBase implements IDeserializable, IInnerTransaction {
 	static const int TRANSACTION_VERSION = 2;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.TRANSFER.value);
 
@@ -5406,7 +5406,7 @@ class TransactionFactory implements IDeserializable {
 		}
 		Uint8List buffer = payload.buffer.asUint8List();
 		var parent = Transaction().deserialize(buffer);
-		var mapping = {
+		var mapping = <(int, int), StructBase>{
 			(AccountKeyLinkTransactionV1.TRANSACTION_TYPE.value, AccountKeyLinkTransactionV1.TRANSACTION_VERSION): AccountKeyLinkTransactionV1(),
 			(MosaicDefinitionTransactionV1.TRANSACTION_TYPE.value, MosaicDefinitionTransactionV1.TRANSACTION_VERSION): MosaicDefinitionTransactionV1(),
 			(MosaicSupplyChangeTransactionV1.TRANSACTION_TYPE.value, MosaicSupplyChangeTransactionV1.TRANSACTION_VERSION): MosaicSupplyChangeTransactionV1(),
@@ -5427,8 +5427,8 @@ class TransactionFactory implements IDeserializable {
 		}
 	}
 
-	IDeserializable createByName(String entityName) {
-		var mapping = {
+	StructBase createByName(String entityName) {
+		var mapping = <String, StructBase Function()>{
 			'account_key_link_transaction_v1': () => AccountKeyLinkTransactionV1(),
 			'mosaic_definition_transaction_v1': () => MosaicDefinitionTransactionV1(),
 			'mosaic_supply_change_transaction_v1': () => MosaicSupplyChangeTransactionV1(),
@@ -5459,7 +5459,7 @@ class NonVerifiableTransactionFactory implements IDeserializable {
 		}
 		Uint8List buffer = payload.buffer.asUint8List();
 		var parent = NonVerifiableTransaction().deserialize(buffer);
-		var mapping = {
+		var mapping = <(int, int), StructBase>{
 			(NonVerifiableAccountKeyLinkTransactionV1.TRANSACTION_TYPE.value, NonVerifiableAccountKeyLinkTransactionV1.TRANSACTION_VERSION): NonVerifiableAccountKeyLinkTransactionV1(),
 			(NonVerifiableMosaicDefinitionTransactionV1.TRANSACTION_TYPE.value, NonVerifiableMosaicDefinitionTransactionV1.TRANSACTION_VERSION): NonVerifiableMosaicDefinitionTransactionV1(),
 			(NonVerifiableMosaicSupplyChangeTransactionV1.TRANSACTION_TYPE.value, NonVerifiableMosaicSupplyChangeTransactionV1.TRANSACTION_VERSION): NonVerifiableMosaicSupplyChangeTransactionV1(),
@@ -5479,8 +5479,8 @@ class NonVerifiableTransactionFactory implements IDeserializable {
 		}
 	}
 
-	IDeserializable createByName(String entityName) {
-		var mapping = {
+	StructBase createByName(String entityName) {
+		var mapping = <String, StructBase Function()>{
 			'non_verifiable_account_key_link_transaction_v1': () => NonVerifiableAccountKeyLinkTransactionV1(),
 			'non_verifiable_mosaic_definition_transaction_v1': () => NonVerifiableMosaicDefinitionTransactionV1(),
 			'non_verifiable_mosaic_supply_change_transaction_v1': () => NonVerifiableMosaicSupplyChangeTransactionV1(),

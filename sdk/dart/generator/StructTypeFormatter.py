@@ -48,8 +48,8 @@ class StructFormatter(AbstractTypeFormatter):
 		return 'StructBase'
 
 	def get_interface(self):
-		interface = ', IEmbeddedTransaction' if 'Embedded' in self.struct.name else ''
-		interface = interface + ', INonVerifiableTransaction' if 'NonVerifiable' in self.struct.name else interface
+		interface = ', ITransaction' if 'Transaction' in self.struct.name and 'Statement' not in self.struct.name else ''
+		interface = ', IInnerTransaction' if 'Embedded' in self.struct.name or 'NonVerifiable' in self.struct.name else interface
 		return interface
 	
 	def is_fields_one(self):
@@ -72,8 +72,8 @@ class StructFormatter(AbstractTypeFormatter):
 	
 	@staticmethod
 	def embedded_name(name):
-		name = name.replace("NonVerifiable", "INonVerifiable")
-		name = name.replace("Embedded", "IEmbedded")
+		name = name.replace("NonVerifiable", "IInner")
+		name = name.replace("Embedded", "IInner")
 		return name
 
 	@property

@@ -31,7 +31,7 @@ class Address extends ByteArray {
 
   static Uint8List _extractAddressBytes(dynamic addressInput) {
     if (addressInput is String){
-      return base32.decode('${addressInput}A').sublist(0, -1);
+      return base32.decode('${addressInput}A').sublist(0, SIZE);
     }
 
     if (addressInput is Address){
@@ -53,7 +53,7 @@ class Network extends basic_network.Network {
   static Network MAINNET = Network(
     'mainnet',
     0x68,
-    DateTime.utc(2021, 2, 16, 0, 6, 25),
+    DateTime.utc(2021, 3, 16, 0, 6, 25),
     Hash256('57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6'),
   );
 
@@ -61,7 +61,7 @@ class Network extends basic_network.Network {
   static Network TESTNET = Network(
     'testnet',
     0x98,
-    DateTime.utc(2022, 9, 31, 21, 7, 47),
+    DateTime.utc(2022, 10, 31, 21, 7, 47),
     Hash256('49D6E1CE276A85B70EAFE52349AACCA389302E7A9754BCF1221E79494FC665A4'),
   );
 
@@ -82,6 +82,6 @@ class Network extends basic_network.Network {
       (Uint8List addressWithoutChecksum, Uint8List checksum) =>
           Uint8List.fromList([...addressWithoutChecksum, ...checksum.sublist(0, 3)]),
       Address,
-      NetworkTimestamp,
+      (int timestamp) => NetworkTimestamp(timestamp),
     );
 }

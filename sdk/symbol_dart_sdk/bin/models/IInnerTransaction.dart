@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-interface class INonVerifiableTransaction {
+interface class IInnerTransaction {
   dynamic serialize(){
     throw UnimplementedError('unimplement serialize');
   }

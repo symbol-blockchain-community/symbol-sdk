@@ -1,9 +1,9 @@
 import '../BaseValue.dart';
 import '../ByteArray.dart';
 import '../models/IDeserializable.dart';
-import '../models/IEmbeddedTransaction.dart';
-import '../models/INonVerifiableTransaction.dart';
 import '../models/StructBase.dart';
+import './ITransaction.dart';
+import '../models/IInnerTransaction.dart';
 import '../utils/converter.dart';
 import '../utils/arrayHelpers.dart';
 import '../utils/transform.dart';
@@ -653,7 +653,7 @@ class TransactionType implements IDeserializable {
 }
 
 
-class Transaction extends StructBase implements IDeserializable {
+class Transaction extends StructBase implements IDeserializable, ITransaction {
 
 	static const Map<String, String> TYPE_HINTS = {
 		'signature': 'pod:Signature',
@@ -797,7 +797,7 @@ class Transaction extends StructBase implements IDeserializable {
 }
 
 
-class EmbeddedTransaction extends StructBase implements IDeserializable, IEmbeddedTransaction {
+class EmbeddedTransaction extends StructBase implements IDeserializable, IInnerTransaction {
 
 	static const Map<String, String> TYPE_HINTS = {
 		'signerPublicKey': 'pod:PublicKey',
@@ -4147,7 +4147,7 @@ class BlockStatement extends StructBase implements IDeserializable {
 }
 
 
-class AccountKeyLinkTransactionV1 extends StructBase implements IDeserializable {
+class AccountKeyLinkTransactionV1 extends StructBase implements IDeserializable, ITransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.ACCOUNT_KEY_LINK.value);
 
@@ -4315,7 +4315,7 @@ class AccountKeyLinkTransactionV1 extends StructBase implements IDeserializable 
 }
 
 
-class EmbeddedAccountKeyLinkTransactionV1 extends StructBase implements IDeserializable, IEmbeddedTransaction {
+class EmbeddedAccountKeyLinkTransactionV1 extends StructBase implements IDeserializable, IInnerTransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.ACCOUNT_KEY_LINK.value);
 
@@ -4450,7 +4450,7 @@ class EmbeddedAccountKeyLinkTransactionV1 extends StructBase implements IDeseria
 }
 
 
-class NodeKeyLinkTransactionV1 extends StructBase implements IDeserializable {
+class NodeKeyLinkTransactionV1 extends StructBase implements IDeserializable, ITransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.NODE_KEY_LINK.value);
 
@@ -4618,7 +4618,7 @@ class NodeKeyLinkTransactionV1 extends StructBase implements IDeserializable {
 }
 
 
-class EmbeddedNodeKeyLinkTransactionV1 extends StructBase implements IDeserializable, IEmbeddedTransaction {
+class EmbeddedNodeKeyLinkTransactionV1 extends StructBase implements IDeserializable, IInnerTransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.NODE_KEY_LINK.value);
 
@@ -4909,7 +4909,7 @@ class DetachedCosignature extends StructBase implements IDeserializable {
 }
 
 
-class AggregateCompleteTransactionV1 extends StructBase implements IDeserializable {
+class AggregateCompleteTransactionV1 extends StructBase implements IDeserializable, ITransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.AGGREGATE_COMPLETE.value);
 
@@ -4933,7 +4933,7 @@ class AggregateCompleteTransactionV1 extends StructBase implements IDeserializab
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
 	Hash256 transactionsHash = Hash256();
-	List<IEmbeddedTransaction> transactions = [];
+	List<IInnerTransaction> transactions = [];
 	List<Cosignature> cosignatures = [];
 	final int verifiableEntityHeaderReserved_1 = 0; // reserved field
 	final int entityBodyReserved_1 = 0; // reserved field
@@ -4948,7 +4948,7 @@ class AggregateCompleteTransactionV1 extends StructBase implements IDeserializab
 	Amount? fee,
 	Timestamp? deadline,
 	Hash256? transactionsHash,
-	List<IEmbeddedTransaction>? transactions,
+	List<IInnerTransaction>? transactions,
 	List<Cosignature>? cosignatures
 	}) 
 		: super(signature == null && signerPublicKey == null && version == null && network == null && type == null && fee == null && deadline == null && transactionsHash == null && transactions == null && cosignatures == null )
@@ -5027,7 +5027,7 @@ class AggregateCompleteTransactionV1 extends StructBase implements IDeserializab
 		if (0 != aggregateTransactionHeaderReserved_1) {
 			throw RangeError('Invalid value of reserved field ($aggregateTransactionHeaderReserved_1)');
 		}
-		var transactions = ArrayHelpers.readVariableSizeElements(buffer.sublist(0, payloadSize), EmbeddedTransactionFactory(), 8, false).map((item) => item as IEmbeddedTransaction).toList();
+		var transactions = ArrayHelpers.readVariableSizeElements(buffer.sublist(0, payloadSize), EmbeddedTransactionFactory(), 8, false).map((item) => item as IInnerTransaction).toList();
 		buffer = buffer.sublist(payloadSize);
 		var cosignatures = ArrayHelpers.readArray(buffer, Cosignature()).map((item) => item as Cosignature).toList();
 		buffer = buffer.sublist(ArrayHelpers.size(cosignatures));
@@ -5106,7 +5106,7 @@ class AggregateCompleteTransactionV1 extends StructBase implements IDeserializab
 }
 
 
-class AggregateCompleteTransactionV2 extends StructBase implements IDeserializable {
+class AggregateCompleteTransactionV2 extends StructBase implements IDeserializable, ITransaction {
 	static const int TRANSACTION_VERSION = 2;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.AGGREGATE_COMPLETE.value);
 
@@ -5130,7 +5130,7 @@ class AggregateCompleteTransactionV2 extends StructBase implements IDeserializab
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
 	Hash256 transactionsHash = Hash256();
-	List<IEmbeddedTransaction> transactions = [];
+	List<IInnerTransaction> transactions = [];
 	List<Cosignature> cosignatures = [];
 	final int verifiableEntityHeaderReserved_1 = 0; // reserved field
 	final int entityBodyReserved_1 = 0; // reserved field
@@ -5145,7 +5145,7 @@ class AggregateCompleteTransactionV2 extends StructBase implements IDeserializab
 	Amount? fee,
 	Timestamp? deadline,
 	Hash256? transactionsHash,
-	List<IEmbeddedTransaction>? transactions,
+	List<IInnerTransaction>? transactions,
 	List<Cosignature>? cosignatures
 	}) 
 		: super(signature == null && signerPublicKey == null && version == null && network == null && type == null && fee == null && deadline == null && transactionsHash == null && transactions == null && cosignatures == null )
@@ -5224,7 +5224,7 @@ class AggregateCompleteTransactionV2 extends StructBase implements IDeserializab
 		if (0 != aggregateTransactionHeaderReserved_1) {
 			throw RangeError('Invalid value of reserved field ($aggregateTransactionHeaderReserved_1)');
 		}
-		var transactions = ArrayHelpers.readVariableSizeElements(buffer.sublist(0, payloadSize), EmbeddedTransactionFactory(), 8, false).map((item) => item as IEmbeddedTransaction).toList();
+		var transactions = ArrayHelpers.readVariableSizeElements(buffer.sublist(0, payloadSize), EmbeddedTransactionFactory(), 8, false).map((item) => item as IInnerTransaction).toList();
 		buffer = buffer.sublist(payloadSize);
 		var cosignatures = ArrayHelpers.readArray(buffer, Cosignature()).map((item) => item as Cosignature).toList();
 		buffer = buffer.sublist(ArrayHelpers.size(cosignatures));
@@ -5303,7 +5303,7 @@ class AggregateCompleteTransactionV2 extends StructBase implements IDeserializab
 }
 
 
-class AggregateBondedTransactionV1 extends StructBase implements IDeserializable {
+class AggregateBondedTransactionV1 extends StructBase implements IDeserializable, ITransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.AGGREGATE_BONDED.value);
 
@@ -5327,7 +5327,7 @@ class AggregateBondedTransactionV1 extends StructBase implements IDeserializable
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
 	Hash256 transactionsHash = Hash256();
-	List<IEmbeddedTransaction> transactions = [];
+	List<IInnerTransaction> transactions = [];
 	List<Cosignature> cosignatures = [];
 	final int verifiableEntityHeaderReserved_1 = 0; // reserved field
 	final int entityBodyReserved_1 = 0; // reserved field
@@ -5342,7 +5342,7 @@ class AggregateBondedTransactionV1 extends StructBase implements IDeserializable
 	Amount? fee,
 	Timestamp? deadline,
 	Hash256? transactionsHash,
-	List<IEmbeddedTransaction>? transactions,
+	List<IInnerTransaction>? transactions,
 	List<Cosignature>? cosignatures
 	}) 
 		: super(signature == null && signerPublicKey == null && version == null && network == null && type == null && fee == null && deadline == null && transactionsHash == null && transactions == null && cosignatures == null )
@@ -5421,7 +5421,7 @@ class AggregateBondedTransactionV1 extends StructBase implements IDeserializable
 		if (0 != aggregateTransactionHeaderReserved_1) {
 			throw RangeError('Invalid value of reserved field ($aggregateTransactionHeaderReserved_1)');
 		}
-		var transactions = ArrayHelpers.readVariableSizeElements(buffer.sublist(0, payloadSize), EmbeddedTransactionFactory(), 8, false).map((item) => item as IEmbeddedTransaction).toList();
+		var transactions = ArrayHelpers.readVariableSizeElements(buffer.sublist(0, payloadSize), EmbeddedTransactionFactory(), 8, false).map((item) => item as IInnerTransaction).toList();
 		buffer = buffer.sublist(payloadSize);
 		var cosignatures = ArrayHelpers.readArray(buffer, Cosignature()).map((item) => item as Cosignature).toList();
 		buffer = buffer.sublist(ArrayHelpers.size(cosignatures));
@@ -5500,7 +5500,7 @@ class AggregateBondedTransactionV1 extends StructBase implements IDeserializable
 }
 
 
-class AggregateBondedTransactionV2 extends StructBase implements IDeserializable {
+class AggregateBondedTransactionV2 extends StructBase implements IDeserializable, ITransaction {
 	static const int TRANSACTION_VERSION = 2;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.AGGREGATE_BONDED.value);
 
@@ -5524,7 +5524,7 @@ class AggregateBondedTransactionV2 extends StructBase implements IDeserializable
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
 	Hash256 transactionsHash = Hash256();
-	List<IEmbeddedTransaction> transactions = [];
+	List<IInnerTransaction> transactions = [];
 	List<Cosignature> cosignatures = [];
 	final int verifiableEntityHeaderReserved_1 = 0; // reserved field
 	final int entityBodyReserved_1 = 0; // reserved field
@@ -5539,7 +5539,7 @@ class AggregateBondedTransactionV2 extends StructBase implements IDeserializable
 	Amount? fee,
 	Timestamp? deadline,
 	Hash256? transactionsHash,
-	List<IEmbeddedTransaction>? transactions,
+	List<IInnerTransaction>? transactions,
 	List<Cosignature>? cosignatures
 	}) 
 		: super(signature == null && signerPublicKey == null && version == null && network == null && type == null && fee == null && deadline == null && transactionsHash == null && transactions == null && cosignatures == null )
@@ -5618,7 +5618,7 @@ class AggregateBondedTransactionV2 extends StructBase implements IDeserializable
 		if (0 != aggregateTransactionHeaderReserved_1) {
 			throw RangeError('Invalid value of reserved field ($aggregateTransactionHeaderReserved_1)');
 		}
-		var transactions = ArrayHelpers.readVariableSizeElements(buffer.sublist(0, payloadSize), EmbeddedTransactionFactory(), 8, false).map((item) => item as IEmbeddedTransaction).toList();
+		var transactions = ArrayHelpers.readVariableSizeElements(buffer.sublist(0, payloadSize), EmbeddedTransactionFactory(), 8, false).map((item) => item as IInnerTransaction).toList();
 		buffer = buffer.sublist(payloadSize);
 		var cosignatures = ArrayHelpers.readArray(buffer, Cosignature()).map((item) => item as Cosignature).toList();
 		buffer = buffer.sublist(ArrayHelpers.size(cosignatures));
@@ -5697,7 +5697,7 @@ class AggregateBondedTransactionV2 extends StructBase implements IDeserializable
 }
 
 
-class VotingKeyLinkTransactionV1 extends StructBase implements IDeserializable {
+class VotingKeyLinkTransactionV1 extends StructBase implements IDeserializable, ITransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.VOTING_KEY_LINK.value);
 
@@ -5887,7 +5887,7 @@ class VotingKeyLinkTransactionV1 extends StructBase implements IDeserializable {
 }
 
 
-class EmbeddedVotingKeyLinkTransactionV1 extends StructBase implements IDeserializable, IEmbeddedTransaction {
+class EmbeddedVotingKeyLinkTransactionV1 extends StructBase implements IDeserializable, IInnerTransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.VOTING_KEY_LINK.value);
 
@@ -6044,7 +6044,7 @@ class EmbeddedVotingKeyLinkTransactionV1 extends StructBase implements IDeserial
 }
 
 
-class VrfKeyLinkTransactionV1 extends StructBase implements IDeserializable {
+class VrfKeyLinkTransactionV1 extends StructBase implements IDeserializable, ITransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.VRF_KEY_LINK.value);
 
@@ -6212,7 +6212,7 @@ class VrfKeyLinkTransactionV1 extends StructBase implements IDeserializable {
 }
 
 
-class EmbeddedVrfKeyLinkTransactionV1 extends StructBase implements IDeserializable, IEmbeddedTransaction {
+class EmbeddedVrfKeyLinkTransactionV1 extends StructBase implements IDeserializable, IInnerTransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.VRF_KEY_LINK.value);
 
@@ -6347,7 +6347,7 @@ class EmbeddedVrfKeyLinkTransactionV1 extends StructBase implements IDeserializa
 }
 
 
-class HashLockTransactionV1 extends StructBase implements IDeserializable {
+class HashLockTransactionV1 extends StructBase implements IDeserializable, ITransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.HASH_LOCK.value);
 
@@ -6526,7 +6526,7 @@ class HashLockTransactionV1 extends StructBase implements IDeserializable {
 }
 
 
-class EmbeddedHashLockTransactionV1 extends StructBase implements IDeserializable, IEmbeddedTransaction {
+class EmbeddedHashLockTransactionV1 extends StructBase implements IDeserializable, IInnerTransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.HASH_LOCK.value);
 
@@ -6709,7 +6709,7 @@ class LockHashAlgorithm implements IDeserializable {
 }
 
 
-class SecretLockTransactionV1 extends StructBase implements IDeserializable {
+class SecretLockTransactionV1 extends StructBase implements IDeserializable, ITransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.SECRET_LOCK.value);
 
@@ -6910,7 +6910,7 @@ class SecretLockTransactionV1 extends StructBase implements IDeserializable {
 }
 
 
-class EmbeddedSecretLockTransactionV1 extends StructBase implements IDeserializable, IEmbeddedTransaction {
+class EmbeddedSecretLockTransactionV1 extends StructBase implements IDeserializable, IInnerTransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.SECRET_LOCK.value);
 
@@ -7078,7 +7078,7 @@ class EmbeddedSecretLockTransactionV1 extends StructBase implements IDeserializa
 }
 
 
-class SecretProofTransactionV1 extends StructBase implements IDeserializable {
+class SecretProofTransactionV1 extends StructBase implements IDeserializable, ITransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.SECRET_PROOF.value);
 
@@ -7273,7 +7273,7 @@ class SecretProofTransactionV1 extends StructBase implements IDeserializable {
 }
 
 
-class EmbeddedSecretProofTransactionV1 extends StructBase implements IDeserializable, IEmbeddedTransaction {
+class EmbeddedSecretProofTransactionV1 extends StructBase implements IDeserializable, IInnerTransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.SECRET_PROOF.value);
 
@@ -7435,7 +7435,7 @@ class EmbeddedSecretProofTransactionV1 extends StructBase implements IDeserializ
 }
 
 
-class AccountMetadataTransactionV1 extends StructBase implements IDeserializable {
+class AccountMetadataTransactionV1 extends StructBase implements IDeserializable, ITransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.ACCOUNT_METADATA.value);
 
@@ -7628,7 +7628,7 @@ class AccountMetadataTransactionV1 extends StructBase implements IDeserializable
 }
 
 
-class EmbeddedAccountMetadataTransactionV1 extends StructBase implements IDeserializable, IEmbeddedTransaction {
+class EmbeddedAccountMetadataTransactionV1 extends StructBase implements IDeserializable, IInnerTransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.ACCOUNT_METADATA.value);
 
@@ -7788,7 +7788,7 @@ class EmbeddedAccountMetadataTransactionV1 extends StructBase implements IDeseri
 }
 
 
-class MosaicMetadataTransactionV1 extends StructBase implements IDeserializable {
+class MosaicMetadataTransactionV1 extends StructBase implements IDeserializable, ITransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.MOSAIC_METADATA.value);
 
@@ -7992,7 +7992,7 @@ class MosaicMetadataTransactionV1 extends StructBase implements IDeserializable 
 }
 
 
-class EmbeddedMosaicMetadataTransactionV1 extends StructBase implements IDeserializable, IEmbeddedTransaction {
+class EmbeddedMosaicMetadataTransactionV1 extends StructBase implements IDeserializable, IInnerTransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.MOSAIC_METADATA.value);
 
@@ -8163,7 +8163,7 @@ class EmbeddedMosaicMetadataTransactionV1 extends StructBase implements IDeseria
 }
 
 
-class NamespaceMetadataTransactionV1 extends StructBase implements IDeserializable {
+class NamespaceMetadataTransactionV1 extends StructBase implements IDeserializable, ITransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.NAMESPACE_METADATA.value);
 
@@ -8367,7 +8367,7 @@ class NamespaceMetadataTransactionV1 extends StructBase implements IDeserializab
 }
 
 
-class EmbeddedNamespaceMetadataTransactionV1 extends StructBase implements IDeserializable, IEmbeddedTransaction {
+class EmbeddedNamespaceMetadataTransactionV1 extends StructBase implements IDeserializable, IInnerTransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.NAMESPACE_METADATA.value);
 
@@ -8638,7 +8638,7 @@ class MosaicSupplyChangeAction implements IDeserializable {
 }
 
 
-class MosaicDefinitionTransactionV1 extends StructBase implements IDeserializable {
+class MosaicDefinitionTransactionV1 extends StructBase implements IDeserializable, ITransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.MOSAIC_DEFINITION.value);
 
@@ -8838,7 +8838,7 @@ class MosaicDefinitionTransactionV1 extends StructBase implements IDeserializabl
 }
 
 
-class EmbeddedMosaicDefinitionTransactionV1 extends StructBase implements IDeserializable, IEmbeddedTransaction {
+class EmbeddedMosaicDefinitionTransactionV1 extends StructBase implements IDeserializable, IInnerTransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.MOSAIC_DEFINITION.value);
 
@@ -9005,7 +9005,7 @@ class EmbeddedMosaicDefinitionTransactionV1 extends StructBase implements IDeser
 }
 
 
-class MosaicSupplyChangeTransactionV1 extends StructBase implements IDeserializable {
+class MosaicSupplyChangeTransactionV1 extends StructBase implements IDeserializable, ITransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.MOSAIC_SUPPLY_CHANGE.value);
 
@@ -9184,7 +9184,7 @@ class MosaicSupplyChangeTransactionV1 extends StructBase implements IDeserializa
 }
 
 
-class EmbeddedMosaicSupplyChangeTransactionV1 extends StructBase implements IDeserializable, IEmbeddedTransaction {
+class EmbeddedMosaicSupplyChangeTransactionV1 extends StructBase implements IDeserializable, IInnerTransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.MOSAIC_SUPPLY_CHANGE.value);
 
@@ -9330,7 +9330,7 @@ class EmbeddedMosaicSupplyChangeTransactionV1 extends StructBase implements IDes
 }
 
 
-class MosaicSupplyRevocationTransactionV1 extends StructBase implements IDeserializable {
+class MosaicSupplyRevocationTransactionV1 extends StructBase implements IDeserializable, ITransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.MOSAIC_SUPPLY_REVOCATION.value);
 
@@ -9498,7 +9498,7 @@ class MosaicSupplyRevocationTransactionV1 extends StructBase implements IDeseria
 }
 
 
-class EmbeddedMosaicSupplyRevocationTransactionV1 extends StructBase implements IDeserializable, IEmbeddedTransaction {
+class EmbeddedMosaicSupplyRevocationTransactionV1 extends StructBase implements IDeserializable, IInnerTransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.MOSAIC_SUPPLY_REVOCATION.value);
 
@@ -9633,7 +9633,7 @@ class EmbeddedMosaicSupplyRevocationTransactionV1 extends StructBase implements 
 }
 
 
-class MultisigAccountModificationTransactionV1 extends StructBase implements IDeserializable {
+class MultisigAccountModificationTransactionV1 extends StructBase implements IDeserializable, ITransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.MULTISIG_ACCOUNT_MODIFICATION.value);
 
@@ -9844,7 +9844,7 @@ class MultisigAccountModificationTransactionV1 extends StructBase implements IDe
 }
 
 
-class EmbeddedMultisigAccountModificationTransactionV1 extends StructBase implements IDeserializable, IEmbeddedTransaction {
+class EmbeddedMultisigAccountModificationTransactionV1 extends StructBase implements IDeserializable, IInnerTransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.MULTISIG_ACCOUNT_MODIFICATION.value);
 
@@ -10022,7 +10022,7 @@ class EmbeddedMultisigAccountModificationTransactionV1 extends StructBase implem
 }
 
 
-class AddressAliasTransactionV1 extends StructBase implements IDeserializable {
+class AddressAliasTransactionV1 extends StructBase implements IDeserializable, ITransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.ADDRESS_ALIAS.value);
 
@@ -10201,7 +10201,7 @@ class AddressAliasTransactionV1 extends StructBase implements IDeserializable {
 }
 
 
-class EmbeddedAddressAliasTransactionV1 extends StructBase implements IDeserializable, IEmbeddedTransaction {
+class EmbeddedAddressAliasTransactionV1 extends StructBase implements IDeserializable, IInnerTransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.ADDRESS_ALIAS.value);
 
@@ -10347,7 +10347,7 @@ class EmbeddedAddressAliasTransactionV1 extends StructBase implements IDeseriali
 }
 
 
-class MosaicAliasTransactionV1 extends StructBase implements IDeserializable {
+class MosaicAliasTransactionV1 extends StructBase implements IDeserializable, ITransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.MOSAIC_ALIAS.value);
 
@@ -10526,7 +10526,7 @@ class MosaicAliasTransactionV1 extends StructBase implements IDeserializable {
 }
 
 
-class EmbeddedMosaicAliasTransactionV1 extends StructBase implements IDeserializable, IEmbeddedTransaction {
+class EmbeddedMosaicAliasTransactionV1 extends StructBase implements IDeserializable, IInnerTransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.MOSAIC_ALIAS.value);
 
@@ -10672,7 +10672,7 @@ class EmbeddedMosaicAliasTransactionV1 extends StructBase implements IDeserializ
 }
 
 
-class NamespaceRegistrationTransactionV1 extends StructBase implements IDeserializable {
+class NamespaceRegistrationTransactionV1 extends StructBase implements IDeserializable, ITransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.NAMESPACE_REGISTRATION.value);
 
@@ -10909,7 +10909,7 @@ class NamespaceRegistrationTransactionV1 extends StructBase implements IDeserial
 }
 
 
-class EmbeddedNamespaceRegistrationTransactionV1 extends StructBase implements IDeserializable, IEmbeddedTransaction {
+class EmbeddedNamespaceRegistrationTransactionV1 extends StructBase implements IDeserializable, IInnerTransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.NAMESPACE_REGISTRATION.value);
 
@@ -11157,7 +11157,7 @@ class AccountRestrictionFlags implements IDeserializable {
 }
 
 
-class AccountAddressRestrictionTransactionV1 extends StructBase implements IDeserializable {
+class AccountAddressRestrictionTransactionV1 extends StructBase implements IDeserializable, ITransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.ACCOUNT_ADDRESS_RESTRICTION.value);
 
@@ -11359,7 +11359,7 @@ class AccountAddressRestrictionTransactionV1 extends StructBase implements IDese
 }
 
 
-class EmbeddedAccountAddressRestrictionTransactionV1 extends StructBase implements IDeserializable, IEmbeddedTransaction {
+class EmbeddedAccountAddressRestrictionTransactionV1 extends StructBase implements IDeserializable, IInnerTransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.ACCOUNT_ADDRESS_RESTRICTION.value);
 
@@ -11528,7 +11528,7 @@ class EmbeddedAccountAddressRestrictionTransactionV1 extends StructBase implemen
 }
 
 
-class AccountMosaicRestrictionTransactionV1 extends StructBase implements IDeserializable {
+class AccountMosaicRestrictionTransactionV1 extends StructBase implements IDeserializable, ITransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.ACCOUNT_MOSAIC_RESTRICTION.value);
 
@@ -11730,7 +11730,7 @@ class AccountMosaicRestrictionTransactionV1 extends StructBase implements IDeser
 }
 
 
-class EmbeddedAccountMosaicRestrictionTransactionV1 extends StructBase implements IDeserializable, IEmbeddedTransaction {
+class EmbeddedAccountMosaicRestrictionTransactionV1 extends StructBase implements IDeserializable, IInnerTransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.ACCOUNT_MOSAIC_RESTRICTION.value);
 
@@ -11899,7 +11899,7 @@ class EmbeddedAccountMosaicRestrictionTransactionV1 extends StructBase implement
 }
 
 
-class AccountOperationRestrictionTransactionV1 extends StructBase implements IDeserializable {
+class AccountOperationRestrictionTransactionV1 extends StructBase implements IDeserializable, ITransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.ACCOUNT_OPERATION_RESTRICTION.value);
 
@@ -12101,7 +12101,7 @@ class AccountOperationRestrictionTransactionV1 extends StructBase implements IDe
 }
 
 
-class EmbeddedAccountOperationRestrictionTransactionV1 extends StructBase implements IDeserializable, IEmbeddedTransaction {
+class EmbeddedAccountOperationRestrictionTransactionV1 extends StructBase implements IDeserializable, IInnerTransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.ACCOUNT_OPERATION_RESTRICTION.value);
 
@@ -12270,7 +12270,7 @@ class EmbeddedAccountOperationRestrictionTransactionV1 extends StructBase implem
 }
 
 
-class MosaicAddressRestrictionTransactionV1 extends StructBase implements IDeserializable {
+class MosaicAddressRestrictionTransactionV1 extends StructBase implements IDeserializable, ITransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.MOSAIC_ADDRESS_RESTRICTION.value);
 
@@ -12468,7 +12468,7 @@ class MosaicAddressRestrictionTransactionV1 extends StructBase implements IDeser
 }
 
 
-class EmbeddedMosaicAddressRestrictionTransactionV1 extends StructBase implements IDeserializable, IEmbeddedTransaction {
+class EmbeddedMosaicAddressRestrictionTransactionV1 extends StructBase implements IDeserializable, IInnerTransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.MOSAIC_ADDRESS_RESTRICTION.value);
 
@@ -12696,7 +12696,7 @@ class MosaicRestrictionType implements IDeserializable {
 }
 
 
-class MosaicGlobalRestrictionTransactionV1 extends StructBase implements IDeserializable {
+class MosaicGlobalRestrictionTransactionV1 extends StructBase implements IDeserializable, ITransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.MOSAIC_GLOBAL_RESTRICTION.value);
 
@@ -12916,7 +12916,7 @@ class MosaicGlobalRestrictionTransactionV1 extends StructBase implements IDeseri
 }
 
 
-class EmbeddedMosaicGlobalRestrictionTransactionV1 extends StructBase implements IDeserializable, IEmbeddedTransaction {
+class EmbeddedMosaicGlobalRestrictionTransactionV1 extends StructBase implements IDeserializable, IInnerTransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.MOSAIC_GLOBAL_RESTRICTION.value);
 
@@ -13103,7 +13103,7 @@ class EmbeddedMosaicGlobalRestrictionTransactionV1 extends StructBase implements
 }
 
 
-class TransferTransactionV1 extends StructBase implements IDeserializable {
+class TransferTransactionV1 extends StructBase implements IDeserializable, ITransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.TRANSFER.value);
 
@@ -13314,7 +13314,7 @@ class TransferTransactionV1 extends StructBase implements IDeserializable {
 }
 
 
-class EmbeddedTransferTransactionV1 extends StructBase implements IDeserializable, IEmbeddedTransaction {
+class EmbeddedTransferTransactionV1 extends StructBase implements IDeserializable, IInnerTransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.TRANSFER.value);
 
@@ -13501,7 +13501,7 @@ class TransactionFactory implements IDeserializable {
 		}
 		Uint8List buffer = payload.buffer.asUint8List();
 		var parent = Transaction().deserialize(buffer);
-		var mapping = {
+		var mapping = <(int, int), StructBase>{
 			(AccountKeyLinkTransactionV1.TRANSACTION_TYPE.value, AccountKeyLinkTransactionV1.TRANSACTION_VERSION): AccountKeyLinkTransactionV1(),
 			(NodeKeyLinkTransactionV1.TRANSACTION_TYPE.value, NodeKeyLinkTransactionV1.TRANSACTION_VERSION): NodeKeyLinkTransactionV1(),
 			(AggregateCompleteTransactionV1.TRANSACTION_TYPE.value, AggregateCompleteTransactionV1.TRANSACTION_VERSION): AggregateCompleteTransactionV1(),
@@ -13539,8 +13539,8 @@ class TransactionFactory implements IDeserializable {
 		}
 	}
 
-	IDeserializable createByName(String entityName) {
-		var mapping = {
+	StructBase createByName(String entityName) {
+		var mapping = <String, StructBase Function()>{
 			'account_key_link_transaction_v1': () => AccountKeyLinkTransactionV1(),
 			'node_key_link_transaction_v1': () => NodeKeyLinkTransactionV1(),
 			'aggregate_complete_transaction_v1': () => AggregateCompleteTransactionV1(),
@@ -13588,7 +13588,7 @@ class EmbeddedTransactionFactory implements IDeserializable {
 		}
 		Uint8List buffer = payload.buffer.asUint8List();
 		var parent = EmbeddedTransaction().deserialize(buffer);
-		var mapping = {
+		var mapping = <(int, int), StructBase>{
 			(EmbeddedAccountKeyLinkTransactionV1.TRANSACTION_TYPE.value, EmbeddedAccountKeyLinkTransactionV1.TRANSACTION_VERSION): EmbeddedAccountKeyLinkTransactionV1(),
 			(EmbeddedNodeKeyLinkTransactionV1.TRANSACTION_TYPE.value, EmbeddedNodeKeyLinkTransactionV1.TRANSACTION_VERSION): EmbeddedNodeKeyLinkTransactionV1(),
 			(EmbeddedVotingKeyLinkTransactionV1.TRANSACTION_TYPE.value, EmbeddedVotingKeyLinkTransactionV1.TRANSACTION_VERSION): EmbeddedVotingKeyLinkTransactionV1(),
@@ -13622,8 +13622,8 @@ class EmbeddedTransactionFactory implements IDeserializable {
 		}
 	}
 
-	IDeserializable createByName(String entityName) {
-		var mapping = {
+	StructBase createByName(String entityName) {
+		var mapping = <String, StructBase Function()>{
 			'account_key_link_transaction_v1': () => EmbeddedAccountKeyLinkTransactionV1(),
 			'node_key_link_transaction_v1': () => EmbeddedNodeKeyLinkTransactionV1(),
 			'voting_key_link_transaction_v1': () => EmbeddedVotingKeyLinkTransactionV1(),
@@ -13667,7 +13667,7 @@ class BlockFactory implements IDeserializable {
 		}
 		Uint8List buffer = payload.buffer.asUint8List();
 		var parent = Block().deserialize(buffer);
-		var mapping = {
+		var mapping = <(int, ), StructBase>{
 			(NemesisBlockV1.BLOCK_TYPE.value, ): NemesisBlockV1(),
 			(NormalBlockV1.BLOCK_TYPE.value, ): NormalBlockV1(),
 			(ImportanceBlockV1.BLOCK_TYPE.value, ): ImportanceBlockV1()
@@ -13681,8 +13681,8 @@ class BlockFactory implements IDeserializable {
 		}
 	}
 
-	IDeserializable createByName(String entityName) {
-		var mapping = {
+	StructBase createByName(String entityName) {
+		var mapping = <String, StructBase Function()>{
 			'nemesis_block_v1': () => NemesisBlockV1(),
 			'normal_block_v1': () => NormalBlockV1(),
 			'importance_block_v1': () => ImportanceBlockV1()
@@ -13706,7 +13706,7 @@ class ReceiptFactory implements IDeserializable {
 		}
 		Uint8List buffer = payload.buffer.asUint8List();
 		var parent = Receipt().deserialize(buffer);
-		var mapping = {
+		var mapping = <(int, ), StructBase>{
 			(HarvestFeeReceipt.RECEIPT_TYPE.value, ): HarvestFeeReceipt(),
 			(InflationReceipt.RECEIPT_TYPE.value, ): InflationReceipt(),
 			(LockHashCreatedFeeReceipt.RECEIPT_TYPE.value, ): LockHashCreatedFeeReceipt(),
@@ -13730,8 +13730,8 @@ class ReceiptFactory implements IDeserializable {
 		}
 	}
 
-	IDeserializable createByName(String entityName) {
-		var mapping = {
+	StructBase createByName(String entityName) {
+		var mapping = <String, StructBase Function()>{
 			'harvest_fee_receipt': () => HarvestFeeReceipt(),
 			'inflation_receipt': () => InflationReceipt(),
 			'lock_hash_created_fee_receipt': () => LockHashCreatedFeeReceipt(),

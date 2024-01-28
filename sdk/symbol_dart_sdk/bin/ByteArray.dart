@@ -33,7 +33,7 @@ class ByteArray {
     try {
       return addressToString(bytes);
     } catch(_) {
-      return hex.encode(bytes.toList()).toUpperCase();
+      return hex.encode(bytes).toUpperCase();
     }
   }
 }

@@ -65,13 +65,15 @@ class FactoryFormatter(AbstractTypeFormatter):
 		body += 'Uint8List buffer = payload.buffer.asUint8List();\n'
 		body += f'var {self.printer.name} = {self.printer.load()};\n'
 
-		body += 'var mapping = {\n'
-
 		if self.factory_descriptor:
 			names = [f'{concrete.name}' for concrete in self.factory_descriptor.children]
+			add_int = 'int' if len(self.factory_descriptor.discriminator_values) > 1 else ''
+			body += f'var mapping = <(int, {add_int}), StructBase>{{\n'
 			body += indent(
 				',\n'.join(map(self.create_discriminator, names))
 			)
+		else:
+			body += 'var mapping = {\n'
 
 		body += '};\n'
 
@@ -89,7 +91,7 @@ class FactoryFormatter(AbstractTypeFormatter):
 
 	def get_create_by_name_descriptor(self):
 		body = ''
-		body += 'var mapping = {\n'
+		body += 'var mapping = <String, StructBase Function()>{\n'
 		body += indent(
 			',\n'.join(
 				map(
@@ -107,7 +109,7 @@ if (!mapping.containsKey(entityName)) {{
 
 return mapping[entityName]!();
 '''
-		return MethodDescriptor(body=body, result='IDeserializable')
+		return MethodDescriptor(body=body, result='StructBase')
 
 	def get_serialize_descriptor(self):
 		raise RuntimeError('not required')
