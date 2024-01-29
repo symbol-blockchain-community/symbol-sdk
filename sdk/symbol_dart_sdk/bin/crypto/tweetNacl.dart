@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'dart:typed_data';
+import '../utils/converter.dart';
 import 'poly1305.dart';
 
 class TweetNaCl {
@@ -1853,6 +1854,10 @@ class TweetNaCl {
     }
   }
 
+  static void scalarbase(List<Int32List> p, Uint8List s, final int soff) {
+    _scalarbase(p, s, soff);
+  }
+
   static void _scalarbase(List<Int32List> p, Uint8List s, final int soff) {
     final q = List<Int32List>.generate(4, (_) => Int32List(16));
 
@@ -1873,6 +1878,7 @@ class TweetNaCl {
     final p = List<Int32List>.generate(4, (_) => Int32List(16));
 
     _crypto_hash_off(k, seed, 0, 32);
+    print(bytesToHex(k));
     k[0] &= 248;
     k[31] &= 127;
     k[31] |= 64;
@@ -1901,6 +1907,10 @@ class TweetNaCl {
     0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0x10
   ];
+
+  static void modL(Uint8List r, final int roff, Int32List x) {
+    _modL(r, roff, x);
+  }
   static void _modL(Uint8List r, final int roff, Int32List x) {
     int carry;
     int i, j;
@@ -1931,6 +1941,10 @@ class TweetNaCl {
       x[i + 1] += x[i] >> 8;
       r[i + roff] = (x[i] & 255);
     }
+  }
+
+  static void reduce(Uint8List r) {
+    _reduce(r);
   }
 
   static void _reduce(Uint8List r) {

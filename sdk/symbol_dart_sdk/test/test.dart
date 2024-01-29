@@ -15,7 +15,7 @@ import '../bin/utils/converter.dart';
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:hash/hash.dart';
-import '../bin/symbol/KeyPair.dart';
+import '../bin/nem/KeyPair.dart';
 import '../bin/CryptoTypes.dart' as ct;
 import '../bin/symbol/idGenerator.dart';
 import 'package:ed25519_edwards/ed25519_edwards.dart' as ed;
@@ -23,27 +23,28 @@ import 'package:pointycastle/export.dart' as pc;
 import 'package:http/http.dart' as http;
 import '../bin/symbol/SharedKey.dart';
 
-Future<Uint8List> encode() async {
+/* Future<Uint8List> encode() async {
   var alice = KeyPair(ct.PrivateKey('5DB8324E7EB83E7665D500B014283260EF312139034E86DFB7EE736503EAEC02'));
   var bob = KeyPair(ct.PrivateKey('E3839324F3CD2FC194F6E1C501D4D2CFD0DC8CCAC4307AC328E3154FF00951B9'));
   var message = Uint8List.fromList('hello symbol!!'.codeUnits);
   var encorder = MessageEncorder(alice);
   var c = await encorder.encode(bob.publicKey, message);
   return c;
-}
+} */
 
 void decode(Uint8List m) async {
-  var alice = KeyPair(ct.PrivateKey('5DB8324E7EB83E7665D500B014283260EF312139034E86DFB7EE736503EAEC02'));
+  var alice = KeyPair(ct.PrivateKey('ABF4CF55A2B3F742D7543D9CC17F50447B969E6E06F5EA9195D428AB12B7318D'));
+  print(alice.privateKey);
+  print(alice.publicKey);
+  var signature = alice.sign(hexToBytes('8CE03CD60514233B86789729102EA09E867FC6D964DEA8C2018EF7D0A2E0E24BF7E348E917116690B9'));
+  print(signature);
   var bob = KeyPair(ct.PrivateKey('E3839324F3CD2FC194F6E1C501D4D2CFD0DC8CCAC4307AC328E3154FF00951B9'));
-  var encorder = MessageEncorder(bob);
-  var d = await encorder.tryDecode(alice.publicKey, m);
-  print(d);
 }
 void main() async {
   //01FC3E37C915217EA87AA65C41937838310C6E76855D966CE710AEB8B0EFBFD509FBDF0A768989EF530F45
-  var c = await encode();
-  print(bytesToHex(c));
-  decode(c);
+  //var c = await encode();
+  //print(bytesToHex(c));
+  decode(hexToBytes('0126B07BBAC881B85F6D51B817C67FFA6E8BB00E0923DBC14908DCFA9232F492D02C7972AF7A43C1618C1D'));
   /* var alice = KeyPair(crypto.PrivateKey('5DB8324E7EB83E7665D500B014283260EF312139034E86DFB7EE736503EAEC02'));
   var facade = SymbolFacade(Network.TESTNET);
   var tx = TransferTransactionV1(
