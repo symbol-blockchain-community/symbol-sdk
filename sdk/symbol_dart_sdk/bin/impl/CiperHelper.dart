@@ -46,11 +46,12 @@ Future<Map<String, dynamic>> encodeAesGcm (
     Future<ct.SharedKey256> Function(sc.KeyPair, ct.PublicKey) deriveSharedKey,
     sc.KeyPair keyPair,
     ct.PublicKey recipientPublicKey,
-    Uint8List message) async {
+    Uint8List message,
+    [Uint8List? iv]) async {
   final sharedKey = await deriveSharedKey(keyPair, recipientPublicKey);
   final cipher = AesGcmCipher(Uint8List.fromList(sharedKey.bytes));
 
-  final initializationVector = tweet_nacl.TweetNaCl.randombytes(12);
+  var initializationVector = iv ?? tweet_nacl.TweetNaCl.randombytes(12);
   final secretBox = await cipher.encrypt(message, initializationVector);
 
   return {

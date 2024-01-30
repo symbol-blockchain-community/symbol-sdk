@@ -38,8 +38,7 @@ def generate_files(ast_models, output_directory: Path):
 		output_file.write(
 			'''import '../BaseValue.dart';
 import '../ByteArray.dart';
-import '../models/IDeserializable.dart';
-import '../models/StructBase.dart';
+import '../models/ISerializable.dart';
 import './ITransaction.dart';
 import '../models/IInnerTransaction.dart';
 import '../utils/converter.dart';

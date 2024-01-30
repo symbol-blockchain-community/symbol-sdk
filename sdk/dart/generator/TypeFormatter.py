@@ -34,7 +34,7 @@ class ClassFormatter(ABC):
 		base_class = self.provider.get_base_class()
 		base_class = f' extends {base_class}' if base_class else ''
 		interface = self.provider.get_interface()
-		base_class += f' implements IDeserializable{interface}' if interface else ' implements IDeserializable'
+		base_class += f' implements ISerializable{interface}' if interface else ' implements ISerializable'
 		header = f'class {self.provider.typename}{base_class} {{\n'
 		comment = ''
 		return header + indent(comment)
@@ -99,7 +99,7 @@ class TypeFormatter(ClassFormatter):
 		method_descriptor.arguments = []
 		method_descriptor.result = 'void'
 		return self.generate_method(method_descriptor)
-
+	
 	def generate_deserializer(self):
 		# 'deserialize'
 		method_descriptor = self.provider.get_deserialize_descriptor()
@@ -113,6 +113,7 @@ class TypeFormatter(ClassFormatter):
 		method_descriptor = self.provider.get_serialize_descriptor()
 		method_descriptor.method_name = 'serialize'
 		method_descriptor.result = 'Uint8List'
+		method_descriptor.annotations = ['@override']
 		return self.generate_method(method_descriptor)
 
 	def generate_size(self):

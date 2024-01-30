@@ -8,7 +8,9 @@ def plural_to_singular(word):
 	else:
 			return word
 
-def embedded_name(name):
+def re_name(name):
+	if 'Transaction' == name:
+		return 'ITransaction'
 	return name.replace("Embedded", "IInner")
 
 class Printer:
@@ -109,7 +111,7 @@ class TypedArrayPrinter(Printer):
 
 			alignment = self.descriptor.field_type.alignment
 			skip_last_element_padding = f'{not self.descriptor.field_type.is_last_element_padded}'
-			return f'ArrayHelpers.readVariableSizeElements({buffer_view}, {element_type}(), {alignment}, {str(skip_last_element_padding).lower()}).map((item) => item as {embedded_name(self.descriptor.field_type.element_type)}).toList()'
+			return f'ArrayHelpers.readVariableSizeElements({buffer_view}, {element_type}(), {alignment}, {str(skip_last_element_padding).lower()}).map((item) => item as {re_name(self.descriptor.field_type.element_type)}).toList()'
 
 		if self.descriptor.field_type.is_expandable:
 			return f'ArrayHelpers.readArray(buffer, {element_type}()).map((item) => item as {self.descriptor.field_type.element_type}).toList()'
@@ -196,6 +198,8 @@ class ArrayPrinter(Printer):
 
 		return size
 
+		return size
+
 	def load(self, buffer_name='buffer'):
 		return f'Uint8List.fromList({buffer_name})'
 
@@ -236,7 +240,7 @@ class BuiltinPrinter(Printer):
 
 	def get_size(self):
 		return f'{self.name}.size'
-
+	
 	def load(self, buffer_name='buffer'):
 		if DisplayType.STRUCT == self.descriptor.display_type and self.descriptor.is_abstract:
 			# HACK: factories use this printers as well, ignore them

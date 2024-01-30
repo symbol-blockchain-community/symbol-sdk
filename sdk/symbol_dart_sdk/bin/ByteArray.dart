@@ -36,4 +36,8 @@ class ByteArray {
       return hex.encode(bytes).toUpperCase();
     }
   }
+
+  bool get isDefault{
+    return bytes.every((byte) => byte == 0);
+  }
 }

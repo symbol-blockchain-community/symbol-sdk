@@ -21,6 +21,14 @@ class FactoryClassFormatter(ClassFormatter):
 		method_descriptor.result = 'dynamic'
 		method_descriptor.annotations = ['@override']
 		return self.generate_method(method_descriptor)
+	
+	def generate_serializer(self):
+		method_descriptor = self.provider.get_serialize_descriptor()
+		method_descriptor.method_name = 'serialize'
+		method_descriptor.arguments = ['']
+		method_descriptor.result = 'Uint8List'
+		method_descriptor.annotations = ['@override']
+		return self.generate_method(method_descriptor)
 
 	def generate_create_by_name(self):
 		method_descriptor = self.provider.get_create_by_name_descriptor()
@@ -32,6 +40,7 @@ class FactoryClassFormatter(ClassFormatter):
 		methods = []
 		methods.append(self.generate_deserializer())
 		methods.append(self.generate_create_by_name())
+		methods.append(self.generate_serializer())
 		return methods
 
 
@@ -54,6 +63,8 @@ class FactoryFormatter(AbstractTypeFormatter):
 	def create_discriminator(self, name):
 		field_names = self.factory_descriptor.discriminator_values
 		first_field = f'{name}.{field_names[0]}.value'
+		if not len(field_names) > 1:
+			return f'{first_field}: {name}()'
 		remaining_fields = ', '.join(f'{name}.{field}' for field in field_names[1:])
 		return f'({first_field}, {remaining_fields}): {name}()'
 
@@ -67,11 +78,16 @@ class FactoryFormatter(AbstractTypeFormatter):
 
 		if self.factory_descriptor:
 			names = [f'{concrete.name}' for concrete in self.factory_descriptor.children]
-			add_int = 'int' if len(self.factory_descriptor.discriminator_values) > 1 else ''
-			body += f'var mapping = <(int, {add_int}), StructBase>{{\n'
-			body += indent(
+			if len(self.factory_descriptor.discriminator_values) > 1:
+				body += f'var mapping = <(int, int), ISerializable>{{\n'
+				body += indent(
 				',\n'.join(map(self.create_discriminator, names))
-			)
+				)
+			else:
+				body += f'var mapping = <int, ISerializable>{{\n'
+				body += indent(
+				',\n'.join(map(self.create_discriminator, names))
+				)
 		else:
 			body += 'var mapping = {\n'
 
@@ -91,7 +107,7 @@ class FactoryFormatter(AbstractTypeFormatter):
 
 	def get_create_by_name_descriptor(self):
 		body = ''
-		body += 'var mapping = <String, StructBase Function()>{\n'
+		body += 'var mapping = <String, ISerializable Function()>{\n'
 		body += indent(
 			',\n'.join(
 				map(
@@ -109,10 +125,12 @@ if (!mapping.containsKey(entityName)) {{
 
 return mapping[entityName]!();
 '''
-		return MethodDescriptor(body=body, result='StructBase')
+		return MethodDescriptor(body=body, result='ISerializable')
 
 	def get_serialize_descriptor(self):
-		raise RuntimeError('not required')
+		body = "throw UnimplementedError('do not need serialize for factory');"
+		return MethodDescriptor(body=body)
 
 	def get_size_descriptor(self):
 		raise RuntimeError('not required')
+

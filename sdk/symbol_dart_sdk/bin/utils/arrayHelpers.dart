@@ -2,7 +2,7 @@ import 'dart:typed_data';
 
 import 'package:tuple/tuple.dart';
 import './converter.dart';
-import '../models/IDeserializable.dart';
+import '../models/ISerializable.dart';
 
 class ArrayHelpers {
   static dynamic getValue(dynamic e) {
@@ -35,8 +35,8 @@ class ArrayHelpers {
     return 0;
   }
 
-  static List readArrayImpl(Uint8List buffer, IDeserializable FactoryClass, dynamic accessor, bool Function(int, Uint8List) shouldContinue) {
-    final elements = <IDeserializable>[];
+  static List readArrayImpl(Uint8List buffer, ISerializable FactoryClass, dynamic accessor, bool Function(int, Uint8List) shouldContinue) {
+    final elements = <ISerializable>[];
     var previousElement;
     var i = 0;
 
@@ -69,7 +69,9 @@ class ArrayHelpers {
     return Tuple2(output, currentPos);
   }
 
-  static int sum(List<int> numbers) => numbers.reduce((a, b) => a + b);
+  static int sum(List<int> numbers) {
+    return numbers.isEmpty ? 0 : numbers.reduce((a, b) => a + b);
+  }
 
   static int alignUp(int size, int alignment) => ((size + alignment - 1) / alignment).floor() * alignment;
 
@@ -80,13 +82,13 @@ class ArrayHelpers {
     if (!skipLastElementPadding) return sum(elements.map((e) => alignUp(e.size, alignment)).toList());
 
     return sum(elements.sublist(0, elements.length - 1).map((e) => alignUp(e.size, alignment)).toList()) +
-        sum(elements.sublist(elements.length - 1).map<int>((e) => e.size()).toList());
+        sum(elements.sublist(elements.length - 1).map<int>((e) => e.size).toList());
   }
 
-  static List readArray(Uint8List buffer, IDeserializable FactoryClass, [dynamic accessor]) =>
+  static List readArray(Uint8List buffer, ISerializable FactoryClass, [dynamic accessor]) =>
       readArrayImpl(buffer, FactoryClass, accessor, (_, view) => 0 < view.lengthInBytes);
 
-  static List readArrayCount(Uint8List buffer, IDeserializable FactoryClass, int count, [dynamic accessor]) =>
+  static List readArrayCount(Uint8List buffer, ISerializable FactoryClass, int count, [dynamic accessor]) =>
       readArrayImpl(buffer, FactoryClass, accessor, (index, _) => count > index);
 
   static List readVariableSizeElements(Uint8List buffer, dynamic FactoryClass, int alignment, [bool skipLastElementPadding = false]) {

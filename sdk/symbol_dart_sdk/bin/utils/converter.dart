@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'dart:convert';
 import 'package:base32/base32.dart';
 import 'package:convert/convert.dart';
 
@@ -112,4 +113,13 @@ void tryHexString(String value) {
   if (!isHexString(value)) {
     throw ArgumentError('value was not a valid hex string');
   }
+}
+
+String utf8ToHex(String input) {
+  List<int> bytes = utf8.encode(input);
+  return bytes.map((byte) => byte.toRadixString(16).padLeft(2, '0')).join().toUpperCase();
+}
+
+Uint8List utf8ToBytes(String input) {
+  return utf8.encode(input);  
 }

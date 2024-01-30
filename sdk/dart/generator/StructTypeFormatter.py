@@ -45,7 +45,7 @@ class StructFormatter(AbstractTypeFormatter):
 		self.struct = ast_model
 
 	def get_base_class(self):
-		return 'StructBase'
+		return None
 
 	def get_interface(self):
 		interface = ', ITransaction' if 'Transaction' in self.struct.name and 'Statement' not in self.struct.name else ''
@@ -70,8 +70,22 @@ class StructFormatter(AbstractTypeFormatter):
 	def computed_fields(self):
 		return filter(is_computed, self.non_const_fields())
 	
+	def is_nullable_field(self, field):
+		if field.is_conditional:
+				conditional = field.value
+				condition_field_name = conditional.linked_field_name
+				condition_field = next(f for f in self.non_const_fields() if condition_field_name == f.name)
+				condition_model = condition_field.extensions.type_model
+				if f'{condition_model.name}.{conditional.value}' != condition_field.extensions.printer.get_default_value():
+					return True
+		return False
+	
 	@staticmethod
-	def embedded_name(name):
+	def re_name(name):
+		if 'Transaction' == name:
+			return 'ITransaction'
+		if 'List<Transaction>' == name:
+			return 'List<ITransaction>'
 		name = name.replace("NonVerifiable", "IInner")
 		name = name.replace("Embedded", "IInner")
 		return name
@@ -100,9 +114,26 @@ class StructFormatter(AbstractTypeFormatter):
 	def generate_field(self):
 		body = '\n'
 		for field in self.non_reserved_fields():
+			const_field = self.get_paired_const_field(field)
 			field_name = self.field_name(field)
-			value = field.extensions.printer.get_default_value()
-			body += f'{self.embedded_name(field.extensions.printer.get_type())} {field_name} = {self.embedded_name(value)};\n'
+			class_name = self.re_name(field.extensions.printer.get_type())
+			if const_field:
+				body += f'{class_name} {field_name} = {self.typename}.{const_field.name};\n'
+			else:
+				value = field.extensions.printer.get_default_value()
+				null = ''
+				if field.is_conditional:
+					conditional = field.value
+					condition_field_name = conditional.linked_field_name
+					condition_field = next(f for f in self.non_const_fields() if condition_field_name == f.name)
+					condition_model = condition_field.extensions.type_model
+
+					# only initialize default implicit union field in constructor
+					if f'{condition_model.name}.{conditional.value}' != condition_field.extensions.printer.get_default_value():
+						value = 'null'  # needs to be null or else field will not be destination when copying descriptor properties
+						null = '?'
+				body += f'{class_name}{null} {field_name} = {value};\n'
+				#body += f'this.{field_name} = {arg_name} ?? {value};\n'
 
 		for field in self.reserved_fields():
 			field_name = self.field_name(field)
@@ -136,12 +167,9 @@ class StructFormatter(AbstractTypeFormatter):
 
 	def get_ctor_descriptor(self):
 		args = []
-		super = '\n\t: super('
 		for field in self.non_reserved_fields():
 			field_name = self.field_name(field, is_argument=True)
-			args.append(f'{self.embedded_name(field.extensions.printer.get_type())}? {field_name}') if not self.is_fields_one() else args.append(f'[{field_name}]')
-			super += f'{field_name} == null && '
-		super = super.rsplit("&&", 1)[0] + ")\n"
+			args.append(f'{self.re_name(field.extensions.printer.get_type())}? {field_name}') if not self.is_fields_one() else args.append(f'[{field_name}]')
 		arguments = args
 
 		body = ''
@@ -160,15 +188,15 @@ class StructFormatter(AbstractTypeFormatter):
 					condition_model = condition_field.extensions.type_model
 
 					# only initialize default implicit union field in constructor
-					# if f'{condition_model.name}.{conditional.value}' != condition_field.extensions.printer.get_default_value():
-					#	value = 'None'
+					if f'{condition_model.name}.{conditional.value}' != condition_field.extensions.printer.get_default_value():
+						value = 'null'  # needs to be null or else field will not be destination when copying descriptor properties
 
 				body += f'this.{field_name} = {arg_name} ?? {value};\n'
 
 		if not body:
-			return None
+			return 'null'
 
-		return MethodDescriptor(body=body, arguments=arguments, super=super)
+		return MethodDescriptor(body=body, arguments=arguments)#, super=super)
 
 	def get_comparer_descriptor(self):
 		if not self.struct.comparer:
@@ -215,7 +243,7 @@ class StructFormatter(AbstractTypeFormatter):
 
 		# HACK: instead of handling dumb magic value in namespace parent_name, generate slightly simpler condition
 		if prefix_field and DisplayType.UNSET != field.display_type:
-			return f'if ({lang_field_name(field.name)}.isNotEmpty)\n'
+			return f'if ({lang_field_name(field.name)} != null)\n'
 
 		field_postfix = 'Computed' if prefix_field and is_computed(condition_field) else '' if DisplayType.INTEGER == condition_model.display_type else '.value'
 		field_prefix = '' if field_prefix and is_computed(condition_field) else field_prefix
@@ -228,6 +256,8 @@ class StructFormatter(AbstractTypeFormatter):
 		for field in self.non_const_fields():
 			field_value = self.field_name(field)
 
+			if self.is_nullable_field(field):
+				field_value += '?'
 			sort = field.extensions.printer.sort(field_value)
 			if not sort:
 				continue
@@ -265,18 +295,20 @@ class StructFormatter(AbstractTypeFormatter):
 		field_size = field.extensions.printer.advancement_size()
 		if field.display_type == DisplayType.TYPED_ARRAY:
 			load = f'{field.extensions.printer.load(buffer_load_name)}'
-			adjust = f'{buffer_name} = {buffer_name}.sublist({lang_field_name(field_size)});\n'
+			adjust += f'{buffer_name} = {buffer_name}.sublist({lang_field_name(field_size)});\n'
 		else:
 			field_size = field.extensions.printer.advancement_size()
 			if field.display_type == DisplayType.INTEGER:
-				buffer_load_name = 'buffer'#f'buffer.sublist(0, {field.size})'
+				buffer_load_name = 'buffer'
 			elif field.display_type == DisplayType.BYTE_ARRAY:
 				buffer_load_name = f'buffer.sublist(0, {lang_field_name(field.size)})'
 				field_size = lang_field_name(field.size)
 			load = field.extensions.printer.load(buffer_load_name)
-			adjust = f'{buffer_name} = {buffer_name}.sublist({field_size});\n'
-		deserialize = '// nothing to do for size' if field_name == 'size' else f'{field_name_} = {load};'
-		# deserialize = f'{load};' if field_name == 'size' else f'{field_name_} = {load};'
+			if self.struct.size == field.extensions.printer.name:
+				adjust += f'{buffer_name} = {buffer_name}.sublist(0, size);\n'	
+			adjust += f'{buffer_name} = {buffer_name}.sublist({field_size});\n'
+		deserialize = f'{field_name_} = {load};'
+		#deserialize = f'{load};' if field_name == 'size' else f'{field_name_} = {load};'
 
 		additional_statements = ''
 		if is_reserved(field):
@@ -371,7 +403,7 @@ class StructFormatter(AbstractTypeFormatter):
 					# HACK: create inline if condition (for NEM namespace purposes)
 					if bound_condition:
 						condition_value = bound_field.value.value
-						field_value = f'({bound_field_name}.isNotEmpty ? {field_value} : {condition_value})'
+						field_value = f'({bound_field_name} != null ? {field_value.replace(".", "!.")} : {condition_value})'
 				else:
 					field_value = bound_field.extensions.printer.get_size()
 			elif field.is_size_reference:
@@ -387,9 +419,23 @@ class StructFormatter(AbstractTypeFormatter):
 			adjust = f'currentPos = res_{field_value}.item2;\n'
 			adjust += f'buffer = res_{field_value}.item1;\n'
 		else:
-			adjust = f'currentPos += {field.extensions.printer.get_size()};\n'
+			size = field.extensions.printer.get_size()
+			adjust = f'currentPos += {size};\n'
+			if self.is_nullable_field(field):
+				adjust = f'currentPos += {size.replace(".", "!.")};\n'
+				serialize_field = f'{field.extensions.printer.store(field_value + "!", "currentPos")}'
 			
 		return indent_if_conditional(condition, f'{serialize_field};\n{adjust}')
+
+	def get_computed_name(self, field):
+		conditional = field.value
+		condition_field_name = conditional.linked_field_name
+		condition_field = next(f for f in self.non_const_fields() if condition_field_name == f.name)
+		condition_model = condition_field.extensions.type_model
+
+		if f'{condition_model.name}.{conditional.value}' != condition_field.extensions.printer.get_default_value():
+			condition_field_name = lang_field_name(conditional.linked_field_name)
+			return f'{condition_field_name}Computed' if is_computed(condition_field) else ''
 
 	def get_serialize_descriptor(self):
 		body = 'var buffer = Uint8List(size);\n'
@@ -413,6 +459,8 @@ class StructFormatter(AbstractTypeFormatter):
 	def generate_size_field(self, field):
 		condition = self.generate_condition(field, True)
 		size_field = field.extensions.printer.get_size()
+		if self.is_nullable_field(field):
+			size_field = size_field.replace(".", "!.")
 
 		return indent_if_conditional(condition, f'size += {size_field};\n')
 
@@ -427,36 +475,31 @@ class StructFormatter(AbstractTypeFormatter):
 		body = f'return {self.field_name(field)};'
 		if is_computed(field):
 			method_name += 'Computed'
+			body = f'return {field.field_type.sizeref.property_name}?.size ?? 0;'
 
-			sizeref = field.field_type.sizeref
-			body = f'return {sizeref.property_name}.isDefault ? 0 : {sizeref.property_name}.size + {sizeref.delta};'
-
-		method_descriptor = MethodDescriptor(method_name=method_name, body=body, result=self.embedded_name(field.extensions.printer.get_type()))
+		method_descriptor = MethodDescriptor(method_name=method_name, body=body, result=self.re_name(field.extensions.printer.get_type()))
 		return method_descriptor
 
 	def get_getter_descriptors(self):
 		return list(map(self.create_getter_descriptor, self.computed_fields()))
-		return list(map(self.create_getter_descriptor, self.non_reserved_fields())) + (
-			list(map(self.create_getter_descriptor, self.computed_fields()))
-		)
 
 	def create_setter_descriptor(self, field):
 		method_descriptor = MethodDescriptor(
 			method_name= 'set ' + field.extensions.printer.name,
-			arguments=[f'{self.embedded_name(field.extensions.printer.get_type())} value'],
+			arguments=[f'{self.re_name(field.extensions.printer.get_type())} value'],
 			body=f'{self.field_name(field)} = value;',
 		)
 		return method_descriptor
-
-	#def get_setter_descriptors(self):
-	#	return list(map(self.create_setter_descriptor, self.non_reserved_fields()))
 
 	def generate_str_field(self, field):
 		condition = self.generate_condition(field, True)
 		if field.display_type == DisplayType.INTEGER:
 			field_to_string = field.extensions.printer.to_string(self.field_name(field), field.size)
 		else:
-			field_to_string = field.extensions.printer.to_string(self.field_name(field))
+			if self.is_nullable_field(field):
+				field_to_string = field.extensions.printer.to_string(self.field_name(field) + "!")
+			else:
+				field_to_string = field.extensions.printer.to_string(self.field_name(field))
 		field_to_string = field_to_string if '{' in field_to_string else f'${{{field_to_string}}}'
 		return indent_if_conditional(condition, f'result += \'{field.extensions.printer.name}: "{field_to_string}", \';\n')
 

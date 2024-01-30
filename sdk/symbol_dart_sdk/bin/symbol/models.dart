@@ -1,7 +1,6 @@
 import '../BaseValue.dart';
 import '../ByteArray.dart';
-import '../models/IDeserializable.dart';
-import '../models/StructBase.dart';
+import '../models/ISerializable.dart';
 import './ITransaction.dart';
 import '../models/IInnerTransaction.dart';
 import '../utils/converter.dart';
@@ -11,7 +10,7 @@ import 'dart:typed_data';
 import 'package:convert/convert.dart';
 import 'package:tuple/tuple.dart';
 
-class Amount extends BaseValue implements IDeserializable {
+class Amount extends BaseValue implements ISerializable {
 	static const int SIZE = 8;
 
 	Amount([dynamic amount]) : super(SIZE, amount ?? 0);
@@ -21,6 +20,7 @@ class Amount extends BaseValue implements IDeserializable {
 		return Amount(bytesToInt(payload.sublist(0, 8), 8));
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(SIZE);
 		buffer.setRange(0, 0 + 8, intToBytes(value, 8));
@@ -29,7 +29,7 @@ class Amount extends BaseValue implements IDeserializable {
 }
 
 
-class BlockDuration extends BaseValue implements IDeserializable {
+class BlockDuration extends BaseValue implements ISerializable {
 	static const int SIZE = 8;
 
 	BlockDuration([dynamic blockDuration]) : super(SIZE, blockDuration ?? 0);
@@ -39,6 +39,7 @@ class BlockDuration extends BaseValue implements IDeserializable {
 		return BlockDuration(bytesToInt(payload.sublist(0, 8), 8));
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(SIZE);
 		buffer.setRange(0, 0 + 8, intToBytes(value, 8));
@@ -47,7 +48,7 @@ class BlockDuration extends BaseValue implements IDeserializable {
 }
 
 
-class BlockFeeMultiplier extends BaseValue implements IDeserializable {
+class BlockFeeMultiplier extends BaseValue implements ISerializable {
 	static const int SIZE = 4;
 
 	BlockFeeMultiplier([dynamic blockFeeMultiplier]) : super(SIZE, blockFeeMultiplier ?? 0);
@@ -57,6 +58,7 @@ class BlockFeeMultiplier extends BaseValue implements IDeserializable {
 		return BlockFeeMultiplier(bytesToInt(payload.sublist(0, 4), 4));
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(SIZE);
 		buffer.setRange(0, 0 + 4, intToBytes(value, 4));
@@ -65,7 +67,7 @@ class BlockFeeMultiplier extends BaseValue implements IDeserializable {
 }
 
 
-class Difficulty extends BaseValue implements IDeserializable {
+class Difficulty extends BaseValue implements ISerializable {
 	static const int SIZE = 8;
 
 	Difficulty([dynamic difficulty]) : super(SIZE, difficulty ?? 0);
@@ -75,6 +77,7 @@ class Difficulty extends BaseValue implements IDeserializable {
 		return Difficulty(bytesToInt(payload.sublist(0, 8), 8));
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(SIZE);
 		buffer.setRange(0, 0 + 8, intToBytes(value, 8));
@@ -83,7 +86,7 @@ class Difficulty extends BaseValue implements IDeserializable {
 }
 
 
-class FinalizationEpoch extends BaseValue implements IDeserializable {
+class FinalizationEpoch extends BaseValue implements ISerializable {
 	static const int SIZE = 4;
 
 	FinalizationEpoch([dynamic finalizationEpoch]) : super(SIZE, finalizationEpoch ?? 0);
@@ -93,6 +96,7 @@ class FinalizationEpoch extends BaseValue implements IDeserializable {
 		return FinalizationEpoch(bytesToInt(payload.sublist(0, 4), 4));
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(SIZE);
 		buffer.setRange(0, 0 + 4, intToBytes(value, 4));
@@ -101,7 +105,7 @@ class FinalizationEpoch extends BaseValue implements IDeserializable {
 }
 
 
-class FinalizationPoint extends BaseValue implements IDeserializable {
+class FinalizationPoint extends BaseValue implements ISerializable {
 	static const int SIZE = 4;
 
 	FinalizationPoint([dynamic finalizationPoint]) : super(SIZE, finalizationPoint ?? 0);
@@ -111,6 +115,7 @@ class FinalizationPoint extends BaseValue implements IDeserializable {
 		return FinalizationPoint(bytesToInt(payload.sublist(0, 4), 4));
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(SIZE);
 		buffer.setRange(0, 0 + 4, intToBytes(value, 4));
@@ -119,7 +124,7 @@ class FinalizationPoint extends BaseValue implements IDeserializable {
 }
 
 
-class Height extends BaseValue implements IDeserializable {
+class Height extends BaseValue implements ISerializable {
 	static const int SIZE = 8;
 
 	Height([dynamic height]) : super(SIZE, height ?? 0);
@@ -129,6 +134,7 @@ class Height extends BaseValue implements IDeserializable {
 		return Height(bytesToInt(payload.sublist(0, 8), 8));
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(SIZE);
 		buffer.setRange(0, 0 + 8, intToBytes(value, 8));
@@ -137,7 +143,7 @@ class Height extends BaseValue implements IDeserializable {
 }
 
 
-class Importance extends BaseValue implements IDeserializable {
+class Importance extends BaseValue implements ISerializable {
 	static const int SIZE = 8;
 
 	Importance([dynamic importance]) : super(SIZE, importance ?? 0);
@@ -147,6 +153,7 @@ class Importance extends BaseValue implements IDeserializable {
 		return Importance(bytesToInt(payload.sublist(0, 8), 8));
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(SIZE);
 		buffer.setRange(0, 0 + 8, intToBytes(value, 8));
@@ -155,7 +162,7 @@ class Importance extends BaseValue implements IDeserializable {
 }
 
 
-class ImportanceHeight extends BaseValue implements IDeserializable {
+class ImportanceHeight extends BaseValue implements ISerializable {
 	static const int SIZE = 8;
 
 	ImportanceHeight([dynamic importanceHeight]) : super(SIZE, importanceHeight ?? 0);
@@ -165,6 +172,7 @@ class ImportanceHeight extends BaseValue implements IDeserializable {
 		return ImportanceHeight(bytesToInt(payload.sublist(0, 8), 8));
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(SIZE);
 		buffer.setRange(0, 0 + 8, intToBytes(value, 8));
@@ -173,7 +181,7 @@ class ImportanceHeight extends BaseValue implements IDeserializable {
 }
 
 
-class UnresolvedMosaicId extends BaseValue implements IDeserializable {
+class UnresolvedMosaicId extends BaseValue implements ISerializable {
 	static const int SIZE = 8;
 
 	UnresolvedMosaicId([dynamic unresolvedMosaicId]) : super(SIZE, unresolvedMosaicId ?? 0);
@@ -183,6 +191,7 @@ class UnresolvedMosaicId extends BaseValue implements IDeserializable {
 		return UnresolvedMosaicId(bytesToInt(payload.sublist(0, 8), 8));
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(SIZE);
 		buffer.setRange(0, 0 + 8, intToBytes(value, 8));
@@ -191,7 +200,7 @@ class UnresolvedMosaicId extends BaseValue implements IDeserializable {
 }
 
 
-class MosaicId extends BaseValue implements IDeserializable {
+class MosaicId extends BaseValue implements ISerializable {
 	static const int SIZE = 8;
 
 	MosaicId([dynamic mosaicId]) : super(SIZE, mosaicId ?? 0);
@@ -201,6 +210,7 @@ class MosaicId extends BaseValue implements IDeserializable {
 		return MosaicId(bytesToInt(payload.sublist(0, 8), 8));
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(SIZE);
 		buffer.setRange(0, 0 + 8, intToBytes(value, 8));
@@ -209,7 +219,7 @@ class MosaicId extends BaseValue implements IDeserializable {
 }
 
 
-class Timestamp extends BaseValue implements IDeserializable {
+class Timestamp extends BaseValue implements ISerializable {
 	static const int SIZE = 8;
 
 	Timestamp([dynamic timestamp]) : super(SIZE, timestamp ?? 0);
@@ -219,6 +229,7 @@ class Timestamp extends BaseValue implements IDeserializable {
 		return Timestamp(bytesToInt(payload.sublist(0, 8), 8));
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(SIZE);
 		buffer.setRange(0, 0 + 8, intToBytes(value, 8));
@@ -227,7 +238,7 @@ class Timestamp extends BaseValue implements IDeserializable {
 }
 
 
-class UnresolvedAddress extends ByteArray implements IDeserializable {
+class UnresolvedAddress extends ByteArray implements ISerializable {
 	static const int SIZE = 24;
 
 	UnresolvedAddress([dynamic unresolvedAddress]) : super(SIZE, unresolvedAddress ?? Uint8List(24));
@@ -242,13 +253,14 @@ class UnresolvedAddress extends ByteArray implements IDeserializable {
 		return UnresolvedAddress(Uint8List.fromList(payload));
 	}
 
+	@override
 	Uint8List serialize() {
 		return bytes;
 	}
 }
 
 
-class Address extends ByteArray implements IDeserializable {
+class Address extends ByteArray implements ISerializable {
 	static const int SIZE = 24;
 
 	Address([dynamic address]) : super(SIZE, address ?? Uint8List(24));
@@ -263,13 +275,14 @@ class Address extends ByteArray implements IDeserializable {
 		return Address(Uint8List.fromList(payload));
 	}
 
+	@override
 	Uint8List serialize() {
 		return bytes;
 	}
 }
 
 
-class Hash256 extends ByteArray implements IDeserializable {
+class Hash256 extends ByteArray implements ISerializable {
 	static const int SIZE = 32;
 
 	Hash256([dynamic hash256]) : super(SIZE, hash256 ?? Uint8List(32));
@@ -284,13 +297,14 @@ class Hash256 extends ByteArray implements IDeserializable {
 		return Hash256(Uint8List.fromList(payload));
 	}
 
+	@override
 	Uint8List serialize() {
 		return bytes;
 	}
 }
 
 
-class Hash512 extends ByteArray implements IDeserializable {
+class Hash512 extends ByteArray implements ISerializable {
 	static const int SIZE = 64;
 
 	Hash512([dynamic hash512]) : super(SIZE, hash512 ?? Uint8List(64));
@@ -305,13 +319,14 @@ class Hash512 extends ByteArray implements IDeserializable {
 		return Hash512(Uint8List.fromList(payload));
 	}
 
+	@override
 	Uint8List serialize() {
 		return bytes;
 	}
 }
 
 
-class PublicKey extends ByteArray implements IDeserializable {
+class PublicKey extends ByteArray implements ISerializable {
 	static const int SIZE = 32;
 
 	PublicKey([dynamic publicKey]) : super(SIZE, publicKey ?? Uint8List(32));
@@ -326,13 +341,14 @@ class PublicKey extends ByteArray implements IDeserializable {
 		return PublicKey(Uint8List.fromList(payload));
 	}
 
+	@override
 	Uint8List serialize() {
 		return bytes;
 	}
 }
 
 
-class VotingPublicKey extends ByteArray implements IDeserializable {
+class VotingPublicKey extends ByteArray implements ISerializable {
 	static const int SIZE = 32;
 
 	VotingPublicKey([dynamic votingPublicKey]) : super(SIZE, votingPublicKey ?? Uint8List(32));
@@ -347,13 +363,14 @@ class VotingPublicKey extends ByteArray implements IDeserializable {
 		return VotingPublicKey(Uint8List.fromList(payload));
 	}
 
+	@override
 	Uint8List serialize() {
 		return bytes;
 	}
 }
 
 
-class Signature extends ByteArray implements IDeserializable {
+class Signature extends ByteArray implements ISerializable {
 	static const int SIZE = 64;
 
 	Signature([dynamic signature]) : super(SIZE, signature ?? Uint8List(64));
@@ -368,13 +385,14 @@ class Signature extends ByteArray implements IDeserializable {
 		return Signature(Uint8List.fromList(payload));
 	}
 
+	@override
 	Uint8List serialize() {
 		return bytes;
 	}
 }
 
 
-class Mosaic extends StructBase implements IDeserializable {
+class Mosaic implements ISerializable {
 
 	static const Map<String, String> TYPE_HINTS = {
 		'mosaicId': 'pod:MosaicId',
@@ -384,9 +402,7 @@ class Mosaic extends StructBase implements IDeserializable {
 	MosaicId mosaicId = MosaicId();
 	Amount amount = Amount();
 
-	Mosaic({ MosaicId? mosaicId, Amount? amount}) 
-		: super(mosaicId == null && amount == null )
-	{
+	Mosaic({ MosaicId? mosaicId, Amount? amount}) {
 		this.mosaicId = mosaicId ?? MosaicId();
 		this.amount = amount ?? Amount();
 	}
@@ -417,6 +433,7 @@ class Mosaic extends StructBase implements IDeserializable {
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -438,7 +455,7 @@ class Mosaic extends StructBase implements IDeserializable {
 }
 
 
-class UnresolvedMosaic extends StructBase implements IDeserializable {
+class UnresolvedMosaic implements ISerializable {
 
 	static const Map<String, String> TYPE_HINTS = {
 		'mosaicId': 'pod:UnresolvedMosaicId',
@@ -448,9 +465,7 @@ class UnresolvedMosaic extends StructBase implements IDeserializable {
 	UnresolvedMosaicId mosaicId = UnresolvedMosaicId();
 	Amount amount = Amount();
 
-	UnresolvedMosaic({ UnresolvedMosaicId? mosaicId, Amount? amount}) 
-		: super(mosaicId == null && amount == null )
-	{
+	UnresolvedMosaic({ UnresolvedMosaicId? mosaicId, Amount? amount}) {
 		this.mosaicId = mosaicId ?? UnresolvedMosaicId();
 		this.amount = amount ?? Amount();
 	}
@@ -481,6 +496,7 @@ class UnresolvedMosaic extends StructBase implements IDeserializable {
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -502,7 +518,7 @@ class UnresolvedMosaic extends StructBase implements IDeserializable {
 }
 
 
-class LinkAction implements IDeserializable {
+class LinkAction implements ISerializable {
 	static final UNLINK = LinkAction(0);
 	static final LINK = LinkAction(1);
 
@@ -525,6 +541,7 @@ class LinkAction implements IDeserializable {
 		return LinkAction(byteData.getUint8(0));
 	}
 
+	@override
 	Uint8List serialize() {
 		var byteData = ByteData(1)..setUint8(0, value);
 		return byteData.buffer.asUint8List();
@@ -537,7 +554,7 @@ class LinkAction implements IDeserializable {
 }
 
 
-class NetworkType implements IDeserializable {
+class NetworkType implements ISerializable {
 	static final MAINNET = NetworkType(104);
 	static final TESTNET = NetworkType(152);
 
@@ -560,6 +577,7 @@ class NetworkType implements IDeserializable {
 		return NetworkType(byteData.getUint8(0));
 	}
 
+	@override
 	Uint8List serialize() {
 		var byteData = ByteData(1)..setUint8(0, value);
 		return byteData.buffer.asUint8List();
@@ -572,7 +590,7 @@ class NetworkType implements IDeserializable {
 }
 
 
-class TransactionType implements IDeserializable {
+class TransactionType implements ISerializable {
 	static final ACCOUNT_KEY_LINK = TransactionType(16716);
 	static final NODE_KEY_LINK = TransactionType(16972);
 	static final AGGREGATE_COMPLETE = TransactionType(16705);
@@ -641,6 +659,7 @@ class TransactionType implements IDeserializable {
 		return TransactionType(byteData.getUint16(0, Endian.little));
 	}
 
+	@override
 	Uint8List serialize() {
 		var byteData = ByteData(2)..setUint16(0, value, Endian.little);
 		return byteData.buffer.asUint8List();
@@ -653,7 +672,7 @@ class TransactionType implements IDeserializable {
 }
 
 
-class Transaction extends StructBase implements IDeserializable, ITransaction {
+class Transaction implements ISerializable, ITransaction {
 
 	static const Map<String, String> TYPE_HINTS = {
 		'signature': 'pod:Signature',
@@ -682,9 +701,7 @@ class Transaction extends StructBase implements IDeserializable, ITransaction {
 	TransactionType? type,
 	Amount? fee,
 	Timestamp? deadline
-	}) 
-		: super(signature == null && signerPublicKey == null && version == null && network == null && type == null && fee == null && deadline == null )
-	{
+	}) {
 		this.signature = signature ?? Signature();
 		this.signerPublicKey = signerPublicKey ?? PublicKey();
 		this.version = version ?? 0;
@@ -716,7 +733,8 @@ class Transaction extends StructBase implements IDeserializable, ITransaction {
 	@override
 	Transaction deserialize(Uint8List payload) {
 		var buffer = payload;
-		// nothing to do for size
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var verifiableEntityHeaderReserved_1 = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
@@ -755,6 +773,7 @@ class Transaction extends StructBase implements IDeserializable, ITransaction {
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -797,7 +816,7 @@ class Transaction extends StructBase implements IDeserializable, ITransaction {
 }
 
 
-class EmbeddedTransaction extends StructBase implements IDeserializable, IInnerTransaction {
+class EmbeddedTransaction implements ISerializable, IInnerTransaction {
 
 	static const Map<String, String> TYPE_HINTS = {
 		'signerPublicKey': 'pod:PublicKey',
@@ -812,9 +831,7 @@ class EmbeddedTransaction extends StructBase implements IDeserializable, IInnerT
 	final int embeddedTransactionHeaderReserved_1 = 0; // reserved field
 	final int entityBodyReserved_1 = 0; // reserved field
 
-	EmbeddedTransaction({ PublicKey? signerPublicKey, int? version, NetworkType? network, TransactionType? type}) 
-		: super(signerPublicKey == null && version == null && network == null && type == null )
-	{
+	EmbeddedTransaction({ PublicKey? signerPublicKey, int? version, NetworkType? network, TransactionType? type}) {
 		this.signerPublicKey = signerPublicKey ?? PublicKey();
 		this.version = version ?? 0;
 		this.network = network ?? NetworkType.MAINNET;
@@ -840,7 +857,8 @@ class EmbeddedTransaction extends StructBase implements IDeserializable, IInnerT
 	@override
 	EmbeddedTransaction deserialize(Uint8List payload) {
 		var buffer = payload;
-		// nothing to do for size
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var embeddedTransactionHeaderReserved_1 = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
@@ -870,6 +888,7 @@ class EmbeddedTransaction extends StructBase implements IDeserializable, IInnerT
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -903,7 +922,7 @@ class EmbeddedTransaction extends StructBase implements IDeserializable, IInnerT
 }
 
 
-class ProofGamma extends ByteArray implements IDeserializable {
+class ProofGamma extends ByteArray implements ISerializable {
 	static const int SIZE = 32;
 
 	ProofGamma([dynamic proofGamma]) : super(SIZE, proofGamma ?? Uint8List(32));
@@ -918,13 +937,14 @@ class ProofGamma extends ByteArray implements IDeserializable {
 		return ProofGamma(Uint8List.fromList(payload));
 	}
 
+	@override
 	Uint8List serialize() {
 		return bytes;
 	}
 }
 
 
-class ProofVerificationHash extends ByteArray implements IDeserializable {
+class ProofVerificationHash extends ByteArray implements ISerializable {
 	static const int SIZE = 16;
 
 	ProofVerificationHash([dynamic proofVerificationHash]) : super(SIZE, proofVerificationHash ?? Uint8List(16));
@@ -939,13 +959,14 @@ class ProofVerificationHash extends ByteArray implements IDeserializable {
 		return ProofVerificationHash(Uint8List.fromList(payload));
 	}
 
+	@override
 	Uint8List serialize() {
 		return bytes;
 	}
 }
 
 
-class ProofScalar extends ByteArray implements IDeserializable {
+class ProofScalar extends ByteArray implements ISerializable {
 	static const int SIZE = 32;
 
 	ProofScalar([dynamic proofScalar]) : super(SIZE, proofScalar ?? Uint8List(32));
@@ -960,13 +981,14 @@ class ProofScalar extends ByteArray implements IDeserializable {
 		return ProofScalar(Uint8List.fromList(payload));
 	}
 
+	@override
 	Uint8List serialize() {
 		return bytes;
 	}
 }
 
 
-class BlockType implements IDeserializable {
+class BlockType implements ISerializable {
 	static final NEMESIS = BlockType(32835);
 	static final NORMAL = BlockType(33091);
 	static final IMPORTANCE = BlockType(33347);
@@ -991,6 +1013,7 @@ class BlockType implements IDeserializable {
 		return BlockType(byteData.getUint16(0, Endian.little));
 	}
 
+	@override
 	Uint8List serialize() {
 		var byteData = ByteData(2)..setUint16(0, value, Endian.little);
 		return byteData.buffer.asUint8List();
@@ -1003,7 +1026,7 @@ class BlockType implements IDeserializable {
 }
 
 
-class VrfProof extends StructBase implements IDeserializable {
+class VrfProof implements ISerializable {
 
 	static const Map<String, String> TYPE_HINTS = {
 		'gamma': 'pod:ProofGamma',
@@ -1015,9 +1038,7 @@ class VrfProof extends StructBase implements IDeserializable {
 	ProofVerificationHash verificationHash = ProofVerificationHash();
 	ProofScalar scalar = ProofScalar();
 
-	VrfProof({ ProofGamma? gamma, ProofVerificationHash? verificationHash, ProofScalar? scalar}) 
-		: super(gamma == null && verificationHash == null && scalar == null )
-	{
+	VrfProof({ ProofGamma? gamma, ProofVerificationHash? verificationHash, ProofScalar? scalar}) {
 		this.gamma = gamma ?? ProofGamma();
 		this.verificationHash = verificationHash ?? ProofVerificationHash();
 		this.scalar = scalar ?? ProofScalar();
@@ -1053,6 +1074,7 @@ class VrfProof extends StructBase implements IDeserializable {
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -1077,7 +1099,7 @@ class VrfProof extends StructBase implements IDeserializable {
 }
 
 
-class Block extends StructBase implements IDeserializable {
+class Block implements ISerializable {
 
 	static const Map<String, String> TYPE_HINTS = {
 		'signature': 'pod:Signature',
@@ -1130,9 +1152,7 @@ class Block extends StructBase implements IDeserializable {
 	Hash256? stateHash,
 	Address? beneficiaryAddress,
 	BlockFeeMultiplier? feeMultiplier
-	}) 
-		: super(signature == null && signerPublicKey == null && version == null && network == null && type == null && height == null && timestamp == null && difficulty == null && generationHashProof == null && previousBlockHash == null && transactionsHash == null && receiptsHash == null && stateHash == null && beneficiaryAddress == null && feeMultiplier == null )
-	{
+	}) {
 		this.signature = signature ?? Signature();
 		this.signerPublicKey = signerPublicKey ?? PublicKey();
 		this.version = version ?? 0;
@@ -1180,7 +1200,8 @@ class Block extends StructBase implements IDeserializable {
 	@override
 	Block deserialize(Uint8List payload) {
 		var buffer = payload;
-		// nothing to do for size
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var verifiableEntityHeaderReserved_1 = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
@@ -1243,6 +1264,7 @@ class Block extends StructBase implements IDeserializable {
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -1309,7 +1331,7 @@ class Block extends StructBase implements IDeserializable {
 }
 
 
-class NemesisBlockV1 extends StructBase implements IDeserializable {
+class NemesisBlockV1 implements ISerializable {
 	static const int BLOCK_VERSION = 1;
 	static final BlockType BLOCK_TYPE = BlockType(BlockType.NEMESIS.value);
 
@@ -1335,9 +1357,9 @@ class NemesisBlockV1 extends StructBase implements IDeserializable {
 
 	Signature signature = Signature();
 	PublicKey signerPublicKey = PublicKey();
-	int version = 0;
+	int version = NemesisBlockV1.BLOCK_VERSION;
 	NetworkType network = NetworkType.MAINNET;
-	BlockType type = BlockType.NEMESIS;
+	BlockType type = NemesisBlockV1.BLOCK_TYPE;
 	Height height = Height();
 	Timestamp timestamp = Timestamp();
 	Difficulty difficulty = Difficulty();
@@ -1352,7 +1374,7 @@ class NemesisBlockV1 extends StructBase implements IDeserializable {
 	int harvestingEligibleAccountsCount = 0;
 	Amount totalVotingBalance = Amount();
 	Hash256 previousImportanceBlockHash = Hash256();
-	List<Transaction> transactions = [];
+	List<ITransaction> transactions = [];
 	final int verifiableEntityHeaderReserved_1 = 0; // reserved field
 	final int entityBodyReserved_1 = 0; // reserved field
 
@@ -1376,10 +1398,8 @@ class NemesisBlockV1 extends StructBase implements IDeserializable {
 	int? harvestingEligibleAccountsCount,
 	Amount? totalVotingBalance,
 	Hash256? previousImportanceBlockHash,
-	List<Transaction>? transactions
-	}) 
-		: super(signature == null && signerPublicKey == null && version == null && network == null && type == null && height == null && timestamp == null && difficulty == null && generationHashProof == null && previousBlockHash == null && transactionsHash == null && receiptsHash == null && stateHash == null && beneficiaryAddress == null && feeMultiplier == null && votingEligibleAccountsCount == null && harvestingEligibleAccountsCount == null && totalVotingBalance == null && previousImportanceBlockHash == null && transactions == null )
-	{
+	List<ITransaction>? transactions
+	}) {
 		this.signature = signature ?? Signature();
 		this.signerPublicKey = signerPublicKey ?? PublicKey();
 		this.version = version ?? NemesisBlockV1.BLOCK_VERSION;
@@ -1437,7 +1457,8 @@ class NemesisBlockV1 extends StructBase implements IDeserializable {
 	@override
 	NemesisBlockV1 deserialize(Uint8List payload) {
 		var buffer = payload;
-		// nothing to do for size
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var verifiableEntityHeaderReserved_1 = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
@@ -1487,7 +1508,7 @@ class NemesisBlockV1 extends StructBase implements IDeserializable {
 		buffer = buffer.sublist(totalVotingBalance.size);
 		var previousImportanceBlockHash = Hash256().deserialize(buffer);
 		buffer = buffer.sublist(previousImportanceBlockHash.size);
-		var transactions = ArrayHelpers.readVariableSizeElements(buffer, TransactionFactory(), 8, true).map((item) => item as Transaction).toList();
+		var transactions = ArrayHelpers.readVariableSizeElements(buffer, TransactionFactory(), 8, true).map((item) => item as ITransaction).toList();
 		buffer = buffer.sublist(ArrayHelpers.size(transactions, 8, true));
 
 		var instance = NemesisBlockV1(
@@ -1515,6 +1536,7 @@ class NemesisBlockV1 extends StructBase implements IDeserializable {
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -1598,7 +1620,7 @@ class NemesisBlockV1 extends StructBase implements IDeserializable {
 }
 
 
-class NormalBlockV1 extends StructBase implements IDeserializable {
+class NormalBlockV1 implements ISerializable {
 	static const int BLOCK_VERSION = 1;
 	static final BlockType BLOCK_TYPE = BlockType(BlockType.NORMAL.value);
 
@@ -1622,9 +1644,9 @@ class NormalBlockV1 extends StructBase implements IDeserializable {
 
 	Signature signature = Signature();
 	PublicKey signerPublicKey = PublicKey();
-	int version = 0;
+	int version = NormalBlockV1.BLOCK_VERSION;
 	NetworkType network = NetworkType.MAINNET;
-	BlockType type = BlockType.NEMESIS;
+	BlockType type = NormalBlockV1.BLOCK_TYPE;
 	Height height = Height();
 	Timestamp timestamp = Timestamp();
 	Difficulty difficulty = Difficulty();
@@ -1635,7 +1657,7 @@ class NormalBlockV1 extends StructBase implements IDeserializable {
 	Hash256 stateHash = Hash256();
 	Address beneficiaryAddress = Address();
 	BlockFeeMultiplier feeMultiplier = BlockFeeMultiplier();
-	List<Transaction> transactions = [];
+	List<ITransaction> transactions = [];
 	final int verifiableEntityHeaderReserved_1 = 0; // reserved field
 	final int entityBodyReserved_1 = 0; // reserved field
 	final int blockHeaderReserved_1 = 0; // reserved field
@@ -1656,10 +1678,8 @@ class NormalBlockV1 extends StructBase implements IDeserializable {
 	Hash256? stateHash,
 	Address? beneficiaryAddress,
 	BlockFeeMultiplier? feeMultiplier,
-	List<Transaction>? transactions
-	}) 
-		: super(signature == null && signerPublicKey == null && version == null && network == null && type == null && height == null && timestamp == null && difficulty == null && generationHashProof == null && previousBlockHash == null && transactionsHash == null && receiptsHash == null && stateHash == null && beneficiaryAddress == null && feeMultiplier == null && transactions == null )
-	{
+	List<ITransaction>? transactions
+	}) {
 		this.signature = signature ?? Signature();
 		this.signerPublicKey = signerPublicKey ?? PublicKey();
 		this.version = version ?? NormalBlockV1.BLOCK_VERSION;
@@ -1710,7 +1730,8 @@ class NormalBlockV1 extends StructBase implements IDeserializable {
 	@override
 	NormalBlockV1 deserialize(Uint8List payload) {
 		var buffer = payload;
-		// nothing to do for size
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var verifiableEntityHeaderReserved_1 = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
@@ -1757,7 +1778,7 @@ class NormalBlockV1 extends StructBase implements IDeserializable {
 		if (0 != blockHeaderReserved_1) {
 			throw RangeError('Invalid value of reserved field ($blockHeaderReserved_1)');
 		}
-		var transactions = ArrayHelpers.readVariableSizeElements(buffer, TransactionFactory(), 8, true).map((item) => item as Transaction).toList();
+		var transactions = ArrayHelpers.readVariableSizeElements(buffer, TransactionFactory(), 8, true).map((item) => item as ITransaction).toList();
 		buffer = buffer.sublist(ArrayHelpers.size(transactions, 8, true));
 
 		var instance = NormalBlockV1(
@@ -1781,6 +1802,7 @@ class NormalBlockV1 extends StructBase implements IDeserializable {
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -1854,7 +1876,7 @@ class NormalBlockV1 extends StructBase implements IDeserializable {
 }
 
 
-class ImportanceBlockV1 extends StructBase implements IDeserializable {
+class ImportanceBlockV1 implements ISerializable {
 	static const int BLOCK_VERSION = 1;
 	static final BlockType BLOCK_TYPE = BlockType(BlockType.IMPORTANCE.value);
 
@@ -1880,9 +1902,9 @@ class ImportanceBlockV1 extends StructBase implements IDeserializable {
 
 	Signature signature = Signature();
 	PublicKey signerPublicKey = PublicKey();
-	int version = 0;
+	int version = ImportanceBlockV1.BLOCK_VERSION;
 	NetworkType network = NetworkType.MAINNET;
-	BlockType type = BlockType.NEMESIS;
+	BlockType type = ImportanceBlockV1.BLOCK_TYPE;
 	Height height = Height();
 	Timestamp timestamp = Timestamp();
 	Difficulty difficulty = Difficulty();
@@ -1897,7 +1919,7 @@ class ImportanceBlockV1 extends StructBase implements IDeserializable {
 	int harvestingEligibleAccountsCount = 0;
 	Amount totalVotingBalance = Amount();
 	Hash256 previousImportanceBlockHash = Hash256();
-	List<Transaction> transactions = [];
+	List<ITransaction> transactions = [];
 	final int verifiableEntityHeaderReserved_1 = 0; // reserved field
 	final int entityBodyReserved_1 = 0; // reserved field
 
@@ -1921,10 +1943,8 @@ class ImportanceBlockV1 extends StructBase implements IDeserializable {
 	int? harvestingEligibleAccountsCount,
 	Amount? totalVotingBalance,
 	Hash256? previousImportanceBlockHash,
-	List<Transaction>? transactions
-	}) 
-		: super(signature == null && signerPublicKey == null && version == null && network == null && type == null && height == null && timestamp == null && difficulty == null && generationHashProof == null && previousBlockHash == null && transactionsHash == null && receiptsHash == null && stateHash == null && beneficiaryAddress == null && feeMultiplier == null && votingEligibleAccountsCount == null && harvestingEligibleAccountsCount == null && totalVotingBalance == null && previousImportanceBlockHash == null && transactions == null )
-	{
+	List<ITransaction>? transactions
+	}) {
 		this.signature = signature ?? Signature();
 		this.signerPublicKey = signerPublicKey ?? PublicKey();
 		this.version = version ?? ImportanceBlockV1.BLOCK_VERSION;
@@ -1982,7 +2002,8 @@ class ImportanceBlockV1 extends StructBase implements IDeserializable {
 	@override
 	ImportanceBlockV1 deserialize(Uint8List payload) {
 		var buffer = payload;
-		// nothing to do for size
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var verifiableEntityHeaderReserved_1 = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
@@ -2032,7 +2053,7 @@ class ImportanceBlockV1 extends StructBase implements IDeserializable {
 		buffer = buffer.sublist(totalVotingBalance.size);
 		var previousImportanceBlockHash = Hash256().deserialize(buffer);
 		buffer = buffer.sublist(previousImportanceBlockHash.size);
-		var transactions = ArrayHelpers.readVariableSizeElements(buffer, TransactionFactory(), 8, true).map((item) => item as Transaction).toList();
+		var transactions = ArrayHelpers.readVariableSizeElements(buffer, TransactionFactory(), 8, true).map((item) => item as ITransaction).toList();
 		buffer = buffer.sublist(ArrayHelpers.size(transactions, 8, true));
 
 		var instance = ImportanceBlockV1(
@@ -2060,6 +2081,7 @@ class ImportanceBlockV1 extends StructBase implements IDeserializable {
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -2143,7 +2165,7 @@ class ImportanceBlockV1 extends StructBase implements IDeserializable {
 }
 
 
-class FinalizationRound extends StructBase implements IDeserializable {
+class FinalizationRound implements ISerializable {
 
 	static const Map<String, String> TYPE_HINTS = {
 		'epoch': 'pod:FinalizationEpoch',
@@ -2153,9 +2175,7 @@ class FinalizationRound extends StructBase implements IDeserializable {
 	FinalizationEpoch epoch = FinalizationEpoch();
 	FinalizationPoint point = FinalizationPoint();
 
-	FinalizationRound({ FinalizationEpoch? epoch, FinalizationPoint? point}) 
-		: super(epoch == null && point == null )
-	{
+	FinalizationRound({ FinalizationEpoch? epoch, FinalizationPoint? point}) {
 		this.epoch = epoch ?? FinalizationEpoch();
 		this.point = point ?? FinalizationPoint();
 	}
@@ -2186,6 +2206,7 @@ class FinalizationRound extends StructBase implements IDeserializable {
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -2207,7 +2228,7 @@ class FinalizationRound extends StructBase implements IDeserializable {
 }
 
 
-class FinalizedBlockHeader extends StructBase implements IDeserializable {
+class FinalizedBlockHeader implements ISerializable {
 
 	static const Map<String, String> TYPE_HINTS = {
 		'round': 'struct:FinalizationRound',
@@ -2219,9 +2240,7 @@ class FinalizedBlockHeader extends StructBase implements IDeserializable {
 	Height height = Height();
 	Hash256 hash = Hash256();
 
-	FinalizedBlockHeader({ FinalizationRound? round, Height? height, Hash256? hash}) 
-		: super(round == null && height == null && hash == null )
-	{
+	FinalizedBlockHeader({ FinalizationRound? round, Height? height, Hash256? hash}) {
 		this.round = round ?? FinalizationRound();
 		this.height = height ?? Height();
 		this.hash = hash ?? Hash256();
@@ -2257,6 +2276,7 @@ class FinalizedBlockHeader extends StructBase implements IDeserializable {
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -2281,7 +2301,7 @@ class FinalizedBlockHeader extends StructBase implements IDeserializable {
 }
 
 
-class ReceiptType implements IDeserializable {
+class ReceiptType implements ISerializable {
 	static final MOSAIC_RENTAL_FEE = ReceiptType(4685);
 	static final NAMESPACE_RENTAL_FEE = ReceiptType(4942);
 	static final HARVEST_FEE = ReceiptType(8515);
@@ -2332,6 +2352,7 @@ class ReceiptType implements IDeserializable {
 		return ReceiptType(byteData.getUint16(0, Endian.little));
 	}
 
+	@override
 	Uint8List serialize() {
 		var byteData = ByteData(2)..setUint16(0, value, Endian.little);
 		return byteData.buffer.asUint8List();
@@ -2344,7 +2365,7 @@ class ReceiptType implements IDeserializable {
 }
 
 
-class Receipt extends StructBase implements IDeserializable {
+class Receipt implements ISerializable {
 
 	static const Map<String, String> TYPE_HINTS = {
 		'type': 'enum:ReceiptType'
@@ -2353,9 +2374,7 @@ class Receipt extends StructBase implements IDeserializable {
 	int version = 0;
 	ReceiptType type = ReceiptType.MOSAIC_RENTAL_FEE;
 
-	Receipt({ int? version, ReceiptType? type}) 
-		: super(version == null && type == null )
-	{
+	Receipt({ int? version, ReceiptType? type}) {
 		this.version = version ?? 0;
 		this.type = type ?? ReceiptType.MOSAIC_RENTAL_FEE;
 	}
@@ -2375,7 +2394,8 @@ class Receipt extends StructBase implements IDeserializable {
 	@override
 	Receipt deserialize(Uint8List payload) {
 		var buffer = payload;
-		// nothing to do for size
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var version = bytesToInt(buffer.sublist(0, 2), 2);
 		buffer = buffer.sublist(2);
@@ -2389,6 +2409,7 @@ class Receipt extends StructBase implements IDeserializable {
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -2412,7 +2433,7 @@ class Receipt extends StructBase implements IDeserializable {
 }
 
 
-class HarvestFeeReceipt extends StructBase implements IDeserializable {
+class HarvestFeeReceipt implements ISerializable {
 	static final ReceiptType RECEIPT_TYPE = ReceiptType(ReceiptType.HARVEST_FEE.value);
 
 	static const Map<String, String> TYPE_HINTS = {
@@ -2422,13 +2443,11 @@ class HarvestFeeReceipt extends StructBase implements IDeserializable {
 	};
 
 	int version = 0;
-	ReceiptType type = ReceiptType.MOSAIC_RENTAL_FEE;
+	ReceiptType type = HarvestFeeReceipt.RECEIPT_TYPE;
 	Mosaic mosaic = Mosaic();
 	Address targetAddress = Address();
 
-	HarvestFeeReceipt({ int? version, ReceiptType? type, Mosaic? mosaic, Address? targetAddress}) 
-		: super(version == null && type == null && mosaic == null && targetAddress == null )
-	{
+	HarvestFeeReceipt({ int? version, ReceiptType? type, Mosaic? mosaic, Address? targetAddress}) {
 		this.version = version ?? 0;
 		this.type = type ?? HarvestFeeReceipt.RECEIPT_TYPE;
 		this.mosaic = mosaic ?? Mosaic();
@@ -2452,7 +2471,8 @@ class HarvestFeeReceipt extends StructBase implements IDeserializable {
 	@override
 	HarvestFeeReceipt deserialize(Uint8List payload) {
 		var buffer = payload;
-		// nothing to do for size
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var version = bytesToInt(buffer.sublist(0, 2), 2);
 		buffer = buffer.sublist(2);
@@ -2472,6 +2492,7 @@ class HarvestFeeReceipt extends StructBase implements IDeserializable {
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -2501,7 +2522,7 @@ class HarvestFeeReceipt extends StructBase implements IDeserializable {
 }
 
 
-class InflationReceipt extends StructBase implements IDeserializable {
+class InflationReceipt implements ISerializable {
 	static final ReceiptType RECEIPT_TYPE = ReceiptType(ReceiptType.INFLATION.value);
 
 	static const Map<String, String> TYPE_HINTS = {
@@ -2510,12 +2531,10 @@ class InflationReceipt extends StructBase implements IDeserializable {
 	};
 
 	int version = 0;
-	ReceiptType type = ReceiptType.MOSAIC_RENTAL_FEE;
+	ReceiptType type = InflationReceipt.RECEIPT_TYPE;
 	Mosaic mosaic = Mosaic();
 
-	InflationReceipt({ int? version, ReceiptType? type, Mosaic? mosaic}) 
-		: super(version == null && type == null && mosaic == null )
-	{
+	InflationReceipt({ int? version, ReceiptType? type, Mosaic? mosaic}) {
 		this.version = version ?? 0;
 		this.type = type ?? InflationReceipt.RECEIPT_TYPE;
 		this.mosaic = mosaic ?? Mosaic();
@@ -2537,7 +2556,8 @@ class InflationReceipt extends StructBase implements IDeserializable {
 	@override
 	InflationReceipt deserialize(Uint8List payload) {
 		var buffer = payload;
-		// nothing to do for size
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var version = bytesToInt(buffer.sublist(0, 2), 2);
 		buffer = buffer.sublist(2);
@@ -2554,6 +2574,7 @@ class InflationReceipt extends StructBase implements IDeserializable {
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -2580,7 +2601,7 @@ class InflationReceipt extends StructBase implements IDeserializable {
 }
 
 
-class LockHashCreatedFeeReceipt extends StructBase implements IDeserializable {
+class LockHashCreatedFeeReceipt implements ISerializable {
 	static final ReceiptType RECEIPT_TYPE = ReceiptType(ReceiptType.LOCK_HASH_CREATED.value);
 
 	static const Map<String, String> TYPE_HINTS = {
@@ -2590,13 +2611,11 @@ class LockHashCreatedFeeReceipt extends StructBase implements IDeserializable {
 	};
 
 	int version = 0;
-	ReceiptType type = ReceiptType.MOSAIC_RENTAL_FEE;
+	ReceiptType type = LockHashCreatedFeeReceipt.RECEIPT_TYPE;
 	Mosaic mosaic = Mosaic();
 	Address targetAddress = Address();
 
-	LockHashCreatedFeeReceipt({ int? version, ReceiptType? type, Mosaic? mosaic, Address? targetAddress}) 
-		: super(version == null && type == null && mosaic == null && targetAddress == null )
-	{
+	LockHashCreatedFeeReceipt({ int? version, ReceiptType? type, Mosaic? mosaic, Address? targetAddress}) {
 		this.version = version ?? 0;
 		this.type = type ?? LockHashCreatedFeeReceipt.RECEIPT_TYPE;
 		this.mosaic = mosaic ?? Mosaic();
@@ -2620,7 +2639,8 @@ class LockHashCreatedFeeReceipt extends StructBase implements IDeserializable {
 	@override
 	LockHashCreatedFeeReceipt deserialize(Uint8List payload) {
 		var buffer = payload;
-		// nothing to do for size
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var version = bytesToInt(buffer.sublist(0, 2), 2);
 		buffer = buffer.sublist(2);
@@ -2640,6 +2660,7 @@ class LockHashCreatedFeeReceipt extends StructBase implements IDeserializable {
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -2669,7 +2690,7 @@ class LockHashCreatedFeeReceipt extends StructBase implements IDeserializable {
 }
 
 
-class LockHashCompletedFeeReceipt extends StructBase implements IDeserializable {
+class LockHashCompletedFeeReceipt implements ISerializable {
 	static final ReceiptType RECEIPT_TYPE = ReceiptType(ReceiptType.LOCK_HASH_COMPLETED.value);
 
 	static const Map<String, String> TYPE_HINTS = {
@@ -2679,13 +2700,11 @@ class LockHashCompletedFeeReceipt extends StructBase implements IDeserializable 
 	};
 
 	int version = 0;
-	ReceiptType type = ReceiptType.MOSAIC_RENTAL_FEE;
+	ReceiptType type = LockHashCompletedFeeReceipt.RECEIPT_TYPE;
 	Mosaic mosaic = Mosaic();
 	Address targetAddress = Address();
 
-	LockHashCompletedFeeReceipt({ int? version, ReceiptType? type, Mosaic? mosaic, Address? targetAddress}) 
-		: super(version == null && type == null && mosaic == null && targetAddress == null )
-	{
+	LockHashCompletedFeeReceipt({ int? version, ReceiptType? type, Mosaic? mosaic, Address? targetAddress}) {
 		this.version = version ?? 0;
 		this.type = type ?? LockHashCompletedFeeReceipt.RECEIPT_TYPE;
 		this.mosaic = mosaic ?? Mosaic();
@@ -2709,7 +2728,8 @@ class LockHashCompletedFeeReceipt extends StructBase implements IDeserializable 
 	@override
 	LockHashCompletedFeeReceipt deserialize(Uint8List payload) {
 		var buffer = payload;
-		// nothing to do for size
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var version = bytesToInt(buffer.sublist(0, 2), 2);
 		buffer = buffer.sublist(2);
@@ -2729,6 +2749,7 @@ class LockHashCompletedFeeReceipt extends StructBase implements IDeserializable 
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -2758,7 +2779,7 @@ class LockHashCompletedFeeReceipt extends StructBase implements IDeserializable 
 }
 
 
-class LockHashExpiredFeeReceipt extends StructBase implements IDeserializable {
+class LockHashExpiredFeeReceipt implements ISerializable {
 	static final ReceiptType RECEIPT_TYPE = ReceiptType(ReceiptType.LOCK_HASH_EXPIRED.value);
 
 	static const Map<String, String> TYPE_HINTS = {
@@ -2768,13 +2789,11 @@ class LockHashExpiredFeeReceipt extends StructBase implements IDeserializable {
 	};
 
 	int version = 0;
-	ReceiptType type = ReceiptType.MOSAIC_RENTAL_FEE;
+	ReceiptType type = LockHashExpiredFeeReceipt.RECEIPT_TYPE;
 	Mosaic mosaic = Mosaic();
 	Address targetAddress = Address();
 
-	LockHashExpiredFeeReceipt({ int? version, ReceiptType? type, Mosaic? mosaic, Address? targetAddress}) 
-		: super(version == null && type == null && mosaic == null && targetAddress == null )
-	{
+	LockHashExpiredFeeReceipt({ int? version, ReceiptType? type, Mosaic? mosaic, Address? targetAddress}) {
 		this.version = version ?? 0;
 		this.type = type ?? LockHashExpiredFeeReceipt.RECEIPT_TYPE;
 		this.mosaic = mosaic ?? Mosaic();
@@ -2798,7 +2817,8 @@ class LockHashExpiredFeeReceipt extends StructBase implements IDeserializable {
 	@override
 	LockHashExpiredFeeReceipt deserialize(Uint8List payload) {
 		var buffer = payload;
-		// nothing to do for size
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var version = bytesToInt(buffer.sublist(0, 2), 2);
 		buffer = buffer.sublist(2);
@@ -2818,6 +2838,7 @@ class LockHashExpiredFeeReceipt extends StructBase implements IDeserializable {
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -2847,7 +2868,7 @@ class LockHashExpiredFeeReceipt extends StructBase implements IDeserializable {
 }
 
 
-class LockSecretCreatedFeeReceipt extends StructBase implements IDeserializable {
+class LockSecretCreatedFeeReceipt implements ISerializable {
 	static final ReceiptType RECEIPT_TYPE = ReceiptType(ReceiptType.LOCK_SECRET_CREATED.value);
 
 	static const Map<String, String> TYPE_HINTS = {
@@ -2857,13 +2878,11 @@ class LockSecretCreatedFeeReceipt extends StructBase implements IDeserializable 
 	};
 
 	int version = 0;
-	ReceiptType type = ReceiptType.MOSAIC_RENTAL_FEE;
+	ReceiptType type = LockSecretCreatedFeeReceipt.RECEIPT_TYPE;
 	Mosaic mosaic = Mosaic();
 	Address targetAddress = Address();
 
-	LockSecretCreatedFeeReceipt({ int? version, ReceiptType? type, Mosaic? mosaic, Address? targetAddress}) 
-		: super(version == null && type == null && mosaic == null && targetAddress == null )
-	{
+	LockSecretCreatedFeeReceipt({ int? version, ReceiptType? type, Mosaic? mosaic, Address? targetAddress}) {
 		this.version = version ?? 0;
 		this.type = type ?? LockSecretCreatedFeeReceipt.RECEIPT_TYPE;
 		this.mosaic = mosaic ?? Mosaic();
@@ -2887,7 +2906,8 @@ class LockSecretCreatedFeeReceipt extends StructBase implements IDeserializable 
 	@override
 	LockSecretCreatedFeeReceipt deserialize(Uint8List payload) {
 		var buffer = payload;
-		// nothing to do for size
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var version = bytesToInt(buffer.sublist(0, 2), 2);
 		buffer = buffer.sublist(2);
@@ -2907,6 +2927,7 @@ class LockSecretCreatedFeeReceipt extends StructBase implements IDeserializable 
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -2936,7 +2957,7 @@ class LockSecretCreatedFeeReceipt extends StructBase implements IDeserializable 
 }
 
 
-class LockSecretCompletedFeeReceipt extends StructBase implements IDeserializable {
+class LockSecretCompletedFeeReceipt implements ISerializable {
 	static final ReceiptType RECEIPT_TYPE = ReceiptType(ReceiptType.LOCK_SECRET_COMPLETED.value);
 
 	static const Map<String, String> TYPE_HINTS = {
@@ -2946,13 +2967,11 @@ class LockSecretCompletedFeeReceipt extends StructBase implements IDeserializabl
 	};
 
 	int version = 0;
-	ReceiptType type = ReceiptType.MOSAIC_RENTAL_FEE;
+	ReceiptType type = LockSecretCompletedFeeReceipt.RECEIPT_TYPE;
 	Mosaic mosaic = Mosaic();
 	Address targetAddress = Address();
 
-	LockSecretCompletedFeeReceipt({ int? version, ReceiptType? type, Mosaic? mosaic, Address? targetAddress}) 
-		: super(version == null && type == null && mosaic == null && targetAddress == null )
-	{
+	LockSecretCompletedFeeReceipt({ int? version, ReceiptType? type, Mosaic? mosaic, Address? targetAddress}) {
 		this.version = version ?? 0;
 		this.type = type ?? LockSecretCompletedFeeReceipt.RECEIPT_TYPE;
 		this.mosaic = mosaic ?? Mosaic();
@@ -2976,7 +2995,8 @@ class LockSecretCompletedFeeReceipt extends StructBase implements IDeserializabl
 	@override
 	LockSecretCompletedFeeReceipt deserialize(Uint8List payload) {
 		var buffer = payload;
-		// nothing to do for size
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var version = bytesToInt(buffer.sublist(0, 2), 2);
 		buffer = buffer.sublist(2);
@@ -2996,6 +3016,7 @@ class LockSecretCompletedFeeReceipt extends StructBase implements IDeserializabl
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -3025,7 +3046,7 @@ class LockSecretCompletedFeeReceipt extends StructBase implements IDeserializabl
 }
 
 
-class LockSecretExpiredFeeReceipt extends StructBase implements IDeserializable {
+class LockSecretExpiredFeeReceipt implements ISerializable {
 	static final ReceiptType RECEIPT_TYPE = ReceiptType(ReceiptType.LOCK_SECRET_EXPIRED.value);
 
 	static const Map<String, String> TYPE_HINTS = {
@@ -3035,13 +3056,11 @@ class LockSecretExpiredFeeReceipt extends StructBase implements IDeserializable 
 	};
 
 	int version = 0;
-	ReceiptType type = ReceiptType.MOSAIC_RENTAL_FEE;
+	ReceiptType type = LockSecretExpiredFeeReceipt.RECEIPT_TYPE;
 	Mosaic mosaic = Mosaic();
 	Address targetAddress = Address();
 
-	LockSecretExpiredFeeReceipt({ int? version, ReceiptType? type, Mosaic? mosaic, Address? targetAddress}) 
-		: super(version == null && type == null && mosaic == null && targetAddress == null )
-	{
+	LockSecretExpiredFeeReceipt({ int? version, ReceiptType? type, Mosaic? mosaic, Address? targetAddress}) {
 		this.version = version ?? 0;
 		this.type = type ?? LockSecretExpiredFeeReceipt.RECEIPT_TYPE;
 		this.mosaic = mosaic ?? Mosaic();
@@ -3065,7 +3084,8 @@ class LockSecretExpiredFeeReceipt extends StructBase implements IDeserializable 
 	@override
 	LockSecretExpiredFeeReceipt deserialize(Uint8List payload) {
 		var buffer = payload;
-		// nothing to do for size
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var version = bytesToInt(buffer.sublist(0, 2), 2);
 		buffer = buffer.sublist(2);
@@ -3085,6 +3105,7 @@ class LockSecretExpiredFeeReceipt extends StructBase implements IDeserializable 
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -3114,7 +3135,7 @@ class LockSecretExpiredFeeReceipt extends StructBase implements IDeserializable 
 }
 
 
-class MosaicExpiredReceipt extends StructBase implements IDeserializable {
+class MosaicExpiredReceipt implements ISerializable {
 	static final ReceiptType RECEIPT_TYPE = ReceiptType(ReceiptType.MOSAIC_EXPIRED.value);
 
 	static const Map<String, String> TYPE_HINTS = {
@@ -3123,12 +3144,10 @@ class MosaicExpiredReceipt extends StructBase implements IDeserializable {
 	};
 
 	int version = 0;
-	ReceiptType type = ReceiptType.MOSAIC_RENTAL_FEE;
+	ReceiptType type = MosaicExpiredReceipt.RECEIPT_TYPE;
 	MosaicId artifactId = MosaicId();
 
-	MosaicExpiredReceipt({ int? version, ReceiptType? type, MosaicId? artifactId}) 
-		: super(version == null && type == null && artifactId == null )
-	{
+	MosaicExpiredReceipt({ int? version, ReceiptType? type, MosaicId? artifactId}) {
 		this.version = version ?? 0;
 		this.type = type ?? MosaicExpiredReceipt.RECEIPT_TYPE;
 		this.artifactId = artifactId ?? MosaicId();
@@ -3150,7 +3169,8 @@ class MosaicExpiredReceipt extends StructBase implements IDeserializable {
 	@override
 	MosaicExpiredReceipt deserialize(Uint8List payload) {
 		var buffer = payload;
-		// nothing to do for size
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var version = bytesToInt(buffer.sublist(0, 2), 2);
 		buffer = buffer.sublist(2);
@@ -3167,6 +3187,7 @@ class MosaicExpiredReceipt extends StructBase implements IDeserializable {
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -3193,7 +3214,7 @@ class MosaicExpiredReceipt extends StructBase implements IDeserializable {
 }
 
 
-class MosaicRentalFeeReceipt extends StructBase implements IDeserializable {
+class MosaicRentalFeeReceipt implements ISerializable {
 	static final ReceiptType RECEIPT_TYPE = ReceiptType(ReceiptType.MOSAIC_RENTAL_FEE.value);
 
 	static const Map<String, String> TYPE_HINTS = {
@@ -3204,14 +3225,12 @@ class MosaicRentalFeeReceipt extends StructBase implements IDeserializable {
 	};
 
 	int version = 0;
-	ReceiptType type = ReceiptType.MOSAIC_RENTAL_FEE;
+	ReceiptType type = MosaicRentalFeeReceipt.RECEIPT_TYPE;
 	Mosaic mosaic = Mosaic();
 	Address senderAddress = Address();
 	Address recipientAddress = Address();
 
-	MosaicRentalFeeReceipt({ int? version, ReceiptType? type, Mosaic? mosaic, Address? senderAddress, Address? recipientAddress}) 
-		: super(version == null && type == null && mosaic == null && senderAddress == null && recipientAddress == null )
-	{
+	MosaicRentalFeeReceipt({ int? version, ReceiptType? type, Mosaic? mosaic, Address? senderAddress, Address? recipientAddress}) {
 		this.version = version ?? 0;
 		this.type = type ?? MosaicRentalFeeReceipt.RECEIPT_TYPE;
 		this.mosaic = mosaic ?? Mosaic();
@@ -3237,7 +3256,8 @@ class MosaicRentalFeeReceipt extends StructBase implements IDeserializable {
 	@override
 	MosaicRentalFeeReceipt deserialize(Uint8List payload) {
 		var buffer = payload;
-		// nothing to do for size
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var version = bytesToInt(buffer.sublist(0, 2), 2);
 		buffer = buffer.sublist(2);
@@ -3260,6 +3280,7 @@ class MosaicRentalFeeReceipt extends StructBase implements IDeserializable {
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -3292,7 +3313,7 @@ class MosaicRentalFeeReceipt extends StructBase implements IDeserializable {
 }
 
 
-class NamespaceId extends BaseValue implements IDeserializable {
+class NamespaceId extends BaseValue implements ISerializable {
 	static const int SIZE = 8;
 
 	NamespaceId([dynamic namespaceId]) : super(SIZE, namespaceId ?? 0);
@@ -3302,6 +3323,7 @@ class NamespaceId extends BaseValue implements IDeserializable {
 		return NamespaceId(bytesToInt(payload.sublist(0, 8), 8));
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(SIZE);
 		buffer.setRange(0, 0 + 8, intToBytes(value, 8));
@@ -3310,7 +3332,7 @@ class NamespaceId extends BaseValue implements IDeserializable {
 }
 
 
-class NamespaceRegistrationType implements IDeserializable {
+class NamespaceRegistrationType implements ISerializable {
 	static final ROOT = NamespaceRegistrationType(0);
 	static final CHILD = NamespaceRegistrationType(1);
 
@@ -3333,6 +3355,7 @@ class NamespaceRegistrationType implements IDeserializable {
 		return NamespaceRegistrationType(byteData.getUint8(0));
 	}
 
+	@override
 	Uint8List serialize() {
 		var byteData = ByteData(1)..setUint8(0, value);
 		return byteData.buffer.asUint8List();
@@ -3345,7 +3368,7 @@ class NamespaceRegistrationType implements IDeserializable {
 }
 
 
-class AliasAction implements IDeserializable {
+class AliasAction implements ISerializable {
 	static final UNLINK = AliasAction(0);
 	static final LINK = AliasAction(1);
 
@@ -3368,6 +3391,7 @@ class AliasAction implements IDeserializable {
 		return AliasAction(byteData.getUint8(0));
 	}
 
+	@override
 	Uint8List serialize() {
 		var byteData = ByteData(1)..setUint8(0, value);
 		return byteData.buffer.asUint8List();
@@ -3380,7 +3404,7 @@ class AliasAction implements IDeserializable {
 }
 
 
-class NamespaceExpiredReceipt extends StructBase implements IDeserializable {
+class NamespaceExpiredReceipt implements ISerializable {
 	static final ReceiptType RECEIPT_TYPE = ReceiptType(ReceiptType.NAMESPACE_EXPIRED.value);
 
 	static const Map<String, String> TYPE_HINTS = {
@@ -3389,12 +3413,10 @@ class NamespaceExpiredReceipt extends StructBase implements IDeserializable {
 	};
 
 	int version = 0;
-	ReceiptType type = ReceiptType.MOSAIC_RENTAL_FEE;
+	ReceiptType type = NamespaceExpiredReceipt.RECEIPT_TYPE;
 	NamespaceId artifactId = NamespaceId();
 
-	NamespaceExpiredReceipt({ int? version, ReceiptType? type, NamespaceId? artifactId}) 
-		: super(version == null && type == null && artifactId == null )
-	{
+	NamespaceExpiredReceipt({ int? version, ReceiptType? type, NamespaceId? artifactId}) {
 		this.version = version ?? 0;
 		this.type = type ?? NamespaceExpiredReceipt.RECEIPT_TYPE;
 		this.artifactId = artifactId ?? NamespaceId();
@@ -3416,7 +3438,8 @@ class NamespaceExpiredReceipt extends StructBase implements IDeserializable {
 	@override
 	NamespaceExpiredReceipt deserialize(Uint8List payload) {
 		var buffer = payload;
-		// nothing to do for size
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var version = bytesToInt(buffer.sublist(0, 2), 2);
 		buffer = buffer.sublist(2);
@@ -3433,6 +3456,7 @@ class NamespaceExpiredReceipt extends StructBase implements IDeserializable {
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -3459,7 +3483,7 @@ class NamespaceExpiredReceipt extends StructBase implements IDeserializable {
 }
 
 
-class NamespaceDeletedReceipt extends StructBase implements IDeserializable {
+class NamespaceDeletedReceipt implements ISerializable {
 	static final ReceiptType RECEIPT_TYPE = ReceiptType(ReceiptType.NAMESPACE_DELETED.value);
 
 	static const Map<String, String> TYPE_HINTS = {
@@ -3468,12 +3492,10 @@ class NamespaceDeletedReceipt extends StructBase implements IDeserializable {
 	};
 
 	int version = 0;
-	ReceiptType type = ReceiptType.MOSAIC_RENTAL_FEE;
+	ReceiptType type = NamespaceDeletedReceipt.RECEIPT_TYPE;
 	NamespaceId artifactId = NamespaceId();
 
-	NamespaceDeletedReceipt({ int? version, ReceiptType? type, NamespaceId? artifactId}) 
-		: super(version == null && type == null && artifactId == null )
-	{
+	NamespaceDeletedReceipt({ int? version, ReceiptType? type, NamespaceId? artifactId}) {
 		this.version = version ?? 0;
 		this.type = type ?? NamespaceDeletedReceipt.RECEIPT_TYPE;
 		this.artifactId = artifactId ?? NamespaceId();
@@ -3495,7 +3517,8 @@ class NamespaceDeletedReceipt extends StructBase implements IDeserializable {
 	@override
 	NamespaceDeletedReceipt deserialize(Uint8List payload) {
 		var buffer = payload;
-		// nothing to do for size
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var version = bytesToInt(buffer.sublist(0, 2), 2);
 		buffer = buffer.sublist(2);
@@ -3512,6 +3535,7 @@ class NamespaceDeletedReceipt extends StructBase implements IDeserializable {
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -3538,7 +3562,7 @@ class NamespaceDeletedReceipt extends StructBase implements IDeserializable {
 }
 
 
-class NamespaceRentalFeeReceipt extends StructBase implements IDeserializable {
+class NamespaceRentalFeeReceipt implements ISerializable {
 	static final ReceiptType RECEIPT_TYPE = ReceiptType(ReceiptType.NAMESPACE_RENTAL_FEE.value);
 
 	static const Map<String, String> TYPE_HINTS = {
@@ -3549,14 +3573,12 @@ class NamespaceRentalFeeReceipt extends StructBase implements IDeserializable {
 	};
 
 	int version = 0;
-	ReceiptType type = ReceiptType.MOSAIC_RENTAL_FEE;
+	ReceiptType type = NamespaceRentalFeeReceipt.RECEIPT_TYPE;
 	Mosaic mosaic = Mosaic();
 	Address senderAddress = Address();
 	Address recipientAddress = Address();
 
-	NamespaceRentalFeeReceipt({ int? version, ReceiptType? type, Mosaic? mosaic, Address? senderAddress, Address? recipientAddress}) 
-		: super(version == null && type == null && mosaic == null && senderAddress == null && recipientAddress == null )
-	{
+	NamespaceRentalFeeReceipt({ int? version, ReceiptType? type, Mosaic? mosaic, Address? senderAddress, Address? recipientAddress}) {
 		this.version = version ?? 0;
 		this.type = type ?? NamespaceRentalFeeReceipt.RECEIPT_TYPE;
 		this.mosaic = mosaic ?? Mosaic();
@@ -3582,7 +3604,8 @@ class NamespaceRentalFeeReceipt extends StructBase implements IDeserializable {
 	@override
 	NamespaceRentalFeeReceipt deserialize(Uint8List payload) {
 		var buffer = payload;
-		// nothing to do for size
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var version = bytesToInt(buffer.sublist(0, 2), 2);
 		buffer = buffer.sublist(2);
@@ -3605,6 +3628,7 @@ class NamespaceRentalFeeReceipt extends StructBase implements IDeserializable {
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -3637,7 +3661,7 @@ class NamespaceRentalFeeReceipt extends StructBase implements IDeserializable {
 }
 
 
-class ReceiptSource extends StructBase implements IDeserializable {
+class ReceiptSource implements ISerializable {
 
 	static const Map<String, String> TYPE_HINTS = {
 	};
@@ -3645,9 +3669,7 @@ class ReceiptSource extends StructBase implements IDeserializable {
 	int primaryId = 0;
 	int secondaryId = 0;
 
-	ReceiptSource({ int? primaryId, int? secondaryId}) 
-		: super(primaryId == null && secondaryId == null )
-	{
+	ReceiptSource({ int? primaryId, int? secondaryId}) {
 		this.primaryId = primaryId ?? 0;
 		this.secondaryId = secondaryId ?? 0;
 	}
@@ -3678,6 +3700,7 @@ class ReceiptSource extends StructBase implements IDeserializable {
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -3699,7 +3722,7 @@ class ReceiptSource extends StructBase implements IDeserializable {
 }
 
 
-class AddressResolutionEntry extends StructBase implements IDeserializable {
+class AddressResolutionEntry implements ISerializable {
 
 	static const Map<String, String> TYPE_HINTS = {
 		'source': 'struct:ReceiptSource',
@@ -3709,9 +3732,7 @@ class AddressResolutionEntry extends StructBase implements IDeserializable {
 	ReceiptSource source = ReceiptSource();
 	Address resolvedValue = Address();
 
-	AddressResolutionEntry({ ReceiptSource? source, Address? resolvedValue}) 
-		: super(source == null && resolvedValue == null )
-	{
+	AddressResolutionEntry({ ReceiptSource? source, Address? resolvedValue}) {
 		this.source = source ?? ReceiptSource();
 		this.resolvedValue = resolvedValue ?? Address();
 	}
@@ -3742,6 +3763,7 @@ class AddressResolutionEntry extends StructBase implements IDeserializable {
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -3763,7 +3785,7 @@ class AddressResolutionEntry extends StructBase implements IDeserializable {
 }
 
 
-class AddressResolutionStatement extends StructBase implements IDeserializable {
+class AddressResolutionStatement implements ISerializable {
 
 	static const Map<String, String> TYPE_HINTS = {
 		'unresolved': 'pod:UnresolvedAddress',
@@ -3773,9 +3795,7 @@ class AddressResolutionStatement extends StructBase implements IDeserializable {
 	UnresolvedAddress unresolved = UnresolvedAddress();
 	List<AddressResolutionEntry> resolutionEntries = [];
 
-	AddressResolutionStatement({ UnresolvedAddress? unresolved, List<AddressResolutionEntry>? resolutionEntries}) 
-		: super(unresolved == null && resolutionEntries == null )
-	{
+	AddressResolutionStatement({ UnresolvedAddress? unresolved, List<AddressResolutionEntry>? resolutionEntries}) {
 		this.unresolved = unresolved ?? UnresolvedAddress();
 		this.resolutionEntries = resolutionEntries ?? [];
 	}
@@ -3809,6 +3829,7 @@ class AddressResolutionStatement extends StructBase implements IDeserializable {
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -3834,7 +3855,7 @@ class AddressResolutionStatement extends StructBase implements IDeserializable {
 }
 
 
-class MosaicResolutionEntry extends StructBase implements IDeserializable {
+class MosaicResolutionEntry implements ISerializable {
 
 	static const Map<String, String> TYPE_HINTS = {
 		'source': 'struct:ReceiptSource',
@@ -3844,9 +3865,7 @@ class MosaicResolutionEntry extends StructBase implements IDeserializable {
 	ReceiptSource source = ReceiptSource();
 	MosaicId resolvedValue = MosaicId();
 
-	MosaicResolutionEntry({ ReceiptSource? source, MosaicId? resolvedValue}) 
-		: super(source == null && resolvedValue == null )
-	{
+	MosaicResolutionEntry({ ReceiptSource? source, MosaicId? resolvedValue}) {
 		this.source = source ?? ReceiptSource();
 		this.resolvedValue = resolvedValue ?? MosaicId();
 	}
@@ -3877,6 +3896,7 @@ class MosaicResolutionEntry extends StructBase implements IDeserializable {
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -3898,7 +3918,7 @@ class MosaicResolutionEntry extends StructBase implements IDeserializable {
 }
 
 
-class MosaicResolutionStatement extends StructBase implements IDeserializable {
+class MosaicResolutionStatement implements ISerializable {
 
 	static const Map<String, String> TYPE_HINTS = {
 		'unresolved': 'pod:UnresolvedMosaicId',
@@ -3908,9 +3928,7 @@ class MosaicResolutionStatement extends StructBase implements IDeserializable {
 	UnresolvedMosaicId unresolved = UnresolvedMosaicId();
 	List<MosaicResolutionEntry> resolutionEntries = [];
 
-	MosaicResolutionStatement({ UnresolvedMosaicId? unresolved, List<MosaicResolutionEntry>? resolutionEntries}) 
-		: super(unresolved == null && resolutionEntries == null )
-	{
+	MosaicResolutionStatement({ UnresolvedMosaicId? unresolved, List<MosaicResolutionEntry>? resolutionEntries}) {
 		this.unresolved = unresolved ?? UnresolvedMosaicId();
 		this.resolutionEntries = resolutionEntries ?? [];
 	}
@@ -3944,6 +3962,7 @@ class MosaicResolutionStatement extends StructBase implements IDeserializable {
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -3969,7 +3988,7 @@ class MosaicResolutionStatement extends StructBase implements IDeserializable {
 }
 
 
-class TransactionStatement extends StructBase implements IDeserializable {
+class TransactionStatement implements ISerializable {
 
 	static const Map<String, String> TYPE_HINTS = {
 		'receipts': 'array[Receipt]'
@@ -3979,9 +3998,7 @@ class TransactionStatement extends StructBase implements IDeserializable {
 	int secondaryId = 0;
 	List<Receipt> receipts = [];
 
-	TransactionStatement({ int? primaryId, int? secondaryId, List<Receipt>? receipts}) 
-		: super(primaryId == null && secondaryId == null && receipts == null )
-	{
+	TransactionStatement({ int? primaryId, int? secondaryId, List<Receipt>? receipts}) {
 		this.primaryId = primaryId ?? 0;
 		this.secondaryId = secondaryId ?? 0;
 		this.receipts = receipts ?? [];
@@ -4020,6 +4037,7 @@ class TransactionStatement extends StructBase implements IDeserializable {
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -4048,7 +4066,7 @@ class TransactionStatement extends StructBase implements IDeserializable {
 }
 
 
-class BlockStatement extends StructBase implements IDeserializable {
+class BlockStatement implements ISerializable {
 
 	static const Map<String, String> TYPE_HINTS = {
 		'transactionStatements': 'array[TransactionStatement]',
@@ -4064,9 +4082,7 @@ class BlockStatement extends StructBase implements IDeserializable {
 	List<TransactionStatement>? transactionStatements,
 	List<AddressResolutionStatement>? addressResolutionStatements,
 	List<MosaicResolutionStatement>? mosaicResolutionStatements
-	}) 
-		: super(transactionStatements == null && addressResolutionStatements == null && mosaicResolutionStatements == null )
-	{
+	}) {
 		this.transactionStatements = transactionStatements ?? [];
 		this.addressResolutionStatements = addressResolutionStatements ?? [];
 		this.mosaicResolutionStatements = mosaicResolutionStatements ?? [];
@@ -4111,6 +4127,7 @@ class BlockStatement extends StructBase implements IDeserializable {
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -4147,7 +4164,7 @@ class BlockStatement extends StructBase implements IDeserializable {
 }
 
 
-class AccountKeyLinkTransactionV1 extends StructBase implements IDeserializable, ITransaction {
+class AccountKeyLinkTransactionV1 implements ISerializable, ITransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.ACCOUNT_KEY_LINK.value);
 
@@ -4164,9 +4181,9 @@ class AccountKeyLinkTransactionV1 extends StructBase implements IDeserializable,
 
 	Signature signature = Signature();
 	PublicKey signerPublicKey = PublicKey();
-	int version = 0;
+	int version = AccountKeyLinkTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = TransactionType.ACCOUNT_KEY_LINK;
+	TransactionType type = AccountKeyLinkTransactionV1.TRANSACTION_TYPE;
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
 	PublicKey linkedPublicKey = PublicKey();
@@ -4184,9 +4201,7 @@ class AccountKeyLinkTransactionV1 extends StructBase implements IDeserializable,
 	Timestamp? deadline,
 	PublicKey? linkedPublicKey,
 	LinkAction? linkAction
-	}) 
-		: super(signature == null && signerPublicKey == null && version == null && network == null && type == null && fee == null && deadline == null && linkedPublicKey == null && linkAction == null )
-	{
+	}) {
 		this.signature = signature ?? Signature();
 		this.signerPublicKey = signerPublicKey ?? PublicKey();
 		this.version = version ?? AccountKeyLinkTransactionV1.TRANSACTION_VERSION;
@@ -4222,7 +4237,8 @@ class AccountKeyLinkTransactionV1 extends StructBase implements IDeserializable,
 	@override
 	AccountKeyLinkTransactionV1 deserialize(Uint8List payload) {
 		var buffer = payload;
-		// nothing to do for size
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var verifiableEntityHeaderReserved_1 = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
@@ -4267,6 +4283,7 @@ class AccountKeyLinkTransactionV1 extends StructBase implements IDeserializable,
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -4315,7 +4332,7 @@ class AccountKeyLinkTransactionV1 extends StructBase implements IDeserializable,
 }
 
 
-class EmbeddedAccountKeyLinkTransactionV1 extends StructBase implements IDeserializable, IInnerTransaction {
+class EmbeddedAccountKeyLinkTransactionV1 implements ISerializable, IInnerTransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.ACCOUNT_KEY_LINK.value);
 
@@ -4328,9 +4345,9 @@ class EmbeddedAccountKeyLinkTransactionV1 extends StructBase implements IDeseria
 	};
 
 	PublicKey signerPublicKey = PublicKey();
-	int version = 0;
+	int version = EmbeddedAccountKeyLinkTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = TransactionType.ACCOUNT_KEY_LINK;
+	TransactionType type = EmbeddedAccountKeyLinkTransactionV1.TRANSACTION_TYPE;
 	PublicKey linkedPublicKey = PublicKey();
 	LinkAction linkAction = LinkAction.UNLINK;
 	final int embeddedTransactionHeaderReserved_1 = 0; // reserved field
@@ -4343,9 +4360,7 @@ class EmbeddedAccountKeyLinkTransactionV1 extends StructBase implements IDeseria
 	TransactionType? type,
 	PublicKey? linkedPublicKey,
 	LinkAction? linkAction
-	}) 
-		: super(signerPublicKey == null && version == null && network == null && type == null && linkedPublicKey == null && linkAction == null )
-	{
+	}) {
 		this.signerPublicKey = signerPublicKey ?? PublicKey();
 		this.version = version ?? EmbeddedAccountKeyLinkTransactionV1.TRANSACTION_VERSION;
 		this.network = network ?? NetworkType.MAINNET;
@@ -4375,7 +4390,8 @@ class EmbeddedAccountKeyLinkTransactionV1 extends StructBase implements IDeseria
 	@override
 	EmbeddedAccountKeyLinkTransactionV1 deserialize(Uint8List payload) {
 		var buffer = payload;
-		// nothing to do for size
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var embeddedTransactionHeaderReserved_1 = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
@@ -4411,6 +4427,7 @@ class EmbeddedAccountKeyLinkTransactionV1 extends StructBase implements IDeseria
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -4450,7 +4467,7 @@ class EmbeddedAccountKeyLinkTransactionV1 extends StructBase implements IDeseria
 }
 
 
-class NodeKeyLinkTransactionV1 extends StructBase implements IDeserializable, ITransaction {
+class NodeKeyLinkTransactionV1 implements ISerializable, ITransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.NODE_KEY_LINK.value);
 
@@ -4467,9 +4484,9 @@ class NodeKeyLinkTransactionV1 extends StructBase implements IDeserializable, IT
 
 	Signature signature = Signature();
 	PublicKey signerPublicKey = PublicKey();
-	int version = 0;
+	int version = NodeKeyLinkTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = TransactionType.ACCOUNT_KEY_LINK;
+	TransactionType type = NodeKeyLinkTransactionV1.TRANSACTION_TYPE;
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
 	PublicKey linkedPublicKey = PublicKey();
@@ -4487,9 +4504,7 @@ class NodeKeyLinkTransactionV1 extends StructBase implements IDeserializable, IT
 	Timestamp? deadline,
 	PublicKey? linkedPublicKey,
 	LinkAction? linkAction
-	}) 
-		: super(signature == null && signerPublicKey == null && version == null && network == null && type == null && fee == null && deadline == null && linkedPublicKey == null && linkAction == null )
-	{
+	}) {
 		this.signature = signature ?? Signature();
 		this.signerPublicKey = signerPublicKey ?? PublicKey();
 		this.version = version ?? NodeKeyLinkTransactionV1.TRANSACTION_VERSION;
@@ -4525,7 +4540,8 @@ class NodeKeyLinkTransactionV1 extends StructBase implements IDeserializable, IT
 	@override
 	NodeKeyLinkTransactionV1 deserialize(Uint8List payload) {
 		var buffer = payload;
-		// nothing to do for size
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var verifiableEntityHeaderReserved_1 = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
@@ -4570,6 +4586,7 @@ class NodeKeyLinkTransactionV1 extends StructBase implements IDeserializable, IT
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -4618,7 +4635,7 @@ class NodeKeyLinkTransactionV1 extends StructBase implements IDeserializable, IT
 }
 
 
-class EmbeddedNodeKeyLinkTransactionV1 extends StructBase implements IDeserializable, IInnerTransaction {
+class EmbeddedNodeKeyLinkTransactionV1 implements ISerializable, IInnerTransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.NODE_KEY_LINK.value);
 
@@ -4631,9 +4648,9 @@ class EmbeddedNodeKeyLinkTransactionV1 extends StructBase implements IDeserializ
 	};
 
 	PublicKey signerPublicKey = PublicKey();
-	int version = 0;
+	int version = EmbeddedNodeKeyLinkTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = TransactionType.ACCOUNT_KEY_LINK;
+	TransactionType type = EmbeddedNodeKeyLinkTransactionV1.TRANSACTION_TYPE;
 	PublicKey linkedPublicKey = PublicKey();
 	LinkAction linkAction = LinkAction.UNLINK;
 	final int embeddedTransactionHeaderReserved_1 = 0; // reserved field
@@ -4646,9 +4663,7 @@ class EmbeddedNodeKeyLinkTransactionV1 extends StructBase implements IDeserializ
 	TransactionType? type,
 	PublicKey? linkedPublicKey,
 	LinkAction? linkAction
-	}) 
-		: super(signerPublicKey == null && version == null && network == null && type == null && linkedPublicKey == null && linkAction == null )
-	{
+	}) {
 		this.signerPublicKey = signerPublicKey ?? PublicKey();
 		this.version = version ?? EmbeddedNodeKeyLinkTransactionV1.TRANSACTION_VERSION;
 		this.network = network ?? NetworkType.MAINNET;
@@ -4678,7 +4693,8 @@ class EmbeddedNodeKeyLinkTransactionV1 extends StructBase implements IDeserializ
 	@override
 	EmbeddedNodeKeyLinkTransactionV1 deserialize(Uint8List payload) {
 		var buffer = payload;
-		// nothing to do for size
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var embeddedTransactionHeaderReserved_1 = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
@@ -4714,6 +4730,7 @@ class EmbeddedNodeKeyLinkTransactionV1 extends StructBase implements IDeserializ
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -4753,7 +4770,7 @@ class EmbeddedNodeKeyLinkTransactionV1 extends StructBase implements IDeserializ
 }
 
 
-class Cosignature extends StructBase implements IDeserializable {
+class Cosignature implements ISerializable {
 
 	static const Map<String, String> TYPE_HINTS = {
 		'signerPublicKey': 'pod:PublicKey',
@@ -4764,9 +4781,7 @@ class Cosignature extends StructBase implements IDeserializable {
 	PublicKey signerPublicKey = PublicKey();
 	Signature signature = Signature();
 
-	Cosignature({ int? version, PublicKey? signerPublicKey, Signature? signature}) 
-		: super(version == null && signerPublicKey == null && signature == null )
-	{
+	Cosignature({ int? version, PublicKey? signerPublicKey, Signature? signature}) {
 		this.version = version ?? 0;
 		this.signerPublicKey = signerPublicKey ?? PublicKey();
 		this.signature = signature ?? Signature();
@@ -4802,6 +4817,7 @@ class Cosignature extends StructBase implements IDeserializable {
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -4826,7 +4842,7 @@ class Cosignature extends StructBase implements IDeserializable {
 }
 
 
-class DetachedCosignature extends StructBase implements IDeserializable {
+class DetachedCosignature implements ISerializable {
 
 	static const Map<String, String> TYPE_HINTS = {
 		'signerPublicKey': 'pod:PublicKey',
@@ -4839,9 +4855,7 @@ class DetachedCosignature extends StructBase implements IDeserializable {
 	Signature signature = Signature();
 	Hash256 parentHash = Hash256();
 
-	DetachedCosignature({ int? version, PublicKey? signerPublicKey, Signature? signature, Hash256? parentHash}) 
-		: super(version == null && signerPublicKey == null && signature == null && parentHash == null )
-	{
+	DetachedCosignature({ int? version, PublicKey? signerPublicKey, Signature? signature, Hash256? parentHash}) {
 		this.version = version ?? 0;
 		this.signerPublicKey = signerPublicKey ?? PublicKey();
 		this.signature = signature ?? Signature();
@@ -4882,6 +4896,7 @@ class DetachedCosignature extends StructBase implements IDeserializable {
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -4909,7 +4924,7 @@ class DetachedCosignature extends StructBase implements IDeserializable {
 }
 
 
-class AggregateCompleteTransactionV1 extends StructBase implements IDeserializable, ITransaction {
+class AggregateCompleteTransactionV1 implements ISerializable, ITransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.AGGREGATE_COMPLETE.value);
 
@@ -4927,9 +4942,9 @@ class AggregateCompleteTransactionV1 extends StructBase implements IDeserializab
 
 	Signature signature = Signature();
 	PublicKey signerPublicKey = PublicKey();
-	int version = 0;
+	int version = AggregateCompleteTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = TransactionType.ACCOUNT_KEY_LINK;
+	TransactionType type = AggregateCompleteTransactionV1.TRANSACTION_TYPE;
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
 	Hash256 transactionsHash = Hash256();
@@ -4950,9 +4965,7 @@ class AggregateCompleteTransactionV1 extends StructBase implements IDeserializab
 	Hash256? transactionsHash,
 	List<IInnerTransaction>? transactions,
 	List<Cosignature>? cosignatures
-	}) 
-		: super(signature == null && signerPublicKey == null && version == null && network == null && type == null && fee == null && deadline == null && transactionsHash == null && transactions == null && cosignatures == null )
-	{
+	}) {
 		this.signature = signature ?? Signature();
 		this.signerPublicKey = signerPublicKey ?? PublicKey();
 		this.version = version ?? AggregateCompleteTransactionV1.TRANSACTION_VERSION;
@@ -4992,7 +5005,8 @@ class AggregateCompleteTransactionV1 extends StructBase implements IDeserializab
 	@override
 	AggregateCompleteTransactionV1 deserialize(Uint8List payload) {
 		var buffer = payload;
-		// nothing to do for size
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var verifiableEntityHeaderReserved_1 = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
@@ -5047,6 +5061,7 @@ class AggregateCompleteTransactionV1 extends StructBase implements IDeserializab
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -5106,7 +5121,7 @@ class AggregateCompleteTransactionV1 extends StructBase implements IDeserializab
 }
 
 
-class AggregateCompleteTransactionV2 extends StructBase implements IDeserializable, ITransaction {
+class AggregateCompleteTransactionV2 implements ISerializable, ITransaction {
 	static const int TRANSACTION_VERSION = 2;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.AGGREGATE_COMPLETE.value);
 
@@ -5124,9 +5139,9 @@ class AggregateCompleteTransactionV2 extends StructBase implements IDeserializab
 
 	Signature signature = Signature();
 	PublicKey signerPublicKey = PublicKey();
-	int version = 0;
+	int version = AggregateCompleteTransactionV2.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = TransactionType.ACCOUNT_KEY_LINK;
+	TransactionType type = AggregateCompleteTransactionV2.TRANSACTION_TYPE;
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
 	Hash256 transactionsHash = Hash256();
@@ -5147,9 +5162,7 @@ class AggregateCompleteTransactionV2 extends StructBase implements IDeserializab
 	Hash256? transactionsHash,
 	List<IInnerTransaction>? transactions,
 	List<Cosignature>? cosignatures
-	}) 
-		: super(signature == null && signerPublicKey == null && version == null && network == null && type == null && fee == null && deadline == null && transactionsHash == null && transactions == null && cosignatures == null )
-	{
+	}) {
 		this.signature = signature ?? Signature();
 		this.signerPublicKey = signerPublicKey ?? PublicKey();
 		this.version = version ?? AggregateCompleteTransactionV2.TRANSACTION_VERSION;
@@ -5189,7 +5202,8 @@ class AggregateCompleteTransactionV2 extends StructBase implements IDeserializab
 	@override
 	AggregateCompleteTransactionV2 deserialize(Uint8List payload) {
 		var buffer = payload;
-		// nothing to do for size
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var verifiableEntityHeaderReserved_1 = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
@@ -5244,6 +5258,7 @@ class AggregateCompleteTransactionV2 extends StructBase implements IDeserializab
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -5303,7 +5318,7 @@ class AggregateCompleteTransactionV2 extends StructBase implements IDeserializab
 }
 
 
-class AggregateBondedTransactionV1 extends StructBase implements IDeserializable, ITransaction {
+class AggregateBondedTransactionV1 implements ISerializable, ITransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.AGGREGATE_BONDED.value);
 
@@ -5321,9 +5336,9 @@ class AggregateBondedTransactionV1 extends StructBase implements IDeserializable
 
 	Signature signature = Signature();
 	PublicKey signerPublicKey = PublicKey();
-	int version = 0;
+	int version = AggregateBondedTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = TransactionType.ACCOUNT_KEY_LINK;
+	TransactionType type = AggregateBondedTransactionV1.TRANSACTION_TYPE;
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
 	Hash256 transactionsHash = Hash256();
@@ -5344,9 +5359,7 @@ class AggregateBondedTransactionV1 extends StructBase implements IDeserializable
 	Hash256? transactionsHash,
 	List<IInnerTransaction>? transactions,
 	List<Cosignature>? cosignatures
-	}) 
-		: super(signature == null && signerPublicKey == null && version == null && network == null && type == null && fee == null && deadline == null && transactionsHash == null && transactions == null && cosignatures == null )
-	{
+	}) {
 		this.signature = signature ?? Signature();
 		this.signerPublicKey = signerPublicKey ?? PublicKey();
 		this.version = version ?? AggregateBondedTransactionV1.TRANSACTION_VERSION;
@@ -5386,7 +5399,8 @@ class AggregateBondedTransactionV1 extends StructBase implements IDeserializable
 	@override
 	AggregateBondedTransactionV1 deserialize(Uint8List payload) {
 		var buffer = payload;
-		// nothing to do for size
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var verifiableEntityHeaderReserved_1 = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
@@ -5441,6 +5455,7 @@ class AggregateBondedTransactionV1 extends StructBase implements IDeserializable
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -5500,7 +5515,7 @@ class AggregateBondedTransactionV1 extends StructBase implements IDeserializable
 }
 
 
-class AggregateBondedTransactionV2 extends StructBase implements IDeserializable, ITransaction {
+class AggregateBondedTransactionV2 implements ISerializable, ITransaction {
 	static const int TRANSACTION_VERSION = 2;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.AGGREGATE_BONDED.value);
 
@@ -5518,9 +5533,9 @@ class AggregateBondedTransactionV2 extends StructBase implements IDeserializable
 
 	Signature signature = Signature();
 	PublicKey signerPublicKey = PublicKey();
-	int version = 0;
+	int version = AggregateBondedTransactionV2.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = TransactionType.ACCOUNT_KEY_LINK;
+	TransactionType type = AggregateBondedTransactionV2.TRANSACTION_TYPE;
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
 	Hash256 transactionsHash = Hash256();
@@ -5541,9 +5556,7 @@ class AggregateBondedTransactionV2 extends StructBase implements IDeserializable
 	Hash256? transactionsHash,
 	List<IInnerTransaction>? transactions,
 	List<Cosignature>? cosignatures
-	}) 
-		: super(signature == null && signerPublicKey == null && version == null && network == null && type == null && fee == null && deadline == null && transactionsHash == null && transactions == null && cosignatures == null )
-	{
+	}) {
 		this.signature = signature ?? Signature();
 		this.signerPublicKey = signerPublicKey ?? PublicKey();
 		this.version = version ?? AggregateBondedTransactionV2.TRANSACTION_VERSION;
@@ -5583,7 +5596,8 @@ class AggregateBondedTransactionV2 extends StructBase implements IDeserializable
 	@override
 	AggregateBondedTransactionV2 deserialize(Uint8List payload) {
 		var buffer = payload;
-		// nothing to do for size
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var verifiableEntityHeaderReserved_1 = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
@@ -5638,6 +5652,7 @@ class AggregateBondedTransactionV2 extends StructBase implements IDeserializable
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -5697,7 +5712,7 @@ class AggregateBondedTransactionV2 extends StructBase implements IDeserializable
 }
 
 
-class VotingKeyLinkTransactionV1 extends StructBase implements IDeserializable, ITransaction {
+class VotingKeyLinkTransactionV1 implements ISerializable, ITransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.VOTING_KEY_LINK.value);
 
@@ -5716,9 +5731,9 @@ class VotingKeyLinkTransactionV1 extends StructBase implements IDeserializable, 
 
 	Signature signature = Signature();
 	PublicKey signerPublicKey = PublicKey();
-	int version = 0;
+	int version = VotingKeyLinkTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = TransactionType.ACCOUNT_KEY_LINK;
+	TransactionType type = VotingKeyLinkTransactionV1.TRANSACTION_TYPE;
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
 	VotingPublicKey linkedPublicKey = VotingPublicKey();
@@ -5740,9 +5755,7 @@ class VotingKeyLinkTransactionV1 extends StructBase implements IDeserializable, 
 	FinalizationEpoch? startEpoch,
 	FinalizationEpoch? endEpoch,
 	LinkAction? linkAction
-	}) 
-		: super(signature == null && signerPublicKey == null && version == null && network == null && type == null && fee == null && deadline == null && linkedPublicKey == null && startEpoch == null && endEpoch == null && linkAction == null )
-	{
+	}) {
 		this.signature = signature ?? Signature();
 		this.signerPublicKey = signerPublicKey ?? PublicKey();
 		this.version = version ?? VotingKeyLinkTransactionV1.TRANSACTION_VERSION;
@@ -5782,7 +5795,8 @@ class VotingKeyLinkTransactionV1 extends StructBase implements IDeserializable, 
 	@override
 	VotingKeyLinkTransactionV1 deserialize(Uint8List payload) {
 		var buffer = payload;
-		// nothing to do for size
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var verifiableEntityHeaderReserved_1 = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
@@ -5833,6 +5847,7 @@ class VotingKeyLinkTransactionV1 extends StructBase implements IDeserializable, 
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -5887,7 +5902,7 @@ class VotingKeyLinkTransactionV1 extends StructBase implements IDeserializable, 
 }
 
 
-class EmbeddedVotingKeyLinkTransactionV1 extends StructBase implements IDeserializable, IInnerTransaction {
+class EmbeddedVotingKeyLinkTransactionV1 implements ISerializable, IInnerTransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.VOTING_KEY_LINK.value);
 
@@ -5902,9 +5917,9 @@ class EmbeddedVotingKeyLinkTransactionV1 extends StructBase implements IDeserial
 	};
 
 	PublicKey signerPublicKey = PublicKey();
-	int version = 0;
+	int version = EmbeddedVotingKeyLinkTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = TransactionType.ACCOUNT_KEY_LINK;
+	TransactionType type = EmbeddedVotingKeyLinkTransactionV1.TRANSACTION_TYPE;
 	VotingPublicKey linkedPublicKey = VotingPublicKey();
 	FinalizationEpoch startEpoch = FinalizationEpoch();
 	FinalizationEpoch endEpoch = FinalizationEpoch();
@@ -5921,9 +5936,7 @@ class EmbeddedVotingKeyLinkTransactionV1 extends StructBase implements IDeserial
 	FinalizationEpoch? startEpoch,
 	FinalizationEpoch? endEpoch,
 	LinkAction? linkAction
-	}) 
-		: super(signerPublicKey == null && version == null && network == null && type == null && linkedPublicKey == null && startEpoch == null && endEpoch == null && linkAction == null )
-	{
+	}) {
 		this.signerPublicKey = signerPublicKey ?? PublicKey();
 		this.version = version ?? EmbeddedVotingKeyLinkTransactionV1.TRANSACTION_VERSION;
 		this.network = network ?? NetworkType.MAINNET;
@@ -5957,7 +5970,8 @@ class EmbeddedVotingKeyLinkTransactionV1 extends StructBase implements IDeserial
 	@override
 	EmbeddedVotingKeyLinkTransactionV1 deserialize(Uint8List payload) {
 		var buffer = payload;
-		// nothing to do for size
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var embeddedTransactionHeaderReserved_1 = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
@@ -5999,6 +6013,7 @@ class EmbeddedVotingKeyLinkTransactionV1 extends StructBase implements IDeserial
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -6044,7 +6059,7 @@ class EmbeddedVotingKeyLinkTransactionV1 extends StructBase implements IDeserial
 }
 
 
-class VrfKeyLinkTransactionV1 extends StructBase implements IDeserializable, ITransaction {
+class VrfKeyLinkTransactionV1 implements ISerializable, ITransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.VRF_KEY_LINK.value);
 
@@ -6061,9 +6076,9 @@ class VrfKeyLinkTransactionV1 extends StructBase implements IDeserializable, ITr
 
 	Signature signature = Signature();
 	PublicKey signerPublicKey = PublicKey();
-	int version = 0;
+	int version = VrfKeyLinkTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = TransactionType.ACCOUNT_KEY_LINK;
+	TransactionType type = VrfKeyLinkTransactionV1.TRANSACTION_TYPE;
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
 	PublicKey linkedPublicKey = PublicKey();
@@ -6081,9 +6096,7 @@ class VrfKeyLinkTransactionV1 extends StructBase implements IDeserializable, ITr
 	Timestamp? deadline,
 	PublicKey? linkedPublicKey,
 	LinkAction? linkAction
-	}) 
-		: super(signature == null && signerPublicKey == null && version == null && network == null && type == null && fee == null && deadline == null && linkedPublicKey == null && linkAction == null )
-	{
+	}) {
 		this.signature = signature ?? Signature();
 		this.signerPublicKey = signerPublicKey ?? PublicKey();
 		this.version = version ?? VrfKeyLinkTransactionV1.TRANSACTION_VERSION;
@@ -6119,7 +6132,8 @@ class VrfKeyLinkTransactionV1 extends StructBase implements IDeserializable, ITr
 	@override
 	VrfKeyLinkTransactionV1 deserialize(Uint8List payload) {
 		var buffer = payload;
-		// nothing to do for size
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var verifiableEntityHeaderReserved_1 = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
@@ -6164,6 +6178,7 @@ class VrfKeyLinkTransactionV1 extends StructBase implements IDeserializable, ITr
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -6212,7 +6227,7 @@ class VrfKeyLinkTransactionV1 extends StructBase implements IDeserializable, ITr
 }
 
 
-class EmbeddedVrfKeyLinkTransactionV1 extends StructBase implements IDeserializable, IInnerTransaction {
+class EmbeddedVrfKeyLinkTransactionV1 implements ISerializable, IInnerTransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.VRF_KEY_LINK.value);
 
@@ -6225,9 +6240,9 @@ class EmbeddedVrfKeyLinkTransactionV1 extends StructBase implements IDeserializa
 	};
 
 	PublicKey signerPublicKey = PublicKey();
-	int version = 0;
+	int version = EmbeddedVrfKeyLinkTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = TransactionType.ACCOUNT_KEY_LINK;
+	TransactionType type = EmbeddedVrfKeyLinkTransactionV1.TRANSACTION_TYPE;
 	PublicKey linkedPublicKey = PublicKey();
 	LinkAction linkAction = LinkAction.UNLINK;
 	final int embeddedTransactionHeaderReserved_1 = 0; // reserved field
@@ -6240,9 +6255,7 @@ class EmbeddedVrfKeyLinkTransactionV1 extends StructBase implements IDeserializa
 	TransactionType? type,
 	PublicKey? linkedPublicKey,
 	LinkAction? linkAction
-	}) 
-		: super(signerPublicKey == null && version == null && network == null && type == null && linkedPublicKey == null && linkAction == null )
-	{
+	}) {
 		this.signerPublicKey = signerPublicKey ?? PublicKey();
 		this.version = version ?? EmbeddedVrfKeyLinkTransactionV1.TRANSACTION_VERSION;
 		this.network = network ?? NetworkType.MAINNET;
@@ -6272,7 +6285,8 @@ class EmbeddedVrfKeyLinkTransactionV1 extends StructBase implements IDeserializa
 	@override
 	EmbeddedVrfKeyLinkTransactionV1 deserialize(Uint8List payload) {
 		var buffer = payload;
-		// nothing to do for size
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var embeddedTransactionHeaderReserved_1 = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
@@ -6308,6 +6322,7 @@ class EmbeddedVrfKeyLinkTransactionV1 extends StructBase implements IDeserializa
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -6347,7 +6362,7 @@ class EmbeddedVrfKeyLinkTransactionV1 extends StructBase implements IDeserializa
 }
 
 
-class HashLockTransactionV1 extends StructBase implements IDeserializable, ITransaction {
+class HashLockTransactionV1 implements ISerializable, ITransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.HASH_LOCK.value);
 
@@ -6365,9 +6380,9 @@ class HashLockTransactionV1 extends StructBase implements IDeserializable, ITran
 
 	Signature signature = Signature();
 	PublicKey signerPublicKey = PublicKey();
-	int version = 0;
+	int version = HashLockTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = TransactionType.ACCOUNT_KEY_LINK;
+	TransactionType type = HashLockTransactionV1.TRANSACTION_TYPE;
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
 	UnresolvedMosaic mosaic = UnresolvedMosaic();
@@ -6387,9 +6402,7 @@ class HashLockTransactionV1 extends StructBase implements IDeserializable, ITran
 	UnresolvedMosaic? mosaic,
 	BlockDuration? duration,
 	Hash256? hash
-	}) 
-		: super(signature == null && signerPublicKey == null && version == null && network == null && type == null && fee == null && deadline == null && mosaic == null && duration == null && hash == null )
-	{
+	}) {
 		this.signature = signature ?? Signature();
 		this.signerPublicKey = signerPublicKey ?? PublicKey();
 		this.version = version ?? HashLockTransactionV1.TRANSACTION_VERSION;
@@ -6427,7 +6440,8 @@ class HashLockTransactionV1 extends StructBase implements IDeserializable, ITran
 	@override
 	HashLockTransactionV1 deserialize(Uint8List payload) {
 		var buffer = payload;
-		// nothing to do for size
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var verifiableEntityHeaderReserved_1 = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
@@ -6475,6 +6489,7 @@ class HashLockTransactionV1 extends StructBase implements IDeserializable, ITran
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -6526,7 +6541,7 @@ class HashLockTransactionV1 extends StructBase implements IDeserializable, ITran
 }
 
 
-class EmbeddedHashLockTransactionV1 extends StructBase implements IDeserializable, IInnerTransaction {
+class EmbeddedHashLockTransactionV1 implements ISerializable, IInnerTransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.HASH_LOCK.value);
 
@@ -6540,9 +6555,9 @@ class EmbeddedHashLockTransactionV1 extends StructBase implements IDeserializabl
 	};
 
 	PublicKey signerPublicKey = PublicKey();
-	int version = 0;
+	int version = EmbeddedHashLockTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = TransactionType.ACCOUNT_KEY_LINK;
+	TransactionType type = EmbeddedHashLockTransactionV1.TRANSACTION_TYPE;
 	UnresolvedMosaic mosaic = UnresolvedMosaic();
 	BlockDuration duration = BlockDuration();
 	Hash256 hash = Hash256();
@@ -6557,9 +6572,7 @@ class EmbeddedHashLockTransactionV1 extends StructBase implements IDeserializabl
 	UnresolvedMosaic? mosaic,
 	BlockDuration? duration,
 	Hash256? hash
-	}) 
-		: super(signerPublicKey == null && version == null && network == null && type == null && mosaic == null && duration == null && hash == null )
-	{
+	}) {
 		this.signerPublicKey = signerPublicKey ?? PublicKey();
 		this.version = version ?? EmbeddedHashLockTransactionV1.TRANSACTION_VERSION;
 		this.network = network ?? NetworkType.MAINNET;
@@ -6591,7 +6604,8 @@ class EmbeddedHashLockTransactionV1 extends StructBase implements IDeserializabl
 	@override
 	EmbeddedHashLockTransactionV1 deserialize(Uint8List payload) {
 		var buffer = payload;
-		// nothing to do for size
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var embeddedTransactionHeaderReserved_1 = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
@@ -6630,6 +6644,7 @@ class EmbeddedHashLockTransactionV1 extends StructBase implements IDeserializabl
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -6672,7 +6687,7 @@ class EmbeddedHashLockTransactionV1 extends StructBase implements IDeserializabl
 }
 
 
-class LockHashAlgorithm implements IDeserializable {
+class LockHashAlgorithm implements ISerializable {
 	static final SHA3_256 = LockHashAlgorithm(0);
 	static final HASH_160 = LockHashAlgorithm(1);
 	static final HASH_256 = LockHashAlgorithm(2);
@@ -6697,6 +6712,7 @@ class LockHashAlgorithm implements IDeserializable {
 		return LockHashAlgorithm(byteData.getUint8(0));
 	}
 
+	@override
 	Uint8List serialize() {
 		var byteData = ByteData(1)..setUint8(0, value);
 		return byteData.buffer.asUint8List();
@@ -6709,7 +6725,7 @@ class LockHashAlgorithm implements IDeserializable {
 }
 
 
-class SecretLockTransactionV1 extends StructBase implements IDeserializable, ITransaction {
+class SecretLockTransactionV1 implements ISerializable, ITransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.SECRET_LOCK.value);
 
@@ -6729,9 +6745,9 @@ class SecretLockTransactionV1 extends StructBase implements IDeserializable, ITr
 
 	Signature signature = Signature();
 	PublicKey signerPublicKey = PublicKey();
-	int version = 0;
+	int version = SecretLockTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = TransactionType.ACCOUNT_KEY_LINK;
+	TransactionType type = SecretLockTransactionV1.TRANSACTION_TYPE;
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
 	UnresolvedAddress recipientAddress = UnresolvedAddress();
@@ -6755,9 +6771,7 @@ class SecretLockTransactionV1 extends StructBase implements IDeserializable, ITr
 	UnresolvedMosaic? mosaic,
 	BlockDuration? duration,
 	LockHashAlgorithm? hashAlgorithm
-	}) 
-		: super(signature == null && signerPublicKey == null && version == null && network == null && type == null && fee == null && deadline == null && recipientAddress == null && secret == null && mosaic == null && duration == null && hashAlgorithm == null )
-	{
+	}) {
 		this.signature = signature ?? Signature();
 		this.signerPublicKey = signerPublicKey ?? PublicKey();
 		this.version = version ?? SecretLockTransactionV1.TRANSACTION_VERSION;
@@ -6799,7 +6813,8 @@ class SecretLockTransactionV1 extends StructBase implements IDeserializable, ITr
 	@override
 	SecretLockTransactionV1 deserialize(Uint8List payload) {
 		var buffer = payload;
-		// nothing to do for size
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var verifiableEntityHeaderReserved_1 = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
@@ -6853,6 +6868,7 @@ class SecretLockTransactionV1 extends StructBase implements IDeserializable, ITr
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -6910,7 +6926,7 @@ class SecretLockTransactionV1 extends StructBase implements IDeserializable, ITr
 }
 
 
-class EmbeddedSecretLockTransactionV1 extends StructBase implements IDeserializable, IInnerTransaction {
+class EmbeddedSecretLockTransactionV1 implements ISerializable, IInnerTransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.SECRET_LOCK.value);
 
@@ -6926,9 +6942,9 @@ class EmbeddedSecretLockTransactionV1 extends StructBase implements IDeserializa
 	};
 
 	PublicKey signerPublicKey = PublicKey();
-	int version = 0;
+	int version = EmbeddedSecretLockTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = TransactionType.ACCOUNT_KEY_LINK;
+	TransactionType type = EmbeddedSecretLockTransactionV1.TRANSACTION_TYPE;
 	UnresolvedAddress recipientAddress = UnresolvedAddress();
 	Hash256 secret = Hash256();
 	UnresolvedMosaic mosaic = UnresolvedMosaic();
@@ -6947,9 +6963,7 @@ class EmbeddedSecretLockTransactionV1 extends StructBase implements IDeserializa
 	UnresolvedMosaic? mosaic,
 	BlockDuration? duration,
 	LockHashAlgorithm? hashAlgorithm
-	}) 
-		: super(signerPublicKey == null && version == null && network == null && type == null && recipientAddress == null && secret == null && mosaic == null && duration == null && hashAlgorithm == null )
-	{
+	}) {
 		this.signerPublicKey = signerPublicKey ?? PublicKey();
 		this.version = version ?? EmbeddedSecretLockTransactionV1.TRANSACTION_VERSION;
 		this.network = network ?? NetworkType.MAINNET;
@@ -6985,7 +6999,8 @@ class EmbeddedSecretLockTransactionV1 extends StructBase implements IDeserializa
 	@override
 	EmbeddedSecretLockTransactionV1 deserialize(Uint8List payload) {
 		var buffer = payload;
-		// nothing to do for size
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var embeddedTransactionHeaderReserved_1 = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
@@ -7030,6 +7045,7 @@ class EmbeddedSecretLockTransactionV1 extends StructBase implements IDeserializa
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -7078,7 +7094,7 @@ class EmbeddedSecretLockTransactionV1 extends StructBase implements IDeserializa
 }
 
 
-class SecretProofTransactionV1 extends StructBase implements IDeserializable, ITransaction {
+class SecretProofTransactionV1 implements ISerializable, ITransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.SECRET_PROOF.value);
 
@@ -7097,9 +7113,9 @@ class SecretProofTransactionV1 extends StructBase implements IDeserializable, IT
 
 	Signature signature = Signature();
 	PublicKey signerPublicKey = PublicKey();
-	int version = 0;
+	int version = SecretProofTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = TransactionType.ACCOUNT_KEY_LINK;
+	TransactionType type = SecretProofTransactionV1.TRANSACTION_TYPE;
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
 	UnresolvedAddress recipientAddress = UnresolvedAddress();
@@ -7121,9 +7137,7 @@ class SecretProofTransactionV1 extends StructBase implements IDeserializable, IT
 	Hash256? secret,
 	LockHashAlgorithm? hashAlgorithm,
 	Uint8List? proof
-	}) 
-		: super(signature == null && signerPublicKey == null && version == null && network == null && type == null && fee == null && deadline == null && recipientAddress == null && secret == null && hashAlgorithm == null && proof == null )
-	{
+	}) {
 		this.signature = signature ?? Signature();
 		this.signerPublicKey = signerPublicKey ?? PublicKey();
 		this.version = version ?? SecretProofTransactionV1.TRANSACTION_VERSION;
@@ -7164,7 +7178,8 @@ class SecretProofTransactionV1 extends StructBase implements IDeserializable, IT
 	@override
 	SecretProofTransactionV1 deserialize(Uint8List payload) {
 		var buffer = payload;
-		// nothing to do for size
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var verifiableEntityHeaderReserved_1 = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
@@ -7217,6 +7232,7 @@ class SecretProofTransactionV1 extends StructBase implements IDeserializable, IT
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -7273,7 +7289,7 @@ class SecretProofTransactionV1 extends StructBase implements IDeserializable, IT
 }
 
 
-class EmbeddedSecretProofTransactionV1 extends StructBase implements IDeserializable, IInnerTransaction {
+class EmbeddedSecretProofTransactionV1 implements ISerializable, IInnerTransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.SECRET_PROOF.value);
 
@@ -7288,9 +7304,9 @@ class EmbeddedSecretProofTransactionV1 extends StructBase implements IDeserializ
 	};
 
 	PublicKey signerPublicKey = PublicKey();
-	int version = 0;
+	int version = EmbeddedSecretProofTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = TransactionType.ACCOUNT_KEY_LINK;
+	TransactionType type = EmbeddedSecretProofTransactionV1.TRANSACTION_TYPE;
 	UnresolvedAddress recipientAddress = UnresolvedAddress();
 	Hash256 secret = Hash256();
 	LockHashAlgorithm hashAlgorithm = LockHashAlgorithm.SHA3_256;
@@ -7307,9 +7323,7 @@ class EmbeddedSecretProofTransactionV1 extends StructBase implements IDeserializ
 	Hash256? secret,
 	LockHashAlgorithm? hashAlgorithm,
 	Uint8List? proof
-	}) 
-		: super(signerPublicKey == null && version == null && network == null && type == null && recipientAddress == null && secret == null && hashAlgorithm == null && proof == null )
-	{
+	}) {
 		this.signerPublicKey = signerPublicKey ?? PublicKey();
 		this.version = version ?? EmbeddedSecretProofTransactionV1.TRANSACTION_VERSION;
 		this.network = network ?? NetworkType.MAINNET;
@@ -7344,7 +7358,8 @@ class EmbeddedSecretProofTransactionV1 extends StructBase implements IDeserializ
 	@override
 	EmbeddedSecretProofTransactionV1 deserialize(Uint8List payload) {
 		var buffer = payload;
-		// nothing to do for size
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var embeddedTransactionHeaderReserved_1 = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
@@ -7388,6 +7403,7 @@ class EmbeddedSecretProofTransactionV1 extends StructBase implements IDeserializ
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -7435,7 +7451,7 @@ class EmbeddedSecretProofTransactionV1 extends StructBase implements IDeserializ
 }
 
 
-class AccountMetadataTransactionV1 extends StructBase implements IDeserializable, ITransaction {
+class AccountMetadataTransactionV1 implements ISerializable, ITransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.ACCOUNT_METADATA.value);
 
@@ -7452,9 +7468,9 @@ class AccountMetadataTransactionV1 extends StructBase implements IDeserializable
 
 	Signature signature = Signature();
 	PublicKey signerPublicKey = PublicKey();
-	int version = 0;
+	int version = AccountMetadataTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = TransactionType.ACCOUNT_KEY_LINK;
+	TransactionType type = AccountMetadataTransactionV1.TRANSACTION_TYPE;
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
 	UnresolvedAddress targetAddress = UnresolvedAddress();
@@ -7476,9 +7492,7 @@ class AccountMetadataTransactionV1 extends StructBase implements IDeserializable
 	int? scopedMetadataKey,
 	int? valueSizeDelta,
 	Uint8List? value
-	}) 
-		: super(signature == null && signerPublicKey == null && version == null && network == null && type == null && fee == null && deadline == null && targetAddress == null && scopedMetadataKey == null && valueSizeDelta == null && value == null )
-	{
+	}) {
 		this.signature = signature ?? Signature();
 		this.signerPublicKey = signerPublicKey ?? PublicKey();
 		this.version = version ?? AccountMetadataTransactionV1.TRANSACTION_VERSION;
@@ -7519,7 +7533,8 @@ class AccountMetadataTransactionV1 extends StructBase implements IDeserializable
 	@override
 	AccountMetadataTransactionV1 deserialize(Uint8List payload) {
 		var buffer = payload;
-		// nothing to do for size
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var verifiableEntityHeaderReserved_1 = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
@@ -7572,6 +7587,7 @@ class AccountMetadataTransactionV1 extends StructBase implements IDeserializable
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -7628,7 +7644,7 @@ class AccountMetadataTransactionV1 extends StructBase implements IDeserializable
 }
 
 
-class EmbeddedAccountMetadataTransactionV1 extends StructBase implements IDeserializable, IInnerTransaction {
+class EmbeddedAccountMetadataTransactionV1 implements ISerializable, IInnerTransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.ACCOUNT_METADATA.value);
 
@@ -7641,9 +7657,9 @@ class EmbeddedAccountMetadataTransactionV1 extends StructBase implements IDeseri
 	};
 
 	PublicKey signerPublicKey = PublicKey();
-	int version = 0;
+	int version = EmbeddedAccountMetadataTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = TransactionType.ACCOUNT_KEY_LINK;
+	TransactionType type = EmbeddedAccountMetadataTransactionV1.TRANSACTION_TYPE;
 	UnresolvedAddress targetAddress = UnresolvedAddress();
 	int scopedMetadataKey = 0;
 	int valueSizeDelta = 0;
@@ -7660,9 +7676,7 @@ class EmbeddedAccountMetadataTransactionV1 extends StructBase implements IDeseri
 	int? scopedMetadataKey,
 	int? valueSizeDelta,
 	Uint8List? value
-	}) 
-		: super(signerPublicKey == null && version == null && network == null && type == null && targetAddress == null && scopedMetadataKey == null && valueSizeDelta == null && value == null )
-	{
+	}) {
 		this.signerPublicKey = signerPublicKey ?? PublicKey();
 		this.version = version ?? EmbeddedAccountMetadataTransactionV1.TRANSACTION_VERSION;
 		this.network = network ?? NetworkType.MAINNET;
@@ -7697,7 +7711,8 @@ class EmbeddedAccountMetadataTransactionV1 extends StructBase implements IDeseri
 	@override
 	EmbeddedAccountMetadataTransactionV1 deserialize(Uint8List payload) {
 		var buffer = payload;
-		// nothing to do for size
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var embeddedTransactionHeaderReserved_1 = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
@@ -7741,6 +7756,7 @@ class EmbeddedAccountMetadataTransactionV1 extends StructBase implements IDeseri
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -7788,7 +7804,7 @@ class EmbeddedAccountMetadataTransactionV1 extends StructBase implements IDeseri
 }
 
 
-class MosaicMetadataTransactionV1 extends StructBase implements IDeserializable, ITransaction {
+class MosaicMetadataTransactionV1 implements ISerializable, ITransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.MOSAIC_METADATA.value);
 
@@ -7806,9 +7822,9 @@ class MosaicMetadataTransactionV1 extends StructBase implements IDeserializable,
 
 	Signature signature = Signature();
 	PublicKey signerPublicKey = PublicKey();
-	int version = 0;
+	int version = MosaicMetadataTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = TransactionType.ACCOUNT_KEY_LINK;
+	TransactionType type = MosaicMetadataTransactionV1.TRANSACTION_TYPE;
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
 	UnresolvedAddress targetAddress = UnresolvedAddress();
@@ -7832,9 +7848,7 @@ class MosaicMetadataTransactionV1 extends StructBase implements IDeserializable,
 	UnresolvedMosaicId? targetMosaicId,
 	int? valueSizeDelta,
 	Uint8List? value
-	}) 
-		: super(signature == null && signerPublicKey == null && version == null && network == null && type == null && fee == null && deadline == null && targetAddress == null && scopedMetadataKey == null && targetMosaicId == null && valueSizeDelta == null && value == null )
-	{
+	}) {
 		this.signature = signature ?? Signature();
 		this.signerPublicKey = signerPublicKey ?? PublicKey();
 		this.version = version ?? MosaicMetadataTransactionV1.TRANSACTION_VERSION;
@@ -7877,7 +7891,8 @@ class MosaicMetadataTransactionV1 extends StructBase implements IDeserializable,
 	@override
 	MosaicMetadataTransactionV1 deserialize(Uint8List payload) {
 		var buffer = payload;
-		// nothing to do for size
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var verifiableEntityHeaderReserved_1 = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
@@ -7933,6 +7948,7 @@ class MosaicMetadataTransactionV1 extends StructBase implements IDeserializable,
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -7992,7 +8008,7 @@ class MosaicMetadataTransactionV1 extends StructBase implements IDeserializable,
 }
 
 
-class EmbeddedMosaicMetadataTransactionV1 extends StructBase implements IDeserializable, IInnerTransaction {
+class EmbeddedMosaicMetadataTransactionV1 implements ISerializable, IInnerTransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.MOSAIC_METADATA.value);
 
@@ -8006,9 +8022,9 @@ class EmbeddedMosaicMetadataTransactionV1 extends StructBase implements IDeseria
 	};
 
 	PublicKey signerPublicKey = PublicKey();
-	int version = 0;
+	int version = EmbeddedMosaicMetadataTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = TransactionType.ACCOUNT_KEY_LINK;
+	TransactionType type = EmbeddedMosaicMetadataTransactionV1.TRANSACTION_TYPE;
 	UnresolvedAddress targetAddress = UnresolvedAddress();
 	int scopedMetadataKey = 0;
 	UnresolvedMosaicId targetMosaicId = UnresolvedMosaicId();
@@ -8027,9 +8043,7 @@ class EmbeddedMosaicMetadataTransactionV1 extends StructBase implements IDeseria
 	UnresolvedMosaicId? targetMosaicId,
 	int? valueSizeDelta,
 	Uint8List? value
-	}) 
-		: super(signerPublicKey == null && version == null && network == null && type == null && targetAddress == null && scopedMetadataKey == null && targetMosaicId == null && valueSizeDelta == null && value == null )
-	{
+	}) {
 		this.signerPublicKey = signerPublicKey ?? PublicKey();
 		this.version = version ?? EmbeddedMosaicMetadataTransactionV1.TRANSACTION_VERSION;
 		this.network = network ?? NetworkType.MAINNET;
@@ -8066,7 +8080,8 @@ class EmbeddedMosaicMetadataTransactionV1 extends StructBase implements IDeseria
 	@override
 	EmbeddedMosaicMetadataTransactionV1 deserialize(Uint8List payload) {
 		var buffer = payload;
-		// nothing to do for size
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var embeddedTransactionHeaderReserved_1 = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
@@ -8113,6 +8128,7 @@ class EmbeddedMosaicMetadataTransactionV1 extends StructBase implements IDeseria
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -8163,7 +8179,7 @@ class EmbeddedMosaicMetadataTransactionV1 extends StructBase implements IDeseria
 }
 
 
-class NamespaceMetadataTransactionV1 extends StructBase implements IDeserializable, ITransaction {
+class NamespaceMetadataTransactionV1 implements ISerializable, ITransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.NAMESPACE_METADATA.value);
 
@@ -8181,9 +8197,9 @@ class NamespaceMetadataTransactionV1 extends StructBase implements IDeserializab
 
 	Signature signature = Signature();
 	PublicKey signerPublicKey = PublicKey();
-	int version = 0;
+	int version = NamespaceMetadataTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = TransactionType.ACCOUNT_KEY_LINK;
+	TransactionType type = NamespaceMetadataTransactionV1.TRANSACTION_TYPE;
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
 	UnresolvedAddress targetAddress = UnresolvedAddress();
@@ -8207,9 +8223,7 @@ class NamespaceMetadataTransactionV1 extends StructBase implements IDeserializab
 	NamespaceId? targetNamespaceId,
 	int? valueSizeDelta,
 	Uint8List? value
-	}) 
-		: super(signature == null && signerPublicKey == null && version == null && network == null && type == null && fee == null && deadline == null && targetAddress == null && scopedMetadataKey == null && targetNamespaceId == null && valueSizeDelta == null && value == null )
-	{
+	}) {
 		this.signature = signature ?? Signature();
 		this.signerPublicKey = signerPublicKey ?? PublicKey();
 		this.version = version ?? NamespaceMetadataTransactionV1.TRANSACTION_VERSION;
@@ -8252,7 +8266,8 @@ class NamespaceMetadataTransactionV1 extends StructBase implements IDeserializab
 	@override
 	NamespaceMetadataTransactionV1 deserialize(Uint8List payload) {
 		var buffer = payload;
-		// nothing to do for size
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var verifiableEntityHeaderReserved_1 = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
@@ -8308,6 +8323,7 @@ class NamespaceMetadataTransactionV1 extends StructBase implements IDeserializab
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -8367,7 +8383,7 @@ class NamespaceMetadataTransactionV1 extends StructBase implements IDeserializab
 }
 
 
-class EmbeddedNamespaceMetadataTransactionV1 extends StructBase implements IDeserializable, IInnerTransaction {
+class EmbeddedNamespaceMetadataTransactionV1 implements ISerializable, IInnerTransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.NAMESPACE_METADATA.value);
 
@@ -8381,9 +8397,9 @@ class EmbeddedNamespaceMetadataTransactionV1 extends StructBase implements IDese
 	};
 
 	PublicKey signerPublicKey = PublicKey();
-	int version = 0;
+	int version = EmbeddedNamespaceMetadataTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = TransactionType.ACCOUNT_KEY_LINK;
+	TransactionType type = EmbeddedNamespaceMetadataTransactionV1.TRANSACTION_TYPE;
 	UnresolvedAddress targetAddress = UnresolvedAddress();
 	int scopedMetadataKey = 0;
 	NamespaceId targetNamespaceId = NamespaceId();
@@ -8402,9 +8418,7 @@ class EmbeddedNamespaceMetadataTransactionV1 extends StructBase implements IDese
 	NamespaceId? targetNamespaceId,
 	int? valueSizeDelta,
 	Uint8List? value
-	}) 
-		: super(signerPublicKey == null && version == null && network == null && type == null && targetAddress == null && scopedMetadataKey == null && targetNamespaceId == null && valueSizeDelta == null && value == null )
-	{
+	}) {
 		this.signerPublicKey = signerPublicKey ?? PublicKey();
 		this.version = version ?? EmbeddedNamespaceMetadataTransactionV1.TRANSACTION_VERSION;
 		this.network = network ?? NetworkType.MAINNET;
@@ -8441,7 +8455,8 @@ class EmbeddedNamespaceMetadataTransactionV1 extends StructBase implements IDese
 	@override
 	EmbeddedNamespaceMetadataTransactionV1 deserialize(Uint8List payload) {
 		var buffer = payload;
-		// nothing to do for size
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var embeddedTransactionHeaderReserved_1 = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
@@ -8488,6 +8503,7 @@ class EmbeddedNamespaceMetadataTransactionV1 extends StructBase implements IDese
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -8538,7 +8554,7 @@ class EmbeddedNamespaceMetadataTransactionV1 extends StructBase implements IDese
 }
 
 
-class MosaicNonce extends BaseValue implements IDeserializable {
+class MosaicNonce extends BaseValue implements ISerializable {
 	static const int SIZE = 4;
 
 	MosaicNonce([dynamic mosaicNonce]) : super(SIZE, mosaicNonce ?? 0);
@@ -8548,6 +8564,7 @@ class MosaicNonce extends BaseValue implements IDeserializable {
 		return MosaicNonce(bytesToInt(payload.sublist(0, 4), 4));
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(SIZE);
 		buffer.setRange(0, 0 + 4, intToBytes(value, 4));
@@ -8556,7 +8573,7 @@ class MosaicNonce extends BaseValue implements IDeserializable {
 }
 
 
-class MosaicFlags implements IDeserializable {
+class MosaicFlags implements ISerializable {
 	static final NONE = MosaicFlags(0);
 	static final SUPPLY_MUTABLE = MosaicFlags(1);
 	static final TRANSFERABLE = MosaicFlags(2);
@@ -8585,6 +8602,7 @@ class MosaicFlags implements IDeserializable {
 		return MosaicFlags(byteData.getUint8(0));
 	}
 
+	@override
 	Uint8List serialize() {
 		var byteData = ByteData(1)..setUint8(0, value);
 		return byteData.buffer.asUint8List();
@@ -8603,7 +8621,7 @@ class MosaicFlags implements IDeserializable {
 }
 
 
-class MosaicSupplyChangeAction implements IDeserializable {
+class MosaicSupplyChangeAction implements ISerializable {
 	static final DECREASE = MosaicSupplyChangeAction(0);
 	static final INCREASE = MosaicSupplyChangeAction(1);
 
@@ -8626,6 +8644,7 @@ class MosaicSupplyChangeAction implements IDeserializable {
 		return MosaicSupplyChangeAction(byteData.getUint8(0));
 	}
 
+	@override
 	Uint8List serialize() {
 		var byteData = ByteData(1)..setUint8(0, value);
 		return byteData.buffer.asUint8List();
@@ -8638,7 +8657,7 @@ class MosaicSupplyChangeAction implements IDeserializable {
 }
 
 
-class MosaicDefinitionTransactionV1 extends StructBase implements IDeserializable, ITransaction {
+class MosaicDefinitionTransactionV1 implements ISerializable, ITransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.MOSAIC_DEFINITION.value);
 
@@ -8657,9 +8676,9 @@ class MosaicDefinitionTransactionV1 extends StructBase implements IDeserializabl
 
 	Signature signature = Signature();
 	PublicKey signerPublicKey = PublicKey();
-	int version = 0;
+	int version = MosaicDefinitionTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = TransactionType.ACCOUNT_KEY_LINK;
+	TransactionType type = MosaicDefinitionTransactionV1.TRANSACTION_TYPE;
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
 	MosaicId id = MosaicId();
@@ -8683,9 +8702,7 @@ class MosaicDefinitionTransactionV1 extends StructBase implements IDeserializabl
 	MosaicNonce? nonce,
 	MosaicFlags? flags,
 	int? divisibility
-	}) 
-		: super(signature == null && signerPublicKey == null && version == null && network == null && type == null && fee == null && deadline == null && id == null && duration == null && nonce == null && flags == null && divisibility == null )
-	{
+	}) {
 		this.signature = signature ?? Signature();
 		this.signerPublicKey = signerPublicKey ?? PublicKey();
 		this.version = version ?? MosaicDefinitionTransactionV1.TRANSACTION_VERSION;
@@ -8727,7 +8744,8 @@ class MosaicDefinitionTransactionV1 extends StructBase implements IDeserializabl
 	@override
 	MosaicDefinitionTransactionV1 deserialize(Uint8List payload) {
 		var buffer = payload;
-		// nothing to do for size
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var verifiableEntityHeaderReserved_1 = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
@@ -8781,6 +8799,7 @@ class MosaicDefinitionTransactionV1 extends StructBase implements IDeserializabl
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -8838,7 +8857,7 @@ class MosaicDefinitionTransactionV1 extends StructBase implements IDeserializabl
 }
 
 
-class EmbeddedMosaicDefinitionTransactionV1 extends StructBase implements IDeserializable, IInnerTransaction {
+class EmbeddedMosaicDefinitionTransactionV1 implements ISerializable, IInnerTransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.MOSAIC_DEFINITION.value);
 
@@ -8853,9 +8872,9 @@ class EmbeddedMosaicDefinitionTransactionV1 extends StructBase implements IDeser
 	};
 
 	PublicKey signerPublicKey = PublicKey();
-	int version = 0;
+	int version = EmbeddedMosaicDefinitionTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = TransactionType.ACCOUNT_KEY_LINK;
+	TransactionType type = EmbeddedMosaicDefinitionTransactionV1.TRANSACTION_TYPE;
 	MosaicId id = MosaicId();
 	BlockDuration duration = BlockDuration();
 	MosaicNonce nonce = MosaicNonce();
@@ -8874,9 +8893,7 @@ class EmbeddedMosaicDefinitionTransactionV1 extends StructBase implements IDeser
 	MosaicNonce? nonce,
 	MosaicFlags? flags,
 	int? divisibility
-	}) 
-		: super(signerPublicKey == null && version == null && network == null && type == null && id == null && duration == null && nonce == null && flags == null && divisibility == null )
-	{
+	}) {
 		this.signerPublicKey = signerPublicKey ?? PublicKey();
 		this.version = version ?? EmbeddedMosaicDefinitionTransactionV1.TRANSACTION_VERSION;
 		this.network = network ?? NetworkType.MAINNET;
@@ -8912,7 +8929,8 @@ class EmbeddedMosaicDefinitionTransactionV1 extends StructBase implements IDeser
 	@override
 	EmbeddedMosaicDefinitionTransactionV1 deserialize(Uint8List payload) {
 		var buffer = payload;
-		// nothing to do for size
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var embeddedTransactionHeaderReserved_1 = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
@@ -8957,6 +8975,7 @@ class EmbeddedMosaicDefinitionTransactionV1 extends StructBase implements IDeser
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -9005,7 +9024,7 @@ class EmbeddedMosaicDefinitionTransactionV1 extends StructBase implements IDeser
 }
 
 
-class MosaicSupplyChangeTransactionV1 extends StructBase implements IDeserializable, ITransaction {
+class MosaicSupplyChangeTransactionV1 implements ISerializable, ITransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.MOSAIC_SUPPLY_CHANGE.value);
 
@@ -9023,9 +9042,9 @@ class MosaicSupplyChangeTransactionV1 extends StructBase implements IDeserializa
 
 	Signature signature = Signature();
 	PublicKey signerPublicKey = PublicKey();
-	int version = 0;
+	int version = MosaicSupplyChangeTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = TransactionType.ACCOUNT_KEY_LINK;
+	TransactionType type = MosaicSupplyChangeTransactionV1.TRANSACTION_TYPE;
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
 	UnresolvedMosaicId mosaicId = UnresolvedMosaicId();
@@ -9045,9 +9064,7 @@ class MosaicSupplyChangeTransactionV1 extends StructBase implements IDeserializa
 	UnresolvedMosaicId? mosaicId,
 	Amount? delta,
 	MosaicSupplyChangeAction? action
-	}) 
-		: super(signature == null && signerPublicKey == null && version == null && network == null && type == null && fee == null && deadline == null && mosaicId == null && delta == null && action == null )
-	{
+	}) {
 		this.signature = signature ?? Signature();
 		this.signerPublicKey = signerPublicKey ?? PublicKey();
 		this.version = version ?? MosaicSupplyChangeTransactionV1.TRANSACTION_VERSION;
@@ -9085,7 +9102,8 @@ class MosaicSupplyChangeTransactionV1 extends StructBase implements IDeserializa
 	@override
 	MosaicSupplyChangeTransactionV1 deserialize(Uint8List payload) {
 		var buffer = payload;
-		// nothing to do for size
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var verifiableEntityHeaderReserved_1 = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
@@ -9133,6 +9151,7 @@ class MosaicSupplyChangeTransactionV1 extends StructBase implements IDeserializa
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -9184,7 +9203,7 @@ class MosaicSupplyChangeTransactionV1 extends StructBase implements IDeserializa
 }
 
 
-class EmbeddedMosaicSupplyChangeTransactionV1 extends StructBase implements IDeserializable, IInnerTransaction {
+class EmbeddedMosaicSupplyChangeTransactionV1 implements ISerializable, IInnerTransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.MOSAIC_SUPPLY_CHANGE.value);
 
@@ -9198,9 +9217,9 @@ class EmbeddedMosaicSupplyChangeTransactionV1 extends StructBase implements IDes
 	};
 
 	PublicKey signerPublicKey = PublicKey();
-	int version = 0;
+	int version = EmbeddedMosaicSupplyChangeTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = TransactionType.ACCOUNT_KEY_LINK;
+	TransactionType type = EmbeddedMosaicSupplyChangeTransactionV1.TRANSACTION_TYPE;
 	UnresolvedMosaicId mosaicId = UnresolvedMosaicId();
 	Amount delta = Amount();
 	MosaicSupplyChangeAction action = MosaicSupplyChangeAction.DECREASE;
@@ -9215,9 +9234,7 @@ class EmbeddedMosaicSupplyChangeTransactionV1 extends StructBase implements IDes
 	UnresolvedMosaicId? mosaicId,
 	Amount? delta,
 	MosaicSupplyChangeAction? action
-	}) 
-		: super(signerPublicKey == null && version == null && network == null && type == null && mosaicId == null && delta == null && action == null )
-	{
+	}) {
 		this.signerPublicKey = signerPublicKey ?? PublicKey();
 		this.version = version ?? EmbeddedMosaicSupplyChangeTransactionV1.TRANSACTION_VERSION;
 		this.network = network ?? NetworkType.MAINNET;
@@ -9249,7 +9266,8 @@ class EmbeddedMosaicSupplyChangeTransactionV1 extends StructBase implements IDes
 	@override
 	EmbeddedMosaicSupplyChangeTransactionV1 deserialize(Uint8List payload) {
 		var buffer = payload;
-		// nothing to do for size
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var embeddedTransactionHeaderReserved_1 = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
@@ -9288,6 +9306,7 @@ class EmbeddedMosaicSupplyChangeTransactionV1 extends StructBase implements IDes
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -9330,7 +9349,7 @@ class EmbeddedMosaicSupplyChangeTransactionV1 extends StructBase implements IDes
 }
 
 
-class MosaicSupplyRevocationTransactionV1 extends StructBase implements IDeserializable, ITransaction {
+class MosaicSupplyRevocationTransactionV1 implements ISerializable, ITransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.MOSAIC_SUPPLY_REVOCATION.value);
 
@@ -9347,9 +9366,9 @@ class MosaicSupplyRevocationTransactionV1 extends StructBase implements IDeseria
 
 	Signature signature = Signature();
 	PublicKey signerPublicKey = PublicKey();
-	int version = 0;
+	int version = MosaicSupplyRevocationTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = TransactionType.ACCOUNT_KEY_LINK;
+	TransactionType type = MosaicSupplyRevocationTransactionV1.TRANSACTION_TYPE;
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
 	UnresolvedAddress sourceAddress = UnresolvedAddress();
@@ -9367,9 +9386,7 @@ class MosaicSupplyRevocationTransactionV1 extends StructBase implements IDeseria
 	Timestamp? deadline,
 	UnresolvedAddress? sourceAddress,
 	UnresolvedMosaic? mosaic
-	}) 
-		: super(signature == null && signerPublicKey == null && version == null && network == null && type == null && fee == null && deadline == null && sourceAddress == null && mosaic == null )
-	{
+	}) {
 		this.signature = signature ?? Signature();
 		this.signerPublicKey = signerPublicKey ?? PublicKey();
 		this.version = version ?? MosaicSupplyRevocationTransactionV1.TRANSACTION_VERSION;
@@ -9405,7 +9422,8 @@ class MosaicSupplyRevocationTransactionV1 extends StructBase implements IDeseria
 	@override
 	MosaicSupplyRevocationTransactionV1 deserialize(Uint8List payload) {
 		var buffer = payload;
-		// nothing to do for size
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var verifiableEntityHeaderReserved_1 = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
@@ -9450,6 +9468,7 @@ class MosaicSupplyRevocationTransactionV1 extends StructBase implements IDeseria
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -9498,7 +9517,7 @@ class MosaicSupplyRevocationTransactionV1 extends StructBase implements IDeseria
 }
 
 
-class EmbeddedMosaicSupplyRevocationTransactionV1 extends StructBase implements IDeserializable, IInnerTransaction {
+class EmbeddedMosaicSupplyRevocationTransactionV1 implements ISerializable, IInnerTransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.MOSAIC_SUPPLY_REVOCATION.value);
 
@@ -9511,9 +9530,9 @@ class EmbeddedMosaicSupplyRevocationTransactionV1 extends StructBase implements 
 	};
 
 	PublicKey signerPublicKey = PublicKey();
-	int version = 0;
+	int version = EmbeddedMosaicSupplyRevocationTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = TransactionType.ACCOUNT_KEY_LINK;
+	TransactionType type = EmbeddedMosaicSupplyRevocationTransactionV1.TRANSACTION_TYPE;
 	UnresolvedAddress sourceAddress = UnresolvedAddress();
 	UnresolvedMosaic mosaic = UnresolvedMosaic();
 	final int embeddedTransactionHeaderReserved_1 = 0; // reserved field
@@ -9526,9 +9545,7 @@ class EmbeddedMosaicSupplyRevocationTransactionV1 extends StructBase implements 
 	TransactionType? type,
 	UnresolvedAddress? sourceAddress,
 	UnresolvedMosaic? mosaic
-	}) 
-		: super(signerPublicKey == null && version == null && network == null && type == null && sourceAddress == null && mosaic == null )
-	{
+	}) {
 		this.signerPublicKey = signerPublicKey ?? PublicKey();
 		this.version = version ?? EmbeddedMosaicSupplyRevocationTransactionV1.TRANSACTION_VERSION;
 		this.network = network ?? NetworkType.MAINNET;
@@ -9558,7 +9575,8 @@ class EmbeddedMosaicSupplyRevocationTransactionV1 extends StructBase implements 
 	@override
 	EmbeddedMosaicSupplyRevocationTransactionV1 deserialize(Uint8List payload) {
 		var buffer = payload;
-		// nothing to do for size
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var embeddedTransactionHeaderReserved_1 = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
@@ -9594,6 +9612,7 @@ class EmbeddedMosaicSupplyRevocationTransactionV1 extends StructBase implements 
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -9633,7 +9652,7 @@ class EmbeddedMosaicSupplyRevocationTransactionV1 extends StructBase implements 
 }
 
 
-class MultisigAccountModificationTransactionV1 extends StructBase implements IDeserializable, ITransaction {
+class MultisigAccountModificationTransactionV1 implements ISerializable, ITransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.MULTISIG_ACCOUNT_MODIFICATION.value);
 
@@ -9650,9 +9669,9 @@ class MultisigAccountModificationTransactionV1 extends StructBase implements IDe
 
 	Signature signature = Signature();
 	PublicKey signerPublicKey = PublicKey();
-	int version = 0;
+	int version = MultisigAccountModificationTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = TransactionType.ACCOUNT_KEY_LINK;
+	TransactionType type = MultisigAccountModificationTransactionV1.TRANSACTION_TYPE;
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
 	int minRemovalDelta = 0;
@@ -9675,9 +9694,7 @@ class MultisigAccountModificationTransactionV1 extends StructBase implements IDe
 	int? minApprovalDelta,
 	List<UnresolvedAddress>? addressAdditions,
 	List<UnresolvedAddress>? addressDeletions
-	}) 
-		: super(signature == null && signerPublicKey == null && version == null && network == null && type == null && fee == null && deadline == null && minRemovalDelta == null && minApprovalDelta == null && addressAdditions == null && addressDeletions == null )
-	{
+	}) {
 		this.signature = signature ?? Signature();
 		this.signerPublicKey = signerPublicKey ?? PublicKey();
 		this.version = version ?? MultisigAccountModificationTransactionV1.TRANSACTION_VERSION;
@@ -9720,7 +9737,8 @@ class MultisigAccountModificationTransactionV1 extends StructBase implements IDe
 	@override
 	MultisigAccountModificationTransactionV1 deserialize(Uint8List payload) {
 		var buffer = payload;
-		// nothing to do for size
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var verifiableEntityHeaderReserved_1 = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
@@ -9780,6 +9798,7 @@ class MultisigAccountModificationTransactionV1 extends StructBase implements IDe
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -9844,7 +9863,7 @@ class MultisigAccountModificationTransactionV1 extends StructBase implements IDe
 }
 
 
-class EmbeddedMultisigAccountModificationTransactionV1 extends StructBase implements IDeserializable, IInnerTransaction {
+class EmbeddedMultisigAccountModificationTransactionV1 implements ISerializable, IInnerTransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.MULTISIG_ACCOUNT_MODIFICATION.value);
 
@@ -9857,9 +9876,9 @@ class EmbeddedMultisigAccountModificationTransactionV1 extends StructBase implem
 	};
 
 	PublicKey signerPublicKey = PublicKey();
-	int version = 0;
+	int version = EmbeddedMultisigAccountModificationTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = TransactionType.ACCOUNT_KEY_LINK;
+	TransactionType type = EmbeddedMultisigAccountModificationTransactionV1.TRANSACTION_TYPE;
 	int minRemovalDelta = 0;
 	int minApprovalDelta = 0;
 	List<UnresolvedAddress> addressAdditions = [];
@@ -9877,9 +9896,7 @@ class EmbeddedMultisigAccountModificationTransactionV1 extends StructBase implem
 	int? minApprovalDelta,
 	List<UnresolvedAddress>? addressAdditions,
 	List<UnresolvedAddress>? addressDeletions
-	}) 
-		: super(signerPublicKey == null && version == null && network == null && type == null && minRemovalDelta == null && minApprovalDelta == null && addressAdditions == null && addressDeletions == null )
-	{
+	}) {
 		this.signerPublicKey = signerPublicKey ?? PublicKey();
 		this.version = version ?? EmbeddedMultisigAccountModificationTransactionV1.TRANSACTION_VERSION;
 		this.network = network ?? NetworkType.MAINNET;
@@ -9916,7 +9933,8 @@ class EmbeddedMultisigAccountModificationTransactionV1 extends StructBase implem
 	@override
 	EmbeddedMultisigAccountModificationTransactionV1 deserialize(Uint8List payload) {
 		var buffer = payload;
-		// nothing to do for size
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var embeddedTransactionHeaderReserved_1 = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
@@ -9967,6 +9985,7 @@ class EmbeddedMultisigAccountModificationTransactionV1 extends StructBase implem
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -10022,7 +10041,7 @@ class EmbeddedMultisigAccountModificationTransactionV1 extends StructBase implem
 }
 
 
-class AddressAliasTransactionV1 extends StructBase implements IDeserializable, ITransaction {
+class AddressAliasTransactionV1 implements ISerializable, ITransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.ADDRESS_ALIAS.value);
 
@@ -10040,9 +10059,9 @@ class AddressAliasTransactionV1 extends StructBase implements IDeserializable, I
 
 	Signature signature = Signature();
 	PublicKey signerPublicKey = PublicKey();
-	int version = 0;
+	int version = AddressAliasTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = TransactionType.ACCOUNT_KEY_LINK;
+	TransactionType type = AddressAliasTransactionV1.TRANSACTION_TYPE;
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
 	NamespaceId namespaceId = NamespaceId();
@@ -10062,9 +10081,7 @@ class AddressAliasTransactionV1 extends StructBase implements IDeserializable, I
 	NamespaceId? namespaceId,
 	Address? address,
 	AliasAction? aliasAction
-	}) 
-		: super(signature == null && signerPublicKey == null && version == null && network == null && type == null && fee == null && deadline == null && namespaceId == null && address == null && aliasAction == null )
-	{
+	}) {
 		this.signature = signature ?? Signature();
 		this.signerPublicKey = signerPublicKey ?? PublicKey();
 		this.version = version ?? AddressAliasTransactionV1.TRANSACTION_VERSION;
@@ -10102,7 +10119,8 @@ class AddressAliasTransactionV1 extends StructBase implements IDeserializable, I
 	@override
 	AddressAliasTransactionV1 deserialize(Uint8List payload) {
 		var buffer = payload;
-		// nothing to do for size
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var verifiableEntityHeaderReserved_1 = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
@@ -10150,6 +10168,7 @@ class AddressAliasTransactionV1 extends StructBase implements IDeserializable, I
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -10201,7 +10220,7 @@ class AddressAliasTransactionV1 extends StructBase implements IDeserializable, I
 }
 
 
-class EmbeddedAddressAliasTransactionV1 extends StructBase implements IDeserializable, IInnerTransaction {
+class EmbeddedAddressAliasTransactionV1 implements ISerializable, IInnerTransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.ADDRESS_ALIAS.value);
 
@@ -10215,9 +10234,9 @@ class EmbeddedAddressAliasTransactionV1 extends StructBase implements IDeseriali
 	};
 
 	PublicKey signerPublicKey = PublicKey();
-	int version = 0;
+	int version = EmbeddedAddressAliasTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = TransactionType.ACCOUNT_KEY_LINK;
+	TransactionType type = EmbeddedAddressAliasTransactionV1.TRANSACTION_TYPE;
 	NamespaceId namespaceId = NamespaceId();
 	Address address = Address();
 	AliasAction aliasAction = AliasAction.UNLINK;
@@ -10232,9 +10251,7 @@ class EmbeddedAddressAliasTransactionV1 extends StructBase implements IDeseriali
 	NamespaceId? namespaceId,
 	Address? address,
 	AliasAction? aliasAction
-	}) 
-		: super(signerPublicKey == null && version == null && network == null && type == null && namespaceId == null && address == null && aliasAction == null )
-	{
+	}) {
 		this.signerPublicKey = signerPublicKey ?? PublicKey();
 		this.version = version ?? EmbeddedAddressAliasTransactionV1.TRANSACTION_VERSION;
 		this.network = network ?? NetworkType.MAINNET;
@@ -10266,7 +10283,8 @@ class EmbeddedAddressAliasTransactionV1 extends StructBase implements IDeseriali
 	@override
 	EmbeddedAddressAliasTransactionV1 deserialize(Uint8List payload) {
 		var buffer = payload;
-		// nothing to do for size
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var embeddedTransactionHeaderReserved_1 = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
@@ -10305,6 +10323,7 @@ class EmbeddedAddressAliasTransactionV1 extends StructBase implements IDeseriali
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -10347,7 +10366,7 @@ class EmbeddedAddressAliasTransactionV1 extends StructBase implements IDeseriali
 }
 
 
-class MosaicAliasTransactionV1 extends StructBase implements IDeserializable, ITransaction {
+class MosaicAliasTransactionV1 implements ISerializable, ITransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.MOSAIC_ALIAS.value);
 
@@ -10365,9 +10384,9 @@ class MosaicAliasTransactionV1 extends StructBase implements IDeserializable, IT
 
 	Signature signature = Signature();
 	PublicKey signerPublicKey = PublicKey();
-	int version = 0;
+	int version = MosaicAliasTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = TransactionType.ACCOUNT_KEY_LINK;
+	TransactionType type = MosaicAliasTransactionV1.TRANSACTION_TYPE;
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
 	NamespaceId namespaceId = NamespaceId();
@@ -10387,9 +10406,7 @@ class MosaicAliasTransactionV1 extends StructBase implements IDeserializable, IT
 	NamespaceId? namespaceId,
 	MosaicId? mosaicId,
 	AliasAction? aliasAction
-	}) 
-		: super(signature == null && signerPublicKey == null && version == null && network == null && type == null && fee == null && deadline == null && namespaceId == null && mosaicId == null && aliasAction == null )
-	{
+	}) {
 		this.signature = signature ?? Signature();
 		this.signerPublicKey = signerPublicKey ?? PublicKey();
 		this.version = version ?? MosaicAliasTransactionV1.TRANSACTION_VERSION;
@@ -10427,7 +10444,8 @@ class MosaicAliasTransactionV1 extends StructBase implements IDeserializable, IT
 	@override
 	MosaicAliasTransactionV1 deserialize(Uint8List payload) {
 		var buffer = payload;
-		// nothing to do for size
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var verifiableEntityHeaderReserved_1 = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
@@ -10475,6 +10493,7 @@ class MosaicAliasTransactionV1 extends StructBase implements IDeserializable, IT
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -10526,7 +10545,7 @@ class MosaicAliasTransactionV1 extends StructBase implements IDeserializable, IT
 }
 
 
-class EmbeddedMosaicAliasTransactionV1 extends StructBase implements IDeserializable, IInnerTransaction {
+class EmbeddedMosaicAliasTransactionV1 implements ISerializable, IInnerTransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.MOSAIC_ALIAS.value);
 
@@ -10540,9 +10559,9 @@ class EmbeddedMosaicAliasTransactionV1 extends StructBase implements IDeserializ
 	};
 
 	PublicKey signerPublicKey = PublicKey();
-	int version = 0;
+	int version = EmbeddedMosaicAliasTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = TransactionType.ACCOUNT_KEY_LINK;
+	TransactionType type = EmbeddedMosaicAliasTransactionV1.TRANSACTION_TYPE;
 	NamespaceId namespaceId = NamespaceId();
 	MosaicId mosaicId = MosaicId();
 	AliasAction aliasAction = AliasAction.UNLINK;
@@ -10557,9 +10576,7 @@ class EmbeddedMosaicAliasTransactionV1 extends StructBase implements IDeserializ
 	NamespaceId? namespaceId,
 	MosaicId? mosaicId,
 	AliasAction? aliasAction
-	}) 
-		: super(signerPublicKey == null && version == null && network == null && type == null && namespaceId == null && mosaicId == null && aliasAction == null )
-	{
+	}) {
 		this.signerPublicKey = signerPublicKey ?? PublicKey();
 		this.version = version ?? EmbeddedMosaicAliasTransactionV1.TRANSACTION_VERSION;
 		this.network = network ?? NetworkType.MAINNET;
@@ -10591,7 +10608,8 @@ class EmbeddedMosaicAliasTransactionV1 extends StructBase implements IDeserializ
 	@override
 	EmbeddedMosaicAliasTransactionV1 deserialize(Uint8List payload) {
 		var buffer = payload;
-		// nothing to do for size
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var embeddedTransactionHeaderReserved_1 = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
@@ -10630,6 +10648,7 @@ class EmbeddedMosaicAliasTransactionV1 extends StructBase implements IDeserializ
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -10672,7 +10691,7 @@ class EmbeddedMosaicAliasTransactionV1 extends StructBase implements IDeserializ
 }
 
 
-class NamespaceRegistrationTransactionV1 extends StructBase implements IDeserializable, ITransaction {
+class NamespaceRegistrationTransactionV1 implements ISerializable, ITransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.NAMESPACE_REGISTRATION.value);
 
@@ -10692,13 +10711,13 @@ class NamespaceRegistrationTransactionV1 extends StructBase implements IDeserial
 
 	Signature signature = Signature();
 	PublicKey signerPublicKey = PublicKey();
-	int version = 0;
+	int version = NamespaceRegistrationTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = TransactionType.ACCOUNT_KEY_LINK;
+	TransactionType type = NamespaceRegistrationTransactionV1.TRANSACTION_TYPE;
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
 	BlockDuration duration = BlockDuration();
-	NamespaceId parentId = NamespaceId();
+	NamespaceId? parentId = null;
 	NamespaceId id = NamespaceId();
 	NamespaceRegistrationType registrationType = NamespaceRegistrationType.ROOT;
 	Uint8List name = Uint8List(0);
@@ -10718,9 +10737,7 @@ class NamespaceRegistrationTransactionV1 extends StructBase implements IDeserial
 	NamespaceId? id,
 	NamespaceRegistrationType? registrationType,
 	Uint8List? name
-	}) 
-		: super(signature == null && signerPublicKey == null && version == null && network == null && type == null && fee == null && deadline == null && duration == null && parentId == null && id == null && registrationType == null && name == null )
-	{
+	}) {
 		this.signature = signature ?? Signature();
 		this.signerPublicKey = signerPublicKey ?? PublicKey();
 		this.version = version ?? NamespaceRegistrationTransactionV1.TRANSACTION_VERSION;
@@ -10729,7 +10746,7 @@ class NamespaceRegistrationTransactionV1 extends StructBase implements IDeserial
 		this.fee = fee ?? Amount();
 		this.deadline = deadline ?? Timestamp();
 		this.duration = duration ?? BlockDuration();
-		this.parentId = parentId ?? NamespaceId();
+		this.parentId = parentId ?? null;
 		this.id = id ?? NamespaceId();
 		this.registrationType = registrationType ?? NamespaceRegistrationType.ROOT;
 		this.name = name ?? Uint8List(0);
@@ -10757,7 +10774,7 @@ class NamespaceRegistrationTransactionV1 extends StructBase implements IDeserial
 		}
 		if (NamespaceRegistrationType.CHILD.value == registrationType.value)
 		{
-			size += parentId.size;
+			size += parentId!.size;
 		}
 		size += id.size;
 		size += registrationType.size;
@@ -10769,7 +10786,8 @@ class NamespaceRegistrationTransactionV1 extends StructBase implements IDeserial
 	@override
 	NamespaceRegistrationTransactionV1 deserialize(Uint8List payload) {
 		var buffer = payload;
-		// nothing to do for size
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var verifiableEntityHeaderReserved_1 = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
@@ -10838,6 +10856,7 @@ class NamespaceRegistrationTransactionV1 extends StructBase implements IDeserial
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -10868,8 +10887,8 @@ class NamespaceRegistrationTransactionV1 extends StructBase implements IDeserial
 		}
 		if (NamespaceRegistrationType.CHILD.value == registrationType.value)
 		{
-			buffer.setRange(currentPos, currentPos + parentId.size, parentId.serialize());
-			currentPos += parentId.size;
+			buffer.setRange(currentPos, currentPos + parentId!.size, parentId!.serialize());
+			currentPos += parentId!.size;
 		}
 		buffer.setRange(currentPos, currentPos + id.size, id.serialize());
 		currentPos += id.size;
@@ -10898,7 +10917,7 @@ class NamespaceRegistrationTransactionV1 extends StructBase implements IDeserial
 		}
 		if (NamespaceRegistrationType.CHILD.value == registrationType.value)
 		{
-			result += 'parentId: "${parentId.toString()}", ';
+			result += 'parentId: "${parentId!.toString()}", ';
 		}
 		result += 'id: "${id.toString()}", ';
 		result += 'registrationType: "${registrationType.toString()}", ';
@@ -10909,7 +10928,7 @@ class NamespaceRegistrationTransactionV1 extends StructBase implements IDeserial
 }
 
 
-class EmbeddedNamespaceRegistrationTransactionV1 extends StructBase implements IDeserializable, IInnerTransaction {
+class EmbeddedNamespaceRegistrationTransactionV1 implements ISerializable, IInnerTransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.NAMESPACE_REGISTRATION.value);
 
@@ -10925,11 +10944,11 @@ class EmbeddedNamespaceRegistrationTransactionV1 extends StructBase implements I
 	};
 
 	PublicKey signerPublicKey = PublicKey();
-	int version = 0;
+	int version = EmbeddedNamespaceRegistrationTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = TransactionType.ACCOUNT_KEY_LINK;
+	TransactionType type = EmbeddedNamespaceRegistrationTransactionV1.TRANSACTION_TYPE;
 	BlockDuration duration = BlockDuration();
-	NamespaceId parentId = NamespaceId();
+	NamespaceId? parentId = null;
 	NamespaceId id = NamespaceId();
 	NamespaceRegistrationType registrationType = NamespaceRegistrationType.ROOT;
 	Uint8List name = Uint8List(0);
@@ -10946,15 +10965,13 @@ class EmbeddedNamespaceRegistrationTransactionV1 extends StructBase implements I
 	NamespaceId? id,
 	NamespaceRegistrationType? registrationType,
 	Uint8List? name
-	}) 
-		: super(signerPublicKey == null && version == null && network == null && type == null && duration == null && parentId == null && id == null && registrationType == null && name == null )
-	{
+	}) {
 		this.signerPublicKey = signerPublicKey ?? PublicKey();
 		this.version = version ?? EmbeddedNamespaceRegistrationTransactionV1.TRANSACTION_VERSION;
 		this.network = network ?? NetworkType.MAINNET;
 		this.type = type ?? EmbeddedNamespaceRegistrationTransactionV1.TRANSACTION_TYPE;
 		this.duration = duration ?? BlockDuration();
-		this.parentId = parentId ?? NamespaceId();
+		this.parentId = parentId ?? null;
 		this.id = id ?? NamespaceId();
 		this.registrationType = registrationType ?? NamespaceRegistrationType.ROOT;
 		this.name = name ?? Uint8List(0);
@@ -10979,7 +10996,7 @@ class EmbeddedNamespaceRegistrationTransactionV1 extends StructBase implements I
 		}
 		if (NamespaceRegistrationType.CHILD.value == registrationType.value)
 		{
-			size += parentId.size;
+			size += parentId!.size;
 		}
 		size += id.size;
 		size += registrationType.size;
@@ -10991,7 +11008,8 @@ class EmbeddedNamespaceRegistrationTransactionV1 extends StructBase implements I
 	@override
 	EmbeddedNamespaceRegistrationTransactionV1 deserialize(Uint8List payload) {
 		var buffer = payload;
-		// nothing to do for size
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var embeddedTransactionHeaderReserved_1 = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
@@ -11051,6 +11069,7 @@ class EmbeddedNamespaceRegistrationTransactionV1 extends StructBase implements I
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -11075,8 +11094,8 @@ class EmbeddedNamespaceRegistrationTransactionV1 extends StructBase implements I
 		}
 		if (NamespaceRegistrationType.CHILD.value == registrationType.value)
 		{
-			buffer.setRange(currentPos, currentPos + parentId.size, parentId.serialize());
-			currentPos += parentId.size;
+			buffer.setRange(currentPos, currentPos + parentId!.size, parentId!.serialize());
+			currentPos += parentId!.size;
 		}
 		buffer.setRange(currentPos, currentPos + id.size, id.serialize());
 		currentPos += id.size;
@@ -11102,7 +11121,7 @@ class EmbeddedNamespaceRegistrationTransactionV1 extends StructBase implements I
 		}
 		if (NamespaceRegistrationType.CHILD.value == registrationType.value)
 		{
-			result += 'parentId: "${parentId.toString()}", ';
+			result += 'parentId: "${parentId!.toString()}", ';
 		}
 		result += 'id: "${id.toString()}", ';
 		result += 'registrationType: "${registrationType.toString()}", ';
@@ -11113,7 +11132,7 @@ class EmbeddedNamespaceRegistrationTransactionV1 extends StructBase implements I
 }
 
 
-class AccountRestrictionFlags implements IDeserializable {
+class AccountRestrictionFlags implements ISerializable {
 	static final ADDRESS = AccountRestrictionFlags(1);
 	static final MOSAIC_ID = AccountRestrictionFlags(2);
 	static final TRANSACTION_TYPE = AccountRestrictionFlags(4);
@@ -11142,6 +11161,7 @@ class AccountRestrictionFlags implements IDeserializable {
 		return AccountRestrictionFlags(byteData.getUint16(0, Endian.little));
 	}
 
+	@override
 	Uint8List serialize() {
 		var byteData = ByteData(2)..setUint16(0, value, Endian.little);
 		return byteData.buffer.asUint8List();
@@ -11157,7 +11177,7 @@ class AccountRestrictionFlags implements IDeserializable {
 }
 
 
-class AccountAddressRestrictionTransactionV1 extends StructBase implements IDeserializable, ITransaction {
+class AccountAddressRestrictionTransactionV1 implements ISerializable, ITransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.ACCOUNT_ADDRESS_RESTRICTION.value);
 
@@ -11175,9 +11195,9 @@ class AccountAddressRestrictionTransactionV1 extends StructBase implements IDese
 
 	Signature signature = Signature();
 	PublicKey signerPublicKey = PublicKey();
-	int version = 0;
+	int version = AccountAddressRestrictionTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = TransactionType.ACCOUNT_KEY_LINK;
+	TransactionType type = AccountAddressRestrictionTransactionV1.TRANSACTION_TYPE;
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
 	AccountRestrictionFlags restrictionFlags = AccountRestrictionFlags.ADDRESS;
@@ -11198,9 +11218,7 @@ class AccountAddressRestrictionTransactionV1 extends StructBase implements IDese
 	AccountRestrictionFlags? restrictionFlags,
 	List<UnresolvedAddress>? restrictionAdditions,
 	List<UnresolvedAddress>? restrictionDeletions
-	}) 
-		: super(signature == null && signerPublicKey == null && version == null && network == null && type == null && fee == null && deadline == null && restrictionFlags == null && restrictionAdditions == null && restrictionDeletions == null )
-	{
+	}) {
 		this.signature = signature ?? Signature();
 		this.signerPublicKey = signerPublicKey ?? PublicKey();
 		this.version = version ?? AccountAddressRestrictionTransactionV1.TRANSACTION_VERSION;
@@ -11241,7 +11259,8 @@ class AccountAddressRestrictionTransactionV1 extends StructBase implements IDese
 	@override
 	AccountAddressRestrictionTransactionV1 deserialize(Uint8List payload) {
 		var buffer = payload;
-		// nothing to do for size
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var verifiableEntityHeaderReserved_1 = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
@@ -11298,6 +11317,7 @@ class AccountAddressRestrictionTransactionV1 extends StructBase implements IDese
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -11359,7 +11379,7 @@ class AccountAddressRestrictionTransactionV1 extends StructBase implements IDese
 }
 
 
-class EmbeddedAccountAddressRestrictionTransactionV1 extends StructBase implements IDeserializable, IInnerTransaction {
+class EmbeddedAccountAddressRestrictionTransactionV1 implements ISerializable, IInnerTransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.ACCOUNT_ADDRESS_RESTRICTION.value);
 
@@ -11373,9 +11393,9 @@ class EmbeddedAccountAddressRestrictionTransactionV1 extends StructBase implemen
 	};
 
 	PublicKey signerPublicKey = PublicKey();
-	int version = 0;
+	int version = EmbeddedAccountAddressRestrictionTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = TransactionType.ACCOUNT_KEY_LINK;
+	TransactionType type = EmbeddedAccountAddressRestrictionTransactionV1.TRANSACTION_TYPE;
 	AccountRestrictionFlags restrictionFlags = AccountRestrictionFlags.ADDRESS;
 	List<UnresolvedAddress> restrictionAdditions = [];
 	List<UnresolvedAddress> restrictionDeletions = [];
@@ -11391,9 +11411,7 @@ class EmbeddedAccountAddressRestrictionTransactionV1 extends StructBase implemen
 	AccountRestrictionFlags? restrictionFlags,
 	List<UnresolvedAddress>? restrictionAdditions,
 	List<UnresolvedAddress>? restrictionDeletions
-	}) 
-		: super(signerPublicKey == null && version == null && network == null && type == null && restrictionFlags == null && restrictionAdditions == null && restrictionDeletions == null )
-	{
+	}) {
 		this.signerPublicKey = signerPublicKey ?? PublicKey();
 		this.version = version ?? EmbeddedAccountAddressRestrictionTransactionV1.TRANSACTION_VERSION;
 		this.network = network ?? NetworkType.MAINNET;
@@ -11428,7 +11446,8 @@ class EmbeddedAccountAddressRestrictionTransactionV1 extends StructBase implemen
 	@override
 	EmbeddedAccountAddressRestrictionTransactionV1 deserialize(Uint8List payload) {
 		var buffer = payload;
-		// nothing to do for size
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var embeddedTransactionHeaderReserved_1 = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
@@ -11476,6 +11495,7 @@ class EmbeddedAccountAddressRestrictionTransactionV1 extends StructBase implemen
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -11528,7 +11548,7 @@ class EmbeddedAccountAddressRestrictionTransactionV1 extends StructBase implemen
 }
 
 
-class AccountMosaicRestrictionTransactionV1 extends StructBase implements IDeserializable, ITransaction {
+class AccountMosaicRestrictionTransactionV1 implements ISerializable, ITransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.ACCOUNT_MOSAIC_RESTRICTION.value);
 
@@ -11546,9 +11566,9 @@ class AccountMosaicRestrictionTransactionV1 extends StructBase implements IDeser
 
 	Signature signature = Signature();
 	PublicKey signerPublicKey = PublicKey();
-	int version = 0;
+	int version = AccountMosaicRestrictionTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = TransactionType.ACCOUNT_KEY_LINK;
+	TransactionType type = AccountMosaicRestrictionTransactionV1.TRANSACTION_TYPE;
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
 	AccountRestrictionFlags restrictionFlags = AccountRestrictionFlags.ADDRESS;
@@ -11569,9 +11589,7 @@ class AccountMosaicRestrictionTransactionV1 extends StructBase implements IDeser
 	AccountRestrictionFlags? restrictionFlags,
 	List<UnresolvedMosaicId>? restrictionAdditions,
 	List<UnresolvedMosaicId>? restrictionDeletions
-	}) 
-		: super(signature == null && signerPublicKey == null && version == null && network == null && type == null && fee == null && deadline == null && restrictionFlags == null && restrictionAdditions == null && restrictionDeletions == null )
-	{
+	}) {
 		this.signature = signature ?? Signature();
 		this.signerPublicKey = signerPublicKey ?? PublicKey();
 		this.version = version ?? AccountMosaicRestrictionTransactionV1.TRANSACTION_VERSION;
@@ -11612,7 +11630,8 @@ class AccountMosaicRestrictionTransactionV1 extends StructBase implements IDeser
 	@override
 	AccountMosaicRestrictionTransactionV1 deserialize(Uint8List payload) {
 		var buffer = payload;
-		// nothing to do for size
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var verifiableEntityHeaderReserved_1 = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
@@ -11669,6 +11688,7 @@ class AccountMosaicRestrictionTransactionV1 extends StructBase implements IDeser
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -11730,7 +11750,7 @@ class AccountMosaicRestrictionTransactionV1 extends StructBase implements IDeser
 }
 
 
-class EmbeddedAccountMosaicRestrictionTransactionV1 extends StructBase implements IDeserializable, IInnerTransaction {
+class EmbeddedAccountMosaicRestrictionTransactionV1 implements ISerializable, IInnerTransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.ACCOUNT_MOSAIC_RESTRICTION.value);
 
@@ -11744,9 +11764,9 @@ class EmbeddedAccountMosaicRestrictionTransactionV1 extends StructBase implement
 	};
 
 	PublicKey signerPublicKey = PublicKey();
-	int version = 0;
+	int version = EmbeddedAccountMosaicRestrictionTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = TransactionType.ACCOUNT_KEY_LINK;
+	TransactionType type = EmbeddedAccountMosaicRestrictionTransactionV1.TRANSACTION_TYPE;
 	AccountRestrictionFlags restrictionFlags = AccountRestrictionFlags.ADDRESS;
 	List<UnresolvedMosaicId> restrictionAdditions = [];
 	List<UnresolvedMosaicId> restrictionDeletions = [];
@@ -11762,9 +11782,7 @@ class EmbeddedAccountMosaicRestrictionTransactionV1 extends StructBase implement
 	AccountRestrictionFlags? restrictionFlags,
 	List<UnresolvedMosaicId>? restrictionAdditions,
 	List<UnresolvedMosaicId>? restrictionDeletions
-	}) 
-		: super(signerPublicKey == null && version == null && network == null && type == null && restrictionFlags == null && restrictionAdditions == null && restrictionDeletions == null )
-	{
+	}) {
 		this.signerPublicKey = signerPublicKey ?? PublicKey();
 		this.version = version ?? EmbeddedAccountMosaicRestrictionTransactionV1.TRANSACTION_VERSION;
 		this.network = network ?? NetworkType.MAINNET;
@@ -11799,7 +11817,8 @@ class EmbeddedAccountMosaicRestrictionTransactionV1 extends StructBase implement
 	@override
 	EmbeddedAccountMosaicRestrictionTransactionV1 deserialize(Uint8List payload) {
 		var buffer = payload;
-		// nothing to do for size
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var embeddedTransactionHeaderReserved_1 = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
@@ -11847,6 +11866,7 @@ class EmbeddedAccountMosaicRestrictionTransactionV1 extends StructBase implement
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -11899,7 +11919,7 @@ class EmbeddedAccountMosaicRestrictionTransactionV1 extends StructBase implement
 }
 
 
-class AccountOperationRestrictionTransactionV1 extends StructBase implements IDeserializable, ITransaction {
+class AccountOperationRestrictionTransactionV1 implements ISerializable, ITransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.ACCOUNT_OPERATION_RESTRICTION.value);
 
@@ -11917,9 +11937,9 @@ class AccountOperationRestrictionTransactionV1 extends StructBase implements IDe
 
 	Signature signature = Signature();
 	PublicKey signerPublicKey = PublicKey();
-	int version = 0;
+	int version = AccountOperationRestrictionTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = TransactionType.ACCOUNT_KEY_LINK;
+	TransactionType type = AccountOperationRestrictionTransactionV1.TRANSACTION_TYPE;
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
 	AccountRestrictionFlags restrictionFlags = AccountRestrictionFlags.ADDRESS;
@@ -11940,9 +11960,7 @@ class AccountOperationRestrictionTransactionV1 extends StructBase implements IDe
 	AccountRestrictionFlags? restrictionFlags,
 	List<TransactionType>? restrictionAdditions,
 	List<TransactionType>? restrictionDeletions
-	}) 
-		: super(signature == null && signerPublicKey == null && version == null && network == null && type == null && fee == null && deadline == null && restrictionFlags == null && restrictionAdditions == null && restrictionDeletions == null )
-	{
+	}) {
 		this.signature = signature ?? Signature();
 		this.signerPublicKey = signerPublicKey ?? PublicKey();
 		this.version = version ?? AccountOperationRestrictionTransactionV1.TRANSACTION_VERSION;
@@ -11983,7 +12001,8 @@ class AccountOperationRestrictionTransactionV1 extends StructBase implements IDe
 	@override
 	AccountOperationRestrictionTransactionV1 deserialize(Uint8List payload) {
 		var buffer = payload;
-		// nothing to do for size
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var verifiableEntityHeaderReserved_1 = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
@@ -12040,6 +12059,7 @@ class AccountOperationRestrictionTransactionV1 extends StructBase implements IDe
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -12101,7 +12121,7 @@ class AccountOperationRestrictionTransactionV1 extends StructBase implements IDe
 }
 
 
-class EmbeddedAccountOperationRestrictionTransactionV1 extends StructBase implements IDeserializable, IInnerTransaction {
+class EmbeddedAccountOperationRestrictionTransactionV1 implements ISerializable, IInnerTransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.ACCOUNT_OPERATION_RESTRICTION.value);
 
@@ -12115,9 +12135,9 @@ class EmbeddedAccountOperationRestrictionTransactionV1 extends StructBase implem
 	};
 
 	PublicKey signerPublicKey = PublicKey();
-	int version = 0;
+	int version = EmbeddedAccountOperationRestrictionTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = TransactionType.ACCOUNT_KEY_LINK;
+	TransactionType type = EmbeddedAccountOperationRestrictionTransactionV1.TRANSACTION_TYPE;
 	AccountRestrictionFlags restrictionFlags = AccountRestrictionFlags.ADDRESS;
 	List<TransactionType> restrictionAdditions = [];
 	List<TransactionType> restrictionDeletions = [];
@@ -12133,9 +12153,7 @@ class EmbeddedAccountOperationRestrictionTransactionV1 extends StructBase implem
 	AccountRestrictionFlags? restrictionFlags,
 	List<TransactionType>? restrictionAdditions,
 	List<TransactionType>? restrictionDeletions
-	}) 
-		: super(signerPublicKey == null && version == null && network == null && type == null && restrictionFlags == null && restrictionAdditions == null && restrictionDeletions == null )
-	{
+	}) {
 		this.signerPublicKey = signerPublicKey ?? PublicKey();
 		this.version = version ?? EmbeddedAccountOperationRestrictionTransactionV1.TRANSACTION_VERSION;
 		this.network = network ?? NetworkType.MAINNET;
@@ -12170,7 +12188,8 @@ class EmbeddedAccountOperationRestrictionTransactionV1 extends StructBase implem
 	@override
 	EmbeddedAccountOperationRestrictionTransactionV1 deserialize(Uint8List payload) {
 		var buffer = payload;
-		// nothing to do for size
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var embeddedTransactionHeaderReserved_1 = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
@@ -12218,6 +12237,7 @@ class EmbeddedAccountOperationRestrictionTransactionV1 extends StructBase implem
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -12270,7 +12290,7 @@ class EmbeddedAccountOperationRestrictionTransactionV1 extends StructBase implem
 }
 
 
-class MosaicAddressRestrictionTransactionV1 extends StructBase implements IDeserializable, ITransaction {
+class MosaicAddressRestrictionTransactionV1 implements ISerializable, ITransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.MOSAIC_ADDRESS_RESTRICTION.value);
 
@@ -12287,9 +12307,9 @@ class MosaicAddressRestrictionTransactionV1 extends StructBase implements IDeser
 
 	Signature signature = Signature();
 	PublicKey signerPublicKey = PublicKey();
-	int version = 0;
+	int version = MosaicAddressRestrictionTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = TransactionType.ACCOUNT_KEY_LINK;
+	TransactionType type = MosaicAddressRestrictionTransactionV1.TRANSACTION_TYPE;
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
 	UnresolvedMosaicId mosaicId = UnresolvedMosaicId();
@@ -12313,9 +12333,7 @@ class MosaicAddressRestrictionTransactionV1 extends StructBase implements IDeser
 	int? previousRestrictionValue,
 	int? newRestrictionValue,
 	UnresolvedAddress? targetAddress
-	}) 
-		: super(signature == null && signerPublicKey == null && version == null && network == null && type == null && fee == null && deadline == null && mosaicId == null && restrictionKey == null && previousRestrictionValue == null && newRestrictionValue == null && targetAddress == null )
-	{
+	}) {
 		this.signature = signature ?? Signature();
 		this.signerPublicKey = signerPublicKey ?? PublicKey();
 		this.version = version ?? MosaicAddressRestrictionTransactionV1.TRANSACTION_VERSION;
@@ -12357,7 +12375,8 @@ class MosaicAddressRestrictionTransactionV1 extends StructBase implements IDeser
 	@override
 	MosaicAddressRestrictionTransactionV1 deserialize(Uint8List payload) {
 		var buffer = payload;
-		// nothing to do for size
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var verifiableEntityHeaderReserved_1 = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
@@ -12411,6 +12430,7 @@ class MosaicAddressRestrictionTransactionV1 extends StructBase implements IDeser
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -12468,7 +12488,7 @@ class MosaicAddressRestrictionTransactionV1 extends StructBase implements IDeser
 }
 
 
-class EmbeddedMosaicAddressRestrictionTransactionV1 extends StructBase implements IDeserializable, IInnerTransaction {
+class EmbeddedMosaicAddressRestrictionTransactionV1 implements ISerializable, IInnerTransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.MOSAIC_ADDRESS_RESTRICTION.value);
 
@@ -12481,9 +12501,9 @@ class EmbeddedMosaicAddressRestrictionTransactionV1 extends StructBase implement
 	};
 
 	PublicKey signerPublicKey = PublicKey();
-	int version = 0;
+	int version = EmbeddedMosaicAddressRestrictionTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = TransactionType.ACCOUNT_KEY_LINK;
+	TransactionType type = EmbeddedMosaicAddressRestrictionTransactionV1.TRANSACTION_TYPE;
 	UnresolvedMosaicId mosaicId = UnresolvedMosaicId();
 	int restrictionKey = 0;
 	int previousRestrictionValue = 0;
@@ -12502,9 +12522,7 @@ class EmbeddedMosaicAddressRestrictionTransactionV1 extends StructBase implement
 	int? previousRestrictionValue,
 	int? newRestrictionValue,
 	UnresolvedAddress? targetAddress
-	}) 
-		: super(signerPublicKey == null && version == null && network == null && type == null && mosaicId == null && restrictionKey == null && previousRestrictionValue == null && newRestrictionValue == null && targetAddress == null )
-	{
+	}) {
 		this.signerPublicKey = signerPublicKey ?? PublicKey();
 		this.version = version ?? EmbeddedMosaicAddressRestrictionTransactionV1.TRANSACTION_VERSION;
 		this.network = network ?? NetworkType.MAINNET;
@@ -12540,7 +12558,8 @@ class EmbeddedMosaicAddressRestrictionTransactionV1 extends StructBase implement
 	@override
 	EmbeddedMosaicAddressRestrictionTransactionV1 deserialize(Uint8List payload) {
 		var buffer = payload;
-		// nothing to do for size
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var embeddedTransactionHeaderReserved_1 = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
@@ -12585,6 +12604,7 @@ class EmbeddedMosaicAddressRestrictionTransactionV1 extends StructBase implement
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -12633,7 +12653,7 @@ class EmbeddedMosaicAddressRestrictionTransactionV1 extends StructBase implement
 }
 
 
-class MosaicRestrictionKey extends BaseValue implements IDeserializable {
+class MosaicRestrictionKey extends BaseValue implements ISerializable {
 	static const int SIZE = 8;
 
 	MosaicRestrictionKey([dynamic mosaicRestrictionKey]) : super(SIZE, mosaicRestrictionKey ?? 0);
@@ -12643,6 +12663,7 @@ class MosaicRestrictionKey extends BaseValue implements IDeserializable {
 		return MosaicRestrictionKey(bytesToInt(payload.sublist(0, 8), 8));
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(SIZE);
 		buffer.setRange(0, 0 + 8, intToBytes(value, 8));
@@ -12651,7 +12672,7 @@ class MosaicRestrictionKey extends BaseValue implements IDeserializable {
 }
 
 
-class MosaicRestrictionType implements IDeserializable {
+class MosaicRestrictionType implements ISerializable {
 	static final NONE = MosaicRestrictionType(0);
 	static final EQ = MosaicRestrictionType(1);
 	static final NE = MosaicRestrictionType(2);
@@ -12684,6 +12705,7 @@ class MosaicRestrictionType implements IDeserializable {
 		return MosaicRestrictionType(byteData.getUint8(0));
 	}
 
+	@override
 	Uint8List serialize() {
 		var byteData = ByteData(1)..setUint8(0, value);
 		return byteData.buffer.asUint8List();
@@ -12696,7 +12718,7 @@ class MosaicRestrictionType implements IDeserializable {
 }
 
 
-class MosaicGlobalRestrictionTransactionV1 extends StructBase implements IDeserializable, ITransaction {
+class MosaicGlobalRestrictionTransactionV1 implements ISerializable, ITransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.MOSAIC_GLOBAL_RESTRICTION.value);
 
@@ -12715,9 +12737,9 @@ class MosaicGlobalRestrictionTransactionV1 extends StructBase implements IDeseri
 
 	Signature signature = Signature();
 	PublicKey signerPublicKey = PublicKey();
-	int version = 0;
+	int version = MosaicGlobalRestrictionTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = TransactionType.ACCOUNT_KEY_LINK;
+	TransactionType type = MosaicGlobalRestrictionTransactionV1.TRANSACTION_TYPE;
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
 	UnresolvedMosaicId mosaicId = UnresolvedMosaicId();
@@ -12745,9 +12767,7 @@ class MosaicGlobalRestrictionTransactionV1 extends StructBase implements IDeseri
 	int? newRestrictionValue,
 	MosaicRestrictionType? previousRestrictionType,
 	MosaicRestrictionType? newRestrictionType
-	}) 
-		: super(signature == null && signerPublicKey == null && version == null && network == null && type == null && fee == null && deadline == null && mosaicId == null && referenceMosaicId == null && restrictionKey == null && previousRestrictionValue == null && newRestrictionValue == null && previousRestrictionType == null && newRestrictionType == null )
-	{
+	}) {
 		this.signature = signature ?? Signature();
 		this.signerPublicKey = signerPublicKey ?? PublicKey();
 		this.version = version ?? MosaicGlobalRestrictionTransactionV1.TRANSACTION_VERSION;
@@ -12793,7 +12813,8 @@ class MosaicGlobalRestrictionTransactionV1 extends StructBase implements IDeseri
 	@override
 	MosaicGlobalRestrictionTransactionV1 deserialize(Uint8List payload) {
 		var buffer = payload;
-		// nothing to do for size
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var verifiableEntityHeaderReserved_1 = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
@@ -12853,6 +12874,7 @@ class MosaicGlobalRestrictionTransactionV1 extends StructBase implements IDeseri
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -12916,7 +12938,7 @@ class MosaicGlobalRestrictionTransactionV1 extends StructBase implements IDeseri
 }
 
 
-class EmbeddedMosaicGlobalRestrictionTransactionV1 extends StructBase implements IDeserializable, IInnerTransaction {
+class EmbeddedMosaicGlobalRestrictionTransactionV1 implements ISerializable, IInnerTransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.MOSAIC_GLOBAL_RESTRICTION.value);
 
@@ -12931,9 +12953,9 @@ class EmbeddedMosaicGlobalRestrictionTransactionV1 extends StructBase implements
 	};
 
 	PublicKey signerPublicKey = PublicKey();
-	int version = 0;
+	int version = EmbeddedMosaicGlobalRestrictionTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = TransactionType.ACCOUNT_KEY_LINK;
+	TransactionType type = EmbeddedMosaicGlobalRestrictionTransactionV1.TRANSACTION_TYPE;
 	UnresolvedMosaicId mosaicId = UnresolvedMosaicId();
 	UnresolvedMosaicId referenceMosaicId = UnresolvedMosaicId();
 	int restrictionKey = 0;
@@ -12956,9 +12978,7 @@ class EmbeddedMosaicGlobalRestrictionTransactionV1 extends StructBase implements
 	int? newRestrictionValue,
 	MosaicRestrictionType? previousRestrictionType,
 	MosaicRestrictionType? newRestrictionType
-	}) 
-		: super(signerPublicKey == null && version == null && network == null && type == null && mosaicId == null && referenceMosaicId == null && restrictionKey == null && previousRestrictionValue == null && newRestrictionValue == null && previousRestrictionType == null && newRestrictionType == null )
-	{
+	}) {
 		this.signerPublicKey = signerPublicKey ?? PublicKey();
 		this.version = version ?? EmbeddedMosaicGlobalRestrictionTransactionV1.TRANSACTION_VERSION;
 		this.network = network ?? NetworkType.MAINNET;
@@ -12998,7 +13018,8 @@ class EmbeddedMosaicGlobalRestrictionTransactionV1 extends StructBase implements
 	@override
 	EmbeddedMosaicGlobalRestrictionTransactionV1 deserialize(Uint8List payload) {
 		var buffer = payload;
-		// nothing to do for size
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var embeddedTransactionHeaderReserved_1 = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
@@ -13049,6 +13070,7 @@ class EmbeddedMosaicGlobalRestrictionTransactionV1 extends StructBase implements
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -13103,7 +13125,7 @@ class EmbeddedMosaicGlobalRestrictionTransactionV1 extends StructBase implements
 }
 
 
-class TransferTransactionV1 extends StructBase implements IDeserializable, ITransaction {
+class TransferTransactionV1 implements ISerializable, ITransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.TRANSFER.value);
 
@@ -13121,9 +13143,9 @@ class TransferTransactionV1 extends StructBase implements IDeserializable, ITran
 
 	Signature signature = Signature();
 	PublicKey signerPublicKey = PublicKey();
-	int version = 0;
+	int version = TransferTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = TransactionType.ACCOUNT_KEY_LINK;
+	TransactionType type = TransferTransactionV1.TRANSACTION_TYPE;
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
 	UnresolvedAddress recipientAddress = UnresolvedAddress();
@@ -13145,9 +13167,7 @@ class TransferTransactionV1 extends StructBase implements IDeserializable, ITran
 	UnresolvedAddress? recipientAddress,
 	List<UnresolvedMosaic>? mosaics,
 	Uint8List? message
-	}) 
-		: super(signature == null && signerPublicKey == null && version == null && network == null && type == null && fee == null && deadline == null && recipientAddress == null && mosaics == null && message == null )
-	{
+	}) {
 		this.signature = signature ?? Signature();
 		this.signerPublicKey = signerPublicKey ?? PublicKey();
 		this.version = version ?? TransferTransactionV1.TRANSACTION_VERSION;
@@ -13191,7 +13211,8 @@ class TransferTransactionV1 extends StructBase implements IDeserializable, ITran
 	@override
 	TransferTransactionV1 deserialize(Uint8List payload) {
 		var buffer = payload;
-		// nothing to do for size
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var verifiableEntityHeaderReserved_1 = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
@@ -13253,6 +13274,7 @@ class TransferTransactionV1 extends StructBase implements IDeserializable, ITran
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -13314,7 +13336,7 @@ class TransferTransactionV1 extends StructBase implements IDeserializable, ITran
 }
 
 
-class EmbeddedTransferTransactionV1 extends StructBase implements IDeserializable, IInnerTransaction {
+class EmbeddedTransferTransactionV1 implements ISerializable, IInnerTransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.TRANSFER.value);
 
@@ -13328,9 +13350,9 @@ class EmbeddedTransferTransactionV1 extends StructBase implements IDeserializabl
 	};
 
 	PublicKey signerPublicKey = PublicKey();
-	int version = 0;
+	int version = EmbeddedTransferTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = TransactionType.ACCOUNT_KEY_LINK;
+	TransactionType type = EmbeddedTransferTransactionV1.TRANSACTION_TYPE;
 	UnresolvedAddress recipientAddress = UnresolvedAddress();
 	List<UnresolvedMosaic> mosaics = [];
 	Uint8List message = Uint8List(0);
@@ -13347,9 +13369,7 @@ class EmbeddedTransferTransactionV1 extends StructBase implements IDeserializabl
 	UnresolvedAddress? recipientAddress,
 	List<UnresolvedMosaic>? mosaics,
 	Uint8List? message
-	}) 
-		: super(signerPublicKey == null && version == null && network == null && type == null && recipientAddress == null && mosaics == null && message == null )
-	{
+	}) {
 		this.signerPublicKey = signerPublicKey ?? PublicKey();
 		this.version = version ?? EmbeddedTransferTransactionV1.TRANSACTION_VERSION;
 		this.network = network ?? NetworkType.MAINNET;
@@ -13387,7 +13407,8 @@ class EmbeddedTransferTransactionV1 extends StructBase implements IDeserializabl
 	@override
 	EmbeddedTransferTransactionV1 deserialize(Uint8List payload) {
 		var buffer = payload;
-		// nothing to do for size
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var embeddedTransactionHeaderReserved_1 = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
@@ -13440,6 +13461,7 @@ class EmbeddedTransferTransactionV1 extends StructBase implements IDeserializabl
 		return instance;
 	}
 
+	@override
 	Uint8List serialize() {
 		var buffer = Uint8List(size);
 		var currentPos = 0;
@@ -13492,7 +13514,7 @@ class EmbeddedTransferTransactionV1 extends StructBase implements IDeserializabl
 }
 
 
-class TransactionFactory implements IDeserializable {
+class TransactionFactory implements ISerializable {
 	@override
 	dynamic deserialize(dynamic payload) {
 		if(payload is String){
@@ -13501,7 +13523,7 @@ class TransactionFactory implements IDeserializable {
 		}
 		Uint8List buffer = payload.buffer.asUint8List();
 		var parent = Transaction().deserialize(buffer);
-		var mapping = <(int, int), StructBase>{
+		var mapping = <(int, int), ISerializable>{
 			(AccountKeyLinkTransactionV1.TRANSACTION_TYPE.value, AccountKeyLinkTransactionV1.TRANSACTION_VERSION): AccountKeyLinkTransactionV1(),
 			(NodeKeyLinkTransactionV1.TRANSACTION_TYPE.value, NodeKeyLinkTransactionV1.TRANSACTION_VERSION): NodeKeyLinkTransactionV1(),
 			(AggregateCompleteTransactionV1.TRANSACTION_TYPE.value, AggregateCompleteTransactionV1.TRANSACTION_VERSION): AggregateCompleteTransactionV1(),
@@ -13539,8 +13561,8 @@ class TransactionFactory implements IDeserializable {
 		}
 	}
 
-	StructBase createByName(String entityName) {
-		var mapping = <String, StructBase Function()>{
+	ISerializable createByName(String entityName) {
+		var mapping = <String, ISerializable Function()>{
 			'account_key_link_transaction_v1': () => AccountKeyLinkTransactionV1(),
 			'node_key_link_transaction_v1': () => NodeKeyLinkTransactionV1(),
 			'aggregate_complete_transaction_v1': () => AggregateCompleteTransactionV1(),
@@ -13576,10 +13598,15 @@ class TransactionFactory implements IDeserializable {
 
 		return mapping[entityName]!();
 	}
+
+	@override
+	Uint8List serialize() {
+		throw UnimplementedError('do not need serialize for factory');
+	}
 }
 
 
-class EmbeddedTransactionFactory implements IDeserializable {
+class EmbeddedTransactionFactory implements ISerializable {
 	@override
 	dynamic deserialize(dynamic payload) {
 		if(payload is String){
@@ -13588,7 +13615,7 @@ class EmbeddedTransactionFactory implements IDeserializable {
 		}
 		Uint8List buffer = payload.buffer.asUint8List();
 		var parent = EmbeddedTransaction().deserialize(buffer);
-		var mapping = <(int, int), StructBase>{
+		var mapping = <(int, int), ISerializable>{
 			(EmbeddedAccountKeyLinkTransactionV1.TRANSACTION_TYPE.value, EmbeddedAccountKeyLinkTransactionV1.TRANSACTION_VERSION): EmbeddedAccountKeyLinkTransactionV1(),
 			(EmbeddedNodeKeyLinkTransactionV1.TRANSACTION_TYPE.value, EmbeddedNodeKeyLinkTransactionV1.TRANSACTION_VERSION): EmbeddedNodeKeyLinkTransactionV1(),
 			(EmbeddedVotingKeyLinkTransactionV1.TRANSACTION_TYPE.value, EmbeddedVotingKeyLinkTransactionV1.TRANSACTION_VERSION): EmbeddedVotingKeyLinkTransactionV1(),
@@ -13622,8 +13649,8 @@ class EmbeddedTransactionFactory implements IDeserializable {
 		}
 	}
 
-	StructBase createByName(String entityName) {
-		var mapping = <String, StructBase Function()>{
+	ISerializable createByName(String entityName) {
+		var mapping = <String, ISerializable Function()>{
 			'account_key_link_transaction_v1': () => EmbeddedAccountKeyLinkTransactionV1(),
 			'node_key_link_transaction_v1': () => EmbeddedNodeKeyLinkTransactionV1(),
 			'voting_key_link_transaction_v1': () => EmbeddedVotingKeyLinkTransactionV1(),
@@ -13655,10 +13682,15 @@ class EmbeddedTransactionFactory implements IDeserializable {
 
 		return mapping[entityName]!();
 	}
+
+	@override
+	Uint8List serialize() {
+		throw UnimplementedError('do not need serialize for factory');
+	}
 }
 
 
-class BlockFactory implements IDeserializable {
+class BlockFactory implements ISerializable {
 	@override
 	dynamic deserialize(dynamic payload) {
 		if(payload is String){
@@ -13667,10 +13699,10 @@ class BlockFactory implements IDeserializable {
 		}
 		Uint8List buffer = payload.buffer.asUint8List();
 		var parent = Block().deserialize(buffer);
-		var mapping = <(int, ), StructBase>{
-			(NemesisBlockV1.BLOCK_TYPE.value, ): NemesisBlockV1(),
-			(NormalBlockV1.BLOCK_TYPE.value, ): NormalBlockV1(),
-			(ImportanceBlockV1.BLOCK_TYPE.value, ): ImportanceBlockV1()
+		var mapping = <int, ISerializable>{
+			NemesisBlockV1.BLOCK_TYPE.value: NemesisBlockV1(),
+			NormalBlockV1.BLOCK_TYPE.value: NormalBlockV1(),
+			ImportanceBlockV1.BLOCK_TYPE.value: ImportanceBlockV1()
 		};
 		var discriminator = (parent.type.value);
 		if (mapping[discriminator] != null) {
@@ -13681,8 +13713,8 @@ class BlockFactory implements IDeserializable {
 		}
 	}
 
-	StructBase createByName(String entityName) {
-		var mapping = <String, StructBase Function()>{
+	ISerializable createByName(String entityName) {
+		var mapping = <String, ISerializable Function()>{
 			'nemesis_block_v1': () => NemesisBlockV1(),
 			'normal_block_v1': () => NormalBlockV1(),
 			'importance_block_v1': () => ImportanceBlockV1()
@@ -13694,10 +13726,15 @@ class BlockFactory implements IDeserializable {
 
 		return mapping[entityName]!();
 	}
+
+	@override
+	Uint8List serialize() {
+		throw UnimplementedError('do not need serialize for factory');
+	}
 }
 
 
-class ReceiptFactory implements IDeserializable {
+class ReceiptFactory implements ISerializable {
 	@override
 	dynamic deserialize(dynamic payload) {
 		if(payload is String){
@@ -13706,20 +13743,20 @@ class ReceiptFactory implements IDeserializable {
 		}
 		Uint8List buffer = payload.buffer.asUint8List();
 		var parent = Receipt().deserialize(buffer);
-		var mapping = <(int, ), StructBase>{
-			(HarvestFeeReceipt.RECEIPT_TYPE.value, ): HarvestFeeReceipt(),
-			(InflationReceipt.RECEIPT_TYPE.value, ): InflationReceipt(),
-			(LockHashCreatedFeeReceipt.RECEIPT_TYPE.value, ): LockHashCreatedFeeReceipt(),
-			(LockHashCompletedFeeReceipt.RECEIPT_TYPE.value, ): LockHashCompletedFeeReceipt(),
-			(LockHashExpiredFeeReceipt.RECEIPT_TYPE.value, ): LockHashExpiredFeeReceipt(),
-			(LockSecretCreatedFeeReceipt.RECEIPT_TYPE.value, ): LockSecretCreatedFeeReceipt(),
-			(LockSecretCompletedFeeReceipt.RECEIPT_TYPE.value, ): LockSecretCompletedFeeReceipt(),
-			(LockSecretExpiredFeeReceipt.RECEIPT_TYPE.value, ): LockSecretExpiredFeeReceipt(),
-			(MosaicExpiredReceipt.RECEIPT_TYPE.value, ): MosaicExpiredReceipt(),
-			(MosaicRentalFeeReceipt.RECEIPT_TYPE.value, ): MosaicRentalFeeReceipt(),
-			(NamespaceExpiredReceipt.RECEIPT_TYPE.value, ): NamespaceExpiredReceipt(),
-			(NamespaceDeletedReceipt.RECEIPT_TYPE.value, ): NamespaceDeletedReceipt(),
-			(NamespaceRentalFeeReceipt.RECEIPT_TYPE.value, ): NamespaceRentalFeeReceipt()
+		var mapping = <int, ISerializable>{
+			HarvestFeeReceipt.RECEIPT_TYPE.value: HarvestFeeReceipt(),
+			InflationReceipt.RECEIPT_TYPE.value: InflationReceipt(),
+			LockHashCreatedFeeReceipt.RECEIPT_TYPE.value: LockHashCreatedFeeReceipt(),
+			LockHashCompletedFeeReceipt.RECEIPT_TYPE.value: LockHashCompletedFeeReceipt(),
+			LockHashExpiredFeeReceipt.RECEIPT_TYPE.value: LockHashExpiredFeeReceipt(),
+			LockSecretCreatedFeeReceipt.RECEIPT_TYPE.value: LockSecretCreatedFeeReceipt(),
+			LockSecretCompletedFeeReceipt.RECEIPT_TYPE.value: LockSecretCompletedFeeReceipt(),
+			LockSecretExpiredFeeReceipt.RECEIPT_TYPE.value: LockSecretExpiredFeeReceipt(),
+			MosaicExpiredReceipt.RECEIPT_TYPE.value: MosaicExpiredReceipt(),
+			MosaicRentalFeeReceipt.RECEIPT_TYPE.value: MosaicRentalFeeReceipt(),
+			NamespaceExpiredReceipt.RECEIPT_TYPE.value: NamespaceExpiredReceipt(),
+			NamespaceDeletedReceipt.RECEIPT_TYPE.value: NamespaceDeletedReceipt(),
+			NamespaceRentalFeeReceipt.RECEIPT_TYPE.value: NamespaceRentalFeeReceipt()
 		};
 		var discriminator = (parent.type.value);
 		if (mapping[discriminator] != null) {
@@ -13730,8 +13767,8 @@ class ReceiptFactory implements IDeserializable {
 		}
 	}
 
-	StructBase createByName(String entityName) {
-		var mapping = <String, StructBase Function()>{
+	ISerializable createByName(String entityName) {
+		var mapping = <String, ISerializable Function()>{
 			'harvest_fee_receipt': () => HarvestFeeReceipt(),
 			'inflation_receipt': () => InflationReceipt(),
 			'lock_hash_created_fee_receipt': () => LockHashCreatedFeeReceipt(),
@@ -13752,5 +13789,10 @@ class ReceiptFactory implements IDeserializable {
 		}
 
 		return mapping[entityName]!();
+	}
+
+	@override
+	Uint8List serialize() {
+		throw UnimplementedError('do not need serialize for factory');
 	}
 }

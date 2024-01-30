@@ -11,22 +11,26 @@ class BaseValue {
       : _tag = [tag] {
 
     if (value is String) {
-      tryHexString(value);
-      var decoded = hex.decode(value);
-      var byteData = ByteData.view(Uint8List.fromList(decoded.reversed.toList()).buffer);
-      switch(decoded.length){
-        case 1:
-          value = byteData.getInt8(0);
-          break;
-        case 2:
-          value = byteData.getInt16(0, Endian.little);
-          break;
-        case 4:
-          value = byteData.getInt32(0, Endian.little);
-          break;
-        default:
-          value = byteData.getInt64(0, Endian.little);
-          break;
+      try {
+        value = BigInt.parse(value).toSigned(64).toInt();
+      } catch (_) {
+        tryHexString(value);
+        var decoded = hex.decode(value);
+        var byteData = ByteData.view(Uint8List.fromList(decoded.reversed.toList()).buffer);
+        switch(decoded.length){
+          case 1:
+            value = byteData.getInt8(0);
+            break;
+          case 2:
+            value = byteData.getInt16(0, Endian.little);
+            break;
+          case 4:
+            value = byteData.getInt32(0, Endian.little);
+            break;
+          default:
+            value = byteData.getInt64(0, Endian.little);
+            break;
+        }
       }
     }
     
@@ -65,5 +69,9 @@ class BaseValue {
   String toString() {
     var unsignedValue = intToUnsignedInt(value);
     return '0x' + unsignedValue.toRadixString(16).padLeft(size * 2, '0').toUpperCase();
+  }
+
+  bool get isDefault{
+    return value == 0;
   }
 }
