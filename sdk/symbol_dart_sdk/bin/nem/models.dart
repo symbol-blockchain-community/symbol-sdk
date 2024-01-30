@@ -255,7 +255,9 @@ class Transaction implements ISerializable, ITransaction {
 	int version = 0;
 	NetworkType network = NetworkType.MAINNET;
 	Timestamp timestamp = Timestamp();
+	@override
 	PublicKey signerPublicKey = PublicKey();
+	@override
 	Signature signature = Signature();
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
@@ -283,10 +285,12 @@ class Transaction implements ISerializable, ITransaction {
 		this.deadline = deadline ?? Timestamp();
 	}
 
+	@override
 	void sort() {
 		// empty body
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += type.size;
@@ -436,10 +440,12 @@ class NonVerifiableTransaction implements ISerializable, IInnerTransaction {
 		this.deadline = deadline ?? Timestamp();
 	}
 
+	@override
 	void sort() {
 		// empty body
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += type.size;
@@ -591,7 +597,9 @@ class AccountKeyLinkTransactionV1 implements ISerializable, ITransaction {
 	int version = AccountKeyLinkTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
 	Timestamp timestamp = Timestamp();
+	@override
 	PublicKey signerPublicKey = PublicKey();
+	@override
 	Signature signature = Signature();
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
@@ -626,10 +634,12 @@ class AccountKeyLinkTransactionV1 implements ISerializable, ITransaction {
 		this.remotePublicKey = remotePublicKey ?? PublicKey();
 	}
 
+	@override
 	void sort() {
 		// empty body
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += type.size;
@@ -812,10 +822,12 @@ class NonVerifiableAccountKeyLinkTransactionV1 implements ISerializable, IInnerT
 		this.remotePublicKey = remotePublicKey ?? PublicKey();
 	}
 
+	@override
 	void sort() {
 		// empty body
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += type.size;
@@ -1461,7 +1473,7 @@ class MosaicDefinition implements ISerializable {
 	MosaicId id = MosaicId();
 	Uint8List description = Uint8List(0);
 	List<SizePrefixedMosaicProperty> properties = [];
-	MosaicLevy? levy = null;
+	MosaicLevy? levy;
 	final int ownerPublicKeySize = 32; // reserved field
 
 	MosaicDefinition({ 
@@ -1533,7 +1545,7 @@ class MosaicDefinition implements ISerializable {
 		buffer = buffer.sublist(ArrayHelpers.size(properties));
 		var levySize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
-		var levy = MosaicLevy();
+		var levy = null;
 		if (0 != levySize)
 		{
 			levy = MosaicLevy().deserialize(buffer);
@@ -1620,7 +1632,9 @@ class MosaicDefinitionTransactionV1 implements ISerializable, ITransaction {
 	int version = MosaicDefinitionTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
 	Timestamp timestamp = Timestamp();
+	@override
 	PublicKey signerPublicKey = PublicKey();
+	@override
 	Signature signature = Signature();
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
@@ -1658,10 +1672,12 @@ class MosaicDefinitionTransactionV1 implements ISerializable, ITransaction {
 		this.rentalFee = rentalFee ?? Amount();
 	}
 
+	@override
 	void sort() {
 		mosaicDefinition.sort();
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += type.size;
@@ -1861,10 +1877,12 @@ class NonVerifiableMosaicDefinitionTransactionV1 implements ISerializable, IInne
 		this.rentalFee = rentalFee ?? Amount();
 	}
 
+	@override
 	void sort() {
 		mosaicDefinition.sort();
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += type.size;
@@ -2052,7 +2070,9 @@ class MosaicSupplyChangeTransactionV1 implements ISerializable, ITransaction {
 	int version = MosaicSupplyChangeTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
 	Timestamp timestamp = Timestamp();
+	@override
 	PublicKey signerPublicKey = PublicKey();
+	@override
 	Signature signature = Signature();
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
@@ -2089,10 +2109,12 @@ class MosaicSupplyChangeTransactionV1 implements ISerializable, ITransaction {
 		this.delta = delta ?? Amount();
 	}
 
+	@override
 	void sort() {
 		mosaicId.sort();
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += type.size;
@@ -2283,10 +2305,12 @@ class NonVerifiableMosaicSupplyChangeTransactionV1 implements ISerializable, IIn
 		this.delta = delta ?? Amount();
 	}
 
+	@override
 	void sort() {
 		mosaicId.sort();
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += type.size;
@@ -2600,7 +2624,9 @@ class MultisigAccountModificationTransactionV1 implements ISerializable, ITransa
 	int version = MultisigAccountModificationTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
 	Timestamp timestamp = Timestamp();
+	@override
 	PublicKey signerPublicKey = PublicKey();
+	@override
 	Signature signature = Signature();
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
@@ -2631,12 +2657,14 @@ class MultisigAccountModificationTransactionV1 implements ISerializable, ITransa
 		this.modifications = modifications ?? [];
 	}
 
+	@override
 	void sort() {
 		modifications.sort((lhs, rhs) {
 			return ArrayHelpers.deepCompare(ArrayHelpers.getValue(lhs.modification), ArrayHelpers.getValue(rhs.modification));
 		});
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += type.size;
@@ -2806,12 +2834,14 @@ class NonVerifiableMultisigAccountModificationTransactionV1 implements ISerializ
 		this.modifications = modifications ?? [];
 	}
 
+	@override
 	void sort() {
 		modifications.sort((lhs, rhs) {
 			return ArrayHelpers.deepCompare(ArrayHelpers.getValue(lhs.modification), ArrayHelpers.getValue(rhs.modification));
 		});
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += type.size;
@@ -2940,7 +2970,9 @@ class MultisigAccountModificationTransactionV2 implements ISerializable, ITransa
 	int version = MultisigAccountModificationTransactionV2.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
 	Timestamp timestamp = Timestamp();
+	@override
 	PublicKey signerPublicKey = PublicKey();
+	@override
 	Signature signature = Signature();
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
@@ -2975,12 +3007,14 @@ class MultisigAccountModificationTransactionV2 implements ISerializable, ITransa
 		this.minApprovalDelta = minApprovalDelta ?? 0;
 	}
 
+	@override
 	void sort() {
 		modifications.sort((lhs, rhs) {
 			return ArrayHelpers.deepCompare(ArrayHelpers.getValue(lhs.modification), ArrayHelpers.getValue(rhs.modification));
 		});
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += type.size;
@@ -3169,12 +3203,14 @@ class NonVerifiableMultisigAccountModificationTransactionV2 implements ISerializ
 		this.minApprovalDelta = minApprovalDelta ?? 0;
 	}
 
+	@override
 	void sort() {
 		modifications.sort((lhs, rhs) {
 			return ArrayHelpers.deepCompare(ArrayHelpers.getValue(lhs.modification), ArrayHelpers.getValue(rhs.modification));
 		});
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += type.size;
@@ -3585,7 +3621,9 @@ class MultisigTransactionV1 implements ISerializable, ITransaction {
 	int version = MultisigTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
 	Timestamp timestamp = Timestamp();
+	@override
 	PublicKey signerPublicKey = PublicKey();
+	@override
 	Signature signature = Signature();
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
@@ -3619,10 +3657,12 @@ class MultisigTransactionV1 implements ISerializable, ITransaction {
 		this.cosignatures = cosignatures ?? [];
 	}
 
+	@override
 	void sort() {
 		innerTransaction.sort();
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += type.size;
@@ -3805,10 +3845,12 @@ class NonVerifiableMultisigTransactionV1 implements ISerializable, IInnerTransac
 		this.innerTransaction = innerTransaction ?? NonVerifiableTransaction();
 	}
 
+	@override
 	void sort() {
 		innerTransaction.sort();
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += type.size;
@@ -3939,14 +3981,16 @@ class NamespaceRegistrationTransactionV1 implements ISerializable, ITransaction 
 	int version = NamespaceRegistrationTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
 	Timestamp timestamp = Timestamp();
+	@override
 	PublicKey signerPublicKey = PublicKey();
+	@override
 	Signature signature = Signature();
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
 	Address rentalFeeSink = Address();
 	Amount rentalFee = Amount();
 	Uint8List name = Uint8List(0);
-	Uint8List? parentName = null;
+	Uint8List? parentName;
 	final int entityBodyReserved_1 = 0; // reserved field
 	final int signerPublicKeySize = 32; // reserved field
 	final int signatureSize = 64; // reserved field
@@ -3980,10 +4024,12 @@ class NamespaceRegistrationTransactionV1 implements ISerializable, ITransaction 
 		this.parentName = parentName ?? null;
 	}
 
+	@override
 	void sort() {
 		// empty body
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += type.size;
@@ -4059,7 +4105,7 @@ class NamespaceRegistrationTransactionV1 implements ISerializable, ITransaction 
 		buffer = buffer.sublist(nameSize);
 		var parentNameSize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
-		var parentName = Uint8List(0);
+		var parentName = null;
 		if (-1 != parentNameSize)
 		{
 			parentName = Uint8List.fromList(buffer.sublist(0, parentNameSize));
@@ -4180,7 +4226,7 @@ class NonVerifiableNamespaceRegistrationTransactionV1 implements ISerializable, 
 	Address rentalFeeSink = Address();
 	Amount rentalFee = Amount();
 	Uint8List name = Uint8List(0);
-	Uint8List? parentName = null;
+	Uint8List? parentName;
 	final int entityBodyReserved_1 = 0; // reserved field
 	final int signerPublicKeySize = 32; // reserved field
 	final int rentalFeeSinkSize = 40; // reserved field
@@ -4211,10 +4257,12 @@ class NonVerifiableNamespaceRegistrationTransactionV1 implements ISerializable, 
 		this.parentName = parentName ?? null;
 	}
 
+	@override
 	void sort() {
 		// empty body
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += type.size;
@@ -4281,7 +4329,7 @@ class NonVerifiableNamespaceRegistrationTransactionV1 implements ISerializable, 
 		buffer = buffer.sublist(nameSize);
 		var parentNameSize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
-		var parentName = Uint8List(0);
+		var parentName = null;
 		if (-1 != parentNameSize)
 		{
 			parentName = Uint8List.fromList(buffer.sublist(0, parentNameSize));
@@ -4494,13 +4542,15 @@ class TransferTransactionV1 implements ISerializable, ITransaction {
 	int version = TransferTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
 	Timestamp timestamp = Timestamp();
+	@override
 	PublicKey signerPublicKey = PublicKey();
+	@override
 	Signature signature = Signature();
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
 	Address recipientAddress = Address();
 	Amount amount = Amount();
-	Message? message = null;
+	Message? message;
 	final int entityBodyReserved_1 = 0; // reserved field
 	final int signerPublicKeySize = 32; // reserved field
 	final int signatureSize = 64; // reserved field
@@ -4532,6 +4582,7 @@ class TransferTransactionV1 implements ISerializable, ITransaction {
 		this.message = message ?? null;
 	}
 
+	@override
 	void sort() {
 		if (0 != messageEnvelopeSizeComputed)
 		{
@@ -4543,6 +4594,7 @@ class TransferTransactionV1 implements ISerializable, ITransaction {
 		return message?.size ?? 0;
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += type.size;
@@ -4612,7 +4664,7 @@ class TransferTransactionV1 implements ISerializable, ITransaction {
 		buffer = buffer.sublist(amount.size);
 		var messageEnvelopeSize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
-		var message = Message();
+		var message = null;
 		if (0 != messageEnvelopeSize)
 		{
 			message = Message().deserialize(buffer);
@@ -4725,7 +4777,7 @@ class NonVerifiableTransferTransactionV1 implements ISerializable, IInnerTransac
 	Timestamp deadline = Timestamp();
 	Address recipientAddress = Address();
 	Amount amount = Amount();
-	Message? message = null;
+	Message? message;
 	final int entityBodyReserved_1 = 0; // reserved field
 	final int signerPublicKeySize = 32; // reserved field
 	final int recipientAddressSize = 40; // reserved field
@@ -4754,6 +4806,7 @@ class NonVerifiableTransferTransactionV1 implements ISerializable, IInnerTransac
 		this.message = message ?? null;
 	}
 
+	@override
 	void sort() {
 		if (0 != messageEnvelopeSizeComputed)
 		{
@@ -4765,6 +4818,7 @@ class NonVerifiableTransferTransactionV1 implements ISerializable, IInnerTransac
 		return message?.size ?? 0;
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += type.size;
@@ -4825,7 +4879,7 @@ class NonVerifiableTransferTransactionV1 implements ISerializable, IInnerTransac
 		buffer = buffer.sublist(amount.size);
 		var messageEnvelopeSize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
-		var message = Message();
+		var message = null;
 		if (0 != messageEnvelopeSize)
 		{
 			message = Message().deserialize(buffer);
@@ -4929,13 +4983,15 @@ class TransferTransactionV2 implements ISerializable, ITransaction {
 	int version = TransferTransactionV2.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
 	Timestamp timestamp = Timestamp();
+	@override
 	PublicKey signerPublicKey = PublicKey();
+	@override
 	Signature signature = Signature();
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
 	Address recipientAddress = Address();
 	Amount amount = Amount();
-	Message? message = null;
+	Message? message;
 	List<SizePrefixedMosaic> mosaics = [];
 	final int entityBodyReserved_1 = 0; // reserved field
 	final int signerPublicKeySize = 32; // reserved field
@@ -4970,6 +5026,7 @@ class TransferTransactionV2 implements ISerializable, ITransaction {
 		this.mosaics = mosaics ?? [];
 	}
 
+	@override
 	void sort() {
 		if (0 != messageEnvelopeSizeComputed)
 		{
@@ -4981,6 +5038,7 @@ class TransferTransactionV2 implements ISerializable, ITransaction {
 		return message?.size ?? 0;
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += type.size;
@@ -5052,7 +5110,7 @@ class TransferTransactionV2 implements ISerializable, ITransaction {
 		buffer = buffer.sublist(amount.size);
 		var messageEnvelopeSize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
-		var message = Message();
+		var message = null;
 		if (0 != messageEnvelopeSize)
 		{
 			message = Message().deserialize(buffer);
@@ -5178,7 +5236,7 @@ class NonVerifiableTransferTransactionV2 implements ISerializable, IInnerTransac
 	Timestamp deadline = Timestamp();
 	Address recipientAddress = Address();
 	Amount amount = Amount();
-	Message? message = null;
+	Message? message;
 	List<SizePrefixedMosaic> mosaics = [];
 	final int entityBodyReserved_1 = 0; // reserved field
 	final int signerPublicKeySize = 32; // reserved field
@@ -5210,6 +5268,7 @@ class NonVerifiableTransferTransactionV2 implements ISerializable, IInnerTransac
 		this.mosaics = mosaics ?? [];
 	}
 
+	@override
 	void sort() {
 		if (0 != messageEnvelopeSizeComputed)
 		{
@@ -5221,6 +5280,7 @@ class NonVerifiableTransferTransactionV2 implements ISerializable, IInnerTransac
 		return message?.size ?? 0;
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += type.size;
@@ -5283,7 +5343,7 @@ class NonVerifiableTransferTransactionV2 implements ISerializable, IInnerTransac
 		buffer = buffer.sublist(amount.size);
 		var messageEnvelopeSize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
-		var message = Message();
+		var message = null;
 		if (0 != messageEnvelopeSize)
 		{
 			message = Message().deserialize(buffer);

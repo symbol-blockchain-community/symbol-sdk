@@ -683,7 +683,9 @@ class Transaction implements ISerializable, ITransaction {
 		'deadline': 'pod:Timestamp'
 	};
 
+	@override
 	Signature signature = Signature();
+	@override
 	PublicKey signerPublicKey = PublicKey();
 	int version = 0;
 	NetworkType network = NetworkType.MAINNET;
@@ -711,10 +713,12 @@ class Transaction implements ISerializable, ITransaction {
 		this.deadline = deadline ?? Timestamp();
 	}
 
+	@override
 	void sort() {
 		// empty body
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += 4;
@@ -838,10 +842,12 @@ class EmbeddedTransaction implements ISerializable, IInnerTransaction {
 		this.type = type ?? TransactionType.ACCOUNT_KEY_LINK;
 	}
 
+	@override
 	void sort() {
 		// empty body
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += 4;
@@ -4179,7 +4185,9 @@ class AccountKeyLinkTransactionV1 implements ISerializable, ITransaction {
 		'linkAction': 'enum:LinkAction'
 	};
 
+	@override
 	Signature signature = Signature();
+	@override
 	PublicKey signerPublicKey = PublicKey();
 	int version = AccountKeyLinkTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
@@ -4213,10 +4221,12 @@ class AccountKeyLinkTransactionV1 implements ISerializable, ITransaction {
 		this.linkAction = linkAction ?? LinkAction.UNLINK;
 	}
 
+	@override
 	void sort() {
 		// empty body
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += 4;
@@ -4369,10 +4379,12 @@ class EmbeddedAccountKeyLinkTransactionV1 implements ISerializable, IInnerTransa
 		this.linkAction = linkAction ?? LinkAction.UNLINK;
 	}
 
+	@override
 	void sort() {
 		// empty body
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += 4;
@@ -4482,7 +4494,9 @@ class NodeKeyLinkTransactionV1 implements ISerializable, ITransaction {
 		'linkAction': 'enum:LinkAction'
 	};
 
+	@override
 	Signature signature = Signature();
+	@override
 	PublicKey signerPublicKey = PublicKey();
 	int version = NodeKeyLinkTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
@@ -4516,10 +4530,12 @@ class NodeKeyLinkTransactionV1 implements ISerializable, ITransaction {
 		this.linkAction = linkAction ?? LinkAction.UNLINK;
 	}
 
+	@override
 	void sort() {
 		// empty body
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += 4;
@@ -4672,10 +4688,12 @@ class EmbeddedNodeKeyLinkTransactionV1 implements ISerializable, IInnerTransacti
 		this.linkAction = linkAction ?? LinkAction.UNLINK;
 	}
 
+	@override
 	void sort() {
 		// empty body
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += 4;
@@ -4940,7 +4958,9 @@ class AggregateCompleteTransactionV1 implements ISerializable, ITransaction {
 		'cosignatures': 'array[Cosignature]'
 	};
 
+	@override
 	Signature signature = Signature();
+	@override
 	PublicKey signerPublicKey = PublicKey();
 	int version = AggregateCompleteTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
@@ -4978,10 +4998,12 @@ class AggregateCompleteTransactionV1 implements ISerializable, ITransaction {
 		this.cosignatures = cosignatures ?? [];
 	}
 
+	@override
 	void sort() {
 		// empty body
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += 4;
@@ -5137,7 +5159,9 @@ class AggregateCompleteTransactionV2 implements ISerializable, ITransaction {
 		'cosignatures': 'array[Cosignature]'
 	};
 
+	@override
 	Signature signature = Signature();
+	@override
 	PublicKey signerPublicKey = PublicKey();
 	int version = AggregateCompleteTransactionV2.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
@@ -5175,10 +5199,12 @@ class AggregateCompleteTransactionV2 implements ISerializable, ITransaction {
 		this.cosignatures = cosignatures ?? [];
 	}
 
+	@override
 	void sort() {
 		// empty body
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += 4;
@@ -5334,7 +5360,9 @@ class AggregateBondedTransactionV1 implements ISerializable, ITransaction {
 		'cosignatures': 'array[Cosignature]'
 	};
 
+	@override
 	Signature signature = Signature();
+	@override
 	PublicKey signerPublicKey = PublicKey();
 	int version = AggregateBondedTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
@@ -5372,10 +5400,12 @@ class AggregateBondedTransactionV1 implements ISerializable, ITransaction {
 		this.cosignatures = cosignatures ?? [];
 	}
 
+	@override
 	void sort() {
 		// empty body
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += 4;
@@ -5531,7 +5561,9 @@ class AggregateBondedTransactionV2 implements ISerializable, ITransaction {
 		'cosignatures': 'array[Cosignature]'
 	};
 
+	@override
 	Signature signature = Signature();
+	@override
 	PublicKey signerPublicKey = PublicKey();
 	int version = AggregateBondedTransactionV2.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
@@ -5569,10 +5601,12 @@ class AggregateBondedTransactionV2 implements ISerializable, ITransaction {
 		this.cosignatures = cosignatures ?? [];
 	}
 
+	@override
 	void sort() {
 		// empty body
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += 4;
@@ -5729,7 +5763,9 @@ class VotingKeyLinkTransactionV1 implements ISerializable, ITransaction {
 		'linkAction': 'enum:LinkAction'
 	};
 
+	@override
 	Signature signature = Signature();
+	@override
 	PublicKey signerPublicKey = PublicKey();
 	int version = VotingKeyLinkTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
@@ -5769,10 +5805,12 @@ class VotingKeyLinkTransactionV1 implements ISerializable, ITransaction {
 		this.linkAction = linkAction ?? LinkAction.UNLINK;
 	}
 
+	@override
 	void sort() {
 		// empty body
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += 4;
@@ -5947,10 +5985,12 @@ class EmbeddedVotingKeyLinkTransactionV1 implements ISerializable, IInnerTransac
 		this.linkAction = linkAction ?? LinkAction.UNLINK;
 	}
 
+	@override
 	void sort() {
 		// empty body
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += 4;
@@ -6074,7 +6114,9 @@ class VrfKeyLinkTransactionV1 implements ISerializable, ITransaction {
 		'linkAction': 'enum:LinkAction'
 	};
 
+	@override
 	Signature signature = Signature();
+	@override
 	PublicKey signerPublicKey = PublicKey();
 	int version = VrfKeyLinkTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
@@ -6108,10 +6150,12 @@ class VrfKeyLinkTransactionV1 implements ISerializable, ITransaction {
 		this.linkAction = linkAction ?? LinkAction.UNLINK;
 	}
 
+	@override
 	void sort() {
 		// empty body
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += 4;
@@ -6264,10 +6308,12 @@ class EmbeddedVrfKeyLinkTransactionV1 implements ISerializable, IInnerTransactio
 		this.linkAction = linkAction ?? LinkAction.UNLINK;
 	}
 
+	@override
 	void sort() {
 		// empty body
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += 4;
@@ -6378,7 +6424,9 @@ class HashLockTransactionV1 implements ISerializable, ITransaction {
 		'hash': 'pod:Hash256'
 	};
 
+	@override
 	Signature signature = Signature();
+	@override
 	PublicKey signerPublicKey = PublicKey();
 	int version = HashLockTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
@@ -6415,10 +6463,12 @@ class HashLockTransactionV1 implements ISerializable, ITransaction {
 		this.hash = hash ?? Hash256();
 	}
 
+	@override
 	void sort() {
 		mosaic.sort();
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += 4;
@@ -6582,10 +6632,12 @@ class EmbeddedHashLockTransactionV1 implements ISerializable, IInnerTransaction 
 		this.hash = hash ?? Hash256();
 	}
 
+	@override
 	void sort() {
 		mosaic.sort();
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += 4;
@@ -6743,7 +6795,9 @@ class SecretLockTransactionV1 implements ISerializable, ITransaction {
 		'hashAlgorithm': 'enum:LockHashAlgorithm'
 	};
 
+	@override
 	Signature signature = Signature();
+	@override
 	PublicKey signerPublicKey = PublicKey();
 	int version = SecretLockTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
@@ -6786,10 +6840,12 @@ class SecretLockTransactionV1 implements ISerializable, ITransaction {
 		this.hashAlgorithm = hashAlgorithm ?? LockHashAlgorithm.SHA3_256;
 	}
 
+	@override
 	void sort() {
 		mosaic.sort();
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += 4;
@@ -6975,10 +7031,12 @@ class EmbeddedSecretLockTransactionV1 implements ISerializable, IInnerTransactio
 		this.hashAlgorithm = hashAlgorithm ?? LockHashAlgorithm.SHA3_256;
 	}
 
+	@override
 	void sort() {
 		mosaic.sort();
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += 4;
@@ -7111,7 +7169,9 @@ class SecretProofTransactionV1 implements ISerializable, ITransaction {
 		'proof': 'bytes_array'
 	};
 
+	@override
 	Signature signature = Signature();
+	@override
 	PublicKey signerPublicKey = PublicKey();
 	int version = SecretProofTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
@@ -7151,10 +7211,12 @@ class SecretProofTransactionV1 implements ISerializable, ITransaction {
 		this.proof = proof ?? Uint8List(0);
 	}
 
+	@override
 	void sort() {
 		// empty body
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += 4;
@@ -7334,10 +7396,12 @@ class EmbeddedSecretProofTransactionV1 implements ISerializable, IInnerTransacti
 		this.proof = proof ?? Uint8List(0);
 	}
 
+	@override
 	void sort() {
 		// empty body
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += 4;
@@ -7466,7 +7530,9 @@ class AccountMetadataTransactionV1 implements ISerializable, ITransaction {
 		'value': 'bytes_array'
 	};
 
+	@override
 	Signature signature = Signature();
+	@override
 	PublicKey signerPublicKey = PublicKey();
 	int version = AccountMetadataTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
@@ -7506,10 +7572,12 @@ class AccountMetadataTransactionV1 implements ISerializable, ITransaction {
 		this.value = value ?? Uint8List(0);
 	}
 
+	@override
 	void sort() {
 		// empty body
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += 4;
@@ -7687,10 +7755,12 @@ class EmbeddedAccountMetadataTransactionV1 implements ISerializable, IInnerTrans
 		this.value = value ?? Uint8List(0);
 	}
 
+	@override
 	void sort() {
 		// empty body
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += 4;
@@ -7820,7 +7890,9 @@ class MosaicMetadataTransactionV1 implements ISerializable, ITransaction {
 		'value': 'bytes_array'
 	};
 
+	@override
 	Signature signature = Signature();
+	@override
 	PublicKey signerPublicKey = PublicKey();
 	int version = MosaicMetadataTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
@@ -7863,10 +7935,12 @@ class MosaicMetadataTransactionV1 implements ISerializable, ITransaction {
 		this.value = value ?? Uint8List(0);
 	}
 
+	@override
 	void sort() {
 		// empty body
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += 4;
@@ -8055,10 +8129,12 @@ class EmbeddedMosaicMetadataTransactionV1 implements ISerializable, IInnerTransa
 		this.value = value ?? Uint8List(0);
 	}
 
+	@override
 	void sort() {
 		// empty body
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += 4;
@@ -8195,7 +8271,9 @@ class NamespaceMetadataTransactionV1 implements ISerializable, ITransaction {
 		'value': 'bytes_array'
 	};
 
+	@override
 	Signature signature = Signature();
+	@override
 	PublicKey signerPublicKey = PublicKey();
 	int version = NamespaceMetadataTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
@@ -8238,10 +8316,12 @@ class NamespaceMetadataTransactionV1 implements ISerializable, ITransaction {
 		this.value = value ?? Uint8List(0);
 	}
 
+	@override
 	void sort() {
 		// empty body
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += 4;
@@ -8430,10 +8510,12 @@ class EmbeddedNamespaceMetadataTransactionV1 implements ISerializable, IInnerTra
 		this.value = value ?? Uint8List(0);
 	}
 
+	@override
 	void sort() {
 		// empty body
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += 4;
@@ -8674,7 +8756,9 @@ class MosaicDefinitionTransactionV1 implements ISerializable, ITransaction {
 		'flags': 'enum:MosaicFlags'
 	};
 
+	@override
 	Signature signature = Signature();
+	@override
 	PublicKey signerPublicKey = PublicKey();
 	int version = MosaicDefinitionTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
@@ -8717,10 +8801,12 @@ class MosaicDefinitionTransactionV1 implements ISerializable, ITransaction {
 		this.divisibility = divisibility ?? 0;
 	}
 
+	@override
 	void sort() {
 		// empty body
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += 4;
@@ -8905,10 +8991,12 @@ class EmbeddedMosaicDefinitionTransactionV1 implements ISerializable, IInnerTran
 		this.divisibility = divisibility ?? 0;
 	}
 
+	@override
 	void sort() {
 		// empty body
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += 4;
@@ -9040,7 +9128,9 @@ class MosaicSupplyChangeTransactionV1 implements ISerializable, ITransaction {
 		'action': 'enum:MosaicSupplyChangeAction'
 	};
 
+	@override
 	Signature signature = Signature();
+	@override
 	PublicKey signerPublicKey = PublicKey();
 	int version = MosaicSupplyChangeTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
@@ -9077,10 +9167,12 @@ class MosaicSupplyChangeTransactionV1 implements ISerializable, ITransaction {
 		this.action = action ?? MosaicSupplyChangeAction.DECREASE;
 	}
 
+	@override
 	void sort() {
 		// empty body
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += 4;
@@ -9244,10 +9336,12 @@ class EmbeddedMosaicSupplyChangeTransactionV1 implements ISerializable, IInnerTr
 		this.action = action ?? MosaicSupplyChangeAction.DECREASE;
 	}
 
+	@override
 	void sort() {
 		// empty body
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += 4;
@@ -9364,7 +9458,9 @@ class MosaicSupplyRevocationTransactionV1 implements ISerializable, ITransaction
 		'mosaic': 'struct:UnresolvedMosaic'
 	};
 
+	@override
 	Signature signature = Signature();
+	@override
 	PublicKey signerPublicKey = PublicKey();
 	int version = MosaicSupplyRevocationTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
@@ -9398,10 +9494,12 @@ class MosaicSupplyRevocationTransactionV1 implements ISerializable, ITransaction
 		this.mosaic = mosaic ?? UnresolvedMosaic();
 	}
 
+	@override
 	void sort() {
 		mosaic.sort();
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += 4;
@@ -9554,10 +9652,12 @@ class EmbeddedMosaicSupplyRevocationTransactionV1 implements ISerializable, IInn
 		this.mosaic = mosaic ?? UnresolvedMosaic();
 	}
 
+	@override
 	void sort() {
 		mosaic.sort();
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += 4;
@@ -9667,7 +9767,9 @@ class MultisigAccountModificationTransactionV1 implements ISerializable, ITransa
 		'addressDeletions': 'array[UnresolvedAddress]'
 	};
 
+	@override
 	Signature signature = Signature();
+	@override
 	PublicKey signerPublicKey = PublicKey();
 	int version = MultisigAccountModificationTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
@@ -9708,10 +9810,12 @@ class MultisigAccountModificationTransactionV1 implements ISerializable, ITransa
 		this.addressDeletions = addressDeletions ?? [];
 	}
 
+	@override
 	void sort() {
 		// empty body
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += 4;
@@ -9907,10 +10011,12 @@ class EmbeddedMultisigAccountModificationTransactionV1 implements ISerializable,
 		this.addressDeletions = addressDeletions ?? [];
 	}
 
+	@override
 	void sort() {
 		// empty body
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += 4;
@@ -10057,7 +10163,9 @@ class AddressAliasTransactionV1 implements ISerializable, ITransaction {
 		'aliasAction': 'enum:AliasAction'
 	};
 
+	@override
 	Signature signature = Signature();
+	@override
 	PublicKey signerPublicKey = PublicKey();
 	int version = AddressAliasTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
@@ -10094,10 +10202,12 @@ class AddressAliasTransactionV1 implements ISerializable, ITransaction {
 		this.aliasAction = aliasAction ?? AliasAction.UNLINK;
 	}
 
+	@override
 	void sort() {
 		// empty body
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += 4;
@@ -10261,10 +10371,12 @@ class EmbeddedAddressAliasTransactionV1 implements ISerializable, IInnerTransact
 		this.aliasAction = aliasAction ?? AliasAction.UNLINK;
 	}
 
+	@override
 	void sort() {
 		// empty body
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += 4;
@@ -10382,7 +10494,9 @@ class MosaicAliasTransactionV1 implements ISerializable, ITransaction {
 		'aliasAction': 'enum:AliasAction'
 	};
 
+	@override
 	Signature signature = Signature();
+	@override
 	PublicKey signerPublicKey = PublicKey();
 	int version = MosaicAliasTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
@@ -10419,10 +10533,12 @@ class MosaicAliasTransactionV1 implements ISerializable, ITransaction {
 		this.aliasAction = aliasAction ?? AliasAction.UNLINK;
 	}
 
+	@override
 	void sort() {
 		// empty body
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += 4;
@@ -10586,10 +10702,12 @@ class EmbeddedMosaicAliasTransactionV1 implements ISerializable, IInnerTransacti
 		this.aliasAction = aliasAction ?? AliasAction.UNLINK;
 	}
 
+	@override
 	void sort() {
 		// empty body
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += 4;
@@ -10709,7 +10827,9 @@ class NamespaceRegistrationTransactionV1 implements ISerializable, ITransaction 
 		'name': 'bytes_array'
 	};
 
+	@override
 	Signature signature = Signature();
+	@override
 	PublicKey signerPublicKey = PublicKey();
 	int version = NamespaceRegistrationTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
@@ -10717,7 +10837,7 @@ class NamespaceRegistrationTransactionV1 implements ISerializable, ITransaction 
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
 	BlockDuration duration = BlockDuration();
-	NamespaceId? parentId = null;
+	NamespaceId? parentId;
 	NamespaceId id = NamespaceId();
 	NamespaceRegistrationType registrationType = NamespaceRegistrationType.ROOT;
 	Uint8List name = Uint8List(0);
@@ -10752,10 +10872,12 @@ class NamespaceRegistrationTransactionV1 implements ISerializable, ITransaction 
 		this.name = name ?? Uint8List(0);
 	}
 
+	@override
 	void sort() {
 		// empty body
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += 4;
@@ -10822,13 +10944,13 @@ class NamespaceRegistrationTransactionV1 implements ISerializable, ITransaction 
 		buffer = buffer.sublist(id.size);
 		var registrationType = NamespaceRegistrationType().deserialize(buffer);
 		buffer = buffer.sublist(registrationType.size);
-		var duration = BlockDuration();
+		var duration = null;
 		if (NamespaceRegistrationType.ROOT.value == registrationType.value)
 		{
 			duration = BlockDuration().deserialize(registrationTypeCondition);
 			registrationTypeCondition = registrationTypeCondition.sublist(duration.size);
 		}
-		var parentId = NamespaceId();
+		var parentId = null;
 		if (NamespaceRegistrationType.CHILD.value == registrationType.value)
 		{
 			parentId = NamespaceId().deserialize(registrationTypeCondition);
@@ -10948,7 +11070,7 @@ class EmbeddedNamespaceRegistrationTransactionV1 implements ISerializable, IInne
 	NetworkType network = NetworkType.MAINNET;
 	TransactionType type = EmbeddedNamespaceRegistrationTransactionV1.TRANSACTION_TYPE;
 	BlockDuration duration = BlockDuration();
-	NamespaceId? parentId = null;
+	NamespaceId? parentId;
 	NamespaceId id = NamespaceId();
 	NamespaceRegistrationType registrationType = NamespaceRegistrationType.ROOT;
 	Uint8List name = Uint8List(0);
@@ -10977,10 +11099,12 @@ class EmbeddedNamespaceRegistrationTransactionV1 implements ISerializable, IInne
 		this.name = name ?? Uint8List(0);
 	}
 
+	@override
 	void sort() {
 		// empty body
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += 4;
@@ -11038,13 +11162,13 @@ class EmbeddedNamespaceRegistrationTransactionV1 implements ISerializable, IInne
 		buffer = buffer.sublist(id.size);
 		var registrationType = NamespaceRegistrationType().deserialize(buffer);
 		buffer = buffer.sublist(registrationType.size);
-		var duration = BlockDuration();
+		var duration = null;
 		if (NamespaceRegistrationType.ROOT.value == registrationType.value)
 		{
 			duration = BlockDuration().deserialize(registrationTypeCondition);
 			registrationTypeCondition = registrationTypeCondition.sublist(duration.size);
 		}
-		var parentId = NamespaceId();
+		var parentId = null;
 		if (NamespaceRegistrationType.CHILD.value == registrationType.value)
 		{
 			parentId = NamespaceId().deserialize(registrationTypeCondition);
@@ -11193,7 +11317,9 @@ class AccountAddressRestrictionTransactionV1 implements ISerializable, ITransact
 		'restrictionDeletions': 'array[UnresolvedAddress]'
 	};
 
+	@override
 	Signature signature = Signature();
+	@override
 	PublicKey signerPublicKey = PublicKey();
 	int version = AccountAddressRestrictionTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
@@ -11231,10 +11357,12 @@ class AccountAddressRestrictionTransactionV1 implements ISerializable, ITransact
 		this.restrictionDeletions = restrictionDeletions ?? [];
 	}
 
+	@override
 	void sort() {
 		// empty body
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += 4;
@@ -11421,10 +11549,12 @@ class EmbeddedAccountAddressRestrictionTransactionV1 implements ISerializable, I
 		this.restrictionDeletions = restrictionDeletions ?? [];
 	}
 
+	@override
 	void sort() {
 		// empty body
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += 4;
@@ -11564,7 +11694,9 @@ class AccountMosaicRestrictionTransactionV1 implements ISerializable, ITransacti
 		'restrictionDeletions': 'array[UnresolvedMosaicId]'
 	};
 
+	@override
 	Signature signature = Signature();
+	@override
 	PublicKey signerPublicKey = PublicKey();
 	int version = AccountMosaicRestrictionTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
@@ -11602,10 +11734,12 @@ class AccountMosaicRestrictionTransactionV1 implements ISerializable, ITransacti
 		this.restrictionDeletions = restrictionDeletions ?? [];
 	}
 
+	@override
 	void sort() {
 		// empty body
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += 4;
@@ -11792,10 +11926,12 @@ class EmbeddedAccountMosaicRestrictionTransactionV1 implements ISerializable, II
 		this.restrictionDeletions = restrictionDeletions ?? [];
 	}
 
+	@override
 	void sort() {
 		// empty body
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += 4;
@@ -11935,7 +12071,9 @@ class AccountOperationRestrictionTransactionV1 implements ISerializable, ITransa
 		'restrictionDeletions': 'array[TransactionType]'
 	};
 
+	@override
 	Signature signature = Signature();
+	@override
 	PublicKey signerPublicKey = PublicKey();
 	int version = AccountOperationRestrictionTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
@@ -11973,10 +12111,12 @@ class AccountOperationRestrictionTransactionV1 implements ISerializable, ITransa
 		this.restrictionDeletions = restrictionDeletions ?? [];
 	}
 
+	@override
 	void sort() {
 		// empty body
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += 4;
@@ -12163,10 +12303,12 @@ class EmbeddedAccountOperationRestrictionTransactionV1 implements ISerializable,
 		this.restrictionDeletions = restrictionDeletions ?? [];
 	}
 
+	@override
 	void sort() {
 		// empty body
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += 4;
@@ -12305,7 +12447,9 @@ class MosaicAddressRestrictionTransactionV1 implements ISerializable, ITransacti
 		'targetAddress': 'pod:UnresolvedAddress'
 	};
 
+	@override
 	Signature signature = Signature();
+	@override
 	PublicKey signerPublicKey = PublicKey();
 	int version = MosaicAddressRestrictionTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
@@ -12348,10 +12492,12 @@ class MosaicAddressRestrictionTransactionV1 implements ISerializable, ITransacti
 		this.targetAddress = targetAddress ?? UnresolvedAddress();
 	}
 
+	@override
 	void sort() {
 		// empty body
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += 4;
@@ -12534,10 +12680,12 @@ class EmbeddedMosaicAddressRestrictionTransactionV1 implements ISerializable, II
 		this.targetAddress = targetAddress ?? UnresolvedAddress();
 	}
 
+	@override
 	void sort() {
 		// empty body
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += 4;
@@ -12735,7 +12883,9 @@ class MosaicGlobalRestrictionTransactionV1 implements ISerializable, ITransactio
 		'newRestrictionType': 'enum:MosaicRestrictionType'
 	};
 
+	@override
 	Signature signature = Signature();
+	@override
 	PublicKey signerPublicKey = PublicKey();
 	int version = MosaicGlobalRestrictionTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
@@ -12784,10 +12934,12 @@ class MosaicGlobalRestrictionTransactionV1 implements ISerializable, ITransactio
 		this.newRestrictionType = newRestrictionType ?? MosaicRestrictionType.NONE;
 	}
 
+	@override
 	void sort() {
 		// empty body
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += 4;
@@ -12992,10 +13144,12 @@ class EmbeddedMosaicGlobalRestrictionTransactionV1 implements ISerializable, IIn
 		this.newRestrictionType = newRestrictionType ?? MosaicRestrictionType.NONE;
 	}
 
+	@override
 	void sort() {
 		// empty body
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += 4;
@@ -13141,7 +13295,9 @@ class TransferTransactionV1 implements ISerializable, ITransaction {
 		'message': 'bytes_array'
 	};
 
+	@override
 	Signature signature = Signature();
+	@override
 	PublicKey signerPublicKey = PublicKey();
 	int version = TransferTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
@@ -13180,12 +13336,14 @@ class TransferTransactionV1 implements ISerializable, ITransaction {
 		this.message = message ?? Uint8List(0);
 	}
 
+	@override
 	void sort() {
 		mosaics.sort((lhs, rhs) {
 			return ArrayHelpers.deepCompare(ArrayHelpers.getValue(lhs.mosaicId), ArrayHelpers.getValue(rhs.mosaicId));
 		});
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += 4;
@@ -13379,12 +13537,14 @@ class EmbeddedTransferTransactionV1 implements ISerializable, IInnerTransaction 
 		this.message = message ?? Uint8List(0);
 	}
 
+	@override
 	void sort() {
 		mosaics.sort((lhs, rhs) {
 			return ArrayHelpers.deepCompare(ArrayHelpers.getValue(lhs.mosaicId), ArrayHelpers.getValue(rhs.mosaicId));
 		});
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += 4;

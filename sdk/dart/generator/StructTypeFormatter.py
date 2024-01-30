@@ -46,11 +46,19 @@ class StructFormatter(AbstractTypeFormatter):
 
 	def get_base_class(self):
 		return None
-
+	
+	def is_transaction(self):
+		return True if 'Transaction' in self.struct.name and 'Statement' not in self.struct.name and not self.is_inner_transaction() else False
+	
+	def is_inner_transaction(self):
+		return True if 'Embedded' in self.struct.name or 'NonVerifiable' in self.struct.name else False
+	
 	def get_interface(self):
-		interface = ', ITransaction' if 'Transaction' in self.struct.name and 'Statement' not in self.struct.name else ''
-		interface = ', IInnerTransaction' if 'Embedded' in self.struct.name or 'NonVerifiable' in self.struct.name else interface
-		return interface
+		return ', ITransaction' if self.is_transaction() else ', IInnerTransaction' if self.is_inner_transaction() else ''
+	
+	@staticmethod
+	def has_field_override(field_name):
+		return True if 'signerPublicKey' == field_name or 'signature' == field_name else False
 	
 	def is_fields_one(self):
 		return len(list(self.non_reserved_fields())) == 1
@@ -120,19 +128,13 @@ class StructFormatter(AbstractTypeFormatter):
 			if const_field:
 				body += f'{class_name} {field_name} = {self.typename}.{const_field.name};\n'
 			else:
-				value = field.extensions.printer.get_default_value()
-				null = ''
-				if field.is_conditional:
-					conditional = field.value
-					condition_field_name = conditional.linked_field_name
-					condition_field = next(f for f in self.non_const_fields() if condition_field_name == f.name)
-					condition_model = condition_field.extensions.type_model
-
-					# only initialize default implicit union field in constructor
-					if f'{condition_model.name}.{conditional.value}' != condition_field.extensions.printer.get_default_value():
-						value = 'null'  # needs to be null or else field will not be destination when copying descriptor properties
-						null = '?'
-				body += f'{class_name}{null} {field_name} = {value};\n'
+				if self.is_nullable_field(field):
+					body += f'{class_name}? {field_name};\n'
+				else:
+					if self.is_transaction():
+						if self.has_field_override(field_name):
+							body += '@override\n'
+					body += f'{class_name} {field_name} = {field.extensions.printer.get_default_value()};\n'
 				#body += f'this.{field_name} = {arg_name} ?? {value};\n'
 
 		for field in self.reserved_fields():
@@ -275,7 +277,11 @@ class StructFormatter(AbstractTypeFormatter):
 		if body == '':
 			body = '// empty body'
 
-		return MethodDescriptor(body=body)
+		annotations = ''
+		if self.is_transaction() or self.is_inner_transaction():
+			annotations = ['@override']
+
+		return MethodDescriptor(body=body, annotations=annotations)
 
 	def generate_deserialize_field(self, field, arg_buffer_name=None):
 		condition = self.generate_condition(field)
@@ -322,7 +328,7 @@ class StructFormatter(AbstractTypeFormatter):
 
 		value = '0' if field.extensions.printer.get_type() == 'Uint8List' else ''
 		if condition:
-			condition = f'var {field.extensions.printer.name} = {field.extensions.printer.get_type()}({value});\n' + condition
+			condition = f'var {field.extensions.printer.name} = null;\n' + condition
 
 		return indent_if_conditional(condition, deserialize_field)
 
@@ -468,7 +474,10 @@ class StructFormatter(AbstractTypeFormatter):
 		body = 'var size = 0;\n'
 		body += ''.join(map(self.generate_size_field, self.non_const_fields()))
 		body += 'return size;'
-		return MethodDescriptor(body=body)
+		annotations = ''
+		if self.is_transaction() or self.is_inner_transaction():
+			annotations = ['@override']
+		return MethodDescriptor(body=body, annotations=annotations)
 	
 	def create_getter_descriptor(self, field):
 		method_name = 'get ' + field.extensions.printer.name

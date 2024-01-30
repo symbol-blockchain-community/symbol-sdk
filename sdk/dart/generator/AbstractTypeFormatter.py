@@ -2,13 +2,13 @@ from abc import ABC, abstractmethod
 
 
 class MethodDescriptor:
-	def __init__(self, method_name=None, arguments=None, body=None, result='', super=None, is_enum_ctor=False):
+	def __init__(self, method_name=None, arguments=None, body=None, result='', super=None, is_enum_ctor=False, annotations=None):
 		self.method_name = method_name
 		self.arguments = arguments or []
 		self.super = super
 		self.body = body
 		self.result = result
-		self.annotations = []
+		self.annotations = annotations or []
 		self.is_enum_ctor = is_enum_ctor
 
 
