@@ -8962,6 +8962,7 @@ class MosaicDefinitionTransactionV1 implements ISerializable, ITransaction {
 		buffer.setRange(currentPos, currentPos + deadline.size, deadline.serialize());
 		currentPos += deadline.size;
 		buffer.setRange(currentPos, currentPos + id.size, id.serialize());
+    print(bytesToHex(id.serialize()));
 		currentPos += id.size;
 		buffer.setRange(currentPos, currentPos + duration.size, duration.serialize());
 		currentPos += duration.size;

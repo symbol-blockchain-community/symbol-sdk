@@ -12,7 +12,7 @@ class BaseValue {
 
     if (value is String) {
       try {
-        value = BigInt.parse(value).toSigned(64).toInt();
+        value = BigInt.parse(value).toSigned(size * 8).toInt();
       } catch (_) {
         tryHexString(value);
         var decoded = hex.decode(value);
@@ -32,6 +32,8 @@ class BaseValue {
             break;
         }
       }
+    } else if (value is int) {
+      value = unsignedToSigned(value, size);
     }
     
     // check bounds
@@ -73,5 +75,16 @@ class BaseValue {
 
   bool get isDefault{
     return value == 0;
+  }
+}
+
+int unsignedToSigned(int value, int byteSize) {
+  var bitSize = byteSize * 8;
+  var mask = (1 << bitSize) - 1;
+  var signBit = 1 << (bitSize - 1);
+  if ((value & signBit) != 0) {
+    return value | ~mask;
+  } else {
+    return value & mask;
   }
 }
