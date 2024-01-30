@@ -2,7 +2,7 @@ import 'dart:io';
 import 'dart:convert';
 import 'package:test/test.dart';
 import 'package:convert/convert.dart';
-import '../../bin/nem/models.dart';
+import '../../../bin/nem/models.dart';
 
 void transactionTest(String path) async {
   var file = File(path);

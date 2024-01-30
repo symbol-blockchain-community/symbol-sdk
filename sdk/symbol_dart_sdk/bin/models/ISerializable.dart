@@ -7,4 +7,7 @@ interface class ISerializable {
   dynamic deserialize(Uint8List payload){
     throw UnimplementedError('unimplement deserialize');
   }
+  int get size{
+    throw UnimplementedError('unimplement deserialize');
+  }
 }

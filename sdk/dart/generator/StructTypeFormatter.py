@@ -475,8 +475,6 @@ class StructFormatter(AbstractTypeFormatter):
 		body += ''.join(map(self.generate_size_field, self.non_const_fields()))
 		body += 'return size;'
 		annotations = ''
-		if self.is_transaction() or self.is_inner_transaction():
-			annotations = ['@override']
 		return MethodDescriptor(body=body, annotations=annotations)
 	
 	def create_getter_descriptor(self, field):

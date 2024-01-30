@@ -1,21 +1,71 @@
-import 'dart:io';
-import 'dart:convert';
 import 'package:test/test.dart';
-import 'package:convert/convert.dart';
 import '../../../bin/symbol/models.dart';
+import '../../../bin/symbol/ITransaction.dart';
+import '../../../bin/utils/converter.dart';
 
-void transactionTest(String path) async {
-  var file = File(path);
-  var contents = await file.readAsString();
-  var jsonMap = jsonDecode(contents);
-    (jsonMap as List).forEach((element) {
-      test(element['test_name'], () {
-      var payload = element['payload'];
-      var tx = TransactionFactory().deserialize(payload);
-      expect(hex.encode(tx.serialize()).toUpperCase(), payload);
-    });
-  });
-}
 void main() async {
-  transactionTest('../../../../../symbol/tests/vectors/symbol/models/transactions.json');
+  test('AccountAddressRestrictionTransactionV1_account_address_restriction_single_1', () {
+    var payload = 'D0000000000000007695D855CBB6CB83D5BD08E9D76145674F805D741301883387B7101FD8CA84329BB14DBF2F0B4CD58AA84CF31AC6899D134FC38FAB0E7A76F6216ACD60914ACBD294E5E650ACC2A911B548BE2A1806FF4717621BCE3EC1007295219AFFC17B820000000001985041E0FEEEEFFEEEEFFEE0711EE7711EE77101000201000000009841E5B8E40781CF74DABF592817DE48711D778648DEAFB298F409274B52FABBFBCF7E7DF7E20DE1D0C3F657FB8595C1989059321905F681BCF47EA33BBF5E6F8298B5440854FDED';
+    var tx = AccountAddressRestrictionTransactionV1(
+      network: NetworkType.TESTNET,
+      restrictionFlags: AccountRestrictionFlags.ADDRESS,
+      restrictionAdditions: [
+        UnresolvedAddress('TBA6LOHEA6A465G2X5MSQF66JBYR254GJDPK7MQ'),
+        UnresolvedAddress('TD2ASJ2LKL5LX66PPZ67PYQN4HIMH5SX7OCZLQI')
+      ],
+      restrictionDeletions: [
+        UnresolvedAddress('TCIFSMQZAX3IDPHUP2RTXP26N6BJRNKEBBKP33I')
+      ],
+      signerPublicKey: PublicKey('D294E5E650ACC2A911B548BE2A1806FF4717621BCE3EC1007295219AFFC17B82'),
+      signature: Signature('7695D855CBB6CB83D5BD08E9D76145674F805D741301883387B7101FD8CA84329BB14DBF2F0B4CD58AA84CF31AC6899D134FC38FAB0E7A76F6216ACD60914ACB'),
+      fee: Amount('18370164183782063840'),
+      deadline: Timestamp(8207562320463688160)
+    );
+    expect(bytesToHex((TransactionFactory().deserialize(payload) as ITransaction).serialize()), payload);
+    expect(bytesToHex(tx.serialize()).toUpperCase(), payload);
+  });
+  test('AccountAddressRestrictionTransactionV1_account_address_restriction_single_2', () {
+    var payload = 'A0000000000000004E1E910A55162EA9D5E9B17EA6AB357290E97030969C2FAFC18BCF3D73E08827F0CC9A304088742D170E8B3CE1EC4AAAC813F0F7BB6C6BBAFAEBCAE9C23D43276A4E5B14BEDA025A0F12D76FA4391E96FA26D85BE24B3E8C4A08F336ABA1C6F40000000001985041E0FEEEEFFEEEEFFEE0711EE7711EE77101C0010000000000989059321905F681BCF47EA33BBF5E6F8298B5440854FDED';
+    var tx = AccountAddressRestrictionTransactionV1(
+      network: NetworkType.TESTNET,
+      restrictionFlags: AccountRestrictionFlags(AccountRestrictionFlags.ADDRESS.value + AccountRestrictionFlags.OUTGOING.value + AccountRestrictionFlags.BLOCK.value),
+      restrictionAdditions: [
+        UnresolvedAddress('TCIFSMQZAX3IDPHUP2RTXP26N6BJRNKEBBKP33I')
+      ],
+      restrictionDeletions: [],
+      signerPublicKey: PublicKey('6A4E5B14BEDA025A0F12D76FA4391E96FA26D85BE24B3E8C4A08F336ABA1C6F4'),
+      signature: Signature('4E1E910A55162EA9D5E9B17EA6AB357290E97030969C2FAFC18BCF3D73E08827F0CC9A304088742D170E8B3CE1EC4AAAC813F0F7BB6C6BBAFAEBCAE9C23D4327'),
+      fee: Amount('18370164183782063840'),
+      deadline: Timestamp(8207562320463688160)
+    );
+    expect(bytesToHex((TransactionFactory().deserialize(payload) as ITransaction).serialize()), payload);
+    expect(bytesToHex(tx.serialize()).toUpperCase(), payload);
+  });
+  test('AccountAddressRestrictionTransactionV1_account_address_restriction_aggregate_1', () {
+    var payload = '28010000000000006A1C14B723E973CC450165EFC629DCAC65F0A9B70517F27BD426BFEB9C21E33C91699BCDF34A0464DBA8D4A7237E4A4309139F2E9378BEC7B67C7EA1F92D5DC683D1CD2DA160075F016CC04B51397186FEF67006364D851DA9EB0CF3E886E3720000000002984142E0FEEEEFFEEEEFFEE0711EE7711EE771553D90AFA4B171840BCBA16DB6F82A767C98344D5F6D5F2B0B05A8902D01BD4D800000000000000080000000000000000000000000000000000000000000000000000000000000000000000000000000000000000198504101000201000000009841E5B8E40781CF74DABF592817DE48711D778648DEAFB298F409274B52FABBFBCF7E7DF7E20DE1D0C3F657FB8595C1989059321905F681BCF47EA33BBF5E6F8298B5440854FDED';
+    var tx = AggregateBondedTransactionV2(
+      network: NetworkType.TESTNET,
+      transactions: [
+        EmbeddedAccountAddressRestrictionTransactionV1(
+          network: NetworkType.TESTNET,
+          restrictionFlags: AccountRestrictionFlags.ADDRESS,
+          restrictionAdditions: [
+            UnresolvedAddress('TBA6LOHEA6A465G2X5MSQF66JBYR254GJDPK7MQ'),
+            UnresolvedAddress('TD2ASJ2LKL5LX66PPZ67PYQN4HIMH5SX7OCZLQI')
+          ],
+          restrictionDeletions: [
+            UnresolvedAddress('TCIFSMQZAX3IDPHUP2RTXP26N6BJRNKEBBKP33I')
+          ],
+        )
+      ],
+      signerPublicKey: PublicKey('83D1CD2DA160075F016CC04B51397186FEF67006364D851DA9EB0CF3E886E372'),
+      signature: Signature('6A1C14B723E973CC450165EFC629DCAC65F0A9B70517F27BD426BFEB9C21E33C91699BCDF34A0464DBA8D4A7237E4A4309139F2E9378BEC7B67C7EA1F92D5DC6'),
+      fee: Amount('18370164183782063840'),
+      deadline: Timestamp(8207562320463688160),
+      cosignatures: [],
+      transactionsHash: Hash256('553D90AFA4B171840BCBA16DB6F82A767C98344D5F6D5F2B0B05A8902D01BD4D')
+    );
+    expect(bytesToHex((TransactionFactory().deserialize(payload) as ITransaction).serialize()), payload);
+    expect(bytesToHex(tx.serialize()).toUpperCase(), payload);
+  });
 }

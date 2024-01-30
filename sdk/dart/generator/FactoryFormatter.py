@@ -29,6 +29,14 @@ class FactoryClassFormatter(ClassFormatter):
 		method_descriptor.result = 'Uint8List'
 		method_descriptor.annotations = ['@override']
 		return self.generate_method(method_descriptor)
+	
+	def generate_size(self):
+		method_descriptor = self.provider.get_size_descriptor()
+		method_descriptor.method_name = 'get size'
+		method_descriptor.arguments = ['']
+		method_descriptor.result = 'int'
+		method_descriptor.annotations = ['@override']
+		return self.generate_method(method_descriptor)
 
 	def generate_create_by_name(self):
 		method_descriptor = self.provider.get_create_by_name_descriptor()
@@ -41,6 +49,7 @@ class FactoryClassFormatter(ClassFormatter):
 		methods.append(self.generate_deserializer())
 		methods.append(self.generate_create_by_name())
 		methods.append(self.generate_serializer())
+		methods.append(self.generate_size())
 		return methods
 
 
@@ -71,7 +80,7 @@ class FactoryFormatter(AbstractTypeFormatter):
 	def get_deserialize_descriptor(self):
 		body = 'if(payload is String){\n'
 		body += '\ttryHexString(payload);\n'
-		body += '\tpayload = hex.decode(payload);\n'
+		body += '\tpayload = hexToBytes(payload);\n'
 		body += '}\n'
 		body += 'Uint8List buffer = payload.buffer.asUint8List();\n'
 		body += f'var {self.printer.name} = {self.printer.load()};\n'
@@ -132,5 +141,6 @@ return mapping[entityName]!();
 		return MethodDescriptor(body=body)
 
 	def get_size_descriptor(self):
-		raise RuntimeError('not required')
+		body = "throw UnimplementedError('do not need size for factory');"
+		return MethodDescriptor(body=body)
 

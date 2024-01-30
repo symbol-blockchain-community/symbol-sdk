@@ -72,6 +72,7 @@ class Address extends ByteArray implements ISerializable {
 
 	Address([dynamic address]) : super(SIZE, address ?? Uint8List(40));
 
+	@override
 	int get size {
 		return 40;
 	}
@@ -94,6 +95,7 @@ class Hash256 extends ByteArray implements ISerializable {
 
 	Hash256([dynamic hash256]) : super(SIZE, hash256 ?? Uint8List(32));
 
+	@override
 	int get size {
 		return 32;
 	}
@@ -116,6 +118,7 @@ class PublicKey extends ByteArray implements ISerializable {
 
 	PublicKey([dynamic publicKey]) : super(SIZE, publicKey ?? Uint8List(32));
 
+	@override
 	int get size {
 		return 32;
 	}
@@ -138,6 +141,7 @@ class Signature extends ByteArray implements ISerializable {
 
 	Signature([dynamic signature]) : super(SIZE, signature ?? Uint8List(64));
 
+	@override
 	int get size {
 		return 64;
 	}
@@ -168,6 +172,7 @@ class NetworkType implements ISerializable {
 
 	NetworkType([int? _value]) : value = _value ?? 104;
 
+	@override
 	int get size {
 		return 1;
 	}
@@ -216,6 +221,7 @@ class TransactionType implements ISerializable {
 
 	TransactionType([int? _value]) : value = _value ?? 257;
 
+	@override
 	int get size {
 		return 4;
 	}
@@ -554,6 +560,7 @@ class LinkAction implements ISerializable {
 
 	LinkAction([int? _value]) : value = _value ?? 1;
 
+	@override
 	int get size {
 		return 4;
 	}
@@ -961,6 +968,7 @@ class NamespaceId implements ISerializable {
 		// empty body
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += 4;
@@ -1020,6 +1028,7 @@ class MosaicId implements ISerializable {
 		namespaceId.sort();
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += namespaceId.size;
@@ -1088,6 +1097,7 @@ class Mosaic implements ISerializable {
 		mosaicId.sort();
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += 4;
@@ -1154,6 +1164,7 @@ class SizePrefixedMosaic implements ISerializable {
 		mosaic.sort();
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += 4;
@@ -1208,6 +1219,7 @@ class MosaicTransferFeeType implements ISerializable {
 
 	MosaicTransferFeeType([int? _value]) : value = _value ?? 1;
 
+	@override
 	int get size {
 		return 4;
 	}
@@ -1257,6 +1269,7 @@ class MosaicLevy implements ISerializable {
 		mosaicId.sort();
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += transferFeeType.size;
@@ -1348,6 +1361,7 @@ class MosaicProperty implements ISerializable {
 		// empty body
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += 4;
@@ -1418,6 +1432,7 @@ class SizePrefixedMosaicProperty implements ISerializable {
 		property.sort();
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += 4;
@@ -1502,6 +1517,7 @@ class MosaicDefinition implements ISerializable {
 		return levy?.size ?? 0;
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += 4;
@@ -2026,6 +2042,7 @@ class MosaicSupplyChangeAction implements ISerializable {
 
 	MosaicSupplyChangeAction([int? _value]) : value = _value ?? 1;
 
+	@override
 	int get size {
 		return 4;
 	}
@@ -2446,6 +2463,7 @@ class MultisigAccountModificationType implements ISerializable {
 
 	MultisigAccountModificationType([int? _value]) : value = _value ?? 1;
 
+	@override
 	int get size {
 		return 4;
 	}
@@ -2496,6 +2514,7 @@ class MultisigAccountModification implements ISerializable {
 		// empty body
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += modificationType.size;
@@ -2564,6 +2583,7 @@ class SizePrefixedMultisigAccountModification implements ISerializable {
 		modification.sort();
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += 4;
@@ -3396,6 +3416,7 @@ class CosignatureV1 implements ISerializable {
 		// empty body
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += type.size;
@@ -3560,6 +3581,7 @@ class SizePrefixedCosignatureV1 implements ISerializable {
 		cosignature.sort();
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += 4;
@@ -4430,6 +4452,7 @@ class MessageType implements ISerializable {
 
 	MessageType([int? _value]) : value = _value ?? 1;
 
+	@override
 	int get size {
 		return 4;
 	}
@@ -4472,6 +4495,7 @@ class Message implements ISerializable {
 		// empty body
 	}
 
+	@override
 	int get size {
 		var size = 0;
 		size += messageType.size;
@@ -5442,7 +5466,7 @@ class TransactionFactory implements ISerializable {
 	dynamic deserialize(dynamic payload) {
 		if(payload is String){
 			tryHexString(payload);
-			payload = hex.decode(payload);
+			payload = hexToBytes(payload);
 		}
 		Uint8List buffer = payload.buffer.asUint8List();
 		var parent = Transaction().deserialize(buffer);
@@ -5492,6 +5516,11 @@ class TransactionFactory implements ISerializable {
 	Uint8List serialize() {
 		throw UnimplementedError('do not need serialize for factory');
 	}
+
+	@override
+	int get size {
+		throw UnimplementedError('do not need size for factory');
+	}
 }
 
 
@@ -5500,7 +5529,7 @@ class NonVerifiableTransactionFactory implements ISerializable {
 	dynamic deserialize(dynamic payload) {
 		if(payload is String){
 			tryHexString(payload);
-			payload = hex.decode(payload);
+			payload = hexToBytes(payload);
 		}
 		Uint8List buffer = payload.buffer.asUint8List();
 		var parent = NonVerifiableTransaction().deserialize(buffer);
@@ -5547,5 +5576,10 @@ class NonVerifiableTransactionFactory implements ISerializable {
 	@override
 	Uint8List serialize() {
 		throw UnimplementedError('do not need serialize for factory');
+	}
+
+	@override
+	int get size {
+		throw UnimplementedError('do not need size for factory');
 	}
 }

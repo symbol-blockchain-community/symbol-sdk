@@ -124,6 +124,7 @@ class TypeFormatter(ClassFormatter):
 		method_descriptor.method_name = 'get size'
 		method_descriptor.arguments = []
 		method_descriptor.result = 'int'
+		method_descriptor.annotations = ['@override']
 		return self.generate_method(method_descriptor)
 	
 	def generate_getters(self):
