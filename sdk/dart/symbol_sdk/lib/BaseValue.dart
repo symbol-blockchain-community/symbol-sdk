@@ -17,21 +17,10 @@ class BaseValue {
         }
       } catch (_) {
         tryHexString(value);
-        var decoded = hexToBytes(value);
-        var byteData = ByteData.view(Uint8List.fromList(decoded.reversed.toList()).buffer);
-        switch(decoded.length){
-          case 1:
-            value = byteData.getUint8(0);
-            break;
-          case 2:
-            value = byteData.getUint16(0, Endian.little);
-            break;
-          case 4:
-            value = byteData.getUint32(0, Endian.little);
-            break;
-          case 8:
-            value = byteData.getUint64(0, Endian.little);
-            break;
+        if(size == 8) {
+          value = BigInt.parse(value, radix: 16);
+        } else {
+          value = int.parse(value, radix: 16);
         }
       }
     } else if (value is int && size == 8) {

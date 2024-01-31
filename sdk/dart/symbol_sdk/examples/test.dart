@@ -1,20 +1,30 @@
-import 'package:symbol_sdk/nem/index.dart';
+import 'package:symbol_sdk/symbol/index.dart';
 import 'package:symbol_sdk/index.dart';
+import 'package:symbol_sdk/CryptoTypes.dart' as ct;
+import 'package:http/http.dart' as http;
 
 void main(){
-  var payload = '0120000001000098701EE7712000000015A62A582DA8A52B13BB59EBE39FF2E4155FA2C822CBB0268BDDE5FA00F4F8FF400000006F81F080720F6F641386F1320BCD4B641345CA1D3FF4D7DE302B0EA28D0E8869F3FCC0BACD72C3FF897CB620ED6B713B07F68B6312428A3C6C09B88FCAD0789AE0FEEEEFFEEEEFFE0000000028000000544354585A535A545A4751425753374D525854574D4F5237324C5058325945564B4958474449484C8075692800000000050000007374617465FFFFFFFF';
-      var tx = NamespaceRegistrationTransactionV1(
-        network: NetworkType.TESTNET,
-        rentalFeeSink: Address('TCTXZSZTZGQBWS7MRXTWMOR72LPX2YEVKIXGDIHL'),
-        rentalFee: Amount(678000000),
-        parentName: null,
-        name: hexToBytes('7374617465'),
-        signerPublicKey: PublicKey('15A62A582DA8A52B13BB59EBE39FF2E4155FA2C822CBB0268BDDE5FA00F4F8FF'),
-        signature: Signature('6F81F080720F6F641386F1320BCD4B641345CA1D3FF4D7DE302B0EA28D0E8869F3FCC0BACD72C3FF897CB620ED6B713B07F68B6312428A3C6C09B88FCAD0789A'),
-        fee: Amount('18370164183782063840'),
-        timestamp: Timestamp(1910972016)
-      );
+  var facade = SymbolFacade(Network.TESTNET);
+  var keyPair = KeyPair(ct.PrivateKey('5DB8324E7EB83E7665D500B014283260EF312139034E86DFB7EE736503EAEC02'));
+  var tx = TransferTransactionV1(
+    network: NetworkType.TESTNET,
+    deadline: Timestamp(facade.network.fromDatetime(DateTime.now().toUtc()).addHours(2).timestamp),
+    signerPublicKey: PublicKey(keyPair.publicKey.bytes),
+    recipientAddress: UnresolvedAddress('TA5LGYEWS6L2WYBQ75J2DGK7IOZHYVWFWRLOFWI'),
+    message: utf8ToBytes('Hello, Symbol!!'),
+    mosaics: [UnresolvedMosaic(mosaicId: UnresolvedMosaicId('56148181AF8A6CFC'), amount: Amount(1))],
+  );
+  tx.fee = Amount(tx.size * 100);
+  var signature = facade.signTransaction(keyPair, tx);
+  var payload = facade.attachSignature(tx, signature);
+  var hash = facade.hashTransaction(tx);
+  print(hash);
 
-  print(bytesToHex((TransactionFactory().deserialize(payload) as ITransaction).serialize()));
-  print(bytesToHex(tx.serialize()).toUpperCase());
+  http.put(
+    Uri.parse('http://sym-test-01.opening-line.jp:3000/transactions'),
+    headers: {'Content-Type': 'application/json'},
+    body: payload)
+    .then((response) {
+      print(response.body);
+  });
 }
