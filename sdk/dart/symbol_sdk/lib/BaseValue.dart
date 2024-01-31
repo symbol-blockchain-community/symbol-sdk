@@ -41,7 +41,7 @@ class BaseValue {
     // check bounds
     var bitSize = size * 8;
 
-    var upperBound = size == 8 ? BigInt.from(0xFFFFFFFFFFFFFFFF).toUnsigned(64) : bitmask(bitSize);
+    var upperBound = size == 8 ? BigInt.parse('18446744073709551615').toUnsigned(64) : bitmask(bitSize);
     var lowerBound = size == 8 ? BigInt.from(0).toUnsigned(64) : 0;
   
     if (value < lowerBound || value > upperBound) {

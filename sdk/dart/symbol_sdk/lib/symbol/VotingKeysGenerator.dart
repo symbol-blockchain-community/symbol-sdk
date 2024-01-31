@@ -25,8 +25,8 @@ class VotingKeysGenerator {
 
     buffer.setUint64(0, startEpoch, Endian.little); // start key identifier
     buffer.setUint64(8, endEpoch, Endian.little); // end key identifier
-    buffer.setUint64(16, 0xFFFFFFFFFFFFFFFF, Endian.little); // reserved - last (used) key identifier
-    buffer.setUint64(24, 0xFFFFFFFFFFFFFFFF, Endian.little); // reserved - last wiped key identifier
+    setUint64(buffer, 16, 0xFFFFFFFF, 0xFFFFFFFF, Endian.little); // reserved - last (used) key identifier
+    setUint64(buffer, 24, 0xFFFFFFFF, 0xFFFFFFFF, Endian.little); // reserved - last wiped key identifier
 
     setBuffer(buffer, 32, rootKeyPair.publicKey.bytes); // root voting public key
     buffer.setUint64(64, startEpoch, Endian.little); // level 1/1 start key identifier
@@ -49,4 +49,9 @@ class VotingKeysGenerator {
 
     return buffer.buffer.asUint8List();
   }
+}
+
+void setUint64(ByteData buffer, int byteOffset, int value1, int value2, [Endian endian = Endian.big]) {
+  buffer.setUint32(byteOffset, value1, endian);
+  buffer.setUint32(byteOffset + 4, value2, endian);
 }
