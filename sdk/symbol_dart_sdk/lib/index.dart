@@ -3,7 +3,6 @@ export './ByteArray.dart';
 export './Bip32.dart';
 export './Cipher.dart';
 export './CryptoTypes.dart';
-export './Network.dart';
 export './NetworkTimestamp.dart';
 export './SharedKey.dart';
 export './crypto/tweetNacl.dart';
