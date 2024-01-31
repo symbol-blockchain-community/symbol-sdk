@@ -1,2 +1,0 @@
-compiler: ../compilers/clang-prior.yaml
-architecture: skylake

@@ -1,9 +1,0 @@
-c: gcc
-cpp: g++
-version: 11
-
-stl:
-  version: ''
-  lib: libstdc++11
-
-deps: []

@@ -1,3 +1,0 @@
-compiler: ../compilers/gcc-latest.yaml
-architecture: arm64
-enable_code_coverage: true

@@ -1,9 +1,0 @@
-c: msvc
-cpp: msvc
-version: 17
-
-stl:
-  version: c++14
-  lib: ''
-
-deps: []

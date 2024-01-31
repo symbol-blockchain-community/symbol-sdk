@@ -1,4 +1,0 @@
-ubuntu-lts: ubuntu:22.04
-ubuntu-base: ubuntu:20.04
-ubuntu-latest: ubuntu:23.04
-windows-lts: symbolplatform/symbol-server-compiler:windows-msvc-17

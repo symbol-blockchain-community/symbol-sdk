@@ -1,0 +1,6 @@
+symbol_sdk/.dart_tool/
+symbol_sdk/.packages
+symbol_sdk/pubspec.lock
+symbol_sdk/build/
+symbol_sdk/doc/api/
+symbol_sdk/.gitignore
