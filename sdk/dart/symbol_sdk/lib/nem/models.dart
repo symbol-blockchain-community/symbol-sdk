@@ -14,7 +14,7 @@ import 'package:tuple/tuple.dart';
 class Amount extends BaseValue implements ISerializable {
 	static const int SIZE = 8;
 
-	Amount([dynamic amount]) : super(SIZE, amount ?? 0);
+	Amount([dynamic amount]) : super(SIZE, amount ?? BigInt.from(0));
 
 	@override
 	Amount deserialize(Uint8List payload) {
@@ -33,7 +33,7 @@ class Amount extends BaseValue implements ISerializable {
 class Height extends BaseValue implements ISerializable {
 	static const int SIZE = 8;
 
-	Height([dynamic height]) : super(SIZE, height ?? 0);
+	Height([dynamic height]) : super(SIZE, height ?? BigInt.from(0));
 
 	@override
 	Height deserialize(Uint8List payload) {
@@ -4141,7 +4141,7 @@ class NamespaceRegistrationTransactionV1 implements ISerializable, ITransaction 
 		var parentNameSize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		var parentName = null;
-		if (-1 != parentNameSize)
+		if (4294967295 != parentNameSize)
 		{
 			parentName = Uint8List.fromList(buffer.sublist(0, parentNameSize));
 			buffer = buffer.sublist(parentNameSize);
@@ -4365,7 +4365,7 @@ class NonVerifiableNamespaceRegistrationTransactionV1 implements ISerializable, 
 		var parentNameSize = bytesToInt(buffer.sublist(0, 4), 4);
 		buffer = buffer.sublist(4);
 		var parentName = null;
-		if (-1 != parentNameSize)
+		if (4294967295 != parentNameSize)
 		{
 			parentName = Uint8List.fromList(buffer.sublist(0, parentNameSize));
 			buffer = buffer.sublist(parentNameSize);

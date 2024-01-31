@@ -14,7 +14,7 @@ import 'package:tuple/tuple.dart';
 class Amount extends BaseValue implements ISerializable {
 	static const int SIZE = 8;
 
-	Amount([dynamic amount]) : super(SIZE, amount ?? 0);
+	Amount([dynamic amount]) : super(SIZE, amount ?? BigInt.from(0));
 
 	@override
 	Amount deserialize(Uint8List payload) {
@@ -33,7 +33,7 @@ class Amount extends BaseValue implements ISerializable {
 class BlockDuration extends BaseValue implements ISerializable {
 	static const int SIZE = 8;
 
-	BlockDuration([dynamic blockDuration]) : super(SIZE, blockDuration ?? 0);
+	BlockDuration([dynamic blockDuration]) : super(SIZE, blockDuration ?? BigInt.from(0));
 
 	@override
 	BlockDuration deserialize(Uint8List payload) {
@@ -71,7 +71,7 @@ class BlockFeeMultiplier extends BaseValue implements ISerializable {
 class Difficulty extends BaseValue implements ISerializable {
 	static const int SIZE = 8;
 
-	Difficulty([dynamic difficulty]) : super(SIZE, difficulty ?? 0);
+	Difficulty([dynamic difficulty]) : super(SIZE, difficulty ?? BigInt.from(0));
 
 	@override
 	Difficulty deserialize(Uint8List payload) {
@@ -128,7 +128,7 @@ class FinalizationPoint extends BaseValue implements ISerializable {
 class Height extends BaseValue implements ISerializable {
 	static const int SIZE = 8;
 
-	Height([dynamic height]) : super(SIZE, height ?? 0);
+	Height([dynamic height]) : super(SIZE, height ?? BigInt.from(0));
 
 	@override
 	Height deserialize(Uint8List payload) {
@@ -147,7 +147,7 @@ class Height extends BaseValue implements ISerializable {
 class Importance extends BaseValue implements ISerializable {
 	static const int SIZE = 8;
 
-	Importance([dynamic importance]) : super(SIZE, importance ?? 0);
+	Importance([dynamic importance]) : super(SIZE, importance ?? BigInt.from(0));
 
 	@override
 	Importance deserialize(Uint8List payload) {
@@ -166,7 +166,7 @@ class Importance extends BaseValue implements ISerializable {
 class ImportanceHeight extends BaseValue implements ISerializable {
 	static const int SIZE = 8;
 
-	ImportanceHeight([dynamic importanceHeight]) : super(SIZE, importanceHeight ?? 0);
+	ImportanceHeight([dynamic importanceHeight]) : super(SIZE, importanceHeight ?? BigInt.from(0));
 
 	@override
 	ImportanceHeight deserialize(Uint8List payload) {
@@ -185,7 +185,7 @@ class ImportanceHeight extends BaseValue implements ISerializable {
 class UnresolvedMosaicId extends BaseValue implements ISerializable {
 	static const int SIZE = 8;
 
-	UnresolvedMosaicId([dynamic unresolvedMosaicId]) : super(SIZE, unresolvedMosaicId ?? 0);
+	UnresolvedMosaicId([dynamic unresolvedMosaicId]) : super(SIZE, unresolvedMosaicId ?? BigInt.from(0));
 
 	@override
 	UnresolvedMosaicId deserialize(Uint8List payload) {
@@ -204,7 +204,7 @@ class UnresolvedMosaicId extends BaseValue implements ISerializable {
 class MosaicId extends BaseValue implements ISerializable {
 	static const int SIZE = 8;
 
-	MosaicId([dynamic mosaicId]) : super(SIZE, mosaicId ?? 0);
+	MosaicId([dynamic mosaicId]) : super(SIZE, mosaicId ?? BigInt.from(0));
 
 	@override
 	MosaicId deserialize(Uint8List payload) {
@@ -223,7 +223,7 @@ class MosaicId extends BaseValue implements ISerializable {
 class Timestamp extends BaseValue implements ISerializable {
 	static const int SIZE = 8;
 
-	Timestamp([dynamic timestamp]) : super(SIZE, timestamp ?? 0);
+	Timestamp([dynamic timestamp]) : super(SIZE, timestamp ?? BigInt.from(0));
 
 	@override
 	Timestamp deserialize(Uint8List payload) {
@@ -1404,7 +1404,7 @@ class NemesisBlockV1 implements ISerializable {
 	Address beneficiaryAddress = Address();
 	BlockFeeMultiplier feeMultiplier = BlockFeeMultiplier();
 	int votingEligibleAccountsCount = 0;
-	int harvestingEligibleAccountsCount = 0;
+	BigInt harvestingEligibleAccountsCount = BigInt.from(0);
 	Amount totalVotingBalance = Amount();
 	Hash256 previousImportanceBlockHash = Hash256();
 	List<ITransaction> transactions = [];
@@ -1428,7 +1428,7 @@ class NemesisBlockV1 implements ISerializable {
 	Address? beneficiaryAddress,
 	BlockFeeMultiplier? feeMultiplier,
 	int? votingEligibleAccountsCount,
-	int? harvestingEligibleAccountsCount,
+	BigInt? harvestingEligibleAccountsCount,
 	Amount? totalVotingBalance,
 	Hash256? previousImportanceBlockHash,
 	List<ITransaction>? transactions
@@ -1449,7 +1449,7 @@ class NemesisBlockV1 implements ISerializable {
 		this.beneficiaryAddress = beneficiaryAddress ?? Address();
 		this.feeMultiplier = feeMultiplier ?? BlockFeeMultiplier();
 		this.votingEligibleAccountsCount = votingEligibleAccountsCount ?? 0;
-		this.harvestingEligibleAccountsCount = harvestingEligibleAccountsCount ?? 0;
+		this.harvestingEligibleAccountsCount = harvestingEligibleAccountsCount ?? BigInt.from(0);
 		this.totalVotingBalance = totalVotingBalance ?? Amount();
 		this.previousImportanceBlockHash = previousImportanceBlockHash ?? Hash256();
 		this.transactions = transactions ?? [];
@@ -1951,7 +1951,7 @@ class ImportanceBlockV1 implements ISerializable {
 	Address beneficiaryAddress = Address();
 	BlockFeeMultiplier feeMultiplier = BlockFeeMultiplier();
 	int votingEligibleAccountsCount = 0;
-	int harvestingEligibleAccountsCount = 0;
+	BigInt harvestingEligibleAccountsCount = BigInt.from(0);
 	Amount totalVotingBalance = Amount();
 	Hash256 previousImportanceBlockHash = Hash256();
 	List<ITransaction> transactions = [];
@@ -1975,7 +1975,7 @@ class ImportanceBlockV1 implements ISerializable {
 	Address? beneficiaryAddress,
 	BlockFeeMultiplier? feeMultiplier,
 	int? votingEligibleAccountsCount,
-	int? harvestingEligibleAccountsCount,
+	BigInt? harvestingEligibleAccountsCount,
 	Amount? totalVotingBalance,
 	Hash256? previousImportanceBlockHash,
 	List<ITransaction>? transactions
@@ -1996,7 +1996,7 @@ class ImportanceBlockV1 implements ISerializable {
 		this.beneficiaryAddress = beneficiaryAddress ?? Address();
 		this.feeMultiplier = feeMultiplier ?? BlockFeeMultiplier();
 		this.votingEligibleAccountsCount = votingEligibleAccountsCount ?? 0;
-		this.harvestingEligibleAccountsCount = harvestingEligibleAccountsCount ?? 0;
+		this.harvestingEligibleAccountsCount = harvestingEligibleAccountsCount ?? BigInt.from(0);
 		this.totalVotingBalance = totalVotingBalance ?? Amount();
 		this.previousImportanceBlockHash = previousImportanceBlockHash ?? Hash256();
 		this.transactions = transactions ?? [];
@@ -3368,7 +3368,7 @@ class MosaicRentalFeeReceipt implements ISerializable {
 class NamespaceId extends BaseValue implements ISerializable {
 	static const int SIZE = 8;
 
-	NamespaceId([dynamic namespaceId]) : super(SIZE, namespaceId ?? 0);
+	NamespaceId([dynamic namespaceId]) : super(SIZE, namespaceId ?? BigInt.from(0));
 
 	@override
 	NamespaceId deserialize(Uint8List payload) {
@@ -4857,12 +4857,12 @@ class Cosignature implements ISerializable {
 		'signature': 'pod:Signature'
 	};
 
-	int version = 0;
+	BigInt version = BigInt.from(0);
 	PublicKey signerPublicKey = PublicKey();
 	Signature signature = Signature();
 
-	Cosignature({ int? version, PublicKey? signerPublicKey, Signature? signature}) {
-		this.version = version ?? 0;
+	Cosignature({ BigInt? version, PublicKey? signerPublicKey, Signature? signature}) {
+		this.version = version ?? BigInt.from(0);
 		this.signerPublicKey = signerPublicKey ?? PublicKey();
 		this.signature = signature ?? Signature();
 	}
@@ -4931,13 +4931,13 @@ class DetachedCosignature implements ISerializable {
 		'parentHash': 'pod:Hash256'
 	};
 
-	int version = 0;
+	BigInt version = BigInt.from(0);
 	PublicKey signerPublicKey = PublicKey();
 	Signature signature = Signature();
 	Hash256 parentHash = Hash256();
 
-	DetachedCosignature({ int? version, PublicKey? signerPublicKey, Signature? signature, Hash256? parentHash}) {
-		this.version = version ?? 0;
+	DetachedCosignature({ BigInt? version, PublicKey? signerPublicKey, Signature? signature, Hash256? parentHash}) {
+		this.version = version ?? BigInt.from(0);
 		this.signerPublicKey = signerPublicKey ?? PublicKey();
 		this.signature = signature ?? Signature();
 		this.parentHash = parentHash ?? Hash256();
@@ -7607,7 +7607,7 @@ class AccountMetadataTransactionV1 implements ISerializable, ITransaction {
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
 	UnresolvedAddress targetAddress = UnresolvedAddress();
-	int scopedMetadataKey = 0;
+	BigInt scopedMetadataKey = BigInt.from(0);
 	int valueSizeDelta = 0;
 	Uint8List value = Uint8List(0);
 	final int verifiableEntityHeaderReserved_1 = 0; // reserved field
@@ -7622,7 +7622,7 @@ class AccountMetadataTransactionV1 implements ISerializable, ITransaction {
 	Amount? fee,
 	Timestamp? deadline,
 	UnresolvedAddress? targetAddress,
-	int? scopedMetadataKey,
+	BigInt? scopedMetadataKey,
 	int? valueSizeDelta,
 	Uint8List? value
 	}) {
@@ -7634,7 +7634,7 @@ class AccountMetadataTransactionV1 implements ISerializable, ITransaction {
 		this.fee = fee ?? Amount();
 		this.deadline = deadline ?? Timestamp();
 		this.targetAddress = targetAddress ?? UnresolvedAddress();
-		this.scopedMetadataKey = scopedMetadataKey ?? 0;
+		this.scopedMetadataKey = scopedMetadataKey ?? BigInt.from(0);
 		this.valueSizeDelta = valueSizeDelta ?? 0;
 		this.value = value ?? Uint8List(0);
 	}
@@ -7796,7 +7796,7 @@ class EmbeddedAccountMetadataTransactionV1 implements ISerializable, IInnerTrans
 	NetworkType network = NetworkType.MAINNET;
 	TransactionType type = EmbeddedAccountMetadataTransactionV1.TRANSACTION_TYPE;
 	UnresolvedAddress targetAddress = UnresolvedAddress();
-	int scopedMetadataKey = 0;
+	BigInt scopedMetadataKey = BigInt.from(0);
 	int valueSizeDelta = 0;
 	Uint8List value = Uint8List(0);
 	final int embeddedTransactionHeaderReserved_1 = 0; // reserved field
@@ -7808,7 +7808,7 @@ class EmbeddedAccountMetadataTransactionV1 implements ISerializable, IInnerTrans
 	NetworkType? network,
 	TransactionType? type,
 	UnresolvedAddress? targetAddress,
-	int? scopedMetadataKey,
+	BigInt? scopedMetadataKey,
 	int? valueSizeDelta,
 	Uint8List? value
 	}) {
@@ -7817,7 +7817,7 @@ class EmbeddedAccountMetadataTransactionV1 implements ISerializable, IInnerTrans
 		this.network = network ?? NetworkType.MAINNET;
 		this.type = type ?? EmbeddedAccountMetadataTransactionV1.TRANSACTION_TYPE;
 		this.targetAddress = targetAddress ?? UnresolvedAddress();
-		this.scopedMetadataKey = scopedMetadataKey ?? 0;
+		this.scopedMetadataKey = scopedMetadataKey ?? BigInt.from(0);
 		this.valueSizeDelta = valueSizeDelta ?? 0;
 		this.value = value ?? Uint8List(0);
 	}
@@ -7967,7 +7967,7 @@ class MosaicMetadataTransactionV1 implements ISerializable, ITransaction {
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
 	UnresolvedAddress targetAddress = UnresolvedAddress();
-	int scopedMetadataKey = 0;
+	BigInt scopedMetadataKey = BigInt.from(0);
 	UnresolvedMosaicId targetMosaicId = UnresolvedMosaicId();
 	int valueSizeDelta = 0;
 	Uint8List value = Uint8List(0);
@@ -7983,7 +7983,7 @@ class MosaicMetadataTransactionV1 implements ISerializable, ITransaction {
 	Amount? fee,
 	Timestamp? deadline,
 	UnresolvedAddress? targetAddress,
-	int? scopedMetadataKey,
+	BigInt? scopedMetadataKey,
 	UnresolvedMosaicId? targetMosaicId,
 	int? valueSizeDelta,
 	Uint8List? value
@@ -7996,7 +7996,7 @@ class MosaicMetadataTransactionV1 implements ISerializable, ITransaction {
 		this.fee = fee ?? Amount();
 		this.deadline = deadline ?? Timestamp();
 		this.targetAddress = targetAddress ?? UnresolvedAddress();
-		this.scopedMetadataKey = scopedMetadataKey ?? 0;
+		this.scopedMetadataKey = scopedMetadataKey ?? BigInt.from(0);
 		this.targetMosaicId = targetMosaicId ?? UnresolvedMosaicId();
 		this.valueSizeDelta = valueSizeDelta ?? 0;
 		this.value = value ?? Uint8List(0);
@@ -8167,7 +8167,7 @@ class EmbeddedMosaicMetadataTransactionV1 implements ISerializable, IInnerTransa
 	NetworkType network = NetworkType.MAINNET;
 	TransactionType type = EmbeddedMosaicMetadataTransactionV1.TRANSACTION_TYPE;
 	UnresolvedAddress targetAddress = UnresolvedAddress();
-	int scopedMetadataKey = 0;
+	BigInt scopedMetadataKey = BigInt.from(0);
 	UnresolvedMosaicId targetMosaicId = UnresolvedMosaicId();
 	int valueSizeDelta = 0;
 	Uint8List value = Uint8List(0);
@@ -8180,7 +8180,7 @@ class EmbeddedMosaicMetadataTransactionV1 implements ISerializable, IInnerTransa
 	NetworkType? network,
 	TransactionType? type,
 	UnresolvedAddress? targetAddress,
-	int? scopedMetadataKey,
+	BigInt? scopedMetadataKey,
 	UnresolvedMosaicId? targetMosaicId,
 	int? valueSizeDelta,
 	Uint8List? value
@@ -8190,7 +8190,7 @@ class EmbeddedMosaicMetadataTransactionV1 implements ISerializable, IInnerTransa
 		this.network = network ?? NetworkType.MAINNET;
 		this.type = type ?? EmbeddedMosaicMetadataTransactionV1.TRANSACTION_TYPE;
 		this.targetAddress = targetAddress ?? UnresolvedAddress();
-		this.scopedMetadataKey = scopedMetadataKey ?? 0;
+		this.scopedMetadataKey = scopedMetadataKey ?? BigInt.from(0);
 		this.targetMosaicId = targetMosaicId ?? UnresolvedMosaicId();
 		this.valueSizeDelta = valueSizeDelta ?? 0;
 		this.value = value ?? Uint8List(0);
@@ -8348,7 +8348,7 @@ class NamespaceMetadataTransactionV1 implements ISerializable, ITransaction {
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
 	UnresolvedAddress targetAddress = UnresolvedAddress();
-	int scopedMetadataKey = 0;
+	BigInt scopedMetadataKey = BigInt.from(0);
 	NamespaceId targetNamespaceId = NamespaceId();
 	int valueSizeDelta = 0;
 	Uint8List value = Uint8List(0);
@@ -8364,7 +8364,7 @@ class NamespaceMetadataTransactionV1 implements ISerializable, ITransaction {
 	Amount? fee,
 	Timestamp? deadline,
 	UnresolvedAddress? targetAddress,
-	int? scopedMetadataKey,
+	BigInt? scopedMetadataKey,
 	NamespaceId? targetNamespaceId,
 	int? valueSizeDelta,
 	Uint8List? value
@@ -8377,7 +8377,7 @@ class NamespaceMetadataTransactionV1 implements ISerializable, ITransaction {
 		this.fee = fee ?? Amount();
 		this.deadline = deadline ?? Timestamp();
 		this.targetAddress = targetAddress ?? UnresolvedAddress();
-		this.scopedMetadataKey = scopedMetadataKey ?? 0;
+		this.scopedMetadataKey = scopedMetadataKey ?? BigInt.from(0);
 		this.targetNamespaceId = targetNamespaceId ?? NamespaceId();
 		this.valueSizeDelta = valueSizeDelta ?? 0;
 		this.value = value ?? Uint8List(0);
@@ -8548,7 +8548,7 @@ class EmbeddedNamespaceMetadataTransactionV1 implements ISerializable, IInnerTra
 	NetworkType network = NetworkType.MAINNET;
 	TransactionType type = EmbeddedNamespaceMetadataTransactionV1.TRANSACTION_TYPE;
 	UnresolvedAddress targetAddress = UnresolvedAddress();
-	int scopedMetadataKey = 0;
+	BigInt scopedMetadataKey = BigInt.from(0);
 	NamespaceId targetNamespaceId = NamespaceId();
 	int valueSizeDelta = 0;
 	Uint8List value = Uint8List(0);
@@ -8561,7 +8561,7 @@ class EmbeddedNamespaceMetadataTransactionV1 implements ISerializable, IInnerTra
 	NetworkType? network,
 	TransactionType? type,
 	UnresolvedAddress? targetAddress,
-	int? scopedMetadataKey,
+	BigInt? scopedMetadataKey,
 	NamespaceId? targetNamespaceId,
 	int? valueSizeDelta,
 	Uint8List? value
@@ -8571,7 +8571,7 @@ class EmbeddedNamespaceMetadataTransactionV1 implements ISerializable, IInnerTra
 		this.network = network ?? NetworkType.MAINNET;
 		this.type = type ?? EmbeddedNamespaceMetadataTransactionV1.TRANSACTION_TYPE;
 		this.targetAddress = targetAddress ?? UnresolvedAddress();
-		this.scopedMetadataKey = scopedMetadataKey ?? 0;
+		this.scopedMetadataKey = scopedMetadataKey ?? BigInt.from(0);
 		this.targetNamespaceId = targetNamespaceId ?? NamespaceId();
 		this.valueSizeDelta = valueSizeDelta ?? 0;
 		this.value = value ?? Uint8List(0);
@@ -12533,9 +12533,9 @@ class MosaicAddressRestrictionTransactionV1 implements ISerializable, ITransacti
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
 	UnresolvedMosaicId mosaicId = UnresolvedMosaicId();
-	int restrictionKey = 0;
-	int previousRestrictionValue = 0;
-	int newRestrictionValue = 0;
+	BigInt restrictionKey = BigInt.from(0);
+	BigInt previousRestrictionValue = BigInt.from(0);
+	BigInt newRestrictionValue = BigInt.from(0);
 	UnresolvedAddress targetAddress = UnresolvedAddress();
 	final int verifiableEntityHeaderReserved_1 = 0; // reserved field
 	final int entityBodyReserved_1 = 0; // reserved field
@@ -12549,9 +12549,9 @@ class MosaicAddressRestrictionTransactionV1 implements ISerializable, ITransacti
 	Amount? fee,
 	Timestamp? deadline,
 	UnresolvedMosaicId? mosaicId,
-	int? restrictionKey,
-	int? previousRestrictionValue,
-	int? newRestrictionValue,
+	BigInt? restrictionKey,
+	BigInt? previousRestrictionValue,
+	BigInt? newRestrictionValue,
 	UnresolvedAddress? targetAddress
 	}) {
 		this.signature = signature ?? Signature();
@@ -12562,9 +12562,9 @@ class MosaicAddressRestrictionTransactionV1 implements ISerializable, ITransacti
 		this.fee = fee ?? Amount();
 		this.deadline = deadline ?? Timestamp();
 		this.mosaicId = mosaicId ?? UnresolvedMosaicId();
-		this.restrictionKey = restrictionKey ?? 0;
-		this.previousRestrictionValue = previousRestrictionValue ?? 0;
-		this.newRestrictionValue = newRestrictionValue ?? 0;
+		this.restrictionKey = restrictionKey ?? BigInt.from(0);
+		this.previousRestrictionValue = previousRestrictionValue ?? BigInt.from(0);
+		this.newRestrictionValue = newRestrictionValue ?? BigInt.from(0);
 		this.targetAddress = targetAddress ?? UnresolvedAddress();
 	}
 
@@ -12727,9 +12727,9 @@ class EmbeddedMosaicAddressRestrictionTransactionV1 implements ISerializable, II
 	NetworkType network = NetworkType.MAINNET;
 	TransactionType type = EmbeddedMosaicAddressRestrictionTransactionV1.TRANSACTION_TYPE;
 	UnresolvedMosaicId mosaicId = UnresolvedMosaicId();
-	int restrictionKey = 0;
-	int previousRestrictionValue = 0;
-	int newRestrictionValue = 0;
+	BigInt restrictionKey = BigInt.from(0);
+	BigInt previousRestrictionValue = BigInt.from(0);
+	BigInt newRestrictionValue = BigInt.from(0);
 	UnresolvedAddress targetAddress = UnresolvedAddress();
 	final int embeddedTransactionHeaderReserved_1 = 0; // reserved field
 	final int entityBodyReserved_1 = 0; // reserved field
@@ -12740,9 +12740,9 @@ class EmbeddedMosaicAddressRestrictionTransactionV1 implements ISerializable, II
 	NetworkType? network,
 	TransactionType? type,
 	UnresolvedMosaicId? mosaicId,
-	int? restrictionKey,
-	int? previousRestrictionValue,
-	int? newRestrictionValue,
+	BigInt? restrictionKey,
+	BigInt? previousRestrictionValue,
+	BigInt? newRestrictionValue,
 	UnresolvedAddress? targetAddress
 	}) {
 		this.signerPublicKey = signerPublicKey ?? PublicKey();
@@ -12750,9 +12750,9 @@ class EmbeddedMosaicAddressRestrictionTransactionV1 implements ISerializable, II
 		this.network = network ?? NetworkType.MAINNET;
 		this.type = type ?? EmbeddedMosaicAddressRestrictionTransactionV1.TRANSACTION_TYPE;
 		this.mosaicId = mosaicId ?? UnresolvedMosaicId();
-		this.restrictionKey = restrictionKey ?? 0;
-		this.previousRestrictionValue = previousRestrictionValue ?? 0;
-		this.newRestrictionValue = newRestrictionValue ?? 0;
+		this.restrictionKey = restrictionKey ?? BigInt.from(0);
+		this.previousRestrictionValue = previousRestrictionValue ?? BigInt.from(0);
+		this.newRestrictionValue = newRestrictionValue ?? BigInt.from(0);
 		this.targetAddress = targetAddress ?? UnresolvedAddress();
 	}
 
@@ -12880,7 +12880,7 @@ class EmbeddedMosaicAddressRestrictionTransactionV1 implements ISerializable, II
 class MosaicRestrictionKey extends BaseValue implements ISerializable {
 	static const int SIZE = 8;
 
-	MosaicRestrictionKey([dynamic mosaicRestrictionKey]) : super(SIZE, mosaicRestrictionKey ?? 0);
+	MosaicRestrictionKey([dynamic mosaicRestrictionKey]) : super(SIZE, mosaicRestrictionKey ?? BigInt.from(0));
 
 	@override
 	MosaicRestrictionKey deserialize(Uint8List payload) {
@@ -12973,9 +12973,9 @@ class MosaicGlobalRestrictionTransactionV1 implements ISerializable, ITransactio
 	Timestamp deadline = Timestamp();
 	UnresolvedMosaicId mosaicId = UnresolvedMosaicId();
 	UnresolvedMosaicId referenceMosaicId = UnresolvedMosaicId();
-	int restrictionKey = 0;
-	int previousRestrictionValue = 0;
-	int newRestrictionValue = 0;
+	BigInt restrictionKey = BigInt.from(0);
+	BigInt previousRestrictionValue = BigInt.from(0);
+	BigInt newRestrictionValue = BigInt.from(0);
 	MosaicRestrictionType previousRestrictionType = MosaicRestrictionType.NONE;
 	MosaicRestrictionType newRestrictionType = MosaicRestrictionType.NONE;
 	final int verifiableEntityHeaderReserved_1 = 0; // reserved field
@@ -12991,9 +12991,9 @@ class MosaicGlobalRestrictionTransactionV1 implements ISerializable, ITransactio
 	Timestamp? deadline,
 	UnresolvedMosaicId? mosaicId,
 	UnresolvedMosaicId? referenceMosaicId,
-	int? restrictionKey,
-	int? previousRestrictionValue,
-	int? newRestrictionValue,
+	BigInt? restrictionKey,
+	BigInt? previousRestrictionValue,
+	BigInt? newRestrictionValue,
 	MosaicRestrictionType? previousRestrictionType,
 	MosaicRestrictionType? newRestrictionType
 	}) {
@@ -13006,9 +13006,9 @@ class MosaicGlobalRestrictionTransactionV1 implements ISerializable, ITransactio
 		this.deadline = deadline ?? Timestamp();
 		this.mosaicId = mosaicId ?? UnresolvedMosaicId();
 		this.referenceMosaicId = referenceMosaicId ?? UnresolvedMosaicId();
-		this.restrictionKey = restrictionKey ?? 0;
-		this.previousRestrictionValue = previousRestrictionValue ?? 0;
-		this.newRestrictionValue = newRestrictionValue ?? 0;
+		this.restrictionKey = restrictionKey ?? BigInt.from(0);
+		this.previousRestrictionValue = previousRestrictionValue ?? BigInt.from(0);
+		this.newRestrictionValue = newRestrictionValue ?? BigInt.from(0);
 		this.previousRestrictionType = previousRestrictionType ?? MosaicRestrictionType.NONE;
 		this.newRestrictionType = newRestrictionType ?? MosaicRestrictionType.NONE;
 	}
@@ -13189,9 +13189,9 @@ class EmbeddedMosaicGlobalRestrictionTransactionV1 implements ISerializable, IIn
 	TransactionType type = EmbeddedMosaicGlobalRestrictionTransactionV1.TRANSACTION_TYPE;
 	UnresolvedMosaicId mosaicId = UnresolvedMosaicId();
 	UnresolvedMosaicId referenceMosaicId = UnresolvedMosaicId();
-	int restrictionKey = 0;
-	int previousRestrictionValue = 0;
-	int newRestrictionValue = 0;
+	BigInt restrictionKey = BigInt.from(0);
+	BigInt previousRestrictionValue = BigInt.from(0);
+	BigInt newRestrictionValue = BigInt.from(0);
 	MosaicRestrictionType previousRestrictionType = MosaicRestrictionType.NONE;
 	MosaicRestrictionType newRestrictionType = MosaicRestrictionType.NONE;
 	final int embeddedTransactionHeaderReserved_1 = 0; // reserved field
@@ -13204,9 +13204,9 @@ class EmbeddedMosaicGlobalRestrictionTransactionV1 implements ISerializable, IIn
 	TransactionType? type,
 	UnresolvedMosaicId? mosaicId,
 	UnresolvedMosaicId? referenceMosaicId,
-	int? restrictionKey,
-	int? previousRestrictionValue,
-	int? newRestrictionValue,
+	BigInt? restrictionKey,
+	BigInt? previousRestrictionValue,
+	BigInt? newRestrictionValue,
 	MosaicRestrictionType? previousRestrictionType,
 	MosaicRestrictionType? newRestrictionType
 	}) {
@@ -13216,9 +13216,9 @@ class EmbeddedMosaicGlobalRestrictionTransactionV1 implements ISerializable, IIn
 		this.type = type ?? EmbeddedMosaicGlobalRestrictionTransactionV1.TRANSACTION_TYPE;
 		this.mosaicId = mosaicId ?? UnresolvedMosaicId();
 		this.referenceMosaicId = referenceMosaicId ?? UnresolvedMosaicId();
-		this.restrictionKey = restrictionKey ?? 0;
-		this.previousRestrictionValue = previousRestrictionValue ?? 0;
-		this.newRestrictionValue = newRestrictionValue ?? 0;
+		this.restrictionKey = restrictionKey ?? BigInt.from(0);
+		this.previousRestrictionValue = previousRestrictionValue ?? BigInt.from(0);
+		this.newRestrictionValue = newRestrictionValue ?? BigInt.from(0);
 		this.previousRestrictionType = previousRestrictionType ?? MosaicRestrictionType.NONE;
 		this.newRestrictionType = newRestrictionType ?? MosaicRestrictionType.NONE;
 	}

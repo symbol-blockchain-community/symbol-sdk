@@ -48,7 +48,7 @@ void main() async {
         beneficiaryAddress: Address('TD72IGCQRI5QELXTJEP4QJKN5N7MH25GLNJN4HI'),
         feeMultiplier: BlockFeeMultiplier(7867),
         votingEligibleAccountsCount: 14,
-        harvestingEligibleAccountsCount: 478,
+        harvestingEligibleAccountsCount: BigInt.from(478),
         totalVotingBalance: Amount(116842289054626),
         previousImportanceBlockHash: Hash256('DBDC925119781952C316DE84B87DAC640F64B899E191A7190EBCFDDED482A75D'),
         transactions: [
@@ -97,7 +97,7 @@ void main() async {
         beneficiaryAddress: Address('TCGJD3C6PGBW3UOFJHR2VLVM7UBPNGRWJ6AJXMQ'),
         feeMultiplier: BlockFeeMultiplier(0),
         votingEligibleAccountsCount: 14,
-        harvestingEligibleAccountsCount: 479,
+        harvestingEligibleAccountsCount: BigInt.from(479),
         totalVotingBalance: Amount(116887594468987),
         previousImportanceBlockHash: Hash256('77C5CD0D6B7BD6A0E62FC3910A13D764848C5DCECF176E04FA700E033F045753'),
         transactions: [

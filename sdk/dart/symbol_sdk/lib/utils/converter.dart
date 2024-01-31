@@ -15,9 +15,8 @@ final Map<String, Map<String, int>> _constants = {
   }
 };
 
-String intToHex(int num){
-  var unsigned = intToUnsignedInt(num);
-  return unsigned.toRadixString(16).padLeft(16, '0').toUpperCase();
+String intToHex(dynamic num){
+  return num.toRadixString(16).padLeft(16, '0').toUpperCase();
 }
 
 String bytesToHex(Uint8List bytes) {
@@ -28,46 +27,59 @@ Uint8List hexToBytes(String hexString) {
   return Uint8List.fromList(hex.decode(hexString));
 }
 
-Uint8List intToBytes(int value, int byteSize) {
+Uint8List bigintToUint8List(BigInt value) {
+  var result = Uint8List(8);
+  for (var i = 0; i < 8; i++) {
+    result[i] = (value >> (8 * i)).toUnsigned(8).toInt();
+  }
+  return result;
+}
+
+Uint8List intToBytes(dynamic value, int byteSize) {
   var byteData = ByteData(byteSize);
 
   switch (byteSize) {
     case 1:
-      byteData.setInt8(0, value);
+      byteData.setUint8(0, value);
       break;
     case 2:
-      byteData.setInt16(0, value, Endian.little);
+      byteData.setUint16(0, value, Endian.little);
       break;
     case 4:
-      byteData.setInt32(0, value, Endian.little);
+      byteData.setUint32(0, value, Endian.little);
       break;
     case 8:
-      byteData.setInt64(0, value, Endian.little);
-      break;
+      return bigintToUint8List(value);
     default:
       throw Exception('byteSize not supported');
   }
-
   return byteData.buffer.asUint8List();
 }
 
-int bytesToInt(Uint8List input, int size) {
+BigInt uint8ListToBigInt(Uint8List data) {
+  var result = BigInt.from(0);
+  for (var i = 0; i < data.length; i++) {
+    result += BigInt.from(data[i]) << (8 * i);
+  }
+  return result;
+}
+
+dynamic bytesToInt(Uint8List input, int size) {
   var byteData = ByteData.view(input.buffer, input.offsetInBytes, size);
 
   switch (size) {
     case 1:
-      return byteData.getInt8(0);
+      return byteData.getUint8(0);
     case 2:
-      return byteData.getInt16(0, Endian.little);
+      return byteData.getUint16(0, Endian.little);
     case 4:
-      return byteData.getInt32(0, Endian.little);
+      return byteData.getUint32(0, Endian.little);
     case 8:
-      return byteData.getInt64(0, Endian.little);
+      return uint8ListToBigInt(input);
     default:
       throw Exception('byteSize not supported');
   }
 }
-
 
 BigInt intToUnsignedInt(int i) {
   var signedInt = BigInt.from(i);

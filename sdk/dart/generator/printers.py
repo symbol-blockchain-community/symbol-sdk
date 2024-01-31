@@ -29,10 +29,10 @@ class IntPrinter(Printer):
 		self.type_hint = None
 
 	def get_type(self):
-		return 'int'
+		return 'BigInt' if 8 == self.descriptor.size else 'int'
 
 	def get_default_value(self):
-		return '0'
+		return 'BigInt.from(0)' if 8 == self.descriptor.size else '0'
 
 	def get_size(self):
 		return self.descriptor.size

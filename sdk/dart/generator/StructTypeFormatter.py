@@ -3,7 +3,7 @@ from itertools import filterfalse
 from catparser.DisplayType import DisplayType
 
 from .AbstractTypeFormatter import AbstractTypeFormatter, MethodDescriptor
-from .format import indent, uint32_to_int32
+from .format import indent
 from .name_formatting import lang_field_name
 
 def is_reserved(field):
@@ -237,7 +237,7 @@ class StructFormatter(AbstractTypeFormatter):
 		}
 		condition_operator = condition_to_operator_map[conditional.operation]
 
-		value = f'{conditional.value if not isinstance(conditional.value, int) else uint32_to_int32(conditional.value)}'
+		value = f'{conditional.value if not isinstance(conditional.value, int) else conditional.value}'
 		condition_model = condition_field.extensions.type_model
 		yoda_value = value if DisplayType.INTEGER == condition_model.display_type else f'{condition_model.name}.{value}.value'
 		#field_prefix = '_' if prefix_field else ''
