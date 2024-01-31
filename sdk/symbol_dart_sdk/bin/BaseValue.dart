@@ -1,4 +1,3 @@
-import 'package:convert/convert.dart';
 import './utils/converter.dart';
 import 'dart:typed_data';
 
@@ -15,7 +14,7 @@ class BaseValue {
         value = BigInt.parse(value).toSigned(size * 8).toInt();
       } catch (_) {
         tryHexString(value);
-        var decoded = hex.decode(value);
+        var decoded = hexToBytes(value);
         var byteData = ByteData.view(Uint8List.fromList(decoded.reversed.toList()).buffer);
         switch(decoded.length){
           case 1:

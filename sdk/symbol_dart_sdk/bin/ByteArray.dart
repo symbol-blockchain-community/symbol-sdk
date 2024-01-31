@@ -1,6 +1,4 @@
 import 'dart:typed_data';
-import 'package:convert/convert.dart';
-
 import 'utils/converter.dart';
 
 class ByteArray {
@@ -12,7 +10,7 @@ class ByteArray {
     if (rawBytes is String) {
       try {
         if (isHexString(rawBytes)) {
-          rawBytes = hex.decode(rawBytes); // Remove '0x' prefix
+          rawBytes = hexToBytes(rawBytes);
         } else {
           rawBytes = stringToAddress(arrayInput);
         }
@@ -33,7 +31,7 @@ class ByteArray {
     try {
       return addressToString(bytes);
     } catch(_) {
-      return hex.encode(bytes).toUpperCase();
+      return bytesToHex(bytes).toUpperCase();
     }
   }
 

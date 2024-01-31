@@ -45,7 +45,6 @@ import '../utils/converter.dart';
 import '../utils/arrayHelpers.dart';
 import '../utils/transform.dart';
 import 'dart:typed_data';
-import 'package:convert/convert.dart';
 import 'package:tuple/tuple.dart';
 
 '''

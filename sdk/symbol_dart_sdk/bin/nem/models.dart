@@ -7,7 +7,6 @@ import '../utils/converter.dart';
 import '../utils/arrayHelpers.dart';
 import '../utils/transform.dart';
 import 'dart:typed_data';
-import 'package:convert/convert.dart';
 import 'package:tuple/tuple.dart';
 
 class Amount extends BaseValue implements ISerializable {
@@ -163,14 +162,16 @@ class NetworkType implements ISerializable {
 	static final MAINNET = NetworkType(104);
 	static final TESTNET = NetworkType(152);
 
-	final int value;
+	int value = 0;
 
 	static final _flags = {
 		104: 'MAINNET',
 		152: 'TESTNET',
 	};
 
-	NetworkType([int? _value]) : value = _value ?? 104;
+	NetworkType([int? _value]) {
+		value = _value ?? 104;
+	}
 
 	@override
 	int get size {
@@ -206,7 +207,7 @@ class TransactionType implements ISerializable {
 	static final MOSAIC_DEFINITION = TransactionType(16385);
 	static final MOSAIC_SUPPLY_CHANGE = TransactionType(16386);
 
-	final int value;
+	int value = 0;
 
 	static final _flags = {
 		257: 'TRANSFER',
@@ -219,7 +220,9 @@ class TransactionType implements ISerializable {
 		16386: 'MOSAIC_SUPPLY_CHANGE',
 	};
 
-	TransactionType([int? _value]) : value = _value ?? 257;
+	TransactionType([int? _value]) {
+		value = _value ?? 257;
+	}
 
 	@override
 	int get size {
@@ -394,7 +397,7 @@ class Transaction implements ISerializable, ITransaction {
 	String toString() {
 		var result = 'Transaction(';
 		result += 'type: "${type.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'timestamp: "${timestamp.toString()}", ';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
@@ -535,7 +538,7 @@ class NonVerifiableTransaction implements ISerializable, IInnerTransaction {
 	String toString() {
 		var result = 'NonVerifiableTransaction(';
 		result += 'type: "${type.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'timestamp: "${timestamp.toString()}", ';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
@@ -551,14 +554,16 @@ class LinkAction implements ISerializable {
 	static final LINK = LinkAction(1);
 	static final UNLINK = LinkAction(2);
 
-	final int value;
+	int value = 0;
 
 	static final _flags = {
 		1: 'LINK',
 		2: 'UNLINK',
 	};
 
-	LinkAction([int? _value]) : value = _value ?? 1;
+	LinkAction([int? _value]) {
+		value = _value ?? 1;
+	}
 
 	@override
 	int get size {
@@ -764,7 +769,7 @@ class AccountKeyLinkTransactionV1 implements ISerializable, ITransaction {
 	String toString() {
 		var result = 'AccountKeyLinkTransactionV1(';
 		result += 'type: "${type.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'timestamp: "${timestamp.toString()}", ';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
@@ -938,7 +943,7 @@ class NonVerifiableAccountKeyLinkTransactionV1 implements ISerializable, IInnerT
 	String toString() {
 		var result = 'NonVerifiableAccountKeyLinkTransactionV1(';
 		result += 'type: "${type.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'timestamp: "${timestamp.toString()}", ';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
@@ -1002,7 +1007,7 @@ class NamespaceId implements ISerializable {
 	@override
 	String toString() {
 		var result = 'NamespaceId(';
-		result += 'name: "${hex.encode(name.toList()).toUpperCase()}", ';
+		result += 'name: "${bytesToHex(name)}", ';
 		result += ')';
 		return result;
 	}
@@ -1071,7 +1076,7 @@ class MosaicId implements ISerializable {
 	String toString() {
 		var result = 'MosaicId(';
 		result += 'namespaceId: "${namespaceId.toString()}", ';
-		result += 'name: "${hex.encode(name.toList()).toUpperCase()}", ';
+		result += 'name: "${bytesToHex(name)}", ';
 		result += ')';
 		return result;
 	}
@@ -1210,14 +1215,16 @@ class MosaicTransferFeeType implements ISerializable {
 	static final ABSOLUTE = MosaicTransferFeeType(1);
 	static final PERCENTILE = MosaicTransferFeeType(2);
 
-	final int value;
+	int value = 0;
 
 	static final _flags = {
 		1: 'ABSOLUTE',
 		2: 'PERCENTILE',
 	};
 
-	MosaicTransferFeeType([int? _value]) : value = _value ?? 1;
+	MosaicTransferFeeType([int? _value]) {
+		value = _value ?? 1;
+	}
 
 	@override
 	int get size {
@@ -1408,8 +1415,8 @@ class MosaicProperty implements ISerializable {
 	@override
 	String toString() {
 		var result = 'MosaicProperty(';
-		result += 'name: "${hex.encode(name.toList()).toUpperCase()}", ';
-		result += 'value: "${hex.encode(value.toList()).toUpperCase()}", ';
+		result += 'name: "${bytesToHex(name)}", ';
+		result += 'value: "${bytesToHex(value)}", ';
 		result += ')';
 		return result;
 	}
@@ -1615,7 +1622,7 @@ class MosaicDefinition implements ISerializable {
 		var result = 'MosaicDefinition(';
 		result += 'ownerPublicKey: "${ownerPublicKey.toString()}", ';
 		result += 'id: "${id.toString()}", ';
-		result += 'description: "${hex.encode(description.toList()).toUpperCase()}", ';
+		result += 'description: "${bytesToHex(description)}", ';
 		result += 'properties: "${properties.map((e) => e.toString()).toList()}", ';
 		if (0 != levySizeComputed)
 		{
@@ -1823,7 +1830,7 @@ class MosaicDefinitionTransactionV1 implements ISerializable, ITransaction {
 	String toString() {
 		var result = 'MosaicDefinitionTransactionV1(';
 		result += 'type: "${type.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'timestamp: "${timestamp.toString()}", ';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
@@ -2014,7 +2021,7 @@ class NonVerifiableMosaicDefinitionTransactionV1 implements ISerializable, IInne
 	String toString() {
 		var result = 'NonVerifiableMosaicDefinitionTransactionV1(';
 		result += 'type: "${type.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'timestamp: "${timestamp.toString()}", ';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
@@ -2033,14 +2040,16 @@ class MosaicSupplyChangeAction implements ISerializable {
 	static final INCREASE = MosaicSupplyChangeAction(1);
 	static final DECREASE = MosaicSupplyChangeAction(2);
 
-	final int value;
+	int value = 0;
 
 	static final _flags = {
 		1: 'INCREASE',
 		2: 'DECREASE',
 	};
 
-	MosaicSupplyChangeAction([int? _value]) : value = _value ?? 1;
+	MosaicSupplyChangeAction([int? _value]) {
+		value = _value ?? 1;
+	}
 
 	@override
 	int get size {
@@ -2253,7 +2262,7 @@ class MosaicSupplyChangeTransactionV1 implements ISerializable, ITransaction {
 	String toString() {
 		var result = 'MosaicSupplyChangeTransactionV1(';
 		result += 'type: "${type.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'timestamp: "${timestamp.toString()}", ';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
@@ -2435,7 +2444,7 @@ class NonVerifiableMosaicSupplyChangeTransactionV1 implements ISerializable, IIn
 	String toString() {
 		var result = 'NonVerifiableMosaicSupplyChangeTransactionV1(';
 		result += 'type: "${type.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'timestamp: "${timestamp.toString()}", ';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
@@ -2454,14 +2463,16 @@ class MultisigAccountModificationType implements ISerializable {
 	static final ADD_COSIGNATORY = MultisigAccountModificationType(1);
 	static final DELETE_COSIGNATORY = MultisigAccountModificationType(2);
 
-	final int value;
+	int value = 0;
 
 	static final _flags = {
 		1: 'ADD_COSIGNATORY',
 		2: 'DELETE_COSIGNATORY',
 	};
 
-	MultisigAccountModificationType([int? _value]) : value = _value ?? 1;
+	MultisigAccountModificationType([int? _value]) {
+		value = _value ?? 1;
+	}
 
 	@override
 	int get size {
@@ -2795,7 +2806,7 @@ class MultisigAccountModificationTransactionV1 implements ISerializable, ITransa
 	String toString() {
 		var result = 'MultisigAccountModificationTransactionV1(';
 		result += 'type: "${type.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'timestamp: "${timestamp.toString()}", ';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
@@ -2958,7 +2969,7 @@ class NonVerifiableMultisigAccountModificationTransactionV1 implements ISerializ
 	String toString() {
 		var result = 'NonVerifiableMultisigAccountModificationTransactionV1(';
 		result += 'type: "${type.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'timestamp: "${timestamp.toString()}", ';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
@@ -3159,7 +3170,7 @@ class MultisigAccountModificationTransactionV2 implements ISerializable, ITransa
 	String toString() {
 		var result = 'MultisigAccountModificationTransactionV2(';
 		result += 'type: "${type.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'timestamp: "${timestamp.toString()}", ';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
@@ -3167,7 +3178,7 @@ class MultisigAccountModificationTransactionV2 implements ISerializable, ITransa
 		result += 'fee: "${fee.toString()}", ';
 		result += 'deadline: "${deadline.toString()}", ';
 		result += 'modifications: "${modifications.map((e) => e.toString()).toList()}", ';
-		result += 'minApprovalDelta: "0x${minApprovalDelta.toRadixString(16).padLeft(4 * 2, '0').toUpperCase()}", ';
+		result += 'minApprovalDelta: "0x${intToHex(minApprovalDelta)}", ';
 		result += ')';
 		return result;
 	}
@@ -3341,14 +3352,14 @@ class NonVerifiableMultisigAccountModificationTransactionV2 implements ISerializ
 	String toString() {
 		var result = 'NonVerifiableMultisigAccountModificationTransactionV2(';
 		result += 'type: "${type.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'timestamp: "${timestamp.toString()}", ';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
 		result += 'fee: "${fee.toString()}", ';
 		result += 'deadline: "${deadline.toString()}", ';
 		result += 'modifications: "${modifications.map((e) => e.toString()).toList()}", ';
-		result += 'minApprovalDelta: "0x${minApprovalDelta.toRadixString(16).padLeft(4 * 2, '0').toUpperCase()}", ';
+		result += 'minApprovalDelta: "0x${intToHex(minApprovalDelta)}", ';
 		result += ')';
 		return result;
 	}
@@ -3550,7 +3561,7 @@ class CosignatureV1 implements ISerializable {
 	String toString() {
 		var result = 'CosignatureV1(';
 		result += 'type: "${type.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'timestamp: "${timestamp.toString()}", ';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
@@ -3807,7 +3818,7 @@ class MultisigTransactionV1 implements ISerializable, ITransaction {
 	String toString() {
 		var result = 'MultisigTransactionV1(';
 		result += 'type: "${type.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'timestamp: "${timestamp.toString()}", ';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
@@ -3968,7 +3979,7 @@ class NonVerifiableMultisigTransactionV1 implements ISerializable, IInnerTransac
 	String toString() {
 		var result = 'NonVerifiableMultisigTransactionV1(';
 		result += 'type: "${type.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'timestamp: "${timestamp.toString()}", ';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
@@ -4201,7 +4212,7 @@ class NamespaceRegistrationTransactionV1 implements ISerializable, ITransaction 
 	String toString() {
 		var result = 'NamespaceRegistrationTransactionV1(';
 		result += 'type: "${type.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'timestamp: "${timestamp.toString()}", ';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
@@ -4210,10 +4221,10 @@ class NamespaceRegistrationTransactionV1 implements ISerializable, ITransaction 
 		result += 'deadline: "${deadline.toString()}", ';
 		result += 'rentalFeeSink: "${rentalFeeSink.toString()}", ';
 		result += 'rentalFee: "${rentalFee.toString()}", ';
-		result += 'name: "${hex.encode(name.toList()).toUpperCase()}", ';
+		result += 'name: "${bytesToHex(name)}", ';
 		if (parentName != null)
 		{
-			result += 'parentName: "${hex.encode(parentName!.toList()).toUpperCase()}", ';
+			result += 'parentName: "${bytesToHex(parentName!)}", ';
 		}
 		result += ')';
 		return result;
@@ -4420,7 +4431,7 @@ class NonVerifiableNamespaceRegistrationTransactionV1 implements ISerializable, 
 	String toString() {
 		var result = 'NonVerifiableNamespaceRegistrationTransactionV1(';
 		result += 'type: "${type.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'timestamp: "${timestamp.toString()}", ';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
@@ -4428,10 +4439,10 @@ class NonVerifiableNamespaceRegistrationTransactionV1 implements ISerializable, 
 		result += 'deadline: "${deadline.toString()}", ';
 		result += 'rentalFeeSink: "${rentalFeeSink.toString()}", ';
 		result += 'rentalFee: "${rentalFee.toString()}", ';
-		result += 'name: "${hex.encode(name.toList()).toUpperCase()}", ';
+		result += 'name: "${bytesToHex(name)}", ';
 		if (parentName != null)
 		{
-			result += 'parentName: "${hex.encode(parentName!.toList()).toUpperCase()}", ';
+			result += 'parentName: "${bytesToHex(parentName!)}", ';
 		}
 		result += ')';
 		return result;
@@ -4443,14 +4454,16 @@ class MessageType implements ISerializable {
 	static final PLAIN = MessageType(1);
 	static final ENCRYPTED = MessageType(2);
 
-	final int value;
+	int value = 0;
 
 	static final _flags = {
 		1: 'PLAIN',
 		2: 'ENCRYPTED',
 	};
 
-	MessageType([int? _value]) : value = _value ?? 1;
+	MessageType([int? _value]) {
+		value = _value ?? 1;
+	}
 
 	@override
 	int get size {
@@ -4538,7 +4551,7 @@ class Message implements ISerializable {
 	String toString() {
 		var result = 'Message(';
 		result += 'messageType: "${messageType.toString()}", ';
-		result += 'message: "${hex.encode(message.toList()).toUpperCase()}", ';
+		result += 'message: "${bytesToHex(message)}", ';
 		result += ')';
 		return result;
 	}
@@ -4757,7 +4770,7 @@ class TransferTransactionV1 implements ISerializable, ITransaction {
 	String toString() {
 		var result = 'TransferTransactionV1(';
 		result += 'type: "${type.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'timestamp: "${timestamp.toString()}", ';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
@@ -4967,7 +4980,7 @@ class NonVerifiableTransferTransactionV1 implements ISerializable, IInnerTransac
 	String toString() {
 		var result = 'NonVerifiableTransferTransactionV1(';
 		result += 'type: "${type.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'timestamp: "${timestamp.toString()}", ';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
@@ -5214,7 +5227,7 @@ class TransferTransactionV2 implements ISerializable, ITransaction {
 	String toString() {
 		var result = 'TransferTransactionV2(';
 		result += 'type: "${type.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'timestamp: "${timestamp.toString()}", ';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
@@ -5442,7 +5455,7 @@ class NonVerifiableTransferTransactionV2 implements ISerializable, IInnerTransac
 	String toString() {
 		var result = 'NonVerifiableTransferTransactionV2(';
 		result += 'type: "${type.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'timestamp: "${timestamp.toString()}", ';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';

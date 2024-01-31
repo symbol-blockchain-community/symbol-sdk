@@ -26,8 +26,6 @@ class ClassFormatter(ABC):
 
 		method_result = f'{method_descriptor.result} ' if method_descriptor.result else ''
 		body = f'{{\n{indent(method_descriptor.body)}}}' if method_descriptor.body else ';'
-		if method_descriptor.is_enum_ctor:
-			return f'{method_descriptor.method_name}{arguments} {method_descriptor.body}'
 		return f'{annotations}{method_result}{method_descriptor.method_name}{arguments} {super}{body}'
 
 	def generate_class_header(self):

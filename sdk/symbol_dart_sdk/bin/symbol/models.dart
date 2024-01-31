@@ -7,7 +7,6 @@ import '../utils/converter.dart';
 import '../utils/arrayHelpers.dart';
 import '../utils/transform.dart';
 import 'dart:typed_data';
-import 'package:convert/convert.dart';
 import 'package:tuple/tuple.dart';
 
 class Amount extends BaseValue implements ISerializable {
@@ -531,14 +530,16 @@ class LinkAction implements ISerializable {
 	static final UNLINK = LinkAction(0);
 	static final LINK = LinkAction(1);
 
-	final int value;
+	int value = 0;
 
 	static final _flags = {
 		0: 'UNLINK',
 		1: 'LINK',
 	};
 
-	LinkAction([int? _value]) : value = _value ?? 0;
+	LinkAction([int? _value]) {
+		value = _value ?? 0;
+	}
 
 	@override
 	int get size {
@@ -568,14 +569,16 @@ class NetworkType implements ISerializable {
 	static final MAINNET = NetworkType(104);
 	static final TESTNET = NetworkType(152);
 
-	final int value;
+	int value = 0;
 
 	static final _flags = {
 		104: 'MAINNET',
 		152: 'TESTNET',
 	};
 
-	NetworkType([int? _value]) : value = _value ?? 104;
+	NetworkType([int? _value]) {
+		value = _value ?? 104;
+	}
 
 	@override
 	int get size {
@@ -628,7 +631,7 @@ class TransactionType implements ISerializable {
 	static final MOSAIC_GLOBAL_RESTRICTION = TransactionType(16721);
 	static final TRANSFER = TransactionType(16724);
 
-	final int value;
+	int value = 0;
 
 	static final _flags = {
 		16716: 'ACCOUNT_KEY_LINK',
@@ -658,7 +661,9 @@ class TransactionType implements ISerializable {
 		16724: 'TRANSFER',
 	};
 
-	TransactionType([int? _value]) : value = _value ?? 16716;
+	TransactionType([int? _value]) {
+		value = _value ?? 16716;
+	}
 
 	@override
 	int get size {
@@ -821,7 +826,7 @@ class Transaction implements ISerializable, ITransaction {
 		var result = 'Transaction(';
 		result += 'signature: "${signature.toString()}", ';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'type: "${type.toString()}", ';
 		result += 'fee: "${fee.toString()}", ';
@@ -931,7 +936,7 @@ class EmbeddedTransaction implements ISerializable, IInnerTransaction {
 	String toString() {
 		var result = 'EmbeddedTransaction(';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'type: "${type.toString()}", ';
 		result += ')';
@@ -1014,7 +1019,7 @@ class BlockType implements ISerializable {
 	static final NORMAL = BlockType(33091);
 	static final IMPORTANCE = BlockType(33347);
 
-	final int value;
+	int value = 0;
 
 	static final _flags = {
 		32835: 'NEMESIS',
@@ -1022,7 +1027,9 @@ class BlockType implements ISerializable {
 		33347: 'IMPORTANCE',
 	};
 
-	BlockType([int? _value]) : value = _value ?? 32835;
+	BlockType([int? _value]) {
+		value = _value ?? 32835;
+	}
 
 	@override
 	int get size {
@@ -1336,7 +1343,7 @@ class Block implements ISerializable {
 		var result = 'Block(';
 		result += 'signature: "${signature.toString()}", ';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'type: "${type.toString()}", ';
 		result += 'height: "${height.toString()}", ';
@@ -1621,7 +1628,7 @@ class NemesisBlockV1 implements ISerializable {
 		var result = 'NemesisBlockV1(';
 		result += 'signature: "${signature.toString()}", ';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'type: "${type.toString()}", ';
 		result += 'height: "${height.toString()}", ';
@@ -1634,8 +1641,8 @@ class NemesisBlockV1 implements ISerializable {
 		result += 'stateHash: "${stateHash.toString()}", ';
 		result += 'beneficiaryAddress: "${beneficiaryAddress.toString()}", ';
 		result += 'feeMultiplier: "${feeMultiplier.toString()}", ';
-		result += 'votingEligibleAccountsCount: "0x${votingEligibleAccountsCount.toRadixString(16).padLeft(4 * 2, '0').toUpperCase()}", ';
-		result += 'harvestingEligibleAccountsCount: "0x${harvestingEligibleAccountsCount.toRadixString(16).padLeft(8 * 2, '0').toUpperCase()}", ';
+		result += 'votingEligibleAccountsCount: "0x${intToHex(votingEligibleAccountsCount)}", ';
+		result += 'harvestingEligibleAccountsCount: "0x${intToHex(harvestingEligibleAccountsCount)}", ';
 		result += 'totalVotingBalance: "${totalVotingBalance.toString()}", ';
 		result += 'previousImportanceBlockHash: "${previousImportanceBlockHash.toString()}", ';
 		result += 'transactions: "${transactions.map((e) => e.toString()).toList()}", ';
@@ -1882,7 +1889,7 @@ class NormalBlockV1 implements ISerializable {
 		var result = 'NormalBlockV1(';
 		result += 'signature: "${signature.toString()}", ';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'type: "${type.toString()}", ';
 		result += 'height: "${height.toString()}", ';
@@ -2168,7 +2175,7 @@ class ImportanceBlockV1 implements ISerializable {
 		var result = 'ImportanceBlockV1(';
 		result += 'signature: "${signature.toString()}", ';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'type: "${type.toString()}", ';
 		result += 'height: "${height.toString()}", ';
@@ -2181,8 +2188,8 @@ class ImportanceBlockV1 implements ISerializable {
 		result += 'stateHash: "${stateHash.toString()}", ';
 		result += 'beneficiaryAddress: "${beneficiaryAddress.toString()}", ';
 		result += 'feeMultiplier: "${feeMultiplier.toString()}", ';
-		result += 'votingEligibleAccountsCount: "0x${votingEligibleAccountsCount.toRadixString(16).padLeft(4 * 2, '0').toUpperCase()}", ';
-		result += 'harvestingEligibleAccountsCount: "0x${harvestingEligibleAccountsCount.toRadixString(16).padLeft(8 * 2, '0').toUpperCase()}", ';
+		result += 'votingEligibleAccountsCount: "0x${intToHex(votingEligibleAccountsCount)}", ';
+		result += 'harvestingEligibleAccountsCount: "0x${intToHex(harvestingEligibleAccountsCount)}", ';
 		result += 'totalVotingBalance: "${totalVotingBalance.toString()}", ';
 		result += 'previousImportanceBlockHash: "${previousImportanceBlockHash.toString()}", ';
 		result += 'transactions: "${transactions.map((e) => e.toString()).toList()}", ';
@@ -2348,7 +2355,7 @@ class ReceiptType implements ISerializable {
 	static final ADDRESS_ALIAS_RESOLUTION = ReceiptType(61763);
 	static final MOSAIC_ALIAS_RESOLUTION = ReceiptType(62019);
 
-	final int value;
+	int value = 0;
 
 	static final _flags = {
 		4685: 'MOSAIC_RENTAL_FEE',
@@ -2369,7 +2376,9 @@ class ReceiptType implements ISerializable {
 		62019: 'MOSAIC_ALIAS_RESOLUTION',
 	};
 
-	ReceiptType([int? _value]) : value = _value ?? 4685;
+	ReceiptType([int? _value]) {
+		value = _value ?? 4685;
+	}
 
 	@override
 	int get size {
@@ -2456,7 +2465,7 @@ class Receipt implements ISerializable {
 	@override
 	String toString() {
 		var result = 'Receipt(';
-		result += 'version: "0x${version.toRadixString(16).padLeft(2 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'type: "${type.toString()}", ';
 		result += ')';
 		return result;
@@ -2544,7 +2553,7 @@ class HarvestFeeReceipt implements ISerializable {
 	@override
 	String toString() {
 		var result = 'HarvestFeeReceipt(';
-		result += 'version: "0x${version.toRadixString(16).padLeft(2 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'type: "${type.toString()}", ';
 		result += 'mosaic: "${mosaic.toString()}", ';
 		result += 'targetAddress: "${targetAddress.toString()}", ';
@@ -2625,7 +2634,7 @@ class InflationReceipt implements ISerializable {
 	@override
 	String toString() {
 		var result = 'InflationReceipt(';
-		result += 'version: "0x${version.toRadixString(16).padLeft(2 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'type: "${type.toString()}", ';
 		result += 'mosaic: "${mosaic.toString()}", ';
 		result += ')';
@@ -2714,7 +2723,7 @@ class LockHashCreatedFeeReceipt implements ISerializable {
 	@override
 	String toString() {
 		var result = 'LockHashCreatedFeeReceipt(';
-		result += 'version: "0x${version.toRadixString(16).padLeft(2 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'type: "${type.toString()}", ';
 		result += 'mosaic: "${mosaic.toString()}", ';
 		result += 'targetAddress: "${targetAddress.toString()}", ';
@@ -2804,7 +2813,7 @@ class LockHashCompletedFeeReceipt implements ISerializable {
 	@override
 	String toString() {
 		var result = 'LockHashCompletedFeeReceipt(';
-		result += 'version: "0x${version.toRadixString(16).padLeft(2 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'type: "${type.toString()}", ';
 		result += 'mosaic: "${mosaic.toString()}", ';
 		result += 'targetAddress: "${targetAddress.toString()}", ';
@@ -2894,7 +2903,7 @@ class LockHashExpiredFeeReceipt implements ISerializable {
 	@override
 	String toString() {
 		var result = 'LockHashExpiredFeeReceipt(';
-		result += 'version: "0x${version.toRadixString(16).padLeft(2 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'type: "${type.toString()}", ';
 		result += 'mosaic: "${mosaic.toString()}", ';
 		result += 'targetAddress: "${targetAddress.toString()}", ';
@@ -2984,7 +2993,7 @@ class LockSecretCreatedFeeReceipt implements ISerializable {
 	@override
 	String toString() {
 		var result = 'LockSecretCreatedFeeReceipt(';
-		result += 'version: "0x${version.toRadixString(16).padLeft(2 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'type: "${type.toString()}", ';
 		result += 'mosaic: "${mosaic.toString()}", ';
 		result += 'targetAddress: "${targetAddress.toString()}", ';
@@ -3074,7 +3083,7 @@ class LockSecretCompletedFeeReceipt implements ISerializable {
 	@override
 	String toString() {
 		var result = 'LockSecretCompletedFeeReceipt(';
-		result += 'version: "0x${version.toRadixString(16).padLeft(2 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'type: "${type.toString()}", ';
 		result += 'mosaic: "${mosaic.toString()}", ';
 		result += 'targetAddress: "${targetAddress.toString()}", ';
@@ -3164,7 +3173,7 @@ class LockSecretExpiredFeeReceipt implements ISerializable {
 	@override
 	String toString() {
 		var result = 'LockSecretExpiredFeeReceipt(';
-		result += 'version: "0x${version.toRadixString(16).padLeft(2 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'type: "${type.toString()}", ';
 		result += 'mosaic: "${mosaic.toString()}", ';
 		result += 'targetAddress: "${targetAddress.toString()}", ';
@@ -3245,7 +3254,7 @@ class MosaicExpiredReceipt implements ISerializable {
 	@override
 	String toString() {
 		var result = 'MosaicExpiredReceipt(';
-		result += 'version: "0x${version.toRadixString(16).padLeft(2 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'type: "${type.toString()}", ';
 		result += 'artifactId: "${artifactId.toString()}", ';
 		result += ')';
@@ -3343,7 +3352,7 @@ class MosaicRentalFeeReceipt implements ISerializable {
 	@override
 	String toString() {
 		var result = 'MosaicRentalFeeReceipt(';
-		result += 'version: "0x${version.toRadixString(16).padLeft(2 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'type: "${type.toString()}", ';
 		result += 'mosaic: "${mosaic.toString()}", ';
 		result += 'senderAddress: "${senderAddress.toString()}", ';
@@ -3377,14 +3386,16 @@ class NamespaceRegistrationType implements ISerializable {
 	static final ROOT = NamespaceRegistrationType(0);
 	static final CHILD = NamespaceRegistrationType(1);
 
-	final int value;
+	int value = 0;
 
 	static final _flags = {
 		0: 'ROOT',
 		1: 'CHILD',
 	};
 
-	NamespaceRegistrationType([int? _value]) : value = _value ?? 0;
+	NamespaceRegistrationType([int? _value]) {
+		value = _value ?? 0;
+	}
 
 	@override
 	int get size {
@@ -3414,14 +3425,16 @@ class AliasAction implements ISerializable {
 	static final UNLINK = AliasAction(0);
 	static final LINK = AliasAction(1);
 
-	final int value;
+	int value = 0;
 
 	static final _flags = {
 		0: 'UNLINK',
 		1: 'LINK',
 	};
 
-	AliasAction([int? _value]) : value = _value ?? 0;
+	AliasAction([int? _value]) {
+		value = _value ?? 0;
+	}
 
 	@override
 	int get size {
@@ -3518,7 +3531,7 @@ class NamespaceExpiredReceipt implements ISerializable {
 	@override
 	String toString() {
 		var result = 'NamespaceExpiredReceipt(';
-		result += 'version: "0x${version.toRadixString(16).padLeft(2 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'type: "${type.toString()}", ';
 		result += 'artifactId: "${artifactId.toString()}", ';
 		result += ')';
@@ -3598,7 +3611,7 @@ class NamespaceDeletedReceipt implements ISerializable {
 	@override
 	String toString() {
 		var result = 'NamespaceDeletedReceipt(';
-		result += 'version: "0x${version.toRadixString(16).padLeft(2 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'type: "${type.toString()}", ';
 		result += 'artifactId: "${artifactId.toString()}", ';
 		result += ')';
@@ -3696,7 +3709,7 @@ class NamespaceRentalFeeReceipt implements ISerializable {
 	@override
 	String toString() {
 		var result = 'NamespaceRentalFeeReceipt(';
-		result += 'version: "0x${version.toRadixString(16).padLeft(2 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'type: "${type.toString()}", ';
 		result += 'mosaic: "${mosaic.toString()}", ';
 		result += 'senderAddress: "${senderAddress.toString()}", ';
@@ -3761,8 +3774,8 @@ class ReceiptSource implements ISerializable {
 	@override
 	String toString() {
 		var result = 'ReceiptSource(';
-		result += 'primaryId: "0x${primaryId.toRadixString(16).padLeft(4 * 2, '0').toUpperCase()}", ';
-		result += 'secondaryId: "0x${secondaryId.toRadixString(16).padLeft(4 * 2, '0').toUpperCase()}", ';
+		result += 'primaryId: "0x${intToHex(primaryId)}", ';
+		result += 'secondaryId: "0x${intToHex(secondaryId)}", ';
 		result += ')';
 		return result;
 	}
@@ -4109,8 +4122,8 @@ class TransactionStatement implements ISerializable {
 	@override
 	String toString() {
 		var result = 'TransactionStatement(';
-		result += 'primaryId: "0x${primaryId.toRadixString(16).padLeft(4 * 2, '0').toUpperCase()}", ';
-		result += 'secondaryId: "0x${secondaryId.toRadixString(16).padLeft(4 * 2, '0').toUpperCase()}", ';
+		result += 'primaryId: "0x${intToHex(primaryId)}", ';
+		result += 'secondaryId: "0x${intToHex(secondaryId)}", ';
 		result += 'receipts: "${receipts.map((e) => e.toString()).toList()}", ';
 		result += ')';
 		return result;
@@ -4376,7 +4389,7 @@ class AccountKeyLinkTransactionV1 implements ISerializable, ITransaction {
 		var result = 'AccountKeyLinkTransactionV1(';
 		result += 'signature: "${signature.toString()}", ';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'type: "${type.toString()}", ';
 		result += 'fee: "${fee.toString()}", ';
@@ -4515,7 +4528,7 @@ class EmbeddedAccountKeyLinkTransactionV1 implements ISerializable, IInnerTransa
 	String toString() {
 		var result = 'EmbeddedAccountKeyLinkTransactionV1(';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'type: "${type.toString()}", ';
 		result += 'linkedPublicKey: "${linkedPublicKey.toString()}", ';
@@ -4685,7 +4698,7 @@ class NodeKeyLinkTransactionV1 implements ISerializable, ITransaction {
 		var result = 'NodeKeyLinkTransactionV1(';
 		result += 'signature: "${signature.toString()}", ';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'type: "${type.toString()}", ';
 		result += 'fee: "${fee.toString()}", ';
@@ -4824,7 +4837,7 @@ class EmbeddedNodeKeyLinkTransactionV1 implements ISerializable, IInnerTransacti
 	String toString() {
 		var result = 'EmbeddedNodeKeyLinkTransactionV1(';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'type: "${type.toString()}", ';
 		result += 'linkedPublicKey: "${linkedPublicKey.toString()}", ';
@@ -4899,7 +4912,7 @@ class Cosignature implements ISerializable {
 	@override
 	String toString() {
 		var result = 'Cosignature(';
-		result += 'version: "0x${version.toRadixString(16).padLeft(8 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
 		result += 'signature: "${signature.toString()}", ';
 		result += ')';
@@ -4981,7 +4994,7 @@ class DetachedCosignature implements ISerializable {
 	@override
 	String toString() {
 		var result = 'DetachedCosignature(';
-		result += 'version: "0x${version.toRadixString(16).padLeft(8 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
 		result += 'signature: "${signature.toString()}", ';
 		result += 'parentHash: "${parentHash.toString()}", ';
@@ -5178,7 +5191,7 @@ class AggregateCompleteTransactionV1 implements ISerializable, ITransaction {
 		var result = 'AggregateCompleteTransactionV1(';
 		result += 'signature: "${signature.toString()}", ';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'type: "${type.toString()}", ';
 		result += 'fee: "${fee.toString()}", ';
@@ -5379,7 +5392,7 @@ class AggregateCompleteTransactionV2 implements ISerializable, ITransaction {
 		var result = 'AggregateCompleteTransactionV2(';
 		result += 'signature: "${signature.toString()}", ';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'type: "${type.toString()}", ';
 		result += 'fee: "${fee.toString()}", ';
@@ -5580,7 +5593,7 @@ class AggregateBondedTransactionV1 implements ISerializable, ITransaction {
 		var result = 'AggregateBondedTransactionV1(';
 		result += 'signature: "${signature.toString()}", ';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'type: "${type.toString()}", ';
 		result += 'fee: "${fee.toString()}", ';
@@ -5781,7 +5794,7 @@ class AggregateBondedTransactionV2 implements ISerializable, ITransaction {
 		var result = 'AggregateBondedTransactionV2(';
 		result += 'signature: "${signature.toString()}", ';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'type: "${type.toString()}", ';
 		result += 'fee: "${fee.toString()}", ';
@@ -5974,7 +5987,7 @@ class VotingKeyLinkTransactionV1 implements ISerializable, ITransaction {
 		var result = 'VotingKeyLinkTransactionV1(';
 		result += 'signature: "${signature.toString()}", ';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'type: "${type.toString()}", ';
 		result += 'fee: "${fee.toString()}", ';
@@ -6135,7 +6148,7 @@ class EmbeddedVotingKeyLinkTransactionV1 implements ISerializable, IInnerTransac
 	String toString() {
 		var result = 'EmbeddedVotingKeyLinkTransactionV1(';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'type: "${type.toString()}", ';
 		result += 'linkedPublicKey: "${linkedPublicKey.toString()}", ';
@@ -6307,7 +6320,7 @@ class VrfKeyLinkTransactionV1 implements ISerializable, ITransaction {
 		var result = 'VrfKeyLinkTransactionV1(';
 		result += 'signature: "${signature.toString()}", ';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'type: "${type.toString()}", ';
 		result += 'fee: "${fee.toString()}", ';
@@ -6446,7 +6459,7 @@ class EmbeddedVrfKeyLinkTransactionV1 implements ISerializable, IInnerTransactio
 	String toString() {
 		var result = 'EmbeddedVrfKeyLinkTransactionV1(';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'type: "${type.toString()}", ';
 		result += 'linkedPublicKey: "${linkedPublicKey.toString()}", ';
@@ -6626,7 +6639,7 @@ class HashLockTransactionV1 implements ISerializable, ITransaction {
 		var result = 'HashLockTransactionV1(';
 		result += 'signature: "${signature.toString()}", ';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'type: "${type.toString()}", ';
 		result += 'fee: "${fee.toString()}", ';
@@ -6776,7 +6789,7 @@ class EmbeddedHashLockTransactionV1 implements ISerializable, IInnerTransaction 
 	String toString() {
 		var result = 'EmbeddedHashLockTransactionV1(';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'type: "${type.toString()}", ';
 		result += 'mosaic: "${mosaic.toString()}", ';
@@ -6793,7 +6806,7 @@ class LockHashAlgorithm implements ISerializable {
 	static final HASH_160 = LockHashAlgorithm(1);
 	static final HASH_256 = LockHashAlgorithm(2);
 
-	final int value;
+	int value = 0;
 
 	static final _flags = {
 		0: 'SHA3_256',
@@ -6801,7 +6814,9 @@ class LockHashAlgorithm implements ISerializable {
 		2: 'HASH_256',
 	};
 
-	LockHashAlgorithm([int? _value]) : value = _value ?? 0;
+	LockHashAlgorithm([int? _value]) {
+		value = _value ?? 0;
+	}
 
 	@override
 	int get size {
@@ -7016,7 +7031,7 @@ class SecretLockTransactionV1 implements ISerializable, ITransaction {
 		var result = 'SecretLockTransactionV1(';
 		result += 'signature: "${signature.toString()}", ';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'type: "${type.toString()}", ';
 		result += 'fee: "${fee.toString()}", ';
@@ -7188,7 +7203,7 @@ class EmbeddedSecretLockTransactionV1 implements ISerializable, IInnerTransactio
 	String toString() {
 		var result = 'EmbeddedSecretLockTransactionV1(';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'type: "${type.toString()}", ';
 		result += 'recipientAddress: "${recipientAddress.toString()}", ';
@@ -7386,7 +7401,7 @@ class SecretProofTransactionV1 implements ISerializable, ITransaction {
 		var result = 'SecretProofTransactionV1(';
 		result += 'signature: "${signature.toString()}", ';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'type: "${type.toString()}", ';
 		result += 'fee: "${fee.toString()}", ';
@@ -7394,7 +7409,7 @@ class SecretProofTransactionV1 implements ISerializable, ITransaction {
 		result += 'recipientAddress: "${recipientAddress.toString()}", ';
 		result += 'secret: "${secret.toString()}", ';
 		result += 'hashAlgorithm: "${hashAlgorithm.toString()}", ';
-		result += 'proof: "${hex.encode(proof.toList()).toUpperCase()}", ';
+		result += 'proof: "${bytesToHex(proof)}", ';
 		result += ')';
 		return result;
 	}
@@ -7552,13 +7567,13 @@ class EmbeddedSecretProofTransactionV1 implements ISerializable, IInnerTransacti
 	String toString() {
 		var result = 'EmbeddedSecretProofTransactionV1(';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'type: "${type.toString()}", ';
 		result += 'recipientAddress: "${recipientAddress.toString()}", ';
 		result += 'secret: "${secret.toString()}", ';
 		result += 'hashAlgorithm: "${hashAlgorithm.toString()}", ';
-		result += 'proof: "${hex.encode(proof.toList()).toUpperCase()}", ';
+		result += 'proof: "${bytesToHex(proof)}", ';
 		result += ')';
 		return result;
 	}
@@ -7747,15 +7762,15 @@ class AccountMetadataTransactionV1 implements ISerializable, ITransaction {
 		var result = 'AccountMetadataTransactionV1(';
 		result += 'signature: "${signature.toString()}", ';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'type: "${type.toString()}", ';
 		result += 'fee: "${fee.toString()}", ';
 		result += 'deadline: "${deadline.toString()}", ';
 		result += 'targetAddress: "${targetAddress.toString()}", ';
-		result += 'scopedMetadataKey: "0x${scopedMetadataKey.toRadixString(16).padLeft(8 * 2, '0').toUpperCase()}", ';
-		result += 'valueSizeDelta: "0x${valueSizeDelta.toRadixString(16).padLeft(2 * 2, '0').toUpperCase()}", ';
-		result += 'value: "${hex.encode(value.toList()).toUpperCase()}", ';
+		result += 'scopedMetadataKey: "0x${intToHex(scopedMetadataKey)}", ';
+		result += 'valueSizeDelta: "0x${intToHex(valueSizeDelta)}", ';
+		result += 'value: "${bytesToHex(value)}", ';
 		result += ')';
 		return result;
 	}
@@ -7911,13 +7926,13 @@ class EmbeddedAccountMetadataTransactionV1 implements ISerializable, IInnerTrans
 	String toString() {
 		var result = 'EmbeddedAccountMetadataTransactionV1(';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'type: "${type.toString()}", ';
 		result += 'targetAddress: "${targetAddress.toString()}", ';
-		result += 'scopedMetadataKey: "0x${scopedMetadataKey.toRadixString(16).padLeft(8 * 2, '0').toUpperCase()}", ';
-		result += 'valueSizeDelta: "0x${valueSizeDelta.toRadixString(16).padLeft(2 * 2, '0').toUpperCase()}", ';
-		result += 'value: "${hex.encode(value.toList()).toUpperCase()}", ';
+		result += 'scopedMetadataKey: "0x${intToHex(scopedMetadataKey)}", ';
+		result += 'valueSizeDelta: "0x${intToHex(valueSizeDelta)}", ';
+		result += 'value: "${bytesToHex(value)}", ';
 		result += ')';
 		return result;
 	}
@@ -8116,16 +8131,16 @@ class MosaicMetadataTransactionV1 implements ISerializable, ITransaction {
 		var result = 'MosaicMetadataTransactionV1(';
 		result += 'signature: "${signature.toString()}", ';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'type: "${type.toString()}", ';
 		result += 'fee: "${fee.toString()}", ';
 		result += 'deadline: "${deadline.toString()}", ';
 		result += 'targetAddress: "${targetAddress.toString()}", ';
-		result += 'scopedMetadataKey: "0x${scopedMetadataKey.toRadixString(16).padLeft(8 * 2, '0').toUpperCase()}", ';
+		result += 'scopedMetadataKey: "0x${intToHex(scopedMetadataKey)}", ';
 		result += 'targetMosaicId: "${targetMosaicId.toString()}", ';
-		result += 'valueSizeDelta: "0x${valueSizeDelta.toRadixString(16).padLeft(2 * 2, '0').toUpperCase()}", ';
-		result += 'value: "${hex.encode(value.toList()).toUpperCase()}", ';
+		result += 'valueSizeDelta: "0x${intToHex(valueSizeDelta)}", ';
+		result += 'value: "${bytesToHex(value)}", ';
 		result += ')';
 		return result;
 	}
@@ -8291,14 +8306,14 @@ class EmbeddedMosaicMetadataTransactionV1 implements ISerializable, IInnerTransa
 	String toString() {
 		var result = 'EmbeddedMosaicMetadataTransactionV1(';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'type: "${type.toString()}", ';
 		result += 'targetAddress: "${targetAddress.toString()}", ';
-		result += 'scopedMetadataKey: "0x${scopedMetadataKey.toRadixString(16).padLeft(8 * 2, '0').toUpperCase()}", ';
+		result += 'scopedMetadataKey: "0x${intToHex(scopedMetadataKey)}", ';
 		result += 'targetMosaicId: "${targetMosaicId.toString()}", ';
-		result += 'valueSizeDelta: "0x${valueSizeDelta.toRadixString(16).padLeft(2 * 2, '0').toUpperCase()}", ';
-		result += 'value: "${hex.encode(value.toList()).toUpperCase()}", ';
+		result += 'valueSizeDelta: "0x${intToHex(valueSizeDelta)}", ';
+		result += 'value: "${bytesToHex(value)}", ';
 		result += ')';
 		return result;
 	}
@@ -8497,16 +8512,16 @@ class NamespaceMetadataTransactionV1 implements ISerializable, ITransaction {
 		var result = 'NamespaceMetadataTransactionV1(';
 		result += 'signature: "${signature.toString()}", ';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'type: "${type.toString()}", ';
 		result += 'fee: "${fee.toString()}", ';
 		result += 'deadline: "${deadline.toString()}", ';
 		result += 'targetAddress: "${targetAddress.toString()}", ';
-		result += 'scopedMetadataKey: "0x${scopedMetadataKey.toRadixString(16).padLeft(8 * 2, '0').toUpperCase()}", ';
+		result += 'scopedMetadataKey: "0x${intToHex(scopedMetadataKey)}", ';
 		result += 'targetNamespaceId: "${targetNamespaceId.toString()}", ';
-		result += 'valueSizeDelta: "0x${valueSizeDelta.toRadixString(16).padLeft(2 * 2, '0').toUpperCase()}", ';
-		result += 'value: "${hex.encode(value.toList()).toUpperCase()}", ';
+		result += 'valueSizeDelta: "0x${intToHex(valueSizeDelta)}", ';
+		result += 'value: "${bytesToHex(value)}", ';
 		result += ')';
 		return result;
 	}
@@ -8672,14 +8687,14 @@ class EmbeddedNamespaceMetadataTransactionV1 implements ISerializable, IInnerTra
 	String toString() {
 		var result = 'EmbeddedNamespaceMetadataTransactionV1(';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'type: "${type.toString()}", ';
 		result += 'targetAddress: "${targetAddress.toString()}", ';
-		result += 'scopedMetadataKey: "0x${scopedMetadataKey.toRadixString(16).padLeft(8 * 2, '0').toUpperCase()}", ';
+		result += 'scopedMetadataKey: "0x${intToHex(scopedMetadataKey)}", ';
 		result += 'targetNamespaceId: "${targetNamespaceId.toString()}", ';
-		result += 'valueSizeDelta: "0x${valueSizeDelta.toRadixString(16).padLeft(2 * 2, '0').toUpperCase()}", ';
-		result += 'value: "${hex.encode(value.toList()).toUpperCase()}", ';
+		result += 'valueSizeDelta: "0x${intToHex(valueSizeDelta)}", ';
+		result += 'value: "${bytesToHex(value)}", ';
 		result += ')';
 		return result;
 	}
@@ -8712,7 +8727,7 @@ class MosaicFlags implements ISerializable {
 	static final RESTRICTABLE = MosaicFlags(4);
 	static final REVOKABLE = MosaicFlags(8);
 
-	final int value;
+	int value = 0;
 
 	static final _flags = {
 		0: 'NONE',
@@ -8722,7 +8737,9 @@ class MosaicFlags implements ISerializable {
 		8: 'REVOKABLE',
 	};
 
-	MosaicFlags([int? _value]) : value = _value ?? 0;
+	MosaicFlags([int? _value]) {
+		value = _value ?? 0;
+	}
 
 	@override
 	int get size {
@@ -8758,14 +8775,16 @@ class MosaicSupplyChangeAction implements ISerializable {
 	static final DECREASE = MosaicSupplyChangeAction(0);
 	static final INCREASE = MosaicSupplyChangeAction(1);
 
-	final int value;
+	int value = 0;
 
 	static final _flags = {
 		0: 'DECREASE',
 		1: 'INCREASE',
 	};
 
-	MosaicSupplyChangeAction([int? _value]) : value = _value ?? 0;
+	MosaicSupplyChangeAction([int? _value]) {
+		value = _value ?? 0;
+	}
 
 	@override
 	int get size {
@@ -8979,7 +8998,7 @@ class MosaicDefinitionTransactionV1 implements ISerializable, ITransaction {
 		var result = 'MosaicDefinitionTransactionV1(';
 		result += 'signature: "${signature.toString()}", ';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'type: "${type.toString()}", ';
 		result += 'fee: "${fee.toString()}", ';
@@ -8988,7 +9007,7 @@ class MosaicDefinitionTransactionV1 implements ISerializable, ITransaction {
 		result += 'duration: "${duration.toString()}", ';
 		result += 'nonce: "${nonce.toString()}", ';
 		result += 'flags: "${flags.toString()}", ';
-		result += 'divisibility: "0x${divisibility.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'divisibility: "0x${intToHex(divisibility)}", ';
 		result += ')';
 		return result;
 	}
@@ -9150,14 +9169,14 @@ class EmbeddedMosaicDefinitionTransactionV1 implements ISerializable, IInnerTran
 	String toString() {
 		var result = 'EmbeddedMosaicDefinitionTransactionV1(';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'type: "${type.toString()}", ';
 		result += 'id: "${id.toString()}", ';
 		result += 'duration: "${duration.toString()}", ';
 		result += 'nonce: "${nonce.toString()}", ';
 		result += 'flags: "${flags.toString()}", ';
-		result += 'divisibility: "0x${divisibility.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'divisibility: "0x${intToHex(divisibility)}", ';
 		result += ')';
 		return result;
 	}
@@ -9333,7 +9352,7 @@ class MosaicSupplyChangeTransactionV1 implements ISerializable, ITransaction {
 		var result = 'MosaicSupplyChangeTransactionV1(';
 		result += 'signature: "${signature.toString()}", ';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'type: "${type.toString()}", ';
 		result += 'fee: "${fee.toString()}", ';
@@ -9483,7 +9502,7 @@ class EmbeddedMosaicSupplyChangeTransactionV1 implements ISerializable, IInnerTr
 	String toString() {
 		var result = 'EmbeddedMosaicSupplyChangeTransactionV1(';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'type: "${type.toString()}", ';
 		result += 'mosaicId: "${mosaicId.toString()}", ';
@@ -9654,7 +9673,7 @@ class MosaicSupplyRevocationTransactionV1 implements ISerializable, ITransaction
 		var result = 'MosaicSupplyRevocationTransactionV1(';
 		result += 'signature: "${signature.toString()}", ';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'type: "${type.toString()}", ';
 		result += 'fee: "${fee.toString()}", ';
@@ -9793,7 +9812,7 @@ class EmbeddedMosaicSupplyRevocationTransactionV1 implements ISerializable, IInn
 	String toString() {
 		var result = 'EmbeddedMosaicSupplyRevocationTransactionV1(';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'type: "${type.toString()}", ';
 		result += 'sourceAddress: "${sourceAddress.toString()}", ';
@@ -10004,13 +10023,13 @@ class MultisigAccountModificationTransactionV1 implements ISerializable, ITransa
 		var result = 'MultisigAccountModificationTransactionV1(';
 		result += 'signature: "${signature.toString()}", ';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'type: "${type.toString()}", ';
 		result += 'fee: "${fee.toString()}", ';
 		result += 'deadline: "${deadline.toString()}", ';
-		result += 'minRemovalDelta: "0x${minRemovalDelta.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
-		result += 'minApprovalDelta: "0x${minApprovalDelta.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'minRemovalDelta: "0x${intToHex(minRemovalDelta)}", ';
+		result += 'minApprovalDelta: "0x${intToHex(minApprovalDelta)}", ';
 		result += 'addressAdditions: "${addressAdditions.map((e) => e.toString()).toList()}", ';
 		result += 'addressDeletions: "${addressDeletions.map((e) => e.toString()).toList()}", ';
 		result += ')';
@@ -10186,11 +10205,11 @@ class EmbeddedMultisigAccountModificationTransactionV1 implements ISerializable,
 	String toString() {
 		var result = 'EmbeddedMultisigAccountModificationTransactionV1(';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'type: "${type.toString()}", ';
-		result += 'minRemovalDelta: "0x${minRemovalDelta.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
-		result += 'minApprovalDelta: "0x${minApprovalDelta.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'minRemovalDelta: "0x${intToHex(minRemovalDelta)}", ';
+		result += 'minApprovalDelta: "0x${intToHex(minApprovalDelta)}", ';
 		result += 'addressAdditions: "${addressAdditions.map((e) => e.toString()).toList()}", ';
 		result += 'addressDeletions: "${addressDeletions.map((e) => e.toString()).toList()}", ';
 		result += ')';
@@ -10368,7 +10387,7 @@ class AddressAliasTransactionV1 implements ISerializable, ITransaction {
 		var result = 'AddressAliasTransactionV1(';
 		result += 'signature: "${signature.toString()}", ';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'type: "${type.toString()}", ';
 		result += 'fee: "${fee.toString()}", ';
@@ -10518,7 +10537,7 @@ class EmbeddedAddressAliasTransactionV1 implements ISerializable, IInnerTransact
 	String toString() {
 		var result = 'EmbeddedAddressAliasTransactionV1(';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'type: "${type.toString()}", ';
 		result += 'namespaceId: "${namespaceId.toString()}", ';
@@ -10699,7 +10718,7 @@ class MosaicAliasTransactionV1 implements ISerializable, ITransaction {
 		var result = 'MosaicAliasTransactionV1(';
 		result += 'signature: "${signature.toString()}", ';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'type: "${type.toString()}", ';
 		result += 'fee: "${fee.toString()}", ';
@@ -10849,7 +10868,7 @@ class EmbeddedMosaicAliasTransactionV1 implements ISerializable, IInnerTransacti
 	String toString() {
 		var result = 'EmbeddedMosaicAliasTransactionV1(';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'type: "${type.toString()}", ';
 		result += 'namespaceId: "${namespaceId.toString()}", ';
@@ -11080,7 +11099,7 @@ class NamespaceRegistrationTransactionV1 implements ISerializable, ITransaction 
 		var result = 'NamespaceRegistrationTransactionV1(';
 		result += 'signature: "${signature.toString()}", ';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'type: "${type.toString()}", ';
 		result += 'fee: "${fee.toString()}", ';
@@ -11095,7 +11114,7 @@ class NamespaceRegistrationTransactionV1 implements ISerializable, ITransaction 
 		}
 		result += 'id: "${id.toString()}", ';
 		result += 'registrationType: "${registrationType.toString()}", ';
-		result += 'name: "${hex.encode(name.toList()).toUpperCase()}", ';
+		result += 'name: "${bytesToHex(name)}", ';
 		result += ')';
 		return result;
 	}
@@ -11288,7 +11307,7 @@ class EmbeddedNamespaceRegistrationTransactionV1 implements ISerializable, IInne
 	String toString() {
 		var result = 'EmbeddedNamespaceRegistrationTransactionV1(';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'type: "${type.toString()}", ';
 		if (NamespaceRegistrationType.ROOT.value == registrationType.value)
@@ -11301,7 +11320,7 @@ class EmbeddedNamespaceRegistrationTransactionV1 implements ISerializable, IInne
 		}
 		result += 'id: "${id.toString()}", ';
 		result += 'registrationType: "${registrationType.toString()}", ';
-		result += 'name: "${hex.encode(name.toList()).toUpperCase()}", ';
+		result += 'name: "${bytesToHex(name)}", ';
 		result += ')';
 		return result;
 	}
@@ -11315,7 +11334,7 @@ class AccountRestrictionFlags implements ISerializable {
 	static final OUTGOING = AccountRestrictionFlags(16384);
 	static final BLOCK = AccountRestrictionFlags(32768);
 
-	final int value;
+	int value = 0;
 
 	static final _flags = {
 		1: 'ADDRESS',
@@ -11325,7 +11344,9 @@ class AccountRestrictionFlags implements ISerializable {
 		32768: 'BLOCK',
 	};
 
-	AccountRestrictionFlags([int? _value]) : value = _value ?? 1;
+	AccountRestrictionFlags([int? _value]) {
+		value = _value ?? 1;
+	}
 
 	@override
 	int get size {
@@ -11546,7 +11567,7 @@ class AccountAddressRestrictionTransactionV1 implements ISerializable, ITransact
 		var result = 'AccountAddressRestrictionTransactionV1(';
 		result += 'signature: "${signature.toString()}", ';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'type: "${type.toString()}", ';
 		result += 'fee: "${fee.toString()}", ';
@@ -11719,7 +11740,7 @@ class EmbeddedAccountAddressRestrictionTransactionV1 implements ISerializable, I
 	String toString() {
 		var result = 'EmbeddedAccountAddressRestrictionTransactionV1(';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'type: "${type.toString()}", ';
 		result += 'restrictionFlags: "${restrictionFlags.toString()}", ';
@@ -11923,7 +11944,7 @@ class AccountMosaicRestrictionTransactionV1 implements ISerializable, ITransacti
 		var result = 'AccountMosaicRestrictionTransactionV1(';
 		result += 'signature: "${signature.toString()}", ';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'type: "${type.toString()}", ';
 		result += 'fee: "${fee.toString()}", ';
@@ -12096,7 +12117,7 @@ class EmbeddedAccountMosaicRestrictionTransactionV1 implements ISerializable, II
 	String toString() {
 		var result = 'EmbeddedAccountMosaicRestrictionTransactionV1(';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'type: "${type.toString()}", ';
 		result += 'restrictionFlags: "${restrictionFlags.toString()}", ';
@@ -12300,7 +12321,7 @@ class AccountOperationRestrictionTransactionV1 implements ISerializable, ITransa
 		var result = 'AccountOperationRestrictionTransactionV1(';
 		result += 'signature: "${signature.toString()}", ';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'type: "${type.toString()}", ';
 		result += 'fee: "${fee.toString()}", ';
@@ -12473,7 +12494,7 @@ class EmbeddedAccountOperationRestrictionTransactionV1 implements ISerializable,
 	String toString() {
 		var result = 'EmbeddedAccountOperationRestrictionTransactionV1(';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'type: "${type.toString()}", ';
 		result += 'restrictionFlags: "${restrictionFlags.toString()}", ';
@@ -12671,15 +12692,15 @@ class MosaicAddressRestrictionTransactionV1 implements ISerializable, ITransacti
 		var result = 'MosaicAddressRestrictionTransactionV1(';
 		result += 'signature: "${signature.toString()}", ';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'type: "${type.toString()}", ';
 		result += 'fee: "${fee.toString()}", ';
 		result += 'deadline: "${deadline.toString()}", ';
 		result += 'mosaicId: "${mosaicId.toString()}", ';
-		result += 'restrictionKey: "0x${restrictionKey.toRadixString(16).padLeft(8 * 2, '0').toUpperCase()}", ';
-		result += 'previousRestrictionValue: "0x${previousRestrictionValue.toRadixString(16).padLeft(8 * 2, '0').toUpperCase()}", ';
-		result += 'newRestrictionValue: "0x${newRestrictionValue.toRadixString(16).padLeft(8 * 2, '0').toUpperCase()}", ';
+		result += 'restrictionKey: "0x${intToHex(restrictionKey)}", ';
+		result += 'previousRestrictionValue: "0x${intToHex(previousRestrictionValue)}", ';
+		result += 'newRestrictionValue: "0x${intToHex(newRestrictionValue)}", ';
 		result += 'targetAddress: "${targetAddress.toString()}", ';
 		result += ')';
 		return result;
@@ -12840,13 +12861,13 @@ class EmbeddedMosaicAddressRestrictionTransactionV1 implements ISerializable, II
 	String toString() {
 		var result = 'EmbeddedMosaicAddressRestrictionTransactionV1(';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'type: "${type.toString()}", ';
 		result += 'mosaicId: "${mosaicId.toString()}", ';
-		result += 'restrictionKey: "0x${restrictionKey.toRadixString(16).padLeft(8 * 2, '0').toUpperCase()}", ';
-		result += 'previousRestrictionValue: "0x${previousRestrictionValue.toRadixString(16).padLeft(8 * 2, '0').toUpperCase()}", ';
-		result += 'newRestrictionValue: "0x${newRestrictionValue.toRadixString(16).padLeft(8 * 2, '0').toUpperCase()}", ';
+		result += 'restrictionKey: "0x${intToHex(restrictionKey)}", ';
+		result += 'previousRestrictionValue: "0x${intToHex(previousRestrictionValue)}", ';
+		result += 'newRestrictionValue: "0x${intToHex(newRestrictionValue)}", ';
 		result += 'targetAddress: "${targetAddress.toString()}", ';
 		result += ')';
 		return result;
@@ -12882,7 +12903,7 @@ class MosaicRestrictionType implements ISerializable {
 	static final GT = MosaicRestrictionType(5);
 	static final GE = MosaicRestrictionType(6);
 
-	final int value;
+	int value = 0;
 
 	static final _flags = {
 		0: 'NONE',
@@ -12894,7 +12915,9 @@ class MosaicRestrictionType implements ISerializable {
 		6: 'GE',
 	};
 
-	MosaicRestrictionType([int? _value]) : value = _value ?? 0;
+	MosaicRestrictionType([int? _value]) {
+		value = _value ?? 0;
+	}
 
 	@override
 	int get size {
@@ -13126,16 +13149,16 @@ class MosaicGlobalRestrictionTransactionV1 implements ISerializable, ITransactio
 		var result = 'MosaicGlobalRestrictionTransactionV1(';
 		result += 'signature: "${signature.toString()}", ';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'type: "${type.toString()}", ';
 		result += 'fee: "${fee.toString()}", ';
 		result += 'deadline: "${deadline.toString()}", ';
 		result += 'mosaicId: "${mosaicId.toString()}", ';
 		result += 'referenceMosaicId: "${referenceMosaicId.toString()}", ';
-		result += 'restrictionKey: "0x${restrictionKey.toRadixString(16).padLeft(8 * 2, '0').toUpperCase()}", ';
-		result += 'previousRestrictionValue: "0x${previousRestrictionValue.toRadixString(16).padLeft(8 * 2, '0').toUpperCase()}", ';
-		result += 'newRestrictionValue: "0x${newRestrictionValue.toRadixString(16).padLeft(8 * 2, '0').toUpperCase()}", ';
+		result += 'restrictionKey: "0x${intToHex(restrictionKey)}", ';
+		result += 'previousRestrictionValue: "0x${intToHex(previousRestrictionValue)}", ';
+		result += 'newRestrictionValue: "0x${intToHex(newRestrictionValue)}", ';
 		result += 'previousRestrictionType: "${previousRestrictionType.toString()}", ';
 		result += 'newRestrictionType: "${newRestrictionType.toString()}", ';
 		result += ')';
@@ -13317,14 +13340,14 @@ class EmbeddedMosaicGlobalRestrictionTransactionV1 implements ISerializable, IIn
 	String toString() {
 		var result = 'EmbeddedMosaicGlobalRestrictionTransactionV1(';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'type: "${type.toString()}", ';
 		result += 'mosaicId: "${mosaicId.toString()}", ';
 		result += 'referenceMosaicId: "${referenceMosaicId.toString()}", ';
-		result += 'restrictionKey: "0x${restrictionKey.toRadixString(16).padLeft(8 * 2, '0').toUpperCase()}", ';
-		result += 'previousRestrictionValue: "0x${previousRestrictionValue.toRadixString(16).padLeft(8 * 2, '0').toUpperCase()}", ';
-		result += 'newRestrictionValue: "0x${newRestrictionValue.toRadixString(16).padLeft(8 * 2, '0').toUpperCase()}", ';
+		result += 'restrictionKey: "0x${intToHex(restrictionKey)}", ';
+		result += 'previousRestrictionValue: "0x${intToHex(previousRestrictionValue)}", ';
+		result += 'newRestrictionValue: "0x${intToHex(newRestrictionValue)}", ';
 		result += 'previousRestrictionType: "${previousRestrictionType.toString()}", ';
 		result += 'newRestrictionType: "${newRestrictionType.toString()}", ';
 		result += ')';
@@ -13534,14 +13557,14 @@ class TransferTransactionV1 implements ISerializable, ITransaction {
 		var result = 'TransferTransactionV1(';
 		result += 'signature: "${signature.toString()}", ';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'type: "${type.toString()}", ';
 		result += 'fee: "${fee.toString()}", ';
 		result += 'deadline: "${deadline.toString()}", ';
 		result += 'recipientAddress: "${recipientAddress.toString()}", ';
 		result += 'mosaics: "${mosaics.map((e) => e.toString()).toList()}", ';
-		result += 'message: "${hex.encode(message.toList()).toUpperCase()}", ';
+		result += 'message: "${bytesToHex(message)}", ';
 		result += ')';
 		return result;
 	}
@@ -13716,12 +13739,12 @@ class EmbeddedTransferTransactionV1 implements ISerializable, IInnerTransaction 
 	String toString() {
 		var result = 'EmbeddedTransferTransactionV1(';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
-		result += 'version: "0x${version.toRadixString(16).padLeft(1 * 2, '0').toUpperCase()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
 		result += 'network: "${network.toString()}", ';
 		result += 'type: "${type.toString()}", ';
 		result += 'recipientAddress: "${recipientAddress.toString()}", ';
 		result += 'mosaics: "${mosaics.map((e) => e.toString()).toList()}", ';
-		result += 'message: "${hex.encode(message.toList()).toUpperCase()}", ';
+		result += 'message: "${bytesToHex(message)}", ';
 		result += ')';
 		return result;
 	}
@@ -13830,7 +13853,7 @@ class EmbeddedTransactionFactory implements ISerializable {
 	dynamic deserialize(dynamic payload) {
 		if(payload is String){
 			tryHexString(payload);
-			payload = hex.decode(payload);
+			payload = hexToBytes(payload);
 		}
 		Uint8List buffer = payload.buffer.asUint8List();
 		var parent = EmbeddedTransaction().deserialize(buffer);
@@ -13919,7 +13942,7 @@ class BlockFactory implements ISerializable {
 	dynamic deserialize(dynamic payload) {
 		if(payload is String){
 			tryHexString(payload);
-			payload = hex.decode(payload);
+			payload = hexToBytes(payload);
 		}
 		Uint8List buffer = payload.buffer.asUint8List();
 		var parent = Block().deserialize(buffer);
@@ -13968,7 +13991,7 @@ class ReceiptFactory implements ISerializable {
 	dynamic deserialize(dynamic payload) {
 		if(payload is String){
 			tryHexString(payload);
-			payload = hex.decode(payload);
+			payload = hexToBytes(payload);
 		}
 		Uint8List buffer = payload.buffer.asUint8List();
 		var parent = Receipt().deserialize(buffer);

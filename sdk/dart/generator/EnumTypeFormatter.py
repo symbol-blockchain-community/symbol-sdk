@@ -31,7 +31,7 @@ class EnumTypeFormatter(AbstractTypeFormatter):
         )
     )
 		fields.append('\n')
-		fields.append('final int value;\n')
+		fields.append('int value = 0;\n')
 		fields.append('\n')
 		flags = 'static final _flags = {\n'
 		flags += indent(''.join(
@@ -47,8 +47,8 @@ class EnumTypeFormatter(AbstractTypeFormatter):
 	def get_ctor_descriptor(self):
 		method_name = f'{self.typename}'
 		arguments = ['[int? _value]']
-		body = f': value = _value ?? {self.enum_type.values[0].value};\n'
-		return MethodDescriptor(method_name=method_name, body=body, arguments=arguments, is_enum_ctor=True)
+		body = f'value = _value ?? {self.enum_type.values[0].value};\n'
+		return MethodDescriptor(method_name=method_name, body=body, arguments=arguments)
 	
 	def get_deserialize_descriptor(self):
 		body = 'var byteData = ByteData.sublistView(payload);\n'

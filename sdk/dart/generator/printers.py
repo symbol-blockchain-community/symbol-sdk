@@ -58,8 +58,7 @@ class IntPrinter(Printer):
 
 	@staticmethod
 	def to_string(field_name, size):
-		return f'0x${{{field_name}.toRadixString(16).padLeft({size} * 2, \'0\').toUpperCase()}}'
-
+		return f'0x${{intToHex({field_name})}}'
 
 class TypedArrayPrinter(Printer):
 	def __init__(self, descriptor, name=None):
@@ -198,8 +197,6 @@ class ArrayPrinter(Printer):
 
 		return size
 
-		return size
-
 	def load(self, buffer_name='buffer'):
 		return f'Uint8List.fromList({buffer_name})'
 
@@ -213,7 +210,7 @@ class ArrayPrinter(Printer):
 
 	@staticmethod
 	def to_string(field_name):
-		return f'${{hex.encode({field_name}.toList()).toUpperCase()}}'
+		return f'${{bytesToHex({field_name})}}'
 
 class BuiltinPrinter(Printer):
 	def __init__(self, descriptor, name=None):
