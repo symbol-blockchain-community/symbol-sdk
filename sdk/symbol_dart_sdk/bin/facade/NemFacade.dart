@@ -7,49 +7,27 @@ import '../nem/KeyPair.dart';
 import '../nem/models.dart' as nc;
 import '../Bip32.dart';
 import '../utils/converter.dart';
-import 'dart:mirrors';
+import '../nem/TransactionFactory.dart';
 
-nc.NonVerifiableTransaction toNonVerifiableTransaction(ITransaction transaction) {
-  var nonVerifiableClassName = transaction.runtimeType.toString();
-  if (!nonVerifiableClassName.startsWith('NonVerifiable')) {
-    nonVerifiableClassName = 'NonVerifiable$nonVerifiableClassName';
-  }
-
-  var mirrorSystem = currentMirrorSystem();
-  var libraryMirror = mirrorSystem.findLibrary(Symbol('nc'));
-  var classMirror = libraryMirror.declarations[Symbol(nonVerifiableClassName)] as ClassMirror;
-  var nonVerifiableTransaction = classMirror.newInstance(Symbol(''), []).reflectee as nc.NonVerifiableTransaction;
-
-  var transactionMirror = reflect(transaction);
-  var nonVerifiableTransactionMirror = reflect(nonVerifiableTransaction);
-  classMirror.declarations.values.whereType<VariableMirror>().forEach((variableMirror) {
-    if (variableMirror.isPrivate) return;
-    var value = transactionMirror.getField(variableMirror.simpleName).reflectee;
-    nonVerifiableTransactionMirror.setField(variableMirror.simpleName, value);
-  });
-
-  return nonVerifiableTransaction;
-}
-
-class SymbolFacade {
+class NemFacade {
   Network network;
-  SymbolFacade(Network network):
+  NemFacade(Network network):
     network = network;
 
   Hash256 hashTransaction(ITransaction transaction) {
-    var nonVerifiableTransaction = toNonVerifiableTransaction(transaction);
+    var nonVerifiableTransaction = TransactionFactory.toNonVerifiableTransaction(transaction);
     final hasher = pc.KeccakDigest(256);
     var hash = hasher.process(nonVerifiableTransaction.serialize());
     return Hash256(hash);
   }
 
   Signature signTransaction(KeyPair keyPair, ITransaction transaction) {
-    var nonVerifiableTransaction = toNonVerifiableTransaction(transaction);
+    var nonVerifiableTransaction = TransactionFactory.toNonVerifiableTransaction(transaction);
     return keyPair.sign(nonVerifiableTransaction.serialize());
   }
 
   bool verifyTransaction(ITransaction transaction, Signature signature) {
-    var nonVerifiableTransaction = toNonVerifiableTransaction(transaction);
+    var nonVerifiableTransaction = TransactionFactory.toNonVerifiableTransaction(transaction);
     return Verifier(PublicKey(transaction.signerPublicKey.bytes)).verify(nonVerifiableTransaction.serialize(), signature);
   }
 
@@ -65,7 +43,7 @@ class SymbolFacade {
 
   String attachSignature(ITransaction transaction, Signature signature) {
 		transaction.signature = nc.Signature(signature.bytes);
-    var transactionHex = bytesToHex(toNonVerifiableTransaction(transaction).serialize());
+    var transactionHex = bytesToHex(TransactionFactory.toNonVerifiableTransaction(transaction).serialize());
 		var signatureHex = signature.toString();
 		var jsonPayload = '{"data": "$transactionHex", "signature": "$signatureHex"}';
 		return jsonPayload;

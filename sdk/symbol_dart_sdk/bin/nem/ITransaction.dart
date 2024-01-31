@@ -5,6 +5,9 @@ import 'dart:typed_data';
 interface class ITransaction implements IInnerTransaction {
   Signature signature = Signature();
   PublicKey signerPublicKey = PublicKey();
+  TransactionType type = TransactionType.TRANSFER;
+  int version = 0;
+
   @override
   int get size{
     throw UnimplementedError('unimplement size');
