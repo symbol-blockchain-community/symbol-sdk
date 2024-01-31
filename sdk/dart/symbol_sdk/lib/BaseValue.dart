@@ -8,31 +8,29 @@ class BaseValue {
 
   BaseValue(this.size, this.value, {dynamic tag})
       : _tag = [tag] {
-
     if (value is String) {
       try {
-        value = BigInt.parse(value).toSigned(size * 8).toInt();
+        if(size == 8) {
+          value = BigInt.parse(value);
+        } else {
+          value = int.parse(value);
+        }
       } catch (_) {
         tryHexString(value);
         var decoded = hexToBytes(value);
         var byteData = ByteData.view(Uint8List.fromList(decoded.reversed.toList()).buffer);
         switch(decoded.length){
           case 1:
-            value = byteData.getInt8(0);
+            value = byteData.getUint8(0);
             break;
           case 2:
-            value = byteData.getInt16(0, Endian.little);
+            value = byteData.getUint16(0, Endian.little);
             break;
           case 4:
-            value = byteData.getInt32(0, Endian.little);
-            break;
-          default:
-            value = byteData.getInt64(0, Endian.little);
+            value = byteData.getUint32(0, Endian.little);
             break;
         }
       }
-    } else if (value is int) {
-      value = unsignedToSigned(value, size);
     }
     
     // check bounds

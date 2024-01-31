@@ -1,11 +1,11 @@
-import 'package:symbol_sdk/index.dart' as sdk;
+import 'package:symbol_sdk/index.dart';
+import 'package:symbol_sdk/CryptoTypes.dart' as ct;
 import 'package:symbol_sdk/symbol/index.dart';
-import 'package:symbol_sdk/utils/converter.dart';
 import 'package:http/http.dart' as http;
 
 void main(){
-  var facade = sdk.SymbolFacade(Network.TESTNET);
-  var keyPair = KeyPair(sdk.PrivateKey('PRIVATE_KEY'));
+  var facade = SymbolFacade(Network.TESTNET);
+  var keyPair = KeyPair(ct.PrivateKey('PRIVATE_KEY'));
   var tx = TransferTransactionV1(
     network: NetworkType.TESTNET,
     deadline: Timestamp(facade.network.fromDatetime(DateTime.now().toUtc()).addHours(2).timestamp),
