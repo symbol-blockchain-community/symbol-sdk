@@ -1,5 +1,3 @@
-library symbol.key_pair;
-
 import '../CryptoTypes.dart';
 import '../utils/arrayHelpers.dart';
 import 'dart:typed_data';

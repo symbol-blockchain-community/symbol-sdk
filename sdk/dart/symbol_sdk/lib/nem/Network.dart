@@ -1,5 +1,3 @@
-library nem.network;
-
 import '../Network.dart' as basic_network;
 import '../NetworkTimestamp.dart' as basic_timestamp;
 import '../ByteArray.dart';

@@ -1,5 +1,3 @@
-library nem.message_encorder;
-
 import 'package:pinenacl/api.dart';
 import 'package:pinenacl/ed25519.dart';
 import 'package:pinenacl/encoding.dart';

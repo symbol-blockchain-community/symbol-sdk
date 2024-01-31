@@ -1,4 +1,4 @@
-library nem.models;
+
 
 import '../BaseValue.dart';
 import '../ByteArray.dart';

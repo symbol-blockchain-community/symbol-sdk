@@ -1,5 +1,3 @@
-library symbol.shared_key;
-
 import '../CryptoTypes.dart';
 import '../crypto/tweetNacl.dart' as tweet_nacl;
 import '../SharedKey.dart'

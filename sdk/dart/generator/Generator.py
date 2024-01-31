@@ -35,9 +35,7 @@ def generate_files(ast_models, output_directory: Path):
 	output_directory.mkdir(exist_ok=True)
 
 	with open(output_directory / 'models.dart', 'w', encoding='utf8', newline='\n') as output_file:
-		chain = 'library symbol.models;' if 'symbol' in (Path(output_directory).name) else 'library nem.models;'
 		output_file.write(
-			chain +
 			'''\n\nimport '../BaseValue.dart';
 import '../ByteArray.dart';
 import '../models/ISerializable.dart';

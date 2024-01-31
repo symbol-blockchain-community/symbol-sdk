@@ -1,5 +1,3 @@
-library symbol.i_transaction;
-
 import '../models/IInnerTransaction.dart';
 import './models.dart';
 import 'dart:typed_data';

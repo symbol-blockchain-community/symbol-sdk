@@ -1,5 +1,3 @@
-library nem.shared_key;
-
 import 'dart:typed_data';
 import '../CryptoTypes.dart';
 import '../SharedKey.dart';
