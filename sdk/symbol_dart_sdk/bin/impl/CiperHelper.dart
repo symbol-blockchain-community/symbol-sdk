@@ -1,6 +1,5 @@
 import 'package:cryptography/cryptography.dart';
 import '../CryptoTypes.dart' as ct;
-import '../symbol/KeyPair.dart' as sc;
 import 'dart:typed_data';
 import '../Cipher.dart';
 import '../crypto/tweetNacl.dart' as tweet_nacl;
@@ -29,8 +28,8 @@ Map<String, Uint8List> decode(int tagSize, int ivSize, Uint8List encodedMessage)
 }
 
 Future<Uint8List> decodeAesGcm(
-    Future<ct.SharedKey256> Function(sc.KeyPair, ct.PublicKey) deriveSharedKey,
-    sc.KeyPair keyPair,
+    Future<ct.SharedKey256> Function(dynamic, ct.PublicKey) deriveSharedKey,
+    dynamic keyPair,
     ct.PublicKey recipientPublicKey,
     Uint8List encodedMessage) async {
   final decoded = decode(AesGcmCipher.TAG_SIZE, GCM_IV_SIZE, encodedMessage);
@@ -43,8 +42,8 @@ Future<Uint8List> decodeAesGcm(
 }
 
 Future<Map<String, dynamic>> encodeAesGcm (
-    Future<ct.SharedKey256> Function(sc.KeyPair, ct.PublicKey) deriveSharedKey,
-    sc.KeyPair keyPair,
+    Future<ct.SharedKey256> Function(dynamic, ct.PublicKey) deriveSharedKey,
+    dynamic keyPair,
     ct.PublicKey recipientPublicKey,
     Uint8List message,
     [Uint8List? iv]) async {
