@@ -1,5 +1,5 @@
 import './CryptoTypes.dart' as ct;
-import '../bin/crypto/tweetNacl.dart' as tweet_nacl;
+import 'package:symbol_sdk/crypto/tweetNacl.dart' as tweet_nacl;
 import 'package:cryptography/cryptography.dart';
 
 import 'dart:typed_data';

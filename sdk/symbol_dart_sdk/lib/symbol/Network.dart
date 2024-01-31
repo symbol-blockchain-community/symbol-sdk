@@ -1,3 +1,5 @@
+library symbol.network;
+
 import '../Network.dart' as basic_network;
 import '../NetworkTimestamp.dart' as basic_timestamp;
 import '../ByteArray.dart';
@@ -19,7 +21,7 @@ class NetworkTimestamp extends basic_timestamp.NetworkTimestamp {
   }
 }
 
-class Address extends ByteArray {
+class SymbolAddress extends ByteArray {
   // Byte size of raw address.
   static const int SIZE = 24;
 
@@ -27,14 +29,14 @@ class Address extends ByteArray {
   static const int ENCODED_SIZE = 39;
 
   // Creates a Symbol address.
-  Address(dynamic addressInput) : super(SIZE, _extractAddressBytes(addressInput));
+  SymbolAddress(dynamic addressInput) : super(SIZE, _extractAddressBytes(addressInput));
 
   static Uint8List _extractAddressBytes(dynamic addressInput) {
     if (addressInput is String){
       return base32.decode('${addressInput}A').sublist(0, SIZE);
     }
 
-    if (addressInput is Address){
+    if (addressInput is SymbolAddress){
       return addressInput.bytes;
     }
 
@@ -81,7 +83,7 @@ class Network extends basic_network.Network {
       () => SHA3Digest(256),
       (Uint8List addressWithoutChecksum, Uint8List checksum) =>
           Uint8List.fromList([...addressWithoutChecksum, ...checksum.sublist(0, 3)]),
-      Address,
+      SymbolAddress,
       (int timestamp) => NetworkTimestamp(timestamp),
     );
 }

@@ -1,9 +1,9 @@
 import 'dart:io';
 import 'dart:convert';
 import 'package:test/test.dart';
-import '../../../bin/symbol/KeyPair.dart';
-import '../../../bin/utils//converter.dart';
-import '../../../bin/Bip32.dart';
+import 'package:symbol_sdk/symbol/KeyPair.dart';
+import 'package:symbol_sdk/utils/converter.dart';
+import 'package:symbol_sdk/Bip32.dart';
 
 void nodeTest(Bip32Node node, List<dynamic> children, String rootPublicKey, List<List<int>> childrenPath, List<String> childrenPublicKey){
   var rootKeyPair = KeyPair(node.privateKey);

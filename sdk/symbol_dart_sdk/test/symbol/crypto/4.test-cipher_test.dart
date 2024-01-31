@@ -2,11 +2,11 @@ import 'dart:io';
 import 'dart:convert';
 import 'package:test/test.dart';
 import 'package:convert/convert.dart';
-import '../../../bin/symbol/KeyPair.dart';
-import '../../../bin/symbol/SharedKey.dart';
-import '../../../bin/CryptoTypes.dart';
-import '../../../bin/impl/CiperHelper.dart';
-import '../../../bin/utils/converter.dart';
+import 'package:symbol_sdk/symbol/KeyPair.dart';
+import 'package:symbol_sdk/symbol/SharedKey.dart';
+import 'package:symbol_sdk/CryptoTypes.dart';
+import 'package:symbol_sdk/impl/CiperHelper.dart';
+import 'package:symbol_sdk/utils/converter.dart';
 
 void main() async {
   var file = File('../../../../../symbol/tests/vectors/symbol/crypto/4.test-cipher.json');

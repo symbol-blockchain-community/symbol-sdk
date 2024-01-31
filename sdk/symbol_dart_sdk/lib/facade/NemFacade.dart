@@ -1,8 +1,54 @@
-import './models.dart';
-import './ITransaction.dart';
+import 'dart:typed_data';
+import 'package:pointycastle/export.dart' as pc;
+import '../nem/ITransaction.dart';
+import '../nem/Network.dart';
+import '../CryptoTypes.dart' as ct;
+import '../nem/KeyPair.dart';
+import '../nem/models.dart';
+import '../Bip32.dart';
+import '../utils/converter.dart';
 import '../models/IInnerTransaction.dart';
 
-class TransactionFactory {
+class NemFacade {
+  Network network;
+  NemFacade(Network network):
+    network = network;
+
+  ct.Hash256 hashTransaction(ITransaction transaction) {
+    var nonVerifiableTransaction = toNonVerifiableTransaction(transaction);
+    final hasher = pc.KeccakDigest(256);
+    var hash = hasher.process(nonVerifiableTransaction.serialize());
+    return ct.Hash256(hash);
+  }
+
+  ct.Signature signTransaction(KeyPair keyPair, ITransaction transaction) {
+    var nonVerifiableTransaction = toNonVerifiableTransaction(transaction);
+    return keyPair.sign(nonVerifiableTransaction.serialize());
+  }
+
+  bool verifyTransaction(ITransaction transaction, ct.Signature signature) {
+    var nonVerifiableTransaction = toNonVerifiableTransaction(transaction);
+    return Verifier(ct.PublicKey(transaction.signerPublicKey.bytes)).verify(nonVerifiableTransaction.serialize(), signature);
+  }
+
+  List<int> bip32Path(int accountId) {
+    return [44, 'mainnet' == network.name ? 4343 : 1, accountId, 0, 0];
+  }
+
+  static KeyPair bip32NodeToKeyPair(Bip32Node bip32Node) {
+    // BIP32 private keys should be used as is, so reverse here to counteract reverse in KeyPair
+    var reversedPrivateKeyBytes = Uint8List.fromList(bip32Node.privateKey.bytes.reversed.toList());
+    return KeyPair(ct.PrivateKey(reversedPrivateKeyBytes));
+  }
+
+  static String attachSignature(ITransaction transaction, Signature signature) {
+		transaction.signature = Signature(signature.bytes);
+    var transactionHex = bytesToHex(toNonVerifiableTransaction(transaction).serialize());
+		var signatureHex = signature.toString();
+		var jsonPayload = '{"data": "$transactionHex", "signature": "$signatureHex"}';
+		return jsonPayload;
+	}
+
   static IInnerTransaction toNonVerifiableTransaction(ITransaction transaction) {
     switch((transaction.type.value, transaction.version)) {
       case (257, 1):

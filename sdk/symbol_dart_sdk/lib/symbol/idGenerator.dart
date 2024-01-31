@@ -5,7 +5,7 @@ import 'package:pointycastle/export.dart';
 
 final NAMESPACE_FLAG = 1 << 63;
 
-int generateMosaicId(Address ownerAddress, int nonce) {
+int generateMosaicId(SymbolAddress ownerAddress, int nonce) {
   final hasher = SHA3Digest(256);
   hasher.update(intToBytes(nonce, 4), 0, 4);
   hasher.update(ownerAddress.bytes, 0, ownerAddress.bytes.length);

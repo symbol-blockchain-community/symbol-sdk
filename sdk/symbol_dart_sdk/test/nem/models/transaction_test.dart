@@ -1,9 +1,9 @@
 import 'dart:typed_data';
 
 import 'package:test/test.dart';
-import '../../../bin/nem/models.dart';
-import '../../../bin/utils/converter.dart';
-import '../../../bin/nem/ITransaction.dart';
+import 'package:symbol_sdk/nem/models.dart';
+import 'package:symbol_sdk/utils/converter.dart';
+import 'package:symbol_sdk/nem/ITransaction.dart';
 
 void main() async {
   group('transaction test', () => {  

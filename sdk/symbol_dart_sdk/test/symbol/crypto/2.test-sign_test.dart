@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:test/test.dart';
 import 'package:convert/convert.dart';
-import '../../../bin/symbol/KeyPair.dart';
-import '../../../bin/CryptoTypes.dart';
+import 'package:symbol_sdk/symbol/KeyPair.dart';
+import 'package:symbol_sdk/CryptoTypes.dart';
 
 void main() async {
   var file = File('../../../../../symbol/tests/vectors/symbol/crypto/2.test-sign.json');

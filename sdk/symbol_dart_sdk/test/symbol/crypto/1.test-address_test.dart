@@ -1,9 +1,9 @@
 import 'dart:io';
 import 'dart:convert';
 import 'package:test/test.dart';
-import '../../../bin/utils//converter.dart';
-import '../../../bin/CryptoTypes.dart';
-import '../../../bin/symbol/Network.dart';
+import 'package:symbol_sdk/utils/converter.dart';
+import 'package:symbol_sdk/CryptoTypes.dart';
+import 'package:symbol_sdk/symbol/Network.dart';
 
 void main() async {
   var file = File('../../../../../symbol/tests/vectors/symbol/crypto/1.test-address.json');

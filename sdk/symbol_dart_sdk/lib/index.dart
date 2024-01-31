@@ -16,10 +16,9 @@ export './utils/converter.dart';
 export './impl/CiperHelper.dart';
 export './models/IInnerTransaction.dart';
 export './models/ISerializable.dart';
-export './symbol/ITransaction.dart' show ITransactionSymbol;
-export './nem/ITransaction.dart' show ITransactionNem;
-export './symbol/models.dart' show SymbolModels;
-export './nem/models.dart' show NemModels;
+export './symbol/VotingKeysGenerator.dart';
+export './symbol/merkle.dart';
+export './symbol/idGenerator.dart';
 
 void main(){
   // 何もしない

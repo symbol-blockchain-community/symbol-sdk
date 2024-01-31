@@ -1,7 +1,7 @@
 import 'package:test/test.dart';
-import '../../../bin/symbol/models.dart';
-import '../../../bin/symbol/ITransaction.dart';
-import '../../../bin/utils/converter.dart';
+import 'package:symbol_sdk/symbol/models.dart';
+import 'package:symbol_sdk/symbol/ITransaction.dart';
+import 'package:symbol_sdk/utils/converter.dart';
 
 void main() async {
 	group('transaction test', () => {  

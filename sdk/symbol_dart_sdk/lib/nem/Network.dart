@@ -1,3 +1,5 @@
+library nem.network;
+
 import '../Network.dart' as basic_network;
 import '../NetworkTimestamp.dart' as basic_timestamp;
 import '../ByteArray.dart';
@@ -14,7 +16,7 @@ class NetworkTimestamp extends basic_timestamp.NetworkTimestamp {
   }
 }
 
-class Address extends ByteArray {
+class NemAddress extends ByteArray {
   // Byte size of raw address.
   static const int SIZE = 25;
 
@@ -22,14 +24,14 @@ class Address extends ByteArray {
   static const int ENCODED_SIZE = 40;
 
   // Creates a Symbol address.
-  Address(dynamic addressInput) : super(SIZE, _extractAddressBytes(addressInput));
+  NemAddress(dynamic addressInput) : super(SIZE, _extractAddressBytes(addressInput));
 
   static Uint8List _extractAddressBytes(dynamic addressInput) {
     if (addressInput is String){
       return base32.decode('$addressInput');
     }
 
-    if (addressInput is Address){
+    if (addressInput is NemAddress){
       return addressInput.bytes;
     }
 
@@ -70,7 +72,7 @@ class Network extends basic_network.Network {
       () => KeccakDigest(256),
       (Uint8List addressWithoutChecksum, Uint8List checksum) =>
           Uint8List.fromList([...addressWithoutChecksum, ...checksum]),
-      Address,
+      NemAddress,
       (int timestamp) => NetworkTimestamp(timestamp),
     );
 }

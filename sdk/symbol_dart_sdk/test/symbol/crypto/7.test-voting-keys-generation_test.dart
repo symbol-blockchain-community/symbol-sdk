@@ -1,10 +1,10 @@
 import 'dart:io';
 import 'dart:convert';
 import 'package:test/test.dart';
-import '../../../bin/symbol/KeyPair.dart';
-import '../../../bin/CryptoTypes.dart';
-import '../../../bin/symbol/VotingKeysGenerator.dart';
-import '../../../bin/utils/converter.dart';
+import 'package:symbol_sdk/symbol/KeyPair.dart';
+import 'package:symbol_sdk/CryptoTypes.dart';
+import 'package:symbol_sdk/symbol/VotingKeysGenerator.dart';
+import 'package:symbol_sdk/utils/converter.dart';
 
 void main() async {
   var file = File('../../../../../symbol/tests/vectors/symbol/crypto/7.test-voting-keys-generation.json');
