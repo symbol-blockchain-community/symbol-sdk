@@ -1,7 +1,6 @@
-name: symbol_dart_sdk
-description: A simple command-line application.
-# version: 1.0.0
-# homepage: https://www.example.com
+name: symbol_sdk
+description: Symbol and Nem sdk for Dart and Flutter
+version: 1.0.0
 
 environment:
   sdk: '>=3.2.5 <4.0.0'
