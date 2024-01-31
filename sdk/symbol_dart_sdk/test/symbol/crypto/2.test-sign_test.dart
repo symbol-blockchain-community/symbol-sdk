@@ -6,8 +6,8 @@ import 'package:convert/convert.dart';
 import '../../../bin/symbol/KeyPair.dart';
 import '../../../bin/CryptoTypes.dart';
 
-void signTest(String path) async {
-  var file = File(path);
+void main() async {
+  var file = File('../../../../../symbol/tests/vectors/symbol/crypto/2.test-sign.json');
   var contents = await file.readAsString();
   var jsonMap = jsonDecode(contents);
   (jsonMap as List).forEach((element) {
@@ -22,7 +22,4 @@ void signTest(String path) async {
       expect(hex.encode(signed.bytes).toUpperCase(), signature);
     });
   });
-}
-void main() async {
-  signTest('../../../../../symbol/tests/vectors/symbol/crypto/2.test-sign.json');
 }

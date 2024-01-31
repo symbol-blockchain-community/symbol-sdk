@@ -2,12 +2,12 @@ import 'dart:io';
 import 'dart:convert';
 import 'package:test/test.dart';
 import 'package:convert/convert.dart';
-import '../../../bin/symbol/KeyPair.dart';
-import '../../../bin/symbol/SharedKey.dart';
+import '../../../bin/nem/KeyPair.dart';
+import '../../../bin/nem/SharedKey.dart';
 import '../../../bin/CryptoTypes.dart';
 
-void signTest(String path) async {
-  var file = File(path);
+void main() async {
+  var file = File('../../../../../symbol/tests/vectors/nem/crypto/3.test-derive-hkdf.json');
   var contents = await file.readAsString();
   var jsonMap = jsonDecode(contents);
   (jsonMap as List).forEach((element) {
@@ -20,7 +20,4 @@ void signTest(String path) async {
       expect(hex.encode(result.bytes).toUpperCase(), sharedKey);
     });
   });
-}
-void main() async {
-  signTest('../../../../../symbol/tests/vectors/symbol/crypto/3.test-derive-hkdf.json');
 }

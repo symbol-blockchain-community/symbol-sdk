@@ -1,7 +1,5 @@
 import 'dart:typed_data';
 import '../CryptoTypes.dart';
-import '../symbol/KeyPair.dart';
-import '../crypto/tweetNacl.dart' as tweet_nacl;
 import '../SharedKey.dart';
 import 'package:pointycastle/export.dart' as pointy_castle;
 
@@ -14,8 +12,8 @@ void cryptoHash(Uint8List out, Uint8List m) {
   }
 }
 
-final deriveSharedKeyImpl = deriveSharedKeyFactory('catapult', tweet_nacl.TweetNaCl.crypto_hash);
+final deriveSharedKeyImpl = deriveSharedKeyFactory('nem-nis1', cryptoHash);
 
 Future<SharedKey256> deriveSharedKey(dynamic keyPair, PublicKey otherPublicKey) {
-  return deriveSharedKeyImpl(keyPair.privateKey.bytes.reversed, otherPublicKey);
+  return deriveSharedKeyImpl(Uint8List.fromList(keyPair.privateKey.bytes.reversed.toList()), otherPublicKey);
 }

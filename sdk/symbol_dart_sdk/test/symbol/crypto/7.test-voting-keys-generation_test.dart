@@ -6,8 +6,8 @@ import '../../../bin/CryptoTypes.dart';
 import '../../../bin/symbol/VotingKeysGenerator.dart';
 import '../../../bin/utils/converter.dart';
 
-void votingKeyGeneratorTest(String path) async {
-  var file = File(path);
+void main() async {
+  var file = File('../../../../../symbol/tests/vectors/symbol/crypto/7.test-voting-keys-generation.json');
   var contents = await file.readAsString();
   var jsonMap = jsonDecode(contents);
   (jsonMap as List).forEach((element) {
@@ -21,7 +21,4 @@ void votingKeyGeneratorTest(String path) async {
       expect(bytesToHex(key.sublist(0, 80)), (expectedFileHex as String).substring(0, 160));
     });
   });
-}
-void main() async {
-  votingKeyGeneratorTest('../../../../../symbol/tests/vectors/symbol/crypto/7.test-voting-keys-generation.json');
 }

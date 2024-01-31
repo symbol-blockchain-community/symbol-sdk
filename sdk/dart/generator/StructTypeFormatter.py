@@ -459,7 +459,7 @@ class StructFormatter(AbstractTypeFormatter):
 		for field in fields_iter:
 			body += self.generate_serialize_field(field)
 
-		body += 'return buffer.buffer.asUint8List();'
+		body += 'return buffer;'
 		return MethodDescriptor(body=body)
 
 	def generate_size_field(self, field):

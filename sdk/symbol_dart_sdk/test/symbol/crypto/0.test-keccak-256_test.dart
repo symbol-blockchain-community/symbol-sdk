@@ -5,8 +5,8 @@ import 'package:convert/convert.dart';
 import 'dart:typed_data';
 import 'package:pointycastle/export.dart';
 
-void signTest(String path) async {
-  var file = File(path);
+void main() async {
+  var file = File('../../../../../symbol/tests/vectors/symbol/crypto/0.test-keccak-256.json');
   var contents = await file.readAsString();
   var jsonMap = jsonDecode(contents);
   final digest = KeccakDigest(256);
@@ -17,7 +17,4 @@ void signTest(String path) async {
       expect(element['hash'], hash);
     });
   });
-}
-void main() async {
-  signTest('../../../../../symbol/tests/vectors/symbol/crypto/0.test-keccak-256.json');
 }

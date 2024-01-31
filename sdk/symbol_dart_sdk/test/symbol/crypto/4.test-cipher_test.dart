@@ -8,8 +8,8 @@ import '../../../bin/CryptoTypes.dart';
 import '../../../bin/impl/CiperHelper.dart';
 import '../../../bin/utils/converter.dart';
 
-void signTest(String path) async {
-  var file = File(path);
+void main() async {
+  var file = File('../../../../../symbol/tests/vectors/symbol/crypto/4.test-cipher.json');
   var contents = await file.readAsString();
   var jsonMap = jsonDecode(contents);
   (jsonMap as List).forEach((element) {
@@ -26,7 +26,4 @@ void signTest(String path) async {
       expect(hex.encode(result['cipherText']).toUpperCase(), cipherText);
     });
   });
-}
-void main() async {
-  signTest('../../../../../symbol/tests/vectors/symbol/crypto/4.test-cipher.json');
 }

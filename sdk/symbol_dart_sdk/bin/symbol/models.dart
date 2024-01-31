@@ -448,7 +448,7 @@ class Mosaic implements ISerializable {
 		currentPos += mosaicId.size;
 		buffer.setRange(currentPos, currentPos + amount.size, amount.serialize());
 		currentPos += amount.size;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -512,7 +512,7 @@ class UnresolvedMosaic implements ISerializable {
 		currentPos += mosaicId.size;
 		buffer.setRange(currentPos, currentPos + amount.size, amount.serialize());
 		currentPos += amount.size;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -818,7 +818,7 @@ class Transaction implements ISerializable, ITransaction {
 		currentPos += fee.size;
 		buffer.setRange(currentPos, currentPos + deadline.size, deadline.serialize());
 		currentPos += deadline.size;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -929,7 +929,7 @@ class EmbeddedTransaction implements ISerializable, IInnerTransaction {
 		currentPos += network.size;
 		buffer.setRange(currentPos, currentPos + type.size, type.serialize());
 		currentPos += type.size;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -1114,7 +1114,7 @@ class VrfProof implements ISerializable {
 		currentPos += verificationHash.size;
 		buffer.setRange(currentPos, currentPos + scalar.size, scalar.serialize());
 		currentPos += scalar.size;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -1335,7 +1335,7 @@ class Block implements ISerializable {
 		currentPos += beneficiaryAddress.size;
 		buffer.setRange(currentPos, currentPos + feeMultiplier.size, feeMultiplier.serialize());
 		currentPos += feeMultiplier.size;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -1620,7 +1620,7 @@ class NemesisBlockV1 implements ISerializable {
 		var res_transactions = ArrayHelpers.writeVariableSizeElements(buffer, transactions, 8, currentPos, true);
 		currentPos = res_transactions.item2;
 		buffer = res_transactions.item1;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -1881,7 +1881,7 @@ class NormalBlockV1 implements ISerializable {
 		var res_transactions = ArrayHelpers.writeVariableSizeElements(buffer, transactions, 8, currentPos, true);
 		currentPos = res_transactions.item2;
 		buffer = res_transactions.item1;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -2167,7 +2167,7 @@ class ImportanceBlockV1 implements ISerializable {
 		var res_transactions = ArrayHelpers.writeVariableSizeElements(buffer, transactions, 8, currentPos, true);
 		currentPos = res_transactions.item2;
 		buffer = res_transactions.item1;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -2249,7 +2249,7 @@ class FinalizationRound implements ISerializable {
 		currentPos += epoch.size;
 		buffer.setRange(currentPos, currentPos + point.size, point.serialize());
 		currentPos += point.size;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -2322,7 +2322,7 @@ class FinalizedBlockHeader implements ISerializable {
 		currentPos += height.size;
 		buffer.setRange(currentPos, currentPos + hash.size, hash.serialize());
 		currentPos += hash.size;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -2459,7 +2459,7 @@ class Receipt implements ISerializable {
 		currentPos += 2;
 		buffer.setRange(currentPos, currentPos + type.size, type.serialize());
 		currentPos += type.size;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -2547,7 +2547,7 @@ class HarvestFeeReceipt implements ISerializable {
 		currentPos += mosaic.size;
 		buffer.setRange(currentPos, currentPos + targetAddress.size, targetAddress.serialize());
 		currentPos += targetAddress.size;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -2628,7 +2628,7 @@ class InflationReceipt implements ISerializable {
 		currentPos += type.size;
 		buffer.setRange(currentPos, currentPos + mosaic.size, mosaic.serialize());
 		currentPos += mosaic.size;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -2717,7 +2717,7 @@ class LockHashCreatedFeeReceipt implements ISerializable {
 		currentPos += mosaic.size;
 		buffer.setRange(currentPos, currentPos + targetAddress.size, targetAddress.serialize());
 		currentPos += targetAddress.size;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -2807,7 +2807,7 @@ class LockHashCompletedFeeReceipt implements ISerializable {
 		currentPos += mosaic.size;
 		buffer.setRange(currentPos, currentPos + targetAddress.size, targetAddress.serialize());
 		currentPos += targetAddress.size;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -2897,7 +2897,7 @@ class LockHashExpiredFeeReceipt implements ISerializable {
 		currentPos += mosaic.size;
 		buffer.setRange(currentPos, currentPos + targetAddress.size, targetAddress.serialize());
 		currentPos += targetAddress.size;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -2987,7 +2987,7 @@ class LockSecretCreatedFeeReceipt implements ISerializable {
 		currentPos += mosaic.size;
 		buffer.setRange(currentPos, currentPos + targetAddress.size, targetAddress.serialize());
 		currentPos += targetAddress.size;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -3077,7 +3077,7 @@ class LockSecretCompletedFeeReceipt implements ISerializable {
 		currentPos += mosaic.size;
 		buffer.setRange(currentPos, currentPos + targetAddress.size, targetAddress.serialize());
 		currentPos += targetAddress.size;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -3167,7 +3167,7 @@ class LockSecretExpiredFeeReceipt implements ISerializable {
 		currentPos += mosaic.size;
 		buffer.setRange(currentPos, currentPos + targetAddress.size, targetAddress.serialize());
 		currentPos += targetAddress.size;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -3248,7 +3248,7 @@ class MosaicExpiredReceipt implements ISerializable {
 		currentPos += type.size;
 		buffer.setRange(currentPos, currentPos + artifactId.size, artifactId.serialize());
 		currentPos += artifactId.size;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -3346,7 +3346,7 @@ class MosaicRentalFeeReceipt implements ISerializable {
 		currentPos += senderAddress.size;
 		buffer.setRange(currentPos, currentPos + recipientAddress.size, recipientAddress.serialize());
 		currentPos += recipientAddress.size;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -3525,7 +3525,7 @@ class NamespaceExpiredReceipt implements ISerializable {
 		currentPos += type.size;
 		buffer.setRange(currentPos, currentPos + artifactId.size, artifactId.serialize());
 		currentPos += artifactId.size;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -3605,7 +3605,7 @@ class NamespaceDeletedReceipt implements ISerializable {
 		currentPos += type.size;
 		buffer.setRange(currentPos, currentPos + artifactId.size, artifactId.serialize());
 		currentPos += artifactId.size;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -3703,7 +3703,7 @@ class NamespaceRentalFeeReceipt implements ISerializable {
 		currentPos += senderAddress.size;
 		buffer.setRange(currentPos, currentPos + recipientAddress.size, recipientAddress.serialize());
 		currentPos += recipientAddress.size;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -3768,7 +3768,7 @@ class ReceiptSource implements ISerializable {
 		currentPos += 4;
 		buffer.setRange(currentPos, currentPos + 4, intToBytes(secondaryId, 4));
 		currentPos += 4;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -3832,7 +3832,7 @@ class AddressResolutionEntry implements ISerializable {
 		currentPos += source.size;
 		buffer.setRange(currentPos, currentPos + resolvedValue.size, resolvedValue.serialize());
 		currentPos += resolvedValue.size;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -3903,7 +3903,7 @@ class AddressResolutionStatement implements ISerializable {
 		var res_resolutionEntries = ArrayHelpers.writeArray(buffer, resolutionEntries, currentPos);
 		currentPos = res_resolutionEntries.item2;
 		buffer = res_resolutionEntries.item1;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -3967,7 +3967,7 @@ class MosaicResolutionEntry implements ISerializable {
 		currentPos += source.size;
 		buffer.setRange(currentPos, currentPos + resolvedValue.size, resolvedValue.serialize());
 		currentPos += resolvedValue.size;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -4038,7 +4038,7 @@ class MosaicResolutionStatement implements ISerializable {
 		var res_resolutionEntries = ArrayHelpers.writeArray(buffer, resolutionEntries, currentPos);
 		currentPos = res_resolutionEntries.item2;
 		buffer = res_resolutionEntries.item1;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -4116,7 +4116,7 @@ class TransactionStatement implements ISerializable {
 		var res_receipts = ArrayHelpers.writeArray(buffer, receipts, currentPos);
 		currentPos = res_receipts.item2;
 		buffer = res_receipts.item1;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -4215,7 +4215,7 @@ class BlockStatement implements ISerializable {
 		var res_mosaicResolutionStatements = ArrayHelpers.writeArray(buffer, mosaicResolutionStatements, currentPos);
 		currentPos = res_mosaicResolutionStatements.item2;
 		buffer = res_mosaicResolutionStatements.item1;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -4381,7 +4381,7 @@ class AccountKeyLinkTransactionV1 implements ISerializable, ITransaction {
 		currentPos += linkedPublicKey.size;
 		buffer.setRange(currentPos, currentPos + linkAction.size, linkAction.serialize());
 		currentPos += linkAction.size;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -4521,7 +4521,7 @@ class EmbeddedAccountKeyLinkTransactionV1 implements ISerializable, IInnerTransa
 		currentPos += linkedPublicKey.size;
 		buffer.setRange(currentPos, currentPos + linkAction.size, linkAction.serialize());
 		currentPos += linkAction.size;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -4690,7 +4690,7 @@ class NodeKeyLinkTransactionV1 implements ISerializable, ITransaction {
 		currentPos += linkedPublicKey.size;
 		buffer.setRange(currentPos, currentPos + linkAction.size, linkAction.serialize());
 		currentPos += linkAction.size;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -4830,7 +4830,7 @@ class EmbeddedNodeKeyLinkTransactionV1 implements ISerializable, IInnerTransacti
 		currentPos += linkedPublicKey.size;
 		buffer.setRange(currentPos, currentPos + linkAction.size, linkAction.serialize());
 		currentPos += linkAction.size;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -4906,7 +4906,7 @@ class Cosignature implements ISerializable {
 		currentPos += signerPublicKey.size;
 		buffer.setRange(currentPos, currentPos + signature.size, signature.serialize());
 		currentPos += signature.size;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -4988,7 +4988,7 @@ class DetachedCosignature implements ISerializable {
 		currentPos += signature.size;
 		buffer.setRange(currentPos, currentPos + parentHash.size, parentHash.serialize());
 		currentPos += parentHash.size;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -5183,7 +5183,7 @@ class AggregateCompleteTransactionV1 implements ISerializable, ITransaction {
 		var res_cosignatures = ArrayHelpers.writeArray(buffer, cosignatures, currentPos);
 		currentPos = res_cosignatures.item2;
 		buffer = res_cosignatures.item1;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -5384,7 +5384,7 @@ class AggregateCompleteTransactionV2 implements ISerializable, ITransaction {
 		var res_cosignatures = ArrayHelpers.writeArray(buffer, cosignatures, currentPos);
 		currentPos = res_cosignatures.item2;
 		buffer = res_cosignatures.item1;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -5585,7 +5585,7 @@ class AggregateBondedTransactionV1 implements ISerializable, ITransaction {
 		var res_cosignatures = ArrayHelpers.writeArray(buffer, cosignatures, currentPos);
 		currentPos = res_cosignatures.item2;
 		buffer = res_cosignatures.item1;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -5786,7 +5786,7 @@ class AggregateBondedTransactionV2 implements ISerializable, ITransaction {
 		var res_cosignatures = ArrayHelpers.writeArray(buffer, cosignatures, currentPos);
 		currentPos = res_cosignatures.item2;
 		buffer = res_cosignatures.item1;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -5979,7 +5979,7 @@ class VotingKeyLinkTransactionV1 implements ISerializable, ITransaction {
 		currentPos += endEpoch.size;
 		buffer.setRange(currentPos, currentPos + linkAction.size, linkAction.serialize());
 		currentPos += linkAction.size;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -6141,7 +6141,7 @@ class EmbeddedVotingKeyLinkTransactionV1 implements ISerializable, IInnerTransac
 		currentPos += endEpoch.size;
 		buffer.setRange(currentPos, currentPos + linkAction.size, linkAction.serialize());
 		currentPos += linkAction.size;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -6312,7 +6312,7 @@ class VrfKeyLinkTransactionV1 implements ISerializable, ITransaction {
 		currentPos += linkedPublicKey.size;
 		buffer.setRange(currentPos, currentPos + linkAction.size, linkAction.serialize());
 		currentPos += linkAction.size;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -6452,7 +6452,7 @@ class EmbeddedVrfKeyLinkTransactionV1 implements ISerializable, IInnerTransactio
 		currentPos += linkedPublicKey.size;
 		buffer.setRange(currentPos, currentPos + linkAction.size, linkAction.serialize());
 		currentPos += linkAction.size;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -6631,7 +6631,7 @@ class HashLockTransactionV1 implements ISerializable, ITransaction {
 		currentPos += duration.size;
 		buffer.setRange(currentPos, currentPos + hash.size, hash.serialize());
 		currentPos += hash.size;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -6782,7 +6782,7 @@ class EmbeddedHashLockTransactionV1 implements ISerializable, IInnerTransaction 
 		currentPos += duration.size;
 		buffer.setRange(currentPos, currentPos + hash.size, hash.serialize());
 		currentPos += hash.size;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -7023,7 +7023,7 @@ class SecretLockTransactionV1 implements ISerializable, ITransaction {
 		currentPos += duration.size;
 		buffer.setRange(currentPos, currentPos + hashAlgorithm.size, hashAlgorithm.serialize());
 		currentPos += hashAlgorithm.size;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -7196,7 +7196,7 @@ class EmbeddedSecretLockTransactionV1 implements ISerializable, IInnerTransactio
 		currentPos += duration.size;
 		buffer.setRange(currentPos, currentPos + hashAlgorithm.size, hashAlgorithm.serialize());
 		currentPos += hashAlgorithm.size;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -7393,7 +7393,7 @@ class SecretProofTransactionV1 implements ISerializable, ITransaction {
 		currentPos += hashAlgorithm.size;
 		buffer.setRange(currentPos, currentPos + proof.lengthInBytes, proof);
 		currentPos += proof.lengthInBytes;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -7560,7 +7560,7 @@ class EmbeddedSecretProofTransactionV1 implements ISerializable, IInnerTransacti
 		currentPos += hashAlgorithm.size;
 		buffer.setRange(currentPos, currentPos + proof.lengthInBytes, proof);
 		currentPos += proof.lengthInBytes;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -7754,7 +7754,7 @@ class AccountMetadataTransactionV1 implements ISerializable, ITransaction {
 		currentPos += 2;
 		buffer.setRange(currentPos, currentPos + value.lengthInBytes, value);
 		currentPos += value.lengthInBytes;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -7919,7 +7919,7 @@ class EmbeddedAccountMetadataTransactionV1 implements ISerializable, IInnerTrans
 		currentPos += 2;
 		buffer.setRange(currentPos, currentPos + value.lengthInBytes, value);
 		currentPos += value.lengthInBytes;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -8123,7 +8123,7 @@ class MosaicMetadataTransactionV1 implements ISerializable, ITransaction {
 		currentPos += 2;
 		buffer.setRange(currentPos, currentPos + value.lengthInBytes, value);
 		currentPos += value.lengthInBytes;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -8299,7 +8299,7 @@ class EmbeddedMosaicMetadataTransactionV1 implements ISerializable, IInnerTransa
 		currentPos += 2;
 		buffer.setRange(currentPos, currentPos + value.lengthInBytes, value);
 		currentPos += value.lengthInBytes;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -8504,7 +8504,7 @@ class NamespaceMetadataTransactionV1 implements ISerializable, ITransaction {
 		currentPos += 2;
 		buffer.setRange(currentPos, currentPos + value.lengthInBytes, value);
 		currentPos += value.lengthInBytes;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -8680,7 +8680,7 @@ class EmbeddedNamespaceMetadataTransactionV1 implements ISerializable, IInnerTra
 		currentPos += 2;
 		buffer.setRange(currentPos, currentPos + value.lengthInBytes, value);
 		currentPos += value.lengthInBytes;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -8990,7 +8990,7 @@ class MosaicDefinitionTransactionV1 implements ISerializable, ITransaction {
 		currentPos += flags.size;
 		buffer.setRange(currentPos, currentPos + 1, intToBytes(divisibility, 1));
 		currentPos += 1;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -9162,7 +9162,7 @@ class EmbeddedMosaicDefinitionTransactionV1 implements ISerializable, IInnerTran
 		currentPos += flags.size;
 		buffer.setRange(currentPos, currentPos + 1, intToBytes(divisibility, 1));
 		currentPos += 1;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -9344,7 +9344,7 @@ class MosaicSupplyChangeTransactionV1 implements ISerializable, ITransaction {
 		currentPos += delta.size;
 		buffer.setRange(currentPos, currentPos + action.size, action.serialize());
 		currentPos += action.size;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -9495,7 +9495,7 @@ class EmbeddedMosaicSupplyChangeTransactionV1 implements ISerializable, IInnerTr
 		currentPos += delta.size;
 		buffer.setRange(currentPos, currentPos + action.size, action.serialize());
 		currentPos += action.size;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -9665,7 +9665,7 @@ class MosaicSupplyRevocationTransactionV1 implements ISerializable, ITransaction
 		currentPos += sourceAddress.size;
 		buffer.setRange(currentPos, currentPos + mosaic.size, mosaic.serialize());
 		currentPos += mosaic.size;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -9805,7 +9805,7 @@ class EmbeddedMosaicSupplyRevocationTransactionV1 implements ISerializable, IInn
 		currentPos += sourceAddress.size;
 		buffer.setRange(currentPos, currentPos + mosaic.size, mosaic.serialize());
 		currentPos += mosaic.size;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -10015,7 +10015,7 @@ class MultisigAccountModificationTransactionV1 implements ISerializable, ITransa
 		var res_addressDeletions = ArrayHelpers.writeArray(buffer, addressDeletions, currentPos);
 		currentPos = res_addressDeletions.item2;
 		buffer = res_addressDeletions.item1;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -10198,7 +10198,7 @@ class EmbeddedMultisigAccountModificationTransactionV1 implements ISerializable,
 		var res_addressDeletions = ArrayHelpers.writeArray(buffer, addressDeletions, currentPos);
 		currentPos = res_addressDeletions.item2;
 		buffer = res_addressDeletions.item1;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -10379,7 +10379,7 @@ class AddressAliasTransactionV1 implements ISerializable, ITransaction {
 		currentPos += address.size;
 		buffer.setRange(currentPos, currentPos + aliasAction.size, aliasAction.serialize());
 		currentPos += aliasAction.size;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -10530,7 +10530,7 @@ class EmbeddedAddressAliasTransactionV1 implements ISerializable, IInnerTransact
 		currentPos += address.size;
 		buffer.setRange(currentPos, currentPos + aliasAction.size, aliasAction.serialize());
 		currentPos += aliasAction.size;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -10710,7 +10710,7 @@ class MosaicAliasTransactionV1 implements ISerializable, ITransaction {
 		currentPos += mosaicId.size;
 		buffer.setRange(currentPos, currentPos + aliasAction.size, aliasAction.serialize());
 		currentPos += aliasAction.size;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -10861,7 +10861,7 @@ class EmbeddedMosaicAliasTransactionV1 implements ISerializable, IInnerTransacti
 		currentPos += mosaicId.size;
 		buffer.setRange(currentPos, currentPos + aliasAction.size, aliasAction.serialize());
 		currentPos += aliasAction.size;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -11091,7 +11091,7 @@ class NamespaceRegistrationTransactionV1 implements ISerializable, ITransaction 
 		currentPos += 1;
 		buffer.setRange(currentPos, currentPos + name.lengthInBytes, name);
 		currentPos += name.lengthInBytes;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -11300,7 +11300,7 @@ class EmbeddedNamespaceRegistrationTransactionV1 implements ISerializable, IInne
 		currentPos += 1;
 		buffer.setRange(currentPos, currentPos + name.lengthInBytes, name);
 		currentPos += name.lengthInBytes;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -11559,7 +11559,7 @@ class AccountAddressRestrictionTransactionV1 implements ISerializable, ITransact
 		var res_restrictionDeletions = ArrayHelpers.writeArray(buffer, restrictionDeletions, currentPos);
 		currentPos = res_restrictionDeletions.item2;
 		buffer = res_restrictionDeletions.item1;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -11733,7 +11733,7 @@ class EmbeddedAccountAddressRestrictionTransactionV1 implements ISerializable, I
 		var res_restrictionDeletions = ArrayHelpers.writeArray(buffer, restrictionDeletions, currentPos);
 		currentPos = res_restrictionDeletions.item2;
 		buffer = res_restrictionDeletions.item1;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -11936,7 +11936,7 @@ class AccountMosaicRestrictionTransactionV1 implements ISerializable, ITransacti
 		var res_restrictionDeletions = ArrayHelpers.writeArray(buffer, restrictionDeletions, currentPos);
 		currentPos = res_restrictionDeletions.item2;
 		buffer = res_restrictionDeletions.item1;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -12110,7 +12110,7 @@ class EmbeddedAccountMosaicRestrictionTransactionV1 implements ISerializable, II
 		var res_restrictionDeletions = ArrayHelpers.writeArray(buffer, restrictionDeletions, currentPos);
 		currentPos = res_restrictionDeletions.item2;
 		buffer = res_restrictionDeletions.item1;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -12313,7 +12313,7 @@ class AccountOperationRestrictionTransactionV1 implements ISerializable, ITransa
 		var res_restrictionDeletions = ArrayHelpers.writeArray(buffer, restrictionDeletions, currentPos);
 		currentPos = res_restrictionDeletions.item2;
 		buffer = res_restrictionDeletions.item1;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -12487,7 +12487,7 @@ class EmbeddedAccountOperationRestrictionTransactionV1 implements ISerializable,
 		var res_restrictionDeletions = ArrayHelpers.writeArray(buffer, restrictionDeletions, currentPos);
 		currentPos = res_restrictionDeletions.item2;
 		buffer = res_restrictionDeletions.item1;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -12684,7 +12684,7 @@ class MosaicAddressRestrictionTransactionV1 implements ISerializable, ITransacti
 		currentPos += 8;
 		buffer.setRange(currentPos, currentPos + targetAddress.size, targetAddress.serialize());
 		currentPos += targetAddress.size;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -12854,7 +12854,7 @@ class EmbeddedMosaicAddressRestrictionTransactionV1 implements ISerializable, II
 		currentPos += 8;
 		buffer.setRange(currentPos, currentPos + targetAddress.size, targetAddress.serialize());
 		currentPos += targetAddress.size;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -13141,7 +13141,7 @@ class MosaicGlobalRestrictionTransactionV1 implements ISerializable, ITransactio
 		currentPos += previousRestrictionType.size;
 		buffer.setRange(currentPos, currentPos + newRestrictionType.size, newRestrictionType.serialize());
 		currentPos += newRestrictionType.size;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -13333,7 +13333,7 @@ class EmbeddedMosaicGlobalRestrictionTransactionV1 implements ISerializable, IIn
 		currentPos += previousRestrictionType.size;
 		buffer.setRange(currentPos, currentPos + newRestrictionType.size, newRestrictionType.serialize());
 		currentPos += newRestrictionType.size;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -13549,7 +13549,7 @@ class TransferTransactionV1 implements ISerializable, ITransaction {
 		buffer = res_mosaics.item1;
 		buffer.setRange(currentPos, currentPos + message.lengthInBytes, message);
 		currentPos += message.lengthInBytes;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -13732,7 +13732,7 @@ class EmbeddedTransferTransactionV1 implements ISerializable, IInnerTransaction 
 		buffer = res_mosaics.item1;
 		buffer.setRange(currentPos, currentPos + message.lengthInBytes, message);
 		currentPos += message.lengthInBytes;
-		return buffer.buffer.asUint8List();
+		return buffer;
 	}
 
 	@override
@@ -13758,7 +13758,7 @@ class TransactionFactory implements ISerializable {
 			tryHexString(payload);
 			payload = hexToBytes(payload);
 		}
-		Uint8List buffer = payload.buffer.asUint8List();
+		Uint8List buffer = payload;
 		var parent = Transaction().deserialize(buffer);
 		var mapping = <(int, int), ISerializable>{
 			(AccountKeyLinkTransactionV1.TRANSACTION_TYPE.value, AccountKeyLinkTransactionV1.TRANSACTION_VERSION): AccountKeyLinkTransactionV1(),
@@ -13855,7 +13855,7 @@ class EmbeddedTransactionFactory implements ISerializable {
 			tryHexString(payload);
 			payload = hexToBytes(payload);
 		}
-		Uint8List buffer = payload.buffer.asUint8List();
+		Uint8List buffer = payload;
 		var parent = EmbeddedTransaction().deserialize(buffer);
 		var mapping = <(int, int), ISerializable>{
 			(EmbeddedAccountKeyLinkTransactionV1.TRANSACTION_TYPE.value, EmbeddedAccountKeyLinkTransactionV1.TRANSACTION_VERSION): EmbeddedAccountKeyLinkTransactionV1(),
@@ -13944,7 +13944,7 @@ class BlockFactory implements ISerializable {
 			tryHexString(payload);
 			payload = hexToBytes(payload);
 		}
-		Uint8List buffer = payload.buffer.asUint8List();
+		Uint8List buffer = payload;
 		var parent = Block().deserialize(buffer);
 		var mapping = <int, ISerializable>{
 			NemesisBlockV1.BLOCK_TYPE.value: NemesisBlockV1(),
@@ -13993,7 +13993,7 @@ class ReceiptFactory implements ISerializable {
 			tryHexString(payload);
 			payload = hexToBytes(payload);
 		}
-		Uint8List buffer = payload.buffer.asUint8List();
+		Uint8List buffer = payload;
 		var parent = Receipt().deserialize(buffer);
 		var mapping = <int, ISerializable>{
 			HarvestFeeReceipt.RECEIPT_TYPE.value: HarvestFeeReceipt(),

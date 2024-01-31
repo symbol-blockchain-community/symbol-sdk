@@ -3,10 +3,10 @@ import 'dart:convert';
 import 'package:test/test.dart';
 import 'package:convert/convert.dart';
 import '../../../bin/CryptoTypes.dart';
-import '../../../bin/symbol/KeyPair.dart';
+import '../../../bin/nem/KeyPair.dart';
 
-void signTest(String path) async {
-  var file = File(path);
+void main() async {
+  var file = File('../../../../../symbol/tests/vectors/nem/crypto/1.test-keys.json');
   var contents = await file.readAsString();
   var jsonMap = jsonDecode(contents);
   (jsonMap as List).forEach((element) {
@@ -17,7 +17,4 @@ void signTest(String path) async {
       expect(hex.encode(keyPair.publicKey.bytes).toUpperCase(), publicKey);
     });
   });
-}
-void main() async {
-  signTest('../../../../../symbol/tests/vectors/symbol/crypto/1.test-keys.json');
 }

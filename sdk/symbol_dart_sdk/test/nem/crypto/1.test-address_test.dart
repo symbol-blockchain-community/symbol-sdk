@@ -1,12 +1,12 @@
 import 'dart:io';
 import 'dart:convert';
 import 'package:test/test.dart';
-import '../../../bin/utils//converter.dart';
+import '../../../bin/utils/converter.dart';
 import '../../../bin/CryptoTypes.dart';
-import '../../../bin/symbol/Network.dart';
+import '../../../bin/nem/Network.dart';
 
-void signTest(String path) async {
-  var file = File(path);
+void main() async {
+  var file = File('../../../../../symbol/tests/vectors/nem/crypto/1.test-address.json');
   var contents = await file.readAsString();
   var jsonMap = jsonDecode(contents);
   (jsonMap as List).forEach((element) {
@@ -20,7 +20,4 @@ void signTest(String path) async {
       expect(testAddress, element['address_PublicTest']);
     });
   });
-}
-void main() async {
-  signTest('../../../../../symbol/tests/vectors/symbol/crypto/1.test-address.json');
 }

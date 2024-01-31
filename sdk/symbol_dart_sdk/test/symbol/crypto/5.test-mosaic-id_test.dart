@@ -5,8 +5,8 @@ import '../../../bin/utils//converter.dart';
 import '../../../bin/symbol/Network.dart';
 import '../../../bin/symbol/idGenerator.dart';
 
-void signTest(String path) async {
-  var file = File(path);
+void main() async {
+  var file = File('../../../../../symbol/tests/vectors/symbol/crypto/5.test-mosaic-id.json');
   var contents = await file.readAsString();
   var jsonMap = jsonDecode(contents);
   (jsonMap as List).forEach((element) {
@@ -17,7 +17,4 @@ void signTest(String path) async {
       expect(intToHex(generateMosaicId(Address(element['address_PrivateTest']), element['mosaicNonce'])), element['mosaicId_PrivateTest']);
     });
   });
-}
-void main() async {
-  signTest('../../../../../symbol/tests/vectors/symbol/crypto/5.test-mosaic-id.json');
 }

@@ -7,7 +7,7 @@ final Map<String, Map<String, int>> _constants = {
   'sizes': {
     'ripemd160': 20,
     'symbolAddressDecoded': 24,
-    'nemAddressDecoded': 40,
+    'nemAddressDecoded': 25,
     'symbolAddressEncoded': 39,
     'nemAddressEncoded': 40,
     'key': 32,
@@ -87,7 +87,7 @@ Uint8List stringToAddress(String encoded) {
     return Uint8List.fromList(bytes.sublist(0, _constants['sizes']!['symbolAddressDecoded']));
   }
   if (_constants['sizes']!['nemAddressEncoded'] == encoded.length) {
-    return base32.decode(encoded);
+    return utf8ToBytes(encoded);
   }
   throw Exception('$encoded does not represent a valid encoded address');
 }

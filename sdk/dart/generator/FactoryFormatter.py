@@ -82,7 +82,7 @@ class FactoryFormatter(AbstractTypeFormatter):
 		body += '\ttryHexString(payload);\n'
 		body += '\tpayload = hexToBytes(payload);\n'
 		body += '}\n'
-		body += 'Uint8List buffer = payload.buffer.asUint8List();\n'
+		body += 'Uint8List buffer = payload;\n'
 		body += f'var {self.printer.name} = {self.printer.load()};\n'
 
 		if self.factory_descriptor:
