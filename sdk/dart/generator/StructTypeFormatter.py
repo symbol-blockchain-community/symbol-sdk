@@ -176,15 +176,8 @@ class StructFormatter(AbstractTypeFormatter):
 				body += f'this.{field_name} = {arg_name} ?? {self.typename}.{const_field.name};\n'
 			else:
 				value = field.extensions.printer.get_default_value()
-				if field.is_conditional:
-					conditional = field.value
-					condition_field_name = conditional.linked_field_name
-					condition_field = next(f for f in self.non_const_fields() if condition_field_name == f.name)
-					condition_model = condition_field.extensions.type_model
-
-					# only initialize default implicit union field in constructor
-					if f'{condition_model.name}.{conditional.value}' != condition_field.extensions.printer.get_default_value():
-						value = 'null'  # needs to be null or else field will not be destination when copying descriptor properties
+				if self.is_nullable_field(field):
+					value = 'null'  # needs to be null or else field will not be destination when copying descriptor properties
 
 				body += f'this.{field_name} = {arg_name} ?? {value};\n'
 
