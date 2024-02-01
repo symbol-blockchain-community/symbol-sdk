@@ -1,7 +1,6 @@
 import './NetworkTimestamp.dart';
 import './CryptoTypes.dart';
-import 'package:hash/hash.dart';
-
+import 'package:pointycastle/digests/ripemd160.dart';
 import 'dart:typed_data';
 
 class Network {
@@ -26,7 +25,7 @@ class Network {
   Uint8List publicKeyToAddress(PublicKey publicKey) {
     var partOneHashBuilder = addressHasher();
     var partOneHash = partOneHashBuilder.process(publicKey.bytes);
-    var partTwoHash = RIPEMD160().update(partOneHash).digest();
+    var partTwoHash = RIPEMD160Digest().process(partOneHash);
     var version = Uint8List.fromList([identifier, ...partTwoHash]);
     var partThreeHashBuilder = addressHasher();
     var checksum = partThreeHashBuilder.process(version).sublist(0, 4);
