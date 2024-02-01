@@ -1,8 +1,8 @@
 name: symbol_sdk
 description: Symbol and Nem sdk for Dart and Flutter
-version: 1.0.3
+version: 1.0.4
 license: MIT
-repository: https://github.com/0x070696E65/symbol_dart_sdk.git
+repository: https://github.com/0x070696E65/symbol_sdk.git
 
 environment:
   sdk: '>=3.2.5 <4.0.0'

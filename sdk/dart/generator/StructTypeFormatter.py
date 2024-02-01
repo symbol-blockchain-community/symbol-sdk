@@ -114,36 +114,28 @@ class StructFormatter(AbstractTypeFormatter):
 		return f'{field.extensions.printer.name}'
 
 	@staticmethod
-	def generate_class_field(field):
+	def generate_const_field(field):
 		modifier = field.extensions.printer.modifier()
 		default_value = field.extensions.printer.assign(field.value)
 		return f'static {modifier} {field.extensions.printer.get_type()} {field.name} = {default_value};'
 	
-	def generate_field(self):
-		body = '\n'
-		for field in self.non_reserved_fields():
-			const_field = self.get_paired_const_field(field)
-			field_name = self.field_name(field)
-			class_name = 'late ' + self.re_name(field.extensions.printer.get_type())
-			if const_field:
-				if self.is_transaction() and self.has_field_override(field_name):
-					body += '@override\n'
-				body += f'{class_name} {field_name};\n'
+	def generate_non_reserved_field(self, field):
+		const_field = self.get_paired_const_field(field)
+		field_name = self.field_name(field)
+		class_name = 'late ' + self.re_name(field.extensions.printer.get_type())
+		body = f'{class_name} {field_name};\n'
+		if const_field:
+			return '@override\n' + body if self.is_transaction() and self.has_field_override(field_name) else body
+		else:
+			if self.is_nullable_field(field):
+				return f'{class_name}? {field_name};\n'
 			else:
-				if self.is_nullable_field(field):
-					body += f'{class_name}? {field_name};\n'
-				else:
-					if self.is_transaction() and self.has_field_override(field_name):
-						body += '@override\n'
-					body += f'{class_name} {field_name} = {field.extensions.printer.get_default_value()};\n'
-				#body += f'this.{field_name} = {arg_name} ?? {value};\n'
+				return '@override\n' + body if self.is_transaction() and self.has_field_override(field_name) else body
 
-		for field in self.reserved_fields():
-			field_name = self.field_name(field)
-			value = field.value
-			body += f'final {field.extensions.printer.get_type()} {field_name} = {value}; // reserved field\n'
-		
-		return body
+	def generate_reserved_field(self, field):
+		field_name = self.field_name(field)
+		value = field.value
+		return f'final {field.extensions.printer.get_type()} {field_name} = {value}; // reserved field\n'
 
 	def generate_type_hints(self):
 		body = '\n'
@@ -160,7 +152,7 @@ class StructFormatter(AbstractTypeFormatter):
 		return body
 
 	def get_fields(self):
-		return list(map(self.generate_class_field, self.const_fields())) + [self.generate_type_hints()] + [self.generate_field()]
+		return list(map(self.generate_const_field, self.const_fields())) + list(map(self.generate_non_reserved_field, self.non_reserved_fields())) + list(map(self.generate_reserved_field, self.reserved_fields())) + [self.generate_type_hints()]
 
 	def get_paired_const_field(self, field):
 		for const_field in self.const_fields():

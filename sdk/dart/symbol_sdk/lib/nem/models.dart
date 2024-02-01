@@ -251,6 +251,21 @@ class TransactionType implements ISerializable {
 
 
 class Transaction implements ISerializable, ITransaction {
+	@override
+	late TransactionType type;
+	@override
+	late int version;
+	late NetworkType network;
+	late Timestamp timestamp;
+	@override
+	late PublicKey signerPublicKey;
+	@override
+	late Signature signature;
+	late Amount fee;
+	late Timestamp deadline;
+	final int entityBodyReserved_1 = 0; // reserved field
+	final int signerPublicKeySize = 32; // reserved field
+	final int signatureSize = 64; // reserved field
 
 	static const Map<String, String> TYPE_HINTS = {
 		'type': 'enum:TransactionType',
@@ -261,22 +276,6 @@ class Transaction implements ISerializable, ITransaction {
 		'fee': 'pod:Amount',
 		'deadline': 'pod:Timestamp'
 	};
-
-	@override
-	late TransactionType type = TransactionType.TRANSFER;
-	@override
-	late int version = 0;
-	late NetworkType network = NetworkType.MAINNET;
-	late Timestamp timestamp = Timestamp();
-	@override
-	late PublicKey signerPublicKey = PublicKey();
-	@override
-	late Signature signature = Signature();
-	late Amount fee = Amount();
-	late Timestamp deadline = Timestamp();
-	final int entityBodyReserved_1 = 0; // reserved field
-	final int signerPublicKeySize = 32; // reserved field
-	final int signatureSize = 64; // reserved field
 
 	Transaction({ 
 	TransactionType? type,
@@ -415,6 +414,15 @@ class Transaction implements ISerializable, ITransaction {
 
 
 class NonVerifiableTransaction implements ISerializable, IInnerTransaction {
+	late TransactionType type;
+	late int version;
+	late NetworkType network;
+	late Timestamp timestamp;
+	late PublicKey signerPublicKey;
+	late Amount fee;
+	late Timestamp deadline;
+	final int entityBodyReserved_1 = 0; // reserved field
+	final int signerPublicKeySize = 32; // reserved field
 
 	static const Map<String, String> TYPE_HINTS = {
 		'type': 'enum:TransactionType',
@@ -424,16 +432,6 @@ class NonVerifiableTransaction implements ISerializable, IInnerTransaction {
 		'fee': 'pod:Amount',
 		'deadline': 'pod:Timestamp'
 	};
-
-	late TransactionType type = TransactionType.TRANSFER;
-	late int version = 0;
-	late NetworkType network = NetworkType.MAINNET;
-	late Timestamp timestamp = Timestamp();
-	late PublicKey signerPublicKey = PublicKey();
-	late Amount fee = Amount();
-	late Timestamp deadline = Timestamp();
-	final int entityBodyReserved_1 = 0; // reserved field
-	final int signerPublicKeySize = 32; // reserved field
 
 	NonVerifiableTransaction({ 
 	TransactionType? type,
@@ -596,6 +594,24 @@ class LinkAction implements ISerializable {
 class AccountKeyLinkTransactionV1 implements ISerializable, ITransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.ACCOUNT_KEY_LINK.value);
+	@override
+	late TransactionType type;
+	@override
+	late int version;
+	late NetworkType network;
+	late Timestamp timestamp;
+	@override
+	late PublicKey signerPublicKey;
+	@override
+	late Signature signature;
+	late Amount fee;
+	late Timestamp deadline;
+	late LinkAction linkAction;
+	late PublicKey remotePublicKey;
+	final int entityBodyReserved_1 = 0; // reserved field
+	final int signerPublicKeySize = 32; // reserved field
+	final int signatureSize = 64; // reserved field
+	final int remotePublicKeySize = 32; // reserved field
 
 	static const Map<String, String> TYPE_HINTS = {
 		'type': 'enum:TransactionType',
@@ -608,25 +624,6 @@ class AccountKeyLinkTransactionV1 implements ISerializable, ITransaction {
 		'linkAction': 'enum:LinkAction',
 		'remotePublicKey': 'pod:PublicKey'
 	};
-
-	@override
-	late TransactionType type;
-	@override
-	late int version;
-	late NetworkType network = NetworkType.MAINNET;
-	late Timestamp timestamp = Timestamp();
-	@override
-	late PublicKey signerPublicKey = PublicKey();
-	@override
-	late Signature signature = Signature();
-	late Amount fee = Amount();
-	late Timestamp deadline = Timestamp();
-	late LinkAction linkAction = LinkAction.LINK;
-	late PublicKey remotePublicKey = PublicKey();
-	final int entityBodyReserved_1 = 0; // reserved field
-	final int signerPublicKeySize = 32; // reserved field
-	final int signatureSize = 64; // reserved field
-	final int remotePublicKeySize = 32; // reserved field
 
 	AccountKeyLinkTransactionV1({ 
 	TransactionType? type,
@@ -793,6 +790,18 @@ class AccountKeyLinkTransactionV1 implements ISerializable, ITransaction {
 class NonVerifiableAccountKeyLinkTransactionV1 implements ISerializable, IInnerTransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.ACCOUNT_KEY_LINK.value);
+	late TransactionType type;
+	late int version;
+	late NetworkType network;
+	late Timestamp timestamp;
+	late PublicKey signerPublicKey;
+	late Amount fee;
+	late Timestamp deadline;
+	late LinkAction linkAction;
+	late PublicKey remotePublicKey;
+	final int entityBodyReserved_1 = 0; // reserved field
+	final int signerPublicKeySize = 32; // reserved field
+	final int remotePublicKeySize = 32; // reserved field
 
 	static const Map<String, String> TYPE_HINTS = {
 		'type': 'enum:TransactionType',
@@ -804,19 +813,6 @@ class NonVerifiableAccountKeyLinkTransactionV1 implements ISerializable, IInnerT
 		'linkAction': 'enum:LinkAction',
 		'remotePublicKey': 'pod:PublicKey'
 	};
-
-	late TransactionType type;
-	late int version;
-	late NetworkType network = NetworkType.MAINNET;
-	late Timestamp timestamp = Timestamp();
-	late PublicKey signerPublicKey = PublicKey();
-	late Amount fee = Amount();
-	late Timestamp deadline = Timestamp();
-	late LinkAction linkAction = LinkAction.LINK;
-	late PublicKey remotePublicKey = PublicKey();
-	final int entityBodyReserved_1 = 0; // reserved field
-	final int signerPublicKeySize = 32; // reserved field
-	final int remotePublicKeySize = 32; // reserved field
 
 	NonVerifiableAccountKeyLinkTransactionV1({ 
 	TransactionType? type,
@@ -964,12 +960,11 @@ class NonVerifiableAccountKeyLinkTransactionV1 implements ISerializable, IInnerT
 
 
 class NamespaceId implements ISerializable {
+	late Uint8List name;
 
 	static const Map<String, String> TYPE_HINTS = {
 		'name': 'bytes_array'
 	};
-
-	late Uint8List name = Uint8List(0);
 
 	NamespaceId([name]) {
 		this.name = name ?? Uint8List(0);
@@ -1021,14 +1016,13 @@ class NamespaceId implements ISerializable {
 
 
 class MosaicId implements ISerializable {
+	late NamespaceId namespaceId;
+	late Uint8List name;
 
 	static const Map<String, String> TYPE_HINTS = {
 		'namespaceId': 'struct:NamespaceId',
 		'name': 'bytes_array'
 	};
-
-	late NamespaceId namespaceId = NamespaceId();
-	late Uint8List name = Uint8List(0);
 
 	MosaicId({ NamespaceId? namespaceId, Uint8List? name}) {
 		this.namespaceId = namespaceId ?? NamespaceId();
@@ -1090,14 +1084,13 @@ class MosaicId implements ISerializable {
 
 
 class Mosaic implements ISerializable {
+	late MosaicId mosaicId;
+	late Amount amount;
 
 	static const Map<String, String> TYPE_HINTS = {
 		'mosaicId': 'struct:MosaicId',
 		'amount': 'pod:Amount'
 	};
-
-	late MosaicId mosaicId = MosaicId();
-	late Amount amount = Amount();
 
 	Mosaic({ MosaicId? mosaicId, Amount? amount}) {
 		this.mosaicId = mosaicId ?? MosaicId();
@@ -1160,12 +1153,11 @@ class Mosaic implements ISerializable {
 
 
 class SizePrefixedMosaic implements ISerializable {
+	late Mosaic mosaic;
 
 	static const Map<String, String> TYPE_HINTS = {
 		'mosaic': 'struct:Mosaic'
 	};
-
-	late Mosaic mosaic = Mosaic();
 
 	SizePrefixedMosaic([mosaic]) {
 		this.mosaic = mosaic ?? Mosaic();
@@ -1257,6 +1249,11 @@ class MosaicTransferFeeType implements ISerializable {
 
 
 class MosaicLevy implements ISerializable {
+	late MosaicTransferFeeType transferFeeType;
+	late Address recipientAddress;
+	late MosaicId mosaicId;
+	late Amount fee;
+	final int recipientAddressSize = 40; // reserved field
 
 	static const Map<String, String> TYPE_HINTS = {
 		'transferFeeType': 'enum:MosaicTransferFeeType',
@@ -1264,12 +1261,6 @@ class MosaicLevy implements ISerializable {
 		'mosaicId': 'struct:MosaicId',
 		'fee': 'pod:Amount'
 	};
-
-	late MosaicTransferFeeType transferFeeType = MosaicTransferFeeType.ABSOLUTE;
-	late Address recipientAddress = Address();
-	late MosaicId mosaicId = MosaicId();
-	late Amount fee = Amount();
-	final int recipientAddressSize = 40; // reserved field
 
 	MosaicLevy({ MosaicTransferFeeType? transferFeeType, Address? recipientAddress, MosaicId? mosaicId, Amount? fee}) {
 		this.transferFeeType = transferFeeType ?? MosaicTransferFeeType.ABSOLUTE;
@@ -1356,14 +1347,13 @@ class MosaicLevy implements ISerializable {
 
 
 class MosaicProperty implements ISerializable {
+	late Uint8List name;
+	late Uint8List value;
 
 	static const Map<String, String> TYPE_HINTS = {
 		'name': 'bytes_array',
 		'value': 'bytes_array'
 	};
-
-	late Uint8List name = Uint8List(0);
-	late Uint8List value = Uint8List(0);
 
 	MosaicProperty({ Uint8List? name, Uint8List? value}) {
 		this.name = name ?? Uint8List(0);
@@ -1430,12 +1420,11 @@ class MosaicProperty implements ISerializable {
 
 
 class SizePrefixedMosaicProperty implements ISerializable {
+	late MosaicProperty property;
 
 	static const Map<String, String> TYPE_HINTS = {
 		'property': 'struct:MosaicProperty'
 	};
-
-	late MosaicProperty property = MosaicProperty();
 
 	SizePrefixedMosaicProperty([property]) {
 		this.property = property ?? MosaicProperty();
@@ -1488,6 +1477,12 @@ class SizePrefixedMosaicProperty implements ISerializable {
 
 
 class MosaicDefinition implements ISerializable {
+	late PublicKey ownerPublicKey;
+	late MosaicId id;
+	late Uint8List description;
+	late List<SizePrefixedMosaicProperty> properties;
+	late MosaicLevy? levy;
+	final int ownerPublicKeySize = 32; // reserved field
 
 	static const Map<String, String> TYPE_HINTS = {
 		'ownerPublicKey': 'pod:PublicKey',
@@ -1496,13 +1491,6 @@ class MosaicDefinition implements ISerializable {
 		'properties': 'array[SizePrefixedMosaicProperty]',
 		'levy': 'struct:MosaicLevy'
 	};
-
-	late PublicKey ownerPublicKey = PublicKey();
-	late MosaicId id = MosaicId();
-	late Uint8List description = Uint8List(0);
-	late List<SizePrefixedMosaicProperty> properties = [];
-	late MosaicLevy? levy;
-	final int ownerPublicKeySize = 32; // reserved field
 
 	MosaicDefinition({ 
 	PublicKey? ownerPublicKey,
@@ -1643,6 +1631,25 @@ class MosaicDefinition implements ISerializable {
 class MosaicDefinitionTransactionV1 implements ISerializable, ITransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.MOSAIC_DEFINITION.value);
+	@override
+	late TransactionType type;
+	@override
+	late int version;
+	late NetworkType network;
+	late Timestamp timestamp;
+	@override
+	late PublicKey signerPublicKey;
+	@override
+	late Signature signature;
+	late Amount fee;
+	late Timestamp deadline;
+	late MosaicDefinition mosaicDefinition;
+	late Address rentalFeeSink;
+	late Amount rentalFee;
+	final int entityBodyReserved_1 = 0; // reserved field
+	final int signerPublicKeySize = 32; // reserved field
+	final int signatureSize = 64; // reserved field
+	final int rentalFeeSinkSize = 40; // reserved field
 
 	static const Map<String, String> TYPE_HINTS = {
 		'type': 'enum:TransactionType',
@@ -1656,26 +1663,6 @@ class MosaicDefinitionTransactionV1 implements ISerializable, ITransaction {
 		'rentalFeeSink': 'pod:Address',
 		'rentalFee': 'pod:Amount'
 	};
-
-	@override
-	late TransactionType type;
-	@override
-	late int version;
-	late NetworkType network = NetworkType.MAINNET;
-	late Timestamp timestamp = Timestamp();
-	@override
-	late PublicKey signerPublicKey = PublicKey();
-	@override
-	late Signature signature = Signature();
-	late Amount fee = Amount();
-	late Timestamp deadline = Timestamp();
-	late MosaicDefinition mosaicDefinition = MosaicDefinition();
-	late Address rentalFeeSink = Address();
-	late Amount rentalFee = Amount();
-	final int entityBodyReserved_1 = 0; // reserved field
-	final int signerPublicKeySize = 32; // reserved field
-	final int signatureSize = 64; // reserved field
-	final int rentalFeeSinkSize = 40; // reserved field
 
 	MosaicDefinitionTransactionV1({ 
 	TransactionType? type,
@@ -1857,6 +1844,19 @@ class MosaicDefinitionTransactionV1 implements ISerializable, ITransaction {
 class NonVerifiableMosaicDefinitionTransactionV1 implements ISerializable, IInnerTransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.MOSAIC_DEFINITION.value);
+	late TransactionType type;
+	late int version;
+	late NetworkType network;
+	late Timestamp timestamp;
+	late PublicKey signerPublicKey;
+	late Amount fee;
+	late Timestamp deadline;
+	late MosaicDefinition mosaicDefinition;
+	late Address rentalFeeSink;
+	late Amount rentalFee;
+	final int entityBodyReserved_1 = 0; // reserved field
+	final int signerPublicKeySize = 32; // reserved field
+	final int rentalFeeSinkSize = 40; // reserved field
 
 	static const Map<String, String> TYPE_HINTS = {
 		'type': 'enum:TransactionType',
@@ -1869,20 +1869,6 @@ class NonVerifiableMosaicDefinitionTransactionV1 implements ISerializable, IInne
 		'rentalFeeSink': 'pod:Address',
 		'rentalFee': 'pod:Amount'
 	};
-
-	late TransactionType type;
-	late int version;
-	late NetworkType network = NetworkType.MAINNET;
-	late Timestamp timestamp = Timestamp();
-	late PublicKey signerPublicKey = PublicKey();
-	late Amount fee = Amount();
-	late Timestamp deadline = Timestamp();
-	late MosaicDefinition mosaicDefinition = MosaicDefinition();
-	late Address rentalFeeSink = Address();
-	late Amount rentalFee = Amount();
-	final int entityBodyReserved_1 = 0; // reserved field
-	final int signerPublicKeySize = 32; // reserved field
-	final int rentalFeeSinkSize = 40; // reserved field
 
 	NonVerifiableMosaicDefinitionTransactionV1({ 
 	TransactionType? type,
@@ -2086,6 +2072,24 @@ class MosaicSupplyChangeAction implements ISerializable {
 class MosaicSupplyChangeTransactionV1 implements ISerializable, ITransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.MOSAIC_SUPPLY_CHANGE.value);
+	@override
+	late TransactionType type;
+	@override
+	late int version;
+	late NetworkType network;
+	late Timestamp timestamp;
+	@override
+	late PublicKey signerPublicKey;
+	@override
+	late Signature signature;
+	late Amount fee;
+	late Timestamp deadline;
+	late MosaicId mosaicId;
+	late MosaicSupplyChangeAction action;
+	late Amount delta;
+	final int entityBodyReserved_1 = 0; // reserved field
+	final int signerPublicKeySize = 32; // reserved field
+	final int signatureSize = 64; // reserved field
 
 	static const Map<String, String> TYPE_HINTS = {
 		'type': 'enum:TransactionType',
@@ -2099,25 +2103,6 @@ class MosaicSupplyChangeTransactionV1 implements ISerializable, ITransaction {
 		'action': 'enum:MosaicSupplyChangeAction',
 		'delta': 'pod:Amount'
 	};
-
-	@override
-	late TransactionType type;
-	@override
-	late int version;
-	late NetworkType network = NetworkType.MAINNET;
-	late Timestamp timestamp = Timestamp();
-	@override
-	late PublicKey signerPublicKey = PublicKey();
-	@override
-	late Signature signature = Signature();
-	late Amount fee = Amount();
-	late Timestamp deadline = Timestamp();
-	late MosaicId mosaicId = MosaicId();
-	late MosaicSupplyChangeAction action = MosaicSupplyChangeAction.INCREASE;
-	late Amount delta = Amount();
-	final int entityBodyReserved_1 = 0; // reserved field
-	final int signerPublicKeySize = 32; // reserved field
-	final int signatureSize = 64; // reserved field
 
 	MosaicSupplyChangeTransactionV1({ 
 	TransactionType? type,
@@ -2291,6 +2276,18 @@ class MosaicSupplyChangeTransactionV1 implements ISerializable, ITransaction {
 class NonVerifiableMosaicSupplyChangeTransactionV1 implements ISerializable, IInnerTransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.MOSAIC_SUPPLY_CHANGE.value);
+	late TransactionType type;
+	late int version;
+	late NetworkType network;
+	late Timestamp timestamp;
+	late PublicKey signerPublicKey;
+	late Amount fee;
+	late Timestamp deadline;
+	late MosaicId mosaicId;
+	late MosaicSupplyChangeAction action;
+	late Amount delta;
+	final int entityBodyReserved_1 = 0; // reserved field
+	final int signerPublicKeySize = 32; // reserved field
 
 	static const Map<String, String> TYPE_HINTS = {
 		'type': 'enum:TransactionType',
@@ -2303,19 +2300,6 @@ class NonVerifiableMosaicSupplyChangeTransactionV1 implements ISerializable, IIn
 		'action': 'enum:MosaicSupplyChangeAction',
 		'delta': 'pod:Amount'
 	};
-
-	late TransactionType type;
-	late int version;
-	late NetworkType network = NetworkType.MAINNET;
-	late Timestamp timestamp = Timestamp();
-	late PublicKey signerPublicKey = PublicKey();
-	late Amount fee = Amount();
-	late Timestamp deadline = Timestamp();
-	late MosaicId mosaicId = MosaicId();
-	late MosaicSupplyChangeAction action = MosaicSupplyChangeAction.INCREASE;
-	late Amount delta = Amount();
-	final int entityBodyReserved_1 = 0; // reserved field
-	final int signerPublicKeySize = 32; // reserved field
 
 	NonVerifiableMosaicSupplyChangeTransactionV1({ 
 	TransactionType? type,
@@ -2509,15 +2493,14 @@ class MultisigAccountModificationType implements ISerializable {
 
 
 class MultisigAccountModification implements ISerializable {
+	late MultisigAccountModificationType modificationType;
+	late PublicKey cosignatoryPublicKey;
+	final int cosignatoryPublicKeySize = 32; // reserved field
 
 	static const Map<String, String> TYPE_HINTS = {
 		'modificationType': 'enum:MultisigAccountModificationType',
 		'cosignatoryPublicKey': 'pod:PublicKey'
 	};
-
-	late MultisigAccountModificationType modificationType = MultisigAccountModificationType.ADD_COSIGNATORY;
-	late PublicKey cosignatoryPublicKey = PublicKey();
-	final int cosignatoryPublicKeySize = 32; // reserved field
 
 	MultisigAccountModification({ MultisigAccountModificationType? modificationType, PublicKey? cosignatoryPublicKey}) {
 		this.modificationType = modificationType ?? MultisigAccountModificationType.ADD_COSIGNATORY;
@@ -2589,12 +2572,11 @@ class MultisigAccountModification implements ISerializable {
 
 
 class SizePrefixedMultisigAccountModification implements ISerializable {
+	late MultisigAccountModification modification;
 
 	static const Map<String, String> TYPE_HINTS = {
 		'modification': 'struct:MultisigAccountModification'
 	};
-
-	late MultisigAccountModification modification = MultisigAccountModification();
 
 	SizePrefixedMultisigAccountModification([modification]) {
 		this.modification = modification ?? MultisigAccountModification();
@@ -2649,6 +2631,22 @@ class SizePrefixedMultisigAccountModification implements ISerializable {
 class MultisigAccountModificationTransactionV1 implements ISerializable, ITransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.MULTISIG_ACCOUNT_MODIFICATION.value);
+	@override
+	late TransactionType type;
+	@override
+	late int version;
+	late NetworkType network;
+	late Timestamp timestamp;
+	@override
+	late PublicKey signerPublicKey;
+	@override
+	late Signature signature;
+	late Amount fee;
+	late Timestamp deadline;
+	late List<SizePrefixedMultisigAccountModification> modifications;
+	final int entityBodyReserved_1 = 0; // reserved field
+	final int signerPublicKeySize = 32; // reserved field
+	final int signatureSize = 64; // reserved field
 
 	static const Map<String, String> TYPE_HINTS = {
 		'type': 'enum:TransactionType',
@@ -2660,23 +2658,6 @@ class MultisigAccountModificationTransactionV1 implements ISerializable, ITransa
 		'deadline': 'pod:Timestamp',
 		'modifications': 'array[SizePrefixedMultisigAccountModification]'
 	};
-
-	@override
-	late TransactionType type;
-	@override
-	late int version;
-	late NetworkType network = NetworkType.MAINNET;
-	late Timestamp timestamp = Timestamp();
-	@override
-	late PublicKey signerPublicKey = PublicKey();
-	@override
-	late Signature signature = Signature();
-	late Amount fee = Amount();
-	late Timestamp deadline = Timestamp();
-	late List<SizePrefixedMultisigAccountModification> modifications = [];
-	final int entityBodyReserved_1 = 0; // reserved field
-	final int signerPublicKeySize = 32; // reserved field
-	final int signatureSize = 64; // reserved field
 
 	MultisigAccountModificationTransactionV1({ 
 	TransactionType? type,
@@ -2835,6 +2816,16 @@ class MultisigAccountModificationTransactionV1 implements ISerializable, ITransa
 class NonVerifiableMultisigAccountModificationTransactionV1 implements ISerializable, IInnerTransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.MULTISIG_ACCOUNT_MODIFICATION.value);
+	late TransactionType type;
+	late int version;
+	late NetworkType network;
+	late Timestamp timestamp;
+	late PublicKey signerPublicKey;
+	late Amount fee;
+	late Timestamp deadline;
+	late List<SizePrefixedMultisigAccountModification> modifications;
+	final int entityBodyReserved_1 = 0; // reserved field
+	final int signerPublicKeySize = 32; // reserved field
 
 	static const Map<String, String> TYPE_HINTS = {
 		'type': 'enum:TransactionType',
@@ -2845,17 +2836,6 @@ class NonVerifiableMultisigAccountModificationTransactionV1 implements ISerializ
 		'deadline': 'pod:Timestamp',
 		'modifications': 'array[SizePrefixedMultisigAccountModification]'
 	};
-
-	late TransactionType type;
-	late int version;
-	late NetworkType network = NetworkType.MAINNET;
-	late Timestamp timestamp = Timestamp();
-	late PublicKey signerPublicKey = PublicKey();
-	late Amount fee = Amount();
-	late Timestamp deadline = Timestamp();
-	late List<SizePrefixedMultisigAccountModification> modifications = [];
-	final int entityBodyReserved_1 = 0; // reserved field
-	final int signerPublicKeySize = 32; // reserved field
 
 	NonVerifiableMultisigAccountModificationTransactionV1({ 
 	TransactionType? type,
@@ -2997,6 +2977,24 @@ class NonVerifiableMultisigAccountModificationTransactionV1 implements ISerializ
 class MultisigAccountModificationTransactionV2 implements ISerializable, ITransaction {
 	static const int TRANSACTION_VERSION = 2;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.MULTISIG_ACCOUNT_MODIFICATION.value);
+	@override
+	late TransactionType type;
+	@override
+	late int version;
+	late NetworkType network;
+	late Timestamp timestamp;
+	@override
+	late PublicKey signerPublicKey;
+	@override
+	late Signature signature;
+	late Amount fee;
+	late Timestamp deadline;
+	late List<SizePrefixedMultisigAccountModification> modifications;
+	late int minApprovalDelta;
+	final int entityBodyReserved_1 = 0; // reserved field
+	final int signerPublicKeySize = 32; // reserved field
+	final int signatureSize = 64; // reserved field
+	final int minApprovalDeltaSize = 4; // reserved field
 
 	static const Map<String, String> TYPE_HINTS = {
 		'type': 'enum:TransactionType',
@@ -3008,25 +3006,6 @@ class MultisigAccountModificationTransactionV2 implements ISerializable, ITransa
 		'deadline': 'pod:Timestamp',
 		'modifications': 'array[SizePrefixedMultisigAccountModification]'
 	};
-
-	@override
-	late TransactionType type;
-	@override
-	late int version;
-	late NetworkType network = NetworkType.MAINNET;
-	late Timestamp timestamp = Timestamp();
-	@override
-	late PublicKey signerPublicKey = PublicKey();
-	@override
-	late Signature signature = Signature();
-	late Amount fee = Amount();
-	late Timestamp deadline = Timestamp();
-	late List<SizePrefixedMultisigAccountModification> modifications = [];
-	late int minApprovalDelta = 0;
-	final int entityBodyReserved_1 = 0; // reserved field
-	final int signerPublicKeySize = 32; // reserved field
-	final int signatureSize = 64; // reserved field
-	final int minApprovalDeltaSize = 4; // reserved field
 
 	MultisigAccountModificationTransactionV2({ 
 	TransactionType? type,
@@ -3202,6 +3181,18 @@ class MultisigAccountModificationTransactionV2 implements ISerializable, ITransa
 class NonVerifiableMultisigAccountModificationTransactionV2 implements ISerializable, IInnerTransaction {
 	static const int TRANSACTION_VERSION = 2;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.MULTISIG_ACCOUNT_MODIFICATION.value);
+	late TransactionType type;
+	late int version;
+	late NetworkType network;
+	late Timestamp timestamp;
+	late PublicKey signerPublicKey;
+	late Amount fee;
+	late Timestamp deadline;
+	late List<SizePrefixedMultisigAccountModification> modifications;
+	late int minApprovalDelta;
+	final int entityBodyReserved_1 = 0; // reserved field
+	final int signerPublicKeySize = 32; // reserved field
+	final int minApprovalDeltaSize = 4; // reserved field
 
 	static const Map<String, String> TYPE_HINTS = {
 		'type': 'enum:TransactionType',
@@ -3212,19 +3203,6 @@ class NonVerifiableMultisigAccountModificationTransactionV2 implements ISerializ
 		'deadline': 'pod:Timestamp',
 		'modifications': 'array[SizePrefixedMultisigAccountModification]'
 	};
-
-	late TransactionType type;
-	late int version;
-	late NetworkType network = NetworkType.MAINNET;
-	late Timestamp timestamp = Timestamp();
-	late PublicKey signerPublicKey = PublicKey();
-	late Amount fee = Amount();
-	late Timestamp deadline = Timestamp();
-	late List<SizePrefixedMultisigAccountModification> modifications = [];
-	late int minApprovalDelta = 0;
-	final int entityBodyReserved_1 = 0; // reserved field
-	final int signerPublicKeySize = 32; // reserved field
-	final int minApprovalDeltaSize = 4; // reserved field
 
 	NonVerifiableMultisigAccountModificationTransactionV2({ 
 	TransactionType? type,
@@ -3383,6 +3361,22 @@ class NonVerifiableMultisigAccountModificationTransactionV2 implements ISerializ
 class CosignatureV1 implements ISerializable {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.MULTISIG_COSIGNATURE.value);
+	late TransactionType type;
+	late int version;
+	late NetworkType network;
+	late Timestamp timestamp;
+	late PublicKey signerPublicKey;
+	late Signature signature;
+	late Amount fee;
+	late Timestamp deadline;
+	late Hash256 multisigTransactionHash;
+	late Address multisigAccountAddress;
+	final int entityBodyReserved_1 = 0; // reserved field
+	final int signerPublicKeySize = 32; // reserved field
+	final int signatureSize = 64; // reserved field
+	final int multisigTransactionHashOuterSize = 36; // reserved field
+	final int multisigTransactionHashSize = 32; // reserved field
+	final int multisigAccountAddressSize = 40; // reserved field
 
 	static const Map<String, String> TYPE_HINTS = {
 		'type': 'enum:TransactionType',
@@ -3395,23 +3389,6 @@ class CosignatureV1 implements ISerializable {
 		'multisigTransactionHash': 'pod:Hash256',
 		'multisigAccountAddress': 'pod:Address'
 	};
-
-	late TransactionType type;
-	late int version;
-	late NetworkType network = NetworkType.MAINNET;
-	late Timestamp timestamp = Timestamp();
-	late PublicKey signerPublicKey = PublicKey();
-	late Signature signature = Signature();
-	late Amount fee = Amount();
-	late Timestamp deadline = Timestamp();
-	late Hash256 multisigTransactionHash = Hash256();
-	late Address multisigAccountAddress = Address();
-	final int entityBodyReserved_1 = 0; // reserved field
-	final int signerPublicKeySize = 32; // reserved field
-	final int signatureSize = 64; // reserved field
-	final int multisigTransactionHashOuterSize = 36; // reserved field
-	final int multisigTransactionHashSize = 32; // reserved field
-	final int multisigAccountAddressSize = 40; // reserved field
 
 	CosignatureV1({ 
 	TransactionType? type,
@@ -3591,12 +3568,11 @@ class CosignatureV1 implements ISerializable {
 
 
 class SizePrefixedCosignatureV1 implements ISerializable {
+	late CosignatureV1 cosignature;
 
 	static const Map<String, String> TYPE_HINTS = {
 		'cosignature': 'struct:CosignatureV1'
 	};
-
-	late CosignatureV1 cosignature = CosignatureV1();
 
 	SizePrefixedCosignatureV1([cosignature]) {
 		this.cosignature = cosignature ?? CosignatureV1();
@@ -3651,6 +3627,23 @@ class SizePrefixedCosignatureV1 implements ISerializable {
 class MultisigTransactionV1 implements ISerializable, ITransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.MULTISIG.value);
+	@override
+	late TransactionType type;
+	@override
+	late int version;
+	late NetworkType network;
+	late Timestamp timestamp;
+	@override
+	late PublicKey signerPublicKey;
+	@override
+	late Signature signature;
+	late Amount fee;
+	late Timestamp deadline;
+	late IInnerTransaction innerTransaction;
+	late List<SizePrefixedCosignatureV1> cosignatures;
+	final int entityBodyReserved_1 = 0; // reserved field
+	final int signerPublicKeySize = 32; // reserved field
+	final int signatureSize = 64; // reserved field
 
 	static const Map<String, String> TYPE_HINTS = {
 		'type': 'enum:TransactionType',
@@ -3663,24 +3656,6 @@ class MultisigTransactionV1 implements ISerializable, ITransaction {
 		'innerTransaction': 'struct:NonVerifiableTransaction',
 		'cosignatures': 'array[SizePrefixedCosignatureV1]'
 	};
-
-	@override
-	late TransactionType type;
-	@override
-	late int version;
-	late NetworkType network = NetworkType.MAINNET;
-	late Timestamp timestamp = Timestamp();
-	@override
-	late PublicKey signerPublicKey = PublicKey();
-	@override
-	late Signature signature = Signature();
-	late Amount fee = Amount();
-	late Timestamp deadline = Timestamp();
-	late IInnerTransaction innerTransaction = NonVerifiableTransaction();
-	late List<SizePrefixedCosignatureV1> cosignatures = [];
-	final int entityBodyReserved_1 = 0; // reserved field
-	final int signerPublicKeySize = 32; // reserved field
-	final int signatureSize = 64; // reserved field
 
 	MultisigTransactionV1({ 
 	TransactionType? type,
@@ -3852,6 +3827,16 @@ class MultisigTransactionV1 implements ISerializable, ITransaction {
 class NonVerifiableMultisigTransactionV1 implements ISerializable, IInnerTransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.MULTISIG.value);
+	late TransactionType type;
+	late int version;
+	late NetworkType network;
+	late Timestamp timestamp;
+	late PublicKey signerPublicKey;
+	late Amount fee;
+	late Timestamp deadline;
+	late IInnerTransaction innerTransaction;
+	final int entityBodyReserved_1 = 0; // reserved field
+	final int signerPublicKeySize = 32; // reserved field
 
 	static const Map<String, String> TYPE_HINTS = {
 		'type': 'enum:TransactionType',
@@ -3862,17 +3847,6 @@ class NonVerifiableMultisigTransactionV1 implements ISerializable, IInnerTransac
 		'deadline': 'pod:Timestamp',
 		'innerTransaction': 'struct:NonVerifiableTransaction'
 	};
-
-	late TransactionType type;
-	late int version;
-	late NetworkType network = NetworkType.MAINNET;
-	late Timestamp timestamp = Timestamp();
-	late PublicKey signerPublicKey = PublicKey();
-	late Amount fee = Amount();
-	late Timestamp deadline = Timestamp();
-	late IInnerTransaction innerTransaction = NonVerifiableTransaction();
-	final int entityBodyReserved_1 = 0; // reserved field
-	final int signerPublicKeySize = 32; // reserved field
 
 	NonVerifiableMultisigTransactionV1({ 
 	TransactionType? type,
@@ -4011,6 +3985,26 @@ class NonVerifiableMultisigTransactionV1 implements ISerializable, IInnerTransac
 class NamespaceRegistrationTransactionV1 implements ISerializable, ITransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.NAMESPACE_REGISTRATION.value);
+	@override
+	late TransactionType type;
+	@override
+	late int version;
+	late NetworkType network;
+	late Timestamp timestamp;
+	@override
+	late PublicKey signerPublicKey;
+	@override
+	late Signature signature;
+	late Amount fee;
+	late Timestamp deadline;
+	late Address rentalFeeSink;
+	late Amount rentalFee;
+	late Uint8List name;
+	late Uint8List? parentName;
+	final int entityBodyReserved_1 = 0; // reserved field
+	final int signerPublicKeySize = 32; // reserved field
+	final int signatureSize = 64; // reserved field
+	final int rentalFeeSinkSize = 40; // reserved field
 
 	static const Map<String, String> TYPE_HINTS = {
 		'type': 'enum:TransactionType',
@@ -4025,27 +4019,6 @@ class NamespaceRegistrationTransactionV1 implements ISerializable, ITransaction 
 		'name': 'bytes_array',
 		'parentName': 'bytes_array'
 	};
-
-	@override
-	late TransactionType type;
-	@override
-	late int version;
-	late NetworkType network = NetworkType.MAINNET;
-	late Timestamp timestamp = Timestamp();
-	@override
-	late PublicKey signerPublicKey = PublicKey();
-	@override
-	late Signature signature = Signature();
-	late Amount fee = Amount();
-	late Timestamp deadline = Timestamp();
-	late Address rentalFeeSink = Address();
-	late Amount rentalFee = Amount();
-	late Uint8List name = Uint8List(0);
-	late Uint8List? parentName;
-	final int entityBodyReserved_1 = 0; // reserved field
-	final int signerPublicKeySize = 32; // reserved field
-	final int signatureSize = 64; // reserved field
-	final int rentalFeeSinkSize = 40; // reserved field
 
 	NamespaceRegistrationTransactionV1({ 
 	TransactionType? type,
@@ -4253,6 +4226,20 @@ class NamespaceRegistrationTransactionV1 implements ISerializable, ITransaction 
 class NonVerifiableNamespaceRegistrationTransactionV1 implements ISerializable, IInnerTransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.NAMESPACE_REGISTRATION.value);
+	late TransactionType type;
+	late int version;
+	late NetworkType network;
+	late Timestamp timestamp;
+	late PublicKey signerPublicKey;
+	late Amount fee;
+	late Timestamp deadline;
+	late Address rentalFeeSink;
+	late Amount rentalFee;
+	late Uint8List name;
+	late Uint8List? parentName;
+	final int entityBodyReserved_1 = 0; // reserved field
+	final int signerPublicKeySize = 32; // reserved field
+	final int rentalFeeSinkSize = 40; // reserved field
 
 	static const Map<String, String> TYPE_HINTS = {
 		'type': 'enum:TransactionType',
@@ -4266,21 +4253,6 @@ class NonVerifiableNamespaceRegistrationTransactionV1 implements ISerializable, 
 		'name': 'bytes_array',
 		'parentName': 'bytes_array'
 	};
-
-	late TransactionType type;
-	late int version;
-	late NetworkType network = NetworkType.MAINNET;
-	late Timestamp timestamp = Timestamp();
-	late PublicKey signerPublicKey = PublicKey();
-	late Amount fee = Amount();
-	late Timestamp deadline = Timestamp();
-	late Address rentalFeeSink = Address();
-	late Amount rentalFee = Amount();
-	late Uint8List name = Uint8List(0);
-	late Uint8List? parentName;
-	final int entityBodyReserved_1 = 0; // reserved field
-	final int signerPublicKeySize = 32; // reserved field
-	final int rentalFeeSinkSize = 40; // reserved field
 
 	NonVerifiableNamespaceRegistrationTransactionV1({ 
 	TransactionType? type,
@@ -4508,14 +4480,13 @@ class MessageType implements ISerializable {
 
 
 class Message implements ISerializable {
+	late MessageType messageType;
+	late Uint8List message;
 
 	static const Map<String, String> TYPE_HINTS = {
 		'messageType': 'enum:MessageType',
 		'message': 'bytes_array'
 	};
-
-	late MessageType messageType = MessageType.PLAIN;
-	late Uint8List message = Uint8List(0);
 
 	Message({ MessageType? messageType, Uint8List? message}) {
 		this.messageType = messageType ?? MessageType.PLAIN;
@@ -4579,6 +4550,25 @@ class Message implements ISerializable {
 class TransferTransactionV1 implements ISerializable, ITransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.TRANSFER.value);
+	@override
+	late TransactionType type;
+	@override
+	late int version;
+	late NetworkType network;
+	late Timestamp timestamp;
+	@override
+	late PublicKey signerPublicKey;
+	@override
+	late Signature signature;
+	late Amount fee;
+	late Timestamp deadline;
+	late Address recipientAddress;
+	late Amount amount;
+	late Message? message;
+	final int entityBodyReserved_1 = 0; // reserved field
+	final int signerPublicKeySize = 32; // reserved field
+	final int signatureSize = 64; // reserved field
+	final int recipientAddressSize = 40; // reserved field
 
 	static const Map<String, String> TYPE_HINTS = {
 		'type': 'enum:TransactionType',
@@ -4592,26 +4582,6 @@ class TransferTransactionV1 implements ISerializable, ITransaction {
 		'amount': 'pod:Amount',
 		'message': 'struct:Message'
 	};
-
-	@override
-	late TransactionType type;
-	@override
-	late int version;
-	late NetworkType network = NetworkType.MAINNET;
-	late Timestamp timestamp = Timestamp();
-	@override
-	late PublicKey signerPublicKey = PublicKey();
-	@override
-	late Signature signature = Signature();
-	late Amount fee = Amount();
-	late Timestamp deadline = Timestamp();
-	late Address recipientAddress = Address();
-	late Amount amount = Amount();
-	late Message? message;
-	final int entityBodyReserved_1 = 0; // reserved field
-	final int signerPublicKeySize = 32; // reserved field
-	final int signatureSize = 64; // reserved field
-	final int recipientAddressSize = 40; // reserved field
 
 	TransferTransactionV1({ 
 	TransactionType? type,
@@ -4812,6 +4782,19 @@ class TransferTransactionV1 implements ISerializable, ITransaction {
 class NonVerifiableTransferTransactionV1 implements ISerializable, IInnerTransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.TRANSFER.value);
+	late TransactionType type;
+	late int version;
+	late NetworkType network;
+	late Timestamp timestamp;
+	late PublicKey signerPublicKey;
+	late Amount fee;
+	late Timestamp deadline;
+	late Address recipientAddress;
+	late Amount amount;
+	late Message? message;
+	final int entityBodyReserved_1 = 0; // reserved field
+	final int signerPublicKeySize = 32; // reserved field
+	final int recipientAddressSize = 40; // reserved field
 
 	static const Map<String, String> TYPE_HINTS = {
 		'type': 'enum:TransactionType',
@@ -4824,20 +4807,6 @@ class NonVerifiableTransferTransactionV1 implements ISerializable, IInnerTransac
 		'amount': 'pod:Amount',
 		'message': 'struct:Message'
 	};
-
-	late TransactionType type;
-	late int version;
-	late NetworkType network = NetworkType.MAINNET;
-	late Timestamp timestamp = Timestamp();
-	late PublicKey signerPublicKey = PublicKey();
-	late Amount fee = Amount();
-	late Timestamp deadline = Timestamp();
-	late Address recipientAddress = Address();
-	late Amount amount = Amount();
-	late Message? message;
-	final int entityBodyReserved_1 = 0; // reserved field
-	final int signerPublicKeySize = 32; // reserved field
-	final int recipientAddressSize = 40; // reserved field
 
 	NonVerifiableTransferTransactionV1({ 
 	TransactionType? type,
@@ -5021,6 +4990,26 @@ class NonVerifiableTransferTransactionV1 implements ISerializable, IInnerTransac
 class TransferTransactionV2 implements ISerializable, ITransaction {
 	static const int TRANSACTION_VERSION = 2;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.TRANSFER.value);
+	@override
+	late TransactionType type;
+	@override
+	late int version;
+	late NetworkType network;
+	late Timestamp timestamp;
+	@override
+	late PublicKey signerPublicKey;
+	@override
+	late Signature signature;
+	late Amount fee;
+	late Timestamp deadline;
+	late Address recipientAddress;
+	late Amount amount;
+	late Message? message;
+	late List<SizePrefixedMosaic> mosaics;
+	final int entityBodyReserved_1 = 0; // reserved field
+	final int signerPublicKeySize = 32; // reserved field
+	final int signatureSize = 64; // reserved field
+	final int recipientAddressSize = 40; // reserved field
 
 	static const Map<String, String> TYPE_HINTS = {
 		'type': 'enum:TransactionType',
@@ -5035,27 +5024,6 @@ class TransferTransactionV2 implements ISerializable, ITransaction {
 		'message': 'struct:Message',
 		'mosaics': 'array[SizePrefixedMosaic]'
 	};
-
-	@override
-	late TransactionType type;
-	@override
-	late int version;
-	late NetworkType network = NetworkType.MAINNET;
-	late Timestamp timestamp = Timestamp();
-	@override
-	late PublicKey signerPublicKey = PublicKey();
-	@override
-	late Signature signature = Signature();
-	late Amount fee = Amount();
-	late Timestamp deadline = Timestamp();
-	late Address recipientAddress = Address();
-	late Amount amount = Amount();
-	late Message? message;
-	late List<SizePrefixedMosaic> mosaics = [];
-	final int entityBodyReserved_1 = 0; // reserved field
-	final int signerPublicKeySize = 32; // reserved field
-	final int signatureSize = 64; // reserved field
-	final int recipientAddressSize = 40; // reserved field
 
 	TransferTransactionV2({ 
 	TransactionType? type,
@@ -5272,6 +5240,20 @@ class TransferTransactionV2 implements ISerializable, ITransaction {
 class NonVerifiableTransferTransactionV2 implements ISerializable, IInnerTransaction {
 	static const int TRANSACTION_VERSION = 2;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.TRANSFER.value);
+	late TransactionType type;
+	late int version;
+	late NetworkType network;
+	late Timestamp timestamp;
+	late PublicKey signerPublicKey;
+	late Amount fee;
+	late Timestamp deadline;
+	late Address recipientAddress;
+	late Amount amount;
+	late Message? message;
+	late List<SizePrefixedMosaic> mosaics;
+	final int entityBodyReserved_1 = 0; // reserved field
+	final int signerPublicKeySize = 32; // reserved field
+	final int recipientAddressSize = 40; // reserved field
 
 	static const Map<String, String> TYPE_HINTS = {
 		'type': 'enum:TransactionType',
@@ -5285,21 +5267,6 @@ class NonVerifiableTransferTransactionV2 implements ISerializable, IInnerTransac
 		'message': 'struct:Message',
 		'mosaics': 'array[SizePrefixedMosaic]'
 	};
-
-	late TransactionType type;
-	late int version;
-	late NetworkType network = NetworkType.MAINNET;
-	late Timestamp timestamp = Timestamp();
-	late PublicKey signerPublicKey = PublicKey();
-	late Amount fee = Amount();
-	late Timestamp deadline = Timestamp();
-	late Address recipientAddress = Address();
-	late Amount amount = Amount();
-	late Message? message;
-	late List<SizePrefixedMosaic> mosaics = [];
-	final int entityBodyReserved_1 = 0; // reserved field
-	final int signerPublicKeySize = 32; // reserved field
-	final int recipientAddressSize = 40; // reserved field
 
 	NonVerifiableTransferTransactionV2({ 
 	TransactionType? type,
