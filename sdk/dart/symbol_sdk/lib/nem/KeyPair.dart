@@ -1,7 +1,6 @@
 import '../CryptoTypes.dart';
 import '../utils/arrayHelpers.dart';
 import 'dart:typed_data';
-import 'package:ed25519_edwards/ed25519_edwards.dart' as ed;
 import './naclFastKeccack.dart' as nacl_fast_keccack;
 
 class KeyPair {
@@ -38,6 +37,6 @@ class Verifier {
   }
 
   bool verify(Uint8List message, Signature signature) {
-    return ed.verify(ed.PublicKey(publicKey.bytes), message, signature.bytes);
+    return nacl_fast_keccack.verify(message, signature.bytes, publicKey.bytes);
   }
 }

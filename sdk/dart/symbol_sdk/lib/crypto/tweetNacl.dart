@@ -1763,6 +1763,10 @@ class TweetNaCl {
     return _crypto_hash_off(out, m, 0, m.length);
   }
 
+  static void add(List<Int32List> p, List<Int32List> q){
+    return _add(p, q);
+  }
+
   static void _add(List<Int32List> p, List<Int32List> q) {
     final a = Int32List(16);
     final b = Int32List(16);

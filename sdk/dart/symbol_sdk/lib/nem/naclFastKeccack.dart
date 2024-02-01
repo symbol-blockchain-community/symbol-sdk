@@ -4,6 +4,7 @@ import '../crypto/tweetNacl.dart' as tweet_nacl;
 
 const crypto_sign_SECRETKEYBYTES = 64;
 const crypto_sign_BYTES = 64;
+const crypto_sign_PUBLICKEYBYTES = 32;
 
 void crypto_hash(Uint8List out, Uint8List m, int n){
   var digest = pc.KeccakDigest(512);
@@ -94,6 +95,59 @@ int crypto_sign(Uint8List sm, Uint8List m, int n, Uint8List sk) {
   return smlen;
 }
 
+int cryptoSignOpen(Uint8List m, Uint8List sm, int n, Uint8List pk) {
+  var tweetNacl = tweet_nacl.TweetNaCl();
+  int i;
+  var t = Uint8List(32);
+  var h = Uint8List(64);
+  var p = [gf(), gf(), gf(), gf()];
+  var q = [gf(), gf(), gf(), gf()];
+
+  if (64 > n){
+    return -1;
+  }
+
+  if (tweet_nacl.TweetNaCl.unpackneg(q, pk) != 0){
+    return -1;
+  }
+
+  for (i = 0; i < n; i++){
+    m[i] = sm[i];
+  }
+
+  for (i = 0; 32 > i; i++){
+    m[i + 32] = pk[i];
+  }
+
+  crypto_hash(h, m, n);
+  tweet_nacl.TweetNaCl.reduce(h);
+  tweetNacl.scalarmult(p, q, h, 0);
+
+  tweet_nacl.TweetNaCl.scalarbase(q, sm.sublist(32, sm.length), 0);
+  tweet_nacl.TweetNaCl.add(p, q);
+  tweetNacl.pack(t, p);
+  n -= 64;
+  var longArr = Uint8List(sm.length);
+  for (var k = 0; k < longArr.length; k++){
+    longArr[k] = sm[k];
+  }
+
+  if (tweet_nacl.TweetNaCl.crypto_verify_32(longArr, t) != 0) {
+    for (i = 0; i < n; i++){
+      m[i] = 0;
+    }
+    return -1;
+  }
+  for (var k = 0; k < longArr.length; k++){
+    sm[k] = longArr[k];
+  }
+
+  for (i = 0; i < n; i++){
+    m[i] = sm[i + 64];
+  }
+  return n;
+}
+
 Uint8List sign(Uint8List msg, Uint8List privateKey, Uint8List publicKey) {
   var secretKey = Uint8List.fromList(privateKey.reversed.followedBy(publicKey).toList());
   if (secretKey.length != crypto_sign_SECRETKEYBYTES) {
@@ -106,4 +160,22 @@ Uint8List sign(Uint8List msg, Uint8List privateKey, Uint8List publicKey) {
     sig[i] = signedMsg[i];
   }
   return sig;
+}
+
+bool verify(Uint8List msg, Uint8List sig, Uint8List publicKey) {
+  if (sig.length != crypto_sign_BYTES){
+    throw Exception('bad signature size');
+  }
+  if (publicKey.length != crypto_sign_PUBLICKEYBYTES){
+    throw Exception('bad public key size');
+  }
+  var sm = Uint8List(crypto_sign_BYTES + msg.length);
+  var m = Uint8List(crypto_sign_BYTES + msg.length);
+  for (var i = 0; i < crypto_sign_BYTES; i++){
+    sm[i] = sig[i];
+  }
+  for (var i = 0; i < msg.length; i++){
+    sm[i + crypto_sign_BYTES] = msg[i];
+  }
+  return cryptoSignOpen(m, sm, sm.length, publicKey) >= 0;
 }

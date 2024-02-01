@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:symbol_sdk/symbol/index.dart';
+import 'package:symbol_sdk/nem/index.dart';
 import 'package:symbol_sdk/index.dart';
 import 'package:symbol_sdk/CryptoTypes.dart' as ct;
 import 'package:http/http.dart' as http;
@@ -12,15 +12,11 @@ void main() async {
   var bobPrivateKey = ct.PrivateKey('E3839324F3CD2FC194F6E1C501D4D2CFD0DC8CCAC4307AC328E3154FF00951B9');
   var aliceKeyPair = KeyPair(alicePrivateKey);
   var bobKeyPair = KeyPair(bobPrivateKey);
-  var messageEncorder = MessageEncorder(aliceKeyPair);
-  var clearText = hexToBytes('86DDB9E713A8EBF67A51830EFF03B837E147C20D75E67B2A54AA29E98C');
-  var encoded = messageEncorder.encode(bobKeyPair.publicKey, clearText);
-  print(encoded);
-
-  var bobEncorder = MessageEncorder(bobKeyPair);
-  var decoded = bobEncorder.tryDecode(aliceKeyPair.publicKey, encoded);
-  print(bytesToHex(decoded['message']));
-
+  var aliceVerifier = Verifier(aliceKeyPair.publicKey);
+  var signature = aliceKeyPair.sign(hexToBytes('AAAA'));
+  var v = aliceVerifier.verify(hexToBytes('AAAA'), signature);
+  print(v);
+  
   /* 
   var tx = TransferTransactionV1(
     network: NetworkType.TESTNET,
