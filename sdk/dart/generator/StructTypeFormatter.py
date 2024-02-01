@@ -124,11 +124,11 @@ class StructFormatter(AbstractTypeFormatter):
 		for field in self.non_reserved_fields():
 			const_field = self.get_paired_const_field(field)
 			field_name = self.field_name(field)
-			class_name = self.re_name(field.extensions.printer.get_type())
+			class_name = 'late ' + self.re_name(field.extensions.printer.get_type())
 			if const_field:
 				if self.is_transaction() and self.has_field_override(field_name):
 					body += '@override\n'
-				body += f'{class_name} {field_name} = {self.typename}.{const_field.name};\n'
+				body += f'{class_name} {field_name};\n'
 			else:
 				if self.is_nullable_field(field):
 					body += f'{class_name}? {field_name};\n'

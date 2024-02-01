@@ -407,8 +407,8 @@ class Mosaic implements ISerializable {
 		'amount': 'pod:Amount'
 	};
 
-	MosaicId mosaicId = MosaicId();
-	Amount amount = Amount();
+	late MosaicId mosaicId = MosaicId();
+	late Amount amount = Amount();
 
 	Mosaic({ MosaicId? mosaicId, Amount? amount}) {
 		this.mosaicId = mosaicId ?? MosaicId();
@@ -471,8 +471,8 @@ class UnresolvedMosaic implements ISerializable {
 		'amount': 'pod:Amount'
 	};
 
-	UnresolvedMosaicId mosaicId = UnresolvedMosaicId();
-	Amount amount = Amount();
+	late UnresolvedMosaicId mosaicId = UnresolvedMosaicId();
+	late Amount amount = Amount();
 
 	UnresolvedMosaic({ UnresolvedMosaicId? mosaicId, Amount? amount}) {
 		this.mosaicId = mosaicId ?? UnresolvedMosaicId();
@@ -703,16 +703,16 @@ class Transaction implements ISerializable, ITransaction {
 	};
 
 	@override
-	Signature signature = Signature();
+	late Signature signature = Signature();
 	@override
-	PublicKey signerPublicKey = PublicKey();
+	late PublicKey signerPublicKey = PublicKey();
 	@override
-	int version = 0;
-	NetworkType network = NetworkType.MAINNET;
+	late int version = 0;
+	late NetworkType network = NetworkType.MAINNET;
 	@override
-	TransactionType type = TransactionType.ACCOUNT_KEY_LINK;
-	Amount fee = Amount();
-	Timestamp deadline = Timestamp();
+	late TransactionType type = TransactionType.ACCOUNT_KEY_LINK;
+	late Amount fee = Amount();
+	late Timestamp deadline = Timestamp();
 	final int verifiableEntityHeaderReserved_1 = 0; // reserved field
 	final int entityBodyReserved_1 = 0; // reserved field
 
@@ -849,10 +849,10 @@ class EmbeddedTransaction implements ISerializable, IInnerTransaction {
 		'type': 'enum:TransactionType'
 	};
 
-	PublicKey signerPublicKey = PublicKey();
-	int version = 0;
-	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = TransactionType.ACCOUNT_KEY_LINK;
+	late PublicKey signerPublicKey = PublicKey();
+	late int version = 0;
+	late NetworkType network = NetworkType.MAINNET;
+	late TransactionType type = TransactionType.ACCOUNT_KEY_LINK;
 	final int embeddedTransactionHeaderReserved_1 = 0; // reserved field
 	final int entityBodyReserved_1 = 0; // reserved field
 
@@ -1067,9 +1067,9 @@ class VrfProof implements ISerializable {
 		'scalar': 'pod:ProofScalar'
 	};
 
-	ProofGamma gamma = ProofGamma();
-	ProofVerificationHash verificationHash = ProofVerificationHash();
-	ProofScalar scalar = ProofScalar();
+	late ProofGamma gamma = ProofGamma();
+	late ProofVerificationHash verificationHash = ProofVerificationHash();
+	late ProofScalar scalar = ProofScalar();
 
 	VrfProof({ ProofGamma? gamma, ProofVerificationHash? verificationHash, ProofScalar? scalar}) {
 		this.gamma = gamma ?? ProofGamma();
@@ -1152,21 +1152,21 @@ class Block implements ISerializable {
 		'feeMultiplier': 'pod:BlockFeeMultiplier'
 	};
 
-	Signature signature = Signature();
-	PublicKey signerPublicKey = PublicKey();
-	int version = 0;
-	NetworkType network = NetworkType.MAINNET;
-	BlockType type = BlockType.NEMESIS;
-	Height height = Height();
-	Timestamp timestamp = Timestamp();
-	Difficulty difficulty = Difficulty();
-	VrfProof generationHashProof = VrfProof();
-	Hash256 previousBlockHash = Hash256();
-	Hash256 transactionsHash = Hash256();
-	Hash256 receiptsHash = Hash256();
-	Hash256 stateHash = Hash256();
-	Address beneficiaryAddress = Address();
-	BlockFeeMultiplier feeMultiplier = BlockFeeMultiplier();
+	late Signature signature = Signature();
+	late PublicKey signerPublicKey = PublicKey();
+	late int version = 0;
+	late NetworkType network = NetworkType.MAINNET;
+	late BlockType type = BlockType.NEMESIS;
+	late Height height = Height();
+	late Timestamp timestamp = Timestamp();
+	late Difficulty difficulty = Difficulty();
+	late VrfProof generationHashProof = VrfProof();
+	late Hash256 previousBlockHash = Hash256();
+	late Hash256 transactionsHash = Hash256();
+	late Hash256 receiptsHash = Hash256();
+	late Hash256 stateHash = Hash256();
+	late Address beneficiaryAddress = Address();
+	late BlockFeeMultiplier feeMultiplier = BlockFeeMultiplier();
 	final int verifiableEntityHeaderReserved_1 = 0; // reserved field
 	final int entityBodyReserved_1 = 0; // reserved field
 
@@ -1390,26 +1390,26 @@ class NemesisBlockV1 implements ISerializable {
 		'transactions': 'array[Transaction]'
 	};
 
-	Signature signature = Signature();
-	PublicKey signerPublicKey = PublicKey();
-	int version = NemesisBlockV1.BLOCK_VERSION;
-	NetworkType network = NetworkType.MAINNET;
-	BlockType type = NemesisBlockV1.BLOCK_TYPE;
-	Height height = Height();
-	Timestamp timestamp = Timestamp();
-	Difficulty difficulty = Difficulty();
-	VrfProof generationHashProof = VrfProof();
-	Hash256 previousBlockHash = Hash256();
-	Hash256 transactionsHash = Hash256();
-	Hash256 receiptsHash = Hash256();
-	Hash256 stateHash = Hash256();
-	Address beneficiaryAddress = Address();
-	BlockFeeMultiplier feeMultiplier = BlockFeeMultiplier();
-	int votingEligibleAccountsCount = 0;
-	BigInt harvestingEligibleAccountsCount = BigInt.from(0);
-	Amount totalVotingBalance = Amount();
-	Hash256 previousImportanceBlockHash = Hash256();
-	List<ITransaction> transactions = [];
+	late Signature signature = Signature();
+	late PublicKey signerPublicKey = PublicKey();
+	late int version;
+	late NetworkType network = NetworkType.MAINNET;
+	late BlockType type;
+	late Height height = Height();
+	late Timestamp timestamp = Timestamp();
+	late Difficulty difficulty = Difficulty();
+	late VrfProof generationHashProof = VrfProof();
+	late Hash256 previousBlockHash = Hash256();
+	late Hash256 transactionsHash = Hash256();
+	late Hash256 receiptsHash = Hash256();
+	late Hash256 stateHash = Hash256();
+	late Address beneficiaryAddress = Address();
+	late BlockFeeMultiplier feeMultiplier = BlockFeeMultiplier();
+	late int votingEligibleAccountsCount = 0;
+	late BigInt harvestingEligibleAccountsCount = BigInt.from(0);
+	late Amount totalVotingBalance = Amount();
+	late Hash256 previousImportanceBlockHash = Hash256();
+	late List<ITransaction> transactions = [];
 	final int verifiableEntityHeaderReserved_1 = 0; // reserved field
 	final int entityBodyReserved_1 = 0; // reserved field
 
@@ -1678,22 +1678,22 @@ class NormalBlockV1 implements ISerializable {
 		'transactions': 'array[Transaction]'
 	};
 
-	Signature signature = Signature();
-	PublicKey signerPublicKey = PublicKey();
-	int version = NormalBlockV1.BLOCK_VERSION;
-	NetworkType network = NetworkType.MAINNET;
-	BlockType type = NormalBlockV1.BLOCK_TYPE;
-	Height height = Height();
-	Timestamp timestamp = Timestamp();
-	Difficulty difficulty = Difficulty();
-	VrfProof generationHashProof = VrfProof();
-	Hash256 previousBlockHash = Hash256();
-	Hash256 transactionsHash = Hash256();
-	Hash256 receiptsHash = Hash256();
-	Hash256 stateHash = Hash256();
-	Address beneficiaryAddress = Address();
-	BlockFeeMultiplier feeMultiplier = BlockFeeMultiplier();
-	List<ITransaction> transactions = [];
+	late Signature signature = Signature();
+	late PublicKey signerPublicKey = PublicKey();
+	late int version;
+	late NetworkType network = NetworkType.MAINNET;
+	late BlockType type;
+	late Height height = Height();
+	late Timestamp timestamp = Timestamp();
+	late Difficulty difficulty = Difficulty();
+	late VrfProof generationHashProof = VrfProof();
+	late Hash256 previousBlockHash = Hash256();
+	late Hash256 transactionsHash = Hash256();
+	late Hash256 receiptsHash = Hash256();
+	late Hash256 stateHash = Hash256();
+	late Address beneficiaryAddress = Address();
+	late BlockFeeMultiplier feeMultiplier = BlockFeeMultiplier();
+	late List<ITransaction> transactions = [];
 	final int verifiableEntityHeaderReserved_1 = 0; // reserved field
 	final int entityBodyReserved_1 = 0; // reserved field
 	final int blockHeaderReserved_1 = 0; // reserved field
@@ -1937,26 +1937,26 @@ class ImportanceBlockV1 implements ISerializable {
 		'transactions': 'array[Transaction]'
 	};
 
-	Signature signature = Signature();
-	PublicKey signerPublicKey = PublicKey();
-	int version = ImportanceBlockV1.BLOCK_VERSION;
-	NetworkType network = NetworkType.MAINNET;
-	BlockType type = ImportanceBlockV1.BLOCK_TYPE;
-	Height height = Height();
-	Timestamp timestamp = Timestamp();
-	Difficulty difficulty = Difficulty();
-	VrfProof generationHashProof = VrfProof();
-	Hash256 previousBlockHash = Hash256();
-	Hash256 transactionsHash = Hash256();
-	Hash256 receiptsHash = Hash256();
-	Hash256 stateHash = Hash256();
-	Address beneficiaryAddress = Address();
-	BlockFeeMultiplier feeMultiplier = BlockFeeMultiplier();
-	int votingEligibleAccountsCount = 0;
-	BigInt harvestingEligibleAccountsCount = BigInt.from(0);
-	Amount totalVotingBalance = Amount();
-	Hash256 previousImportanceBlockHash = Hash256();
-	List<ITransaction> transactions = [];
+	late Signature signature = Signature();
+	late PublicKey signerPublicKey = PublicKey();
+	late int version;
+	late NetworkType network = NetworkType.MAINNET;
+	late BlockType type;
+	late Height height = Height();
+	late Timestamp timestamp = Timestamp();
+	late Difficulty difficulty = Difficulty();
+	late VrfProof generationHashProof = VrfProof();
+	late Hash256 previousBlockHash = Hash256();
+	late Hash256 transactionsHash = Hash256();
+	late Hash256 receiptsHash = Hash256();
+	late Hash256 stateHash = Hash256();
+	late Address beneficiaryAddress = Address();
+	late BlockFeeMultiplier feeMultiplier = BlockFeeMultiplier();
+	late int votingEligibleAccountsCount = 0;
+	late BigInt harvestingEligibleAccountsCount = BigInt.from(0);
+	late Amount totalVotingBalance = Amount();
+	late Hash256 previousImportanceBlockHash = Hash256();
+	late List<ITransaction> transactions = [];
 	final int verifiableEntityHeaderReserved_1 = 0; // reserved field
 	final int entityBodyReserved_1 = 0; // reserved field
 
@@ -2210,8 +2210,8 @@ class FinalizationRound implements ISerializable {
 		'point': 'pod:FinalizationPoint'
 	};
 
-	FinalizationEpoch epoch = FinalizationEpoch();
-	FinalizationPoint point = FinalizationPoint();
+	late FinalizationEpoch epoch = FinalizationEpoch();
+	late FinalizationPoint point = FinalizationPoint();
 
 	FinalizationRound({ FinalizationEpoch? epoch, FinalizationPoint? point}) {
 		this.epoch = epoch ?? FinalizationEpoch();
@@ -2275,9 +2275,9 @@ class FinalizedBlockHeader implements ISerializable {
 		'hash': 'pod:Hash256'
 	};
 
-	FinalizationRound round = FinalizationRound();
-	Height height = Height();
-	Hash256 hash = Hash256();
+	late FinalizationRound round = FinalizationRound();
+	late Height height = Height();
+	late Hash256 hash = Hash256();
 
 	FinalizedBlockHeader({ FinalizationRound? round, Height? height, Hash256? hash}) {
 		this.round = round ?? FinalizationRound();
@@ -2414,8 +2414,8 @@ class Receipt implements ISerializable {
 		'type': 'enum:ReceiptType'
 	};
 
-	int version = 0;
-	ReceiptType type = ReceiptType.MOSAIC_RENTAL_FEE;
+	late int version = 0;
+	late ReceiptType type = ReceiptType.MOSAIC_RENTAL_FEE;
 
 	Receipt({ int? version, ReceiptType? type}) {
 		this.version = version ?? 0;
@@ -2486,10 +2486,10 @@ class HarvestFeeReceipt implements ISerializable {
 		'targetAddress': 'pod:Address'
 	};
 
-	int version = 0;
-	ReceiptType type = HarvestFeeReceipt.RECEIPT_TYPE;
-	Mosaic mosaic = Mosaic();
-	Address targetAddress = Address();
+	late int version = 0;
+	late ReceiptType type;
+	late Mosaic mosaic = Mosaic();
+	late Address targetAddress = Address();
 
 	HarvestFeeReceipt({ int? version, ReceiptType? type, Mosaic? mosaic, Address? targetAddress}) {
 		this.version = version ?? 0;
@@ -2575,9 +2575,9 @@ class InflationReceipt implements ISerializable {
 		'mosaic': 'struct:Mosaic'
 	};
 
-	int version = 0;
-	ReceiptType type = InflationReceipt.RECEIPT_TYPE;
-	Mosaic mosaic = Mosaic();
+	late int version = 0;
+	late ReceiptType type;
+	late Mosaic mosaic = Mosaic();
 
 	InflationReceipt({ int? version, ReceiptType? type, Mosaic? mosaic}) {
 		this.version = version ?? 0;
@@ -2656,10 +2656,10 @@ class LockHashCreatedFeeReceipt implements ISerializable {
 		'targetAddress': 'pod:Address'
 	};
 
-	int version = 0;
-	ReceiptType type = LockHashCreatedFeeReceipt.RECEIPT_TYPE;
-	Mosaic mosaic = Mosaic();
-	Address targetAddress = Address();
+	late int version = 0;
+	late ReceiptType type;
+	late Mosaic mosaic = Mosaic();
+	late Address targetAddress = Address();
 
 	LockHashCreatedFeeReceipt({ int? version, ReceiptType? type, Mosaic? mosaic, Address? targetAddress}) {
 		this.version = version ?? 0;
@@ -2746,10 +2746,10 @@ class LockHashCompletedFeeReceipt implements ISerializable {
 		'targetAddress': 'pod:Address'
 	};
 
-	int version = 0;
-	ReceiptType type = LockHashCompletedFeeReceipt.RECEIPT_TYPE;
-	Mosaic mosaic = Mosaic();
-	Address targetAddress = Address();
+	late int version = 0;
+	late ReceiptType type;
+	late Mosaic mosaic = Mosaic();
+	late Address targetAddress = Address();
 
 	LockHashCompletedFeeReceipt({ int? version, ReceiptType? type, Mosaic? mosaic, Address? targetAddress}) {
 		this.version = version ?? 0;
@@ -2836,10 +2836,10 @@ class LockHashExpiredFeeReceipt implements ISerializable {
 		'targetAddress': 'pod:Address'
 	};
 
-	int version = 0;
-	ReceiptType type = LockHashExpiredFeeReceipt.RECEIPT_TYPE;
-	Mosaic mosaic = Mosaic();
-	Address targetAddress = Address();
+	late int version = 0;
+	late ReceiptType type;
+	late Mosaic mosaic = Mosaic();
+	late Address targetAddress = Address();
 
 	LockHashExpiredFeeReceipt({ int? version, ReceiptType? type, Mosaic? mosaic, Address? targetAddress}) {
 		this.version = version ?? 0;
@@ -2926,10 +2926,10 @@ class LockSecretCreatedFeeReceipt implements ISerializable {
 		'targetAddress': 'pod:Address'
 	};
 
-	int version = 0;
-	ReceiptType type = LockSecretCreatedFeeReceipt.RECEIPT_TYPE;
-	Mosaic mosaic = Mosaic();
-	Address targetAddress = Address();
+	late int version = 0;
+	late ReceiptType type;
+	late Mosaic mosaic = Mosaic();
+	late Address targetAddress = Address();
 
 	LockSecretCreatedFeeReceipt({ int? version, ReceiptType? type, Mosaic? mosaic, Address? targetAddress}) {
 		this.version = version ?? 0;
@@ -3016,10 +3016,10 @@ class LockSecretCompletedFeeReceipt implements ISerializable {
 		'targetAddress': 'pod:Address'
 	};
 
-	int version = 0;
-	ReceiptType type = LockSecretCompletedFeeReceipt.RECEIPT_TYPE;
-	Mosaic mosaic = Mosaic();
-	Address targetAddress = Address();
+	late int version = 0;
+	late ReceiptType type;
+	late Mosaic mosaic = Mosaic();
+	late Address targetAddress = Address();
 
 	LockSecretCompletedFeeReceipt({ int? version, ReceiptType? type, Mosaic? mosaic, Address? targetAddress}) {
 		this.version = version ?? 0;
@@ -3106,10 +3106,10 @@ class LockSecretExpiredFeeReceipt implements ISerializable {
 		'targetAddress': 'pod:Address'
 	};
 
-	int version = 0;
-	ReceiptType type = LockSecretExpiredFeeReceipt.RECEIPT_TYPE;
-	Mosaic mosaic = Mosaic();
-	Address targetAddress = Address();
+	late int version = 0;
+	late ReceiptType type;
+	late Mosaic mosaic = Mosaic();
+	late Address targetAddress = Address();
 
 	LockSecretExpiredFeeReceipt({ int? version, ReceiptType? type, Mosaic? mosaic, Address? targetAddress}) {
 		this.version = version ?? 0;
@@ -3195,9 +3195,9 @@ class MosaicExpiredReceipt implements ISerializable {
 		'artifactId': 'pod:MosaicId'
 	};
 
-	int version = 0;
-	ReceiptType type = MosaicExpiredReceipt.RECEIPT_TYPE;
-	MosaicId artifactId = MosaicId();
+	late int version = 0;
+	late ReceiptType type;
+	late MosaicId artifactId = MosaicId();
 
 	MosaicExpiredReceipt({ int? version, ReceiptType? type, MosaicId? artifactId}) {
 		this.version = version ?? 0;
@@ -3277,11 +3277,11 @@ class MosaicRentalFeeReceipt implements ISerializable {
 		'recipientAddress': 'pod:Address'
 	};
 
-	int version = 0;
-	ReceiptType type = MosaicRentalFeeReceipt.RECEIPT_TYPE;
-	Mosaic mosaic = Mosaic();
-	Address senderAddress = Address();
-	Address recipientAddress = Address();
+	late int version = 0;
+	late ReceiptType type;
+	late Mosaic mosaic = Mosaic();
+	late Address senderAddress = Address();
+	late Address recipientAddress = Address();
 
 	MosaicRentalFeeReceipt({ int? version, ReceiptType? type, Mosaic? mosaic, Address? senderAddress, Address? recipientAddress}) {
 		this.version = version ?? 0;
@@ -3472,9 +3472,9 @@ class NamespaceExpiredReceipt implements ISerializable {
 		'artifactId': 'pod:NamespaceId'
 	};
 
-	int version = 0;
-	ReceiptType type = NamespaceExpiredReceipt.RECEIPT_TYPE;
-	NamespaceId artifactId = NamespaceId();
+	late int version = 0;
+	late ReceiptType type;
+	late NamespaceId artifactId = NamespaceId();
 
 	NamespaceExpiredReceipt({ int? version, ReceiptType? type, NamespaceId? artifactId}) {
 		this.version = version ?? 0;
@@ -3552,9 +3552,9 @@ class NamespaceDeletedReceipt implements ISerializable {
 		'artifactId': 'pod:NamespaceId'
 	};
 
-	int version = 0;
-	ReceiptType type = NamespaceDeletedReceipt.RECEIPT_TYPE;
-	NamespaceId artifactId = NamespaceId();
+	late int version = 0;
+	late ReceiptType type;
+	late NamespaceId artifactId = NamespaceId();
 
 	NamespaceDeletedReceipt({ int? version, ReceiptType? type, NamespaceId? artifactId}) {
 		this.version = version ?? 0;
@@ -3634,11 +3634,11 @@ class NamespaceRentalFeeReceipt implements ISerializable {
 		'recipientAddress': 'pod:Address'
 	};
 
-	int version = 0;
-	ReceiptType type = NamespaceRentalFeeReceipt.RECEIPT_TYPE;
-	Mosaic mosaic = Mosaic();
-	Address senderAddress = Address();
-	Address recipientAddress = Address();
+	late int version = 0;
+	late ReceiptType type;
+	late Mosaic mosaic = Mosaic();
+	late Address senderAddress = Address();
+	late Address recipientAddress = Address();
 
 	NamespaceRentalFeeReceipt({ int? version, ReceiptType? type, Mosaic? mosaic, Address? senderAddress, Address? recipientAddress}) {
 		this.version = version ?? 0;
@@ -3729,8 +3729,8 @@ class ReceiptSource implements ISerializable {
 	static const Map<String, String> TYPE_HINTS = {
 	};
 
-	int primaryId = 0;
-	int secondaryId = 0;
+	late int primaryId = 0;
+	late int secondaryId = 0;
 
 	ReceiptSource({ int? primaryId, int? secondaryId}) {
 		this.primaryId = primaryId ?? 0;
@@ -3793,8 +3793,8 @@ class AddressResolutionEntry implements ISerializable {
 		'resolvedValue': 'pod:Address'
 	};
 
-	ReceiptSource source = ReceiptSource();
-	Address resolvedValue = Address();
+	late ReceiptSource source = ReceiptSource();
+	late Address resolvedValue = Address();
 
 	AddressResolutionEntry({ ReceiptSource? source, Address? resolvedValue}) {
 		this.source = source ?? ReceiptSource();
@@ -3857,8 +3857,8 @@ class AddressResolutionStatement implements ISerializable {
 		'resolutionEntries': 'array[AddressResolutionEntry]'
 	};
 
-	UnresolvedAddress unresolved = UnresolvedAddress();
-	List<AddressResolutionEntry> resolutionEntries = [];
+	late UnresolvedAddress unresolved = UnresolvedAddress();
+	late List<AddressResolutionEntry> resolutionEntries = [];
 
 	AddressResolutionStatement({ UnresolvedAddress? unresolved, List<AddressResolutionEntry>? resolutionEntries}) {
 		this.unresolved = unresolved ?? UnresolvedAddress();
@@ -3928,8 +3928,8 @@ class MosaicResolutionEntry implements ISerializable {
 		'resolvedValue': 'pod:MosaicId'
 	};
 
-	ReceiptSource source = ReceiptSource();
-	MosaicId resolvedValue = MosaicId();
+	late ReceiptSource source = ReceiptSource();
+	late MosaicId resolvedValue = MosaicId();
 
 	MosaicResolutionEntry({ ReceiptSource? source, MosaicId? resolvedValue}) {
 		this.source = source ?? ReceiptSource();
@@ -3992,8 +3992,8 @@ class MosaicResolutionStatement implements ISerializable {
 		'resolutionEntries': 'array[MosaicResolutionEntry]'
 	};
 
-	UnresolvedMosaicId unresolved = UnresolvedMosaicId();
-	List<MosaicResolutionEntry> resolutionEntries = [];
+	late UnresolvedMosaicId unresolved = UnresolvedMosaicId();
+	late List<MosaicResolutionEntry> resolutionEntries = [];
 
 	MosaicResolutionStatement({ UnresolvedMosaicId? unresolved, List<MosaicResolutionEntry>? resolutionEntries}) {
 		this.unresolved = unresolved ?? UnresolvedMosaicId();
@@ -4062,9 +4062,9 @@ class TransactionStatement implements ISerializable {
 		'receipts': 'array[Receipt]'
 	};
 
-	int primaryId = 0;
-	int secondaryId = 0;
-	List<Receipt> receipts = [];
+	late int primaryId = 0;
+	late int secondaryId = 0;
+	late List<Receipt> receipts = [];
 
 	TransactionStatement({ int? primaryId, int? secondaryId, List<Receipt>? receipts}) {
 		this.primaryId = primaryId ?? 0;
@@ -4143,9 +4143,9 @@ class BlockStatement implements ISerializable {
 		'mosaicResolutionStatements': 'array[MosaicResolutionStatement]'
 	};
 
-	List<TransactionStatement> transactionStatements = [];
-	List<AddressResolutionStatement> addressResolutionStatements = [];
-	List<MosaicResolutionStatement> mosaicResolutionStatements = [];
+	late List<TransactionStatement> transactionStatements = [];
+	late List<AddressResolutionStatement> addressResolutionStatements = [];
+	late List<MosaicResolutionStatement> mosaicResolutionStatements = [];
 
 	BlockStatement({ 
 	List<TransactionStatement>? transactionStatements,
@@ -4250,18 +4250,18 @@ class AccountKeyLinkTransactionV1 implements ISerializable, ITransaction {
 	};
 
 	@override
-	Signature signature = Signature();
+	late Signature signature = Signature();
 	@override
-	PublicKey signerPublicKey = PublicKey();
+	late PublicKey signerPublicKey = PublicKey();
 	@override
-	int version = AccountKeyLinkTransactionV1.TRANSACTION_VERSION;
-	NetworkType network = NetworkType.MAINNET;
+	late int version;
+	late NetworkType network = NetworkType.MAINNET;
 	@override
-	TransactionType type = AccountKeyLinkTransactionV1.TRANSACTION_TYPE;
-	Amount fee = Amount();
-	Timestamp deadline = Timestamp();
-	PublicKey linkedPublicKey = PublicKey();
-	LinkAction linkAction = LinkAction.UNLINK;
+	late TransactionType type;
+	late Amount fee = Amount();
+	late Timestamp deadline = Timestamp();
+	late PublicKey linkedPublicKey = PublicKey();
+	late LinkAction linkAction = LinkAction.UNLINK;
 	final int verifiableEntityHeaderReserved_1 = 0; // reserved field
 	final int entityBodyReserved_1 = 0; // reserved field
 
@@ -4420,12 +4420,12 @@ class EmbeddedAccountKeyLinkTransactionV1 implements ISerializable, IInnerTransa
 		'linkAction': 'enum:LinkAction'
 	};
 
-	PublicKey signerPublicKey = PublicKey();
-	int version = EmbeddedAccountKeyLinkTransactionV1.TRANSACTION_VERSION;
-	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = EmbeddedAccountKeyLinkTransactionV1.TRANSACTION_TYPE;
-	PublicKey linkedPublicKey = PublicKey();
-	LinkAction linkAction = LinkAction.UNLINK;
+	late PublicKey signerPublicKey = PublicKey();
+	late int version;
+	late NetworkType network = NetworkType.MAINNET;
+	late TransactionType type;
+	late PublicKey linkedPublicKey = PublicKey();
+	late LinkAction linkAction = LinkAction.UNLINK;
 	final int embeddedTransactionHeaderReserved_1 = 0; // reserved field
 	final int entityBodyReserved_1 = 0; // reserved field
 
@@ -4561,18 +4561,18 @@ class NodeKeyLinkTransactionV1 implements ISerializable, ITransaction {
 	};
 
 	@override
-	Signature signature = Signature();
+	late Signature signature = Signature();
 	@override
-	PublicKey signerPublicKey = PublicKey();
+	late PublicKey signerPublicKey = PublicKey();
 	@override
-	int version = NodeKeyLinkTransactionV1.TRANSACTION_VERSION;
-	NetworkType network = NetworkType.MAINNET;
+	late int version;
+	late NetworkType network = NetworkType.MAINNET;
 	@override
-	TransactionType type = NodeKeyLinkTransactionV1.TRANSACTION_TYPE;
-	Amount fee = Amount();
-	Timestamp deadline = Timestamp();
-	PublicKey linkedPublicKey = PublicKey();
-	LinkAction linkAction = LinkAction.UNLINK;
+	late TransactionType type;
+	late Amount fee = Amount();
+	late Timestamp deadline = Timestamp();
+	late PublicKey linkedPublicKey = PublicKey();
+	late LinkAction linkAction = LinkAction.UNLINK;
 	final int verifiableEntityHeaderReserved_1 = 0; // reserved field
 	final int entityBodyReserved_1 = 0; // reserved field
 
@@ -4731,12 +4731,12 @@ class EmbeddedNodeKeyLinkTransactionV1 implements ISerializable, IInnerTransacti
 		'linkAction': 'enum:LinkAction'
 	};
 
-	PublicKey signerPublicKey = PublicKey();
-	int version = EmbeddedNodeKeyLinkTransactionV1.TRANSACTION_VERSION;
-	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = EmbeddedNodeKeyLinkTransactionV1.TRANSACTION_TYPE;
-	PublicKey linkedPublicKey = PublicKey();
-	LinkAction linkAction = LinkAction.UNLINK;
+	late PublicKey signerPublicKey = PublicKey();
+	late int version;
+	late NetworkType network = NetworkType.MAINNET;
+	late TransactionType type;
+	late PublicKey linkedPublicKey = PublicKey();
+	late LinkAction linkAction = LinkAction.UNLINK;
 	final int embeddedTransactionHeaderReserved_1 = 0; // reserved field
 	final int entityBodyReserved_1 = 0; // reserved field
 
@@ -4863,9 +4863,9 @@ class Cosignature implements ISerializable {
 		'signature': 'pod:Signature'
 	};
 
-	BigInt version = BigInt.from(0);
-	PublicKey signerPublicKey = PublicKey();
-	Signature signature = Signature();
+	late BigInt version = BigInt.from(0);
+	late PublicKey signerPublicKey = PublicKey();
+	late Signature signature = Signature();
 
 	Cosignature({ BigInt? version, PublicKey? signerPublicKey, Signature? signature}) {
 		this.version = version ?? BigInt.from(0);
@@ -4937,10 +4937,10 @@ class DetachedCosignature implements ISerializable {
 		'parentHash': 'pod:Hash256'
 	};
 
-	BigInt version = BigInt.from(0);
-	PublicKey signerPublicKey = PublicKey();
-	Signature signature = Signature();
-	Hash256 parentHash = Hash256();
+	late BigInt version = BigInt.from(0);
+	late PublicKey signerPublicKey = PublicKey();
+	late Signature signature = Signature();
+	late Hash256 parentHash = Hash256();
 
 	DetachedCosignature({ BigInt? version, PublicKey? signerPublicKey, Signature? signature, Hash256? parentHash}) {
 		this.version = version ?? BigInt.from(0);
@@ -5029,19 +5029,19 @@ class AggregateCompleteTransactionV1 implements ISerializable, ITransaction {
 	};
 
 	@override
-	Signature signature = Signature();
+	late Signature signature = Signature();
 	@override
-	PublicKey signerPublicKey = PublicKey();
+	late PublicKey signerPublicKey = PublicKey();
 	@override
-	int version = AggregateCompleteTransactionV1.TRANSACTION_VERSION;
-	NetworkType network = NetworkType.MAINNET;
+	late int version;
+	late NetworkType network = NetworkType.MAINNET;
 	@override
-	TransactionType type = AggregateCompleteTransactionV1.TRANSACTION_TYPE;
-	Amount fee = Amount();
-	Timestamp deadline = Timestamp();
-	Hash256 transactionsHash = Hash256();
-	List<IInnerTransaction> transactions = [];
-	List<Cosignature> cosignatures = [];
+	late TransactionType type;
+	late Amount fee = Amount();
+	late Timestamp deadline = Timestamp();
+	late Hash256 transactionsHash = Hash256();
+	late List<IInnerTransaction> transactions = [];
+	late List<Cosignature> cosignatures = [];
 	final int verifiableEntityHeaderReserved_1 = 0; // reserved field
 	final int entityBodyReserved_1 = 0; // reserved field
 	final int aggregateTransactionHeaderReserved_1 = 0; // reserved field
@@ -5232,19 +5232,19 @@ class AggregateCompleteTransactionV2 implements ISerializable, ITransaction {
 	};
 
 	@override
-	Signature signature = Signature();
+	late Signature signature = Signature();
 	@override
-	PublicKey signerPublicKey = PublicKey();
+	late PublicKey signerPublicKey = PublicKey();
 	@override
-	int version = AggregateCompleteTransactionV2.TRANSACTION_VERSION;
-	NetworkType network = NetworkType.MAINNET;
+	late int version;
+	late NetworkType network = NetworkType.MAINNET;
 	@override
-	TransactionType type = AggregateCompleteTransactionV2.TRANSACTION_TYPE;
-	Amount fee = Amount();
-	Timestamp deadline = Timestamp();
-	Hash256 transactionsHash = Hash256();
-	List<IInnerTransaction> transactions = [];
-	List<Cosignature> cosignatures = [];
+	late TransactionType type;
+	late Amount fee = Amount();
+	late Timestamp deadline = Timestamp();
+	late Hash256 transactionsHash = Hash256();
+	late List<IInnerTransaction> transactions = [];
+	late List<Cosignature> cosignatures = [];
 	final int verifiableEntityHeaderReserved_1 = 0; // reserved field
 	final int entityBodyReserved_1 = 0; // reserved field
 	final int aggregateTransactionHeaderReserved_1 = 0; // reserved field
@@ -5435,19 +5435,19 @@ class AggregateBondedTransactionV1 implements ISerializable, ITransaction {
 	};
 
 	@override
-	Signature signature = Signature();
+	late Signature signature = Signature();
 	@override
-	PublicKey signerPublicKey = PublicKey();
+	late PublicKey signerPublicKey = PublicKey();
 	@override
-	int version = AggregateBondedTransactionV1.TRANSACTION_VERSION;
-	NetworkType network = NetworkType.MAINNET;
+	late int version;
+	late NetworkType network = NetworkType.MAINNET;
 	@override
-	TransactionType type = AggregateBondedTransactionV1.TRANSACTION_TYPE;
-	Amount fee = Amount();
-	Timestamp deadline = Timestamp();
-	Hash256 transactionsHash = Hash256();
-	List<IInnerTransaction> transactions = [];
-	List<Cosignature> cosignatures = [];
+	late TransactionType type;
+	late Amount fee = Amount();
+	late Timestamp deadline = Timestamp();
+	late Hash256 transactionsHash = Hash256();
+	late List<IInnerTransaction> transactions = [];
+	late List<Cosignature> cosignatures = [];
 	final int verifiableEntityHeaderReserved_1 = 0; // reserved field
 	final int entityBodyReserved_1 = 0; // reserved field
 	final int aggregateTransactionHeaderReserved_1 = 0; // reserved field
@@ -5638,19 +5638,19 @@ class AggregateBondedTransactionV2 implements ISerializable, ITransaction {
 	};
 
 	@override
-	Signature signature = Signature();
+	late Signature signature = Signature();
 	@override
-	PublicKey signerPublicKey = PublicKey();
+	late PublicKey signerPublicKey = PublicKey();
 	@override
-	int version = AggregateBondedTransactionV2.TRANSACTION_VERSION;
-	NetworkType network = NetworkType.MAINNET;
+	late int version;
+	late NetworkType network = NetworkType.MAINNET;
 	@override
-	TransactionType type = AggregateBondedTransactionV2.TRANSACTION_TYPE;
-	Amount fee = Amount();
-	Timestamp deadline = Timestamp();
-	Hash256 transactionsHash = Hash256();
-	List<IInnerTransaction> transactions = [];
-	List<Cosignature> cosignatures = [];
+	late TransactionType type;
+	late Amount fee = Amount();
+	late Timestamp deadline = Timestamp();
+	late Hash256 transactionsHash = Hash256();
+	late List<IInnerTransaction> transactions = [];
+	late List<Cosignature> cosignatures = [];
 	final int verifiableEntityHeaderReserved_1 = 0; // reserved field
 	final int entityBodyReserved_1 = 0; // reserved field
 	final int aggregateTransactionHeaderReserved_1 = 0; // reserved field
@@ -5842,20 +5842,20 @@ class VotingKeyLinkTransactionV1 implements ISerializable, ITransaction {
 	};
 
 	@override
-	Signature signature = Signature();
+	late Signature signature = Signature();
 	@override
-	PublicKey signerPublicKey = PublicKey();
+	late PublicKey signerPublicKey = PublicKey();
 	@override
-	int version = VotingKeyLinkTransactionV1.TRANSACTION_VERSION;
-	NetworkType network = NetworkType.MAINNET;
+	late int version;
+	late NetworkType network = NetworkType.MAINNET;
 	@override
-	TransactionType type = VotingKeyLinkTransactionV1.TRANSACTION_TYPE;
-	Amount fee = Amount();
-	Timestamp deadline = Timestamp();
-	VotingPublicKey linkedPublicKey = VotingPublicKey();
-	FinalizationEpoch startEpoch = FinalizationEpoch();
-	FinalizationEpoch endEpoch = FinalizationEpoch();
-	LinkAction linkAction = LinkAction.UNLINK;
+	late TransactionType type;
+	late Amount fee = Amount();
+	late Timestamp deadline = Timestamp();
+	late VotingPublicKey linkedPublicKey = VotingPublicKey();
+	late FinalizationEpoch startEpoch = FinalizationEpoch();
+	late FinalizationEpoch endEpoch = FinalizationEpoch();
+	late LinkAction linkAction = LinkAction.UNLINK;
 	final int verifiableEntityHeaderReserved_1 = 0; // reserved field
 	final int entityBodyReserved_1 = 0; // reserved field
 
@@ -6034,14 +6034,14 @@ class EmbeddedVotingKeyLinkTransactionV1 implements ISerializable, IInnerTransac
 		'linkAction': 'enum:LinkAction'
 	};
 
-	PublicKey signerPublicKey = PublicKey();
-	int version = EmbeddedVotingKeyLinkTransactionV1.TRANSACTION_VERSION;
-	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = EmbeddedVotingKeyLinkTransactionV1.TRANSACTION_TYPE;
-	VotingPublicKey linkedPublicKey = VotingPublicKey();
-	FinalizationEpoch startEpoch = FinalizationEpoch();
-	FinalizationEpoch endEpoch = FinalizationEpoch();
-	LinkAction linkAction = LinkAction.UNLINK;
+	late PublicKey signerPublicKey = PublicKey();
+	late int version;
+	late NetworkType network = NetworkType.MAINNET;
+	late TransactionType type;
+	late VotingPublicKey linkedPublicKey = VotingPublicKey();
+	late FinalizationEpoch startEpoch = FinalizationEpoch();
+	late FinalizationEpoch endEpoch = FinalizationEpoch();
+	late LinkAction linkAction = LinkAction.UNLINK;
 	final int embeddedTransactionHeaderReserved_1 = 0; // reserved field
 	final int entityBodyReserved_1 = 0; // reserved field
 
@@ -6195,18 +6195,18 @@ class VrfKeyLinkTransactionV1 implements ISerializable, ITransaction {
 	};
 
 	@override
-	Signature signature = Signature();
+	late Signature signature = Signature();
 	@override
-	PublicKey signerPublicKey = PublicKey();
+	late PublicKey signerPublicKey = PublicKey();
 	@override
-	int version = VrfKeyLinkTransactionV1.TRANSACTION_VERSION;
-	NetworkType network = NetworkType.MAINNET;
+	late int version;
+	late NetworkType network = NetworkType.MAINNET;
 	@override
-	TransactionType type = VrfKeyLinkTransactionV1.TRANSACTION_TYPE;
-	Amount fee = Amount();
-	Timestamp deadline = Timestamp();
-	PublicKey linkedPublicKey = PublicKey();
-	LinkAction linkAction = LinkAction.UNLINK;
+	late TransactionType type;
+	late Amount fee = Amount();
+	late Timestamp deadline = Timestamp();
+	late PublicKey linkedPublicKey = PublicKey();
+	late LinkAction linkAction = LinkAction.UNLINK;
 	final int verifiableEntityHeaderReserved_1 = 0; // reserved field
 	final int entityBodyReserved_1 = 0; // reserved field
 
@@ -6365,12 +6365,12 @@ class EmbeddedVrfKeyLinkTransactionV1 implements ISerializable, IInnerTransactio
 		'linkAction': 'enum:LinkAction'
 	};
 
-	PublicKey signerPublicKey = PublicKey();
-	int version = EmbeddedVrfKeyLinkTransactionV1.TRANSACTION_VERSION;
-	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = EmbeddedVrfKeyLinkTransactionV1.TRANSACTION_TYPE;
-	PublicKey linkedPublicKey = PublicKey();
-	LinkAction linkAction = LinkAction.UNLINK;
+	late PublicKey signerPublicKey = PublicKey();
+	late int version;
+	late NetworkType network = NetworkType.MAINNET;
+	late TransactionType type;
+	late PublicKey linkedPublicKey = PublicKey();
+	late LinkAction linkAction = LinkAction.UNLINK;
 	final int embeddedTransactionHeaderReserved_1 = 0; // reserved field
 	final int entityBodyReserved_1 = 0; // reserved field
 
@@ -6507,19 +6507,19 @@ class HashLockTransactionV1 implements ISerializable, ITransaction {
 	};
 
 	@override
-	Signature signature = Signature();
+	late Signature signature = Signature();
 	@override
-	PublicKey signerPublicKey = PublicKey();
+	late PublicKey signerPublicKey = PublicKey();
 	@override
-	int version = HashLockTransactionV1.TRANSACTION_VERSION;
-	NetworkType network = NetworkType.MAINNET;
+	late int version;
+	late NetworkType network = NetworkType.MAINNET;
 	@override
-	TransactionType type = HashLockTransactionV1.TRANSACTION_TYPE;
-	Amount fee = Amount();
-	Timestamp deadline = Timestamp();
-	UnresolvedMosaic mosaic = UnresolvedMosaic();
-	BlockDuration duration = BlockDuration();
-	Hash256 hash = Hash256();
+	late TransactionType type;
+	late Amount fee = Amount();
+	late Timestamp deadline = Timestamp();
+	late UnresolvedMosaic mosaic = UnresolvedMosaic();
+	late BlockDuration duration = BlockDuration();
+	late Hash256 hash = Hash256();
 	final int verifiableEntityHeaderReserved_1 = 0; // reserved field
 	final int entityBodyReserved_1 = 0; // reserved field
 
@@ -6688,13 +6688,13 @@ class EmbeddedHashLockTransactionV1 implements ISerializable, IInnerTransaction 
 		'hash': 'pod:Hash256'
 	};
 
-	PublicKey signerPublicKey = PublicKey();
-	int version = EmbeddedHashLockTransactionV1.TRANSACTION_VERSION;
-	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = EmbeddedHashLockTransactionV1.TRANSACTION_TYPE;
-	UnresolvedMosaic mosaic = UnresolvedMosaic();
-	BlockDuration duration = BlockDuration();
-	Hash256 hash = Hash256();
+	late PublicKey signerPublicKey = PublicKey();
+	late int version;
+	late NetworkType network = NetworkType.MAINNET;
+	late TransactionType type;
+	late UnresolvedMosaic mosaic = UnresolvedMosaic();
+	late BlockDuration duration = BlockDuration();
+	late Hash256 hash = Hash256();
 	final int embeddedTransactionHeaderReserved_1 = 0; // reserved field
 	final int entityBodyReserved_1 = 0; // reserved field
 
@@ -6883,21 +6883,21 @@ class SecretLockTransactionV1 implements ISerializable, ITransaction {
 	};
 
 	@override
-	Signature signature = Signature();
+	late Signature signature = Signature();
 	@override
-	PublicKey signerPublicKey = PublicKey();
+	late PublicKey signerPublicKey = PublicKey();
 	@override
-	int version = SecretLockTransactionV1.TRANSACTION_VERSION;
-	NetworkType network = NetworkType.MAINNET;
+	late int version;
+	late NetworkType network = NetworkType.MAINNET;
 	@override
-	TransactionType type = SecretLockTransactionV1.TRANSACTION_TYPE;
-	Amount fee = Amount();
-	Timestamp deadline = Timestamp();
-	UnresolvedAddress recipientAddress = UnresolvedAddress();
-	Hash256 secret = Hash256();
-	UnresolvedMosaic mosaic = UnresolvedMosaic();
-	BlockDuration duration = BlockDuration();
-	LockHashAlgorithm hashAlgorithm = LockHashAlgorithm.SHA3_256;
+	late TransactionType type;
+	late Amount fee = Amount();
+	late Timestamp deadline = Timestamp();
+	late UnresolvedAddress recipientAddress = UnresolvedAddress();
+	late Hash256 secret = Hash256();
+	late UnresolvedMosaic mosaic = UnresolvedMosaic();
+	late BlockDuration duration = BlockDuration();
+	late LockHashAlgorithm hashAlgorithm = LockHashAlgorithm.SHA3_256;
 	final int verifiableEntityHeaderReserved_1 = 0; // reserved field
 	final int entityBodyReserved_1 = 0; // reserved field
 
@@ -7086,15 +7086,15 @@ class EmbeddedSecretLockTransactionV1 implements ISerializable, IInnerTransactio
 		'hashAlgorithm': 'enum:LockHashAlgorithm'
 	};
 
-	PublicKey signerPublicKey = PublicKey();
-	int version = EmbeddedSecretLockTransactionV1.TRANSACTION_VERSION;
-	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = EmbeddedSecretLockTransactionV1.TRANSACTION_TYPE;
-	UnresolvedAddress recipientAddress = UnresolvedAddress();
-	Hash256 secret = Hash256();
-	UnresolvedMosaic mosaic = UnresolvedMosaic();
-	BlockDuration duration = BlockDuration();
-	LockHashAlgorithm hashAlgorithm = LockHashAlgorithm.SHA3_256;
+	late PublicKey signerPublicKey = PublicKey();
+	late int version;
+	late NetworkType network = NetworkType.MAINNET;
+	late TransactionType type;
+	late UnresolvedAddress recipientAddress = UnresolvedAddress();
+	late Hash256 secret = Hash256();
+	late UnresolvedMosaic mosaic = UnresolvedMosaic();
+	late BlockDuration duration = BlockDuration();
+	late LockHashAlgorithm hashAlgorithm = LockHashAlgorithm.SHA3_256;
 	final int embeddedTransactionHeaderReserved_1 = 0; // reserved field
 	final int entityBodyReserved_1 = 0; // reserved field
 
@@ -7259,20 +7259,20 @@ class SecretProofTransactionV1 implements ISerializable, ITransaction {
 	};
 
 	@override
-	Signature signature = Signature();
+	late Signature signature = Signature();
 	@override
-	PublicKey signerPublicKey = PublicKey();
+	late PublicKey signerPublicKey = PublicKey();
 	@override
-	int version = SecretProofTransactionV1.TRANSACTION_VERSION;
-	NetworkType network = NetworkType.MAINNET;
+	late int version;
+	late NetworkType network = NetworkType.MAINNET;
 	@override
-	TransactionType type = SecretProofTransactionV1.TRANSACTION_TYPE;
-	Amount fee = Amount();
-	Timestamp deadline = Timestamp();
-	UnresolvedAddress recipientAddress = UnresolvedAddress();
-	Hash256 secret = Hash256();
-	LockHashAlgorithm hashAlgorithm = LockHashAlgorithm.SHA3_256;
-	Uint8List proof = Uint8List(0);
+	late TransactionType type;
+	late Amount fee = Amount();
+	late Timestamp deadline = Timestamp();
+	late UnresolvedAddress recipientAddress = UnresolvedAddress();
+	late Hash256 secret = Hash256();
+	late LockHashAlgorithm hashAlgorithm = LockHashAlgorithm.SHA3_256;
+	late Uint8List proof = Uint8List(0);
 	final int verifiableEntityHeaderReserved_1 = 0; // reserved field
 	final int entityBodyReserved_1 = 0; // reserved field
 
@@ -7456,14 +7456,14 @@ class EmbeddedSecretProofTransactionV1 implements ISerializable, IInnerTransacti
 		'proof': 'bytes_array'
 	};
 
-	PublicKey signerPublicKey = PublicKey();
-	int version = EmbeddedSecretProofTransactionV1.TRANSACTION_VERSION;
-	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = EmbeddedSecretProofTransactionV1.TRANSACTION_TYPE;
-	UnresolvedAddress recipientAddress = UnresolvedAddress();
-	Hash256 secret = Hash256();
-	LockHashAlgorithm hashAlgorithm = LockHashAlgorithm.SHA3_256;
-	Uint8List proof = Uint8List(0);
+	late PublicKey signerPublicKey = PublicKey();
+	late int version;
+	late NetworkType network = NetworkType.MAINNET;
+	late TransactionType type;
+	late UnresolvedAddress recipientAddress = UnresolvedAddress();
+	late Hash256 secret = Hash256();
+	late LockHashAlgorithm hashAlgorithm = LockHashAlgorithm.SHA3_256;
+	late Uint8List proof = Uint8List(0);
 	final int embeddedTransactionHeaderReserved_1 = 0; // reserved field
 	final int entityBodyReserved_1 = 0; // reserved field
 
@@ -7622,20 +7622,20 @@ class AccountMetadataTransactionV1 implements ISerializable, ITransaction {
 	};
 
 	@override
-	Signature signature = Signature();
+	late Signature signature = Signature();
 	@override
-	PublicKey signerPublicKey = PublicKey();
+	late PublicKey signerPublicKey = PublicKey();
 	@override
-	int version = AccountMetadataTransactionV1.TRANSACTION_VERSION;
-	NetworkType network = NetworkType.MAINNET;
+	late int version;
+	late NetworkType network = NetworkType.MAINNET;
 	@override
-	TransactionType type = AccountMetadataTransactionV1.TRANSACTION_TYPE;
-	Amount fee = Amount();
-	Timestamp deadline = Timestamp();
-	UnresolvedAddress targetAddress = UnresolvedAddress();
-	BigInt scopedMetadataKey = BigInt.from(0);
-	int valueSizeDelta = 0;
-	Uint8List value = Uint8List(0);
+	late TransactionType type;
+	late Amount fee = Amount();
+	late Timestamp deadline = Timestamp();
+	late UnresolvedAddress targetAddress = UnresolvedAddress();
+	late BigInt scopedMetadataKey = BigInt.from(0);
+	late int valueSizeDelta = 0;
+	late Uint8List value = Uint8List(0);
 	final int verifiableEntityHeaderReserved_1 = 0; // reserved field
 	final int entityBodyReserved_1 = 0; // reserved field
 
@@ -7817,14 +7817,14 @@ class EmbeddedAccountMetadataTransactionV1 implements ISerializable, IInnerTrans
 		'value': 'bytes_array'
 	};
 
-	PublicKey signerPublicKey = PublicKey();
-	int version = EmbeddedAccountMetadataTransactionV1.TRANSACTION_VERSION;
-	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = EmbeddedAccountMetadataTransactionV1.TRANSACTION_TYPE;
-	UnresolvedAddress targetAddress = UnresolvedAddress();
-	BigInt scopedMetadataKey = BigInt.from(0);
-	int valueSizeDelta = 0;
-	Uint8List value = Uint8List(0);
+	late PublicKey signerPublicKey = PublicKey();
+	late int version;
+	late NetworkType network = NetworkType.MAINNET;
+	late TransactionType type;
+	late UnresolvedAddress targetAddress = UnresolvedAddress();
+	late BigInt scopedMetadataKey = BigInt.from(0);
+	late int valueSizeDelta = 0;
+	late Uint8List value = Uint8List(0);
 	final int embeddedTransactionHeaderReserved_1 = 0; // reserved field
 	final int entityBodyReserved_1 = 0; // reserved field
 
@@ -7984,21 +7984,21 @@ class MosaicMetadataTransactionV1 implements ISerializable, ITransaction {
 	};
 
 	@override
-	Signature signature = Signature();
+	late Signature signature = Signature();
 	@override
-	PublicKey signerPublicKey = PublicKey();
+	late PublicKey signerPublicKey = PublicKey();
 	@override
-	int version = MosaicMetadataTransactionV1.TRANSACTION_VERSION;
-	NetworkType network = NetworkType.MAINNET;
+	late int version;
+	late NetworkType network = NetworkType.MAINNET;
 	@override
-	TransactionType type = MosaicMetadataTransactionV1.TRANSACTION_TYPE;
-	Amount fee = Amount();
-	Timestamp deadline = Timestamp();
-	UnresolvedAddress targetAddress = UnresolvedAddress();
-	BigInt scopedMetadataKey = BigInt.from(0);
-	UnresolvedMosaicId targetMosaicId = UnresolvedMosaicId();
-	int valueSizeDelta = 0;
-	Uint8List value = Uint8List(0);
+	late TransactionType type;
+	late Amount fee = Amount();
+	late Timestamp deadline = Timestamp();
+	late UnresolvedAddress targetAddress = UnresolvedAddress();
+	late BigInt scopedMetadataKey = BigInt.from(0);
+	late UnresolvedMosaicId targetMosaicId = UnresolvedMosaicId();
+	late int valueSizeDelta = 0;
+	late Uint8List value = Uint8List(0);
 	final int verifiableEntityHeaderReserved_1 = 0; // reserved field
 	final int entityBodyReserved_1 = 0; // reserved field
 
@@ -8190,15 +8190,15 @@ class EmbeddedMosaicMetadataTransactionV1 implements ISerializable, IInnerTransa
 		'value': 'bytes_array'
 	};
 
-	PublicKey signerPublicKey = PublicKey();
-	int version = EmbeddedMosaicMetadataTransactionV1.TRANSACTION_VERSION;
-	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = EmbeddedMosaicMetadataTransactionV1.TRANSACTION_TYPE;
-	UnresolvedAddress targetAddress = UnresolvedAddress();
-	BigInt scopedMetadataKey = BigInt.from(0);
-	UnresolvedMosaicId targetMosaicId = UnresolvedMosaicId();
-	int valueSizeDelta = 0;
-	Uint8List value = Uint8List(0);
+	late PublicKey signerPublicKey = PublicKey();
+	late int version;
+	late NetworkType network = NetworkType.MAINNET;
+	late TransactionType type;
+	late UnresolvedAddress targetAddress = UnresolvedAddress();
+	late BigInt scopedMetadataKey = BigInt.from(0);
+	late UnresolvedMosaicId targetMosaicId = UnresolvedMosaicId();
+	late int valueSizeDelta = 0;
+	late Uint8List value = Uint8List(0);
 	final int embeddedTransactionHeaderReserved_1 = 0; // reserved field
 	final int entityBodyReserved_1 = 0; // reserved field
 
@@ -8367,21 +8367,21 @@ class NamespaceMetadataTransactionV1 implements ISerializable, ITransaction {
 	};
 
 	@override
-	Signature signature = Signature();
+	late Signature signature = Signature();
 	@override
-	PublicKey signerPublicKey = PublicKey();
+	late PublicKey signerPublicKey = PublicKey();
 	@override
-	int version = NamespaceMetadataTransactionV1.TRANSACTION_VERSION;
-	NetworkType network = NetworkType.MAINNET;
+	late int version;
+	late NetworkType network = NetworkType.MAINNET;
 	@override
-	TransactionType type = NamespaceMetadataTransactionV1.TRANSACTION_TYPE;
-	Amount fee = Amount();
-	Timestamp deadline = Timestamp();
-	UnresolvedAddress targetAddress = UnresolvedAddress();
-	BigInt scopedMetadataKey = BigInt.from(0);
-	NamespaceId targetNamespaceId = NamespaceId();
-	int valueSizeDelta = 0;
-	Uint8List value = Uint8List(0);
+	late TransactionType type;
+	late Amount fee = Amount();
+	late Timestamp deadline = Timestamp();
+	late UnresolvedAddress targetAddress = UnresolvedAddress();
+	late BigInt scopedMetadataKey = BigInt.from(0);
+	late NamespaceId targetNamespaceId = NamespaceId();
+	late int valueSizeDelta = 0;
+	late Uint8List value = Uint8List(0);
 	final int verifiableEntityHeaderReserved_1 = 0; // reserved field
 	final int entityBodyReserved_1 = 0; // reserved field
 
@@ -8573,15 +8573,15 @@ class EmbeddedNamespaceMetadataTransactionV1 implements ISerializable, IInnerTra
 		'value': 'bytes_array'
 	};
 
-	PublicKey signerPublicKey = PublicKey();
-	int version = EmbeddedNamespaceMetadataTransactionV1.TRANSACTION_VERSION;
-	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = EmbeddedNamespaceMetadataTransactionV1.TRANSACTION_TYPE;
-	UnresolvedAddress targetAddress = UnresolvedAddress();
-	BigInt scopedMetadataKey = BigInt.from(0);
-	NamespaceId targetNamespaceId = NamespaceId();
-	int valueSizeDelta = 0;
-	Uint8List value = Uint8List(0);
+	late PublicKey signerPublicKey = PublicKey();
+	late int version;
+	late NetworkType network = NetworkType.MAINNET;
+	late TransactionType type;
+	late UnresolvedAddress targetAddress = UnresolvedAddress();
+	late BigInt scopedMetadataKey = BigInt.from(0);
+	late NamespaceId targetNamespaceId = NamespaceId();
+	late int valueSizeDelta = 0;
+	late Uint8List value = Uint8List(0);
 	final int embeddedTransactionHeaderReserved_1 = 0; // reserved field
 	final int entityBodyReserved_1 = 0; // reserved field
 
@@ -8860,21 +8860,21 @@ class MosaicDefinitionTransactionV1 implements ISerializable, ITransaction {
 	};
 
 	@override
-	Signature signature = Signature();
+	late Signature signature = Signature();
 	@override
-	PublicKey signerPublicKey = PublicKey();
+	late PublicKey signerPublicKey = PublicKey();
 	@override
-	int version = MosaicDefinitionTransactionV1.TRANSACTION_VERSION;
-	NetworkType network = NetworkType.MAINNET;
+	late int version;
+	late NetworkType network = NetworkType.MAINNET;
 	@override
-	TransactionType type = MosaicDefinitionTransactionV1.TRANSACTION_TYPE;
-	Amount fee = Amount();
-	Timestamp deadline = Timestamp();
-	MosaicId id = MosaicId();
-	BlockDuration duration = BlockDuration();
-	MosaicNonce nonce = MosaicNonce();
-	MosaicFlags flags = MosaicFlags.NONE;
-	int divisibility = 0;
+	late TransactionType type;
+	late Amount fee = Amount();
+	late Timestamp deadline = Timestamp();
+	late MosaicId id = MosaicId();
+	late BlockDuration duration = BlockDuration();
+	late MosaicNonce nonce = MosaicNonce();
+	late MosaicFlags flags = MosaicFlags.NONE;
+	late int divisibility = 0;
 	final int verifiableEntityHeaderReserved_1 = 0; // reserved field
 	final int entityBodyReserved_1 = 0; // reserved field
 
@@ -9062,15 +9062,15 @@ class EmbeddedMosaicDefinitionTransactionV1 implements ISerializable, IInnerTran
 		'flags': 'enum:MosaicFlags'
 	};
 
-	PublicKey signerPublicKey = PublicKey();
-	int version = EmbeddedMosaicDefinitionTransactionV1.TRANSACTION_VERSION;
-	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = EmbeddedMosaicDefinitionTransactionV1.TRANSACTION_TYPE;
-	MosaicId id = MosaicId();
-	BlockDuration duration = BlockDuration();
-	MosaicNonce nonce = MosaicNonce();
-	MosaicFlags flags = MosaicFlags.NONE;
-	int divisibility = 0;
+	late PublicKey signerPublicKey = PublicKey();
+	late int version;
+	late NetworkType network = NetworkType.MAINNET;
+	late TransactionType type;
+	late MosaicId id = MosaicId();
+	late BlockDuration duration = BlockDuration();
+	late MosaicNonce nonce = MosaicNonce();
+	late MosaicFlags flags = MosaicFlags.NONE;
+	late int divisibility = 0;
 	final int embeddedTransactionHeaderReserved_1 = 0; // reserved field
 	final int entityBodyReserved_1 = 0; // reserved field
 
@@ -9234,19 +9234,19 @@ class MosaicSupplyChangeTransactionV1 implements ISerializable, ITransaction {
 	};
 
 	@override
-	Signature signature = Signature();
+	late Signature signature = Signature();
 	@override
-	PublicKey signerPublicKey = PublicKey();
+	late PublicKey signerPublicKey = PublicKey();
 	@override
-	int version = MosaicSupplyChangeTransactionV1.TRANSACTION_VERSION;
-	NetworkType network = NetworkType.MAINNET;
+	late int version;
+	late NetworkType network = NetworkType.MAINNET;
 	@override
-	TransactionType type = MosaicSupplyChangeTransactionV1.TRANSACTION_TYPE;
-	Amount fee = Amount();
-	Timestamp deadline = Timestamp();
-	UnresolvedMosaicId mosaicId = UnresolvedMosaicId();
-	Amount delta = Amount();
-	MosaicSupplyChangeAction action = MosaicSupplyChangeAction.DECREASE;
+	late TransactionType type;
+	late Amount fee = Amount();
+	late Timestamp deadline = Timestamp();
+	late UnresolvedMosaicId mosaicId = UnresolvedMosaicId();
+	late Amount delta = Amount();
+	late MosaicSupplyChangeAction action = MosaicSupplyChangeAction.DECREASE;
 	final int verifiableEntityHeaderReserved_1 = 0; // reserved field
 	final int entityBodyReserved_1 = 0; // reserved field
 
@@ -9415,13 +9415,13 @@ class EmbeddedMosaicSupplyChangeTransactionV1 implements ISerializable, IInnerTr
 		'action': 'enum:MosaicSupplyChangeAction'
 	};
 
-	PublicKey signerPublicKey = PublicKey();
-	int version = EmbeddedMosaicSupplyChangeTransactionV1.TRANSACTION_VERSION;
-	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = EmbeddedMosaicSupplyChangeTransactionV1.TRANSACTION_TYPE;
-	UnresolvedMosaicId mosaicId = UnresolvedMosaicId();
-	Amount delta = Amount();
-	MosaicSupplyChangeAction action = MosaicSupplyChangeAction.DECREASE;
+	late PublicKey signerPublicKey = PublicKey();
+	late int version;
+	late NetworkType network = NetworkType.MAINNET;
+	late TransactionType type;
+	late UnresolvedMosaicId mosaicId = UnresolvedMosaicId();
+	late Amount delta = Amount();
+	late MosaicSupplyChangeAction action = MosaicSupplyChangeAction.DECREASE;
 	final int embeddedTransactionHeaderReserved_1 = 0; // reserved field
 	final int entityBodyReserved_1 = 0; // reserved field
 
@@ -9566,18 +9566,18 @@ class MosaicSupplyRevocationTransactionV1 implements ISerializable, ITransaction
 	};
 
 	@override
-	Signature signature = Signature();
+	late Signature signature = Signature();
 	@override
-	PublicKey signerPublicKey = PublicKey();
+	late PublicKey signerPublicKey = PublicKey();
 	@override
-	int version = MosaicSupplyRevocationTransactionV1.TRANSACTION_VERSION;
-	NetworkType network = NetworkType.MAINNET;
+	late int version;
+	late NetworkType network = NetworkType.MAINNET;
 	@override
-	TransactionType type = MosaicSupplyRevocationTransactionV1.TRANSACTION_TYPE;
-	Amount fee = Amount();
-	Timestamp deadline = Timestamp();
-	UnresolvedAddress sourceAddress = UnresolvedAddress();
-	UnresolvedMosaic mosaic = UnresolvedMosaic();
+	late TransactionType type;
+	late Amount fee = Amount();
+	late Timestamp deadline = Timestamp();
+	late UnresolvedAddress sourceAddress = UnresolvedAddress();
+	late UnresolvedMosaic mosaic = UnresolvedMosaic();
 	final int verifiableEntityHeaderReserved_1 = 0; // reserved field
 	final int entityBodyReserved_1 = 0; // reserved field
 
@@ -9736,12 +9736,12 @@ class EmbeddedMosaicSupplyRevocationTransactionV1 implements ISerializable, IInn
 		'mosaic': 'struct:UnresolvedMosaic'
 	};
 
-	PublicKey signerPublicKey = PublicKey();
-	int version = EmbeddedMosaicSupplyRevocationTransactionV1.TRANSACTION_VERSION;
-	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = EmbeddedMosaicSupplyRevocationTransactionV1.TRANSACTION_TYPE;
-	UnresolvedAddress sourceAddress = UnresolvedAddress();
-	UnresolvedMosaic mosaic = UnresolvedMosaic();
+	late PublicKey signerPublicKey = PublicKey();
+	late int version;
+	late NetworkType network = NetworkType.MAINNET;
+	late TransactionType type;
+	late UnresolvedAddress sourceAddress = UnresolvedAddress();
+	late UnresolvedMosaic mosaic = UnresolvedMosaic();
 	final int embeddedTransactionHeaderReserved_1 = 0; // reserved field
 	final int entityBodyReserved_1 = 0; // reserved field
 
@@ -9877,20 +9877,20 @@ class MultisigAccountModificationTransactionV1 implements ISerializable, ITransa
 	};
 
 	@override
-	Signature signature = Signature();
+	late Signature signature = Signature();
 	@override
-	PublicKey signerPublicKey = PublicKey();
+	late PublicKey signerPublicKey = PublicKey();
 	@override
-	int version = MultisigAccountModificationTransactionV1.TRANSACTION_VERSION;
-	NetworkType network = NetworkType.MAINNET;
+	late int version;
+	late NetworkType network = NetworkType.MAINNET;
 	@override
-	TransactionType type = MultisigAccountModificationTransactionV1.TRANSACTION_TYPE;
-	Amount fee = Amount();
-	Timestamp deadline = Timestamp();
-	int minRemovalDelta = 0;
-	int minApprovalDelta = 0;
-	List<UnresolvedAddress> addressAdditions = [];
-	List<UnresolvedAddress> addressDeletions = [];
+	late TransactionType type;
+	late Amount fee = Amount();
+	late Timestamp deadline = Timestamp();
+	late int minRemovalDelta = 0;
+	late int minApprovalDelta = 0;
+	late List<UnresolvedAddress> addressAdditions = [];
+	late List<UnresolvedAddress> addressDeletions = [];
 	final int verifiableEntityHeaderReserved_1 = 0; // reserved field
 	final int entityBodyReserved_1 = 0; // reserved field
 	final int multisigAccountModificationTransactionBodyReserved_1 = 0; // reserved field
@@ -10090,14 +10090,14 @@ class EmbeddedMultisigAccountModificationTransactionV1 implements ISerializable,
 		'addressDeletions': 'array[UnresolvedAddress]'
 	};
 
-	PublicKey signerPublicKey = PublicKey();
-	int version = EmbeddedMultisigAccountModificationTransactionV1.TRANSACTION_VERSION;
-	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = EmbeddedMultisigAccountModificationTransactionV1.TRANSACTION_TYPE;
-	int minRemovalDelta = 0;
-	int minApprovalDelta = 0;
-	List<UnresolvedAddress> addressAdditions = [];
-	List<UnresolvedAddress> addressDeletions = [];
+	late PublicKey signerPublicKey = PublicKey();
+	late int version;
+	late NetworkType network = NetworkType.MAINNET;
+	late TransactionType type;
+	late int minRemovalDelta = 0;
+	late int minApprovalDelta = 0;
+	late List<UnresolvedAddress> addressAdditions = [];
+	late List<UnresolvedAddress> addressDeletions = [];
 	final int embeddedTransactionHeaderReserved_1 = 0; // reserved field
 	final int entityBodyReserved_1 = 0; // reserved field
 	final int multisigAccountModificationTransactionBodyReserved_1 = 0; // reserved field
@@ -10275,19 +10275,19 @@ class AddressAliasTransactionV1 implements ISerializable, ITransaction {
 	};
 
 	@override
-	Signature signature = Signature();
+	late Signature signature = Signature();
 	@override
-	PublicKey signerPublicKey = PublicKey();
+	late PublicKey signerPublicKey = PublicKey();
 	@override
-	int version = AddressAliasTransactionV1.TRANSACTION_VERSION;
-	NetworkType network = NetworkType.MAINNET;
+	late int version;
+	late NetworkType network = NetworkType.MAINNET;
 	@override
-	TransactionType type = AddressAliasTransactionV1.TRANSACTION_TYPE;
-	Amount fee = Amount();
-	Timestamp deadline = Timestamp();
-	NamespaceId namespaceId = NamespaceId();
-	Address address = Address();
-	AliasAction aliasAction = AliasAction.UNLINK;
+	late TransactionType type;
+	late Amount fee = Amount();
+	late Timestamp deadline = Timestamp();
+	late NamespaceId namespaceId = NamespaceId();
+	late Address address = Address();
+	late AliasAction aliasAction = AliasAction.UNLINK;
 	final int verifiableEntityHeaderReserved_1 = 0; // reserved field
 	final int entityBodyReserved_1 = 0; // reserved field
 
@@ -10456,13 +10456,13 @@ class EmbeddedAddressAliasTransactionV1 implements ISerializable, IInnerTransact
 		'aliasAction': 'enum:AliasAction'
 	};
 
-	PublicKey signerPublicKey = PublicKey();
-	int version = EmbeddedAddressAliasTransactionV1.TRANSACTION_VERSION;
-	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = EmbeddedAddressAliasTransactionV1.TRANSACTION_TYPE;
-	NamespaceId namespaceId = NamespaceId();
-	Address address = Address();
-	AliasAction aliasAction = AliasAction.UNLINK;
+	late PublicKey signerPublicKey = PublicKey();
+	late int version;
+	late NetworkType network = NetworkType.MAINNET;
+	late TransactionType type;
+	late NamespaceId namespaceId = NamespaceId();
+	late Address address = Address();
+	late AliasAction aliasAction = AliasAction.UNLINK;
 	final int embeddedTransactionHeaderReserved_1 = 0; // reserved field
 	final int entityBodyReserved_1 = 0; // reserved field
 
@@ -10608,19 +10608,19 @@ class MosaicAliasTransactionV1 implements ISerializable, ITransaction {
 	};
 
 	@override
-	Signature signature = Signature();
+	late Signature signature = Signature();
 	@override
-	PublicKey signerPublicKey = PublicKey();
+	late PublicKey signerPublicKey = PublicKey();
 	@override
-	int version = MosaicAliasTransactionV1.TRANSACTION_VERSION;
-	NetworkType network = NetworkType.MAINNET;
+	late int version;
+	late NetworkType network = NetworkType.MAINNET;
 	@override
-	TransactionType type = MosaicAliasTransactionV1.TRANSACTION_TYPE;
-	Amount fee = Amount();
-	Timestamp deadline = Timestamp();
-	NamespaceId namespaceId = NamespaceId();
-	MosaicId mosaicId = MosaicId();
-	AliasAction aliasAction = AliasAction.UNLINK;
+	late TransactionType type;
+	late Amount fee = Amount();
+	late Timestamp deadline = Timestamp();
+	late NamespaceId namespaceId = NamespaceId();
+	late MosaicId mosaicId = MosaicId();
+	late AliasAction aliasAction = AliasAction.UNLINK;
 	final int verifiableEntityHeaderReserved_1 = 0; // reserved field
 	final int entityBodyReserved_1 = 0; // reserved field
 
@@ -10789,13 +10789,13 @@ class EmbeddedMosaicAliasTransactionV1 implements ISerializable, IInnerTransacti
 		'aliasAction': 'enum:AliasAction'
 	};
 
-	PublicKey signerPublicKey = PublicKey();
-	int version = EmbeddedMosaicAliasTransactionV1.TRANSACTION_VERSION;
-	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = EmbeddedMosaicAliasTransactionV1.TRANSACTION_TYPE;
-	NamespaceId namespaceId = NamespaceId();
-	MosaicId mosaicId = MosaicId();
-	AliasAction aliasAction = AliasAction.UNLINK;
+	late PublicKey signerPublicKey = PublicKey();
+	late int version;
+	late NetworkType network = NetworkType.MAINNET;
+	late TransactionType type;
+	late NamespaceId namespaceId = NamespaceId();
+	late MosaicId mosaicId = MosaicId();
+	late AliasAction aliasAction = AliasAction.UNLINK;
 	final int embeddedTransactionHeaderReserved_1 = 0; // reserved field
 	final int entityBodyReserved_1 = 0; // reserved field
 
@@ -10943,21 +10943,21 @@ class NamespaceRegistrationTransactionV1 implements ISerializable, ITransaction 
 	};
 
 	@override
-	Signature signature = Signature();
+	late Signature signature = Signature();
 	@override
-	PublicKey signerPublicKey = PublicKey();
+	late PublicKey signerPublicKey = PublicKey();
 	@override
-	int version = NamespaceRegistrationTransactionV1.TRANSACTION_VERSION;
-	NetworkType network = NetworkType.MAINNET;
+	late int version;
+	late NetworkType network = NetworkType.MAINNET;
 	@override
-	TransactionType type = NamespaceRegistrationTransactionV1.TRANSACTION_TYPE;
-	Amount fee = Amount();
-	Timestamp deadline = Timestamp();
-	BlockDuration duration = BlockDuration();
-	NamespaceId? parentId;
-	NamespaceId id = NamespaceId();
-	NamespaceRegistrationType registrationType = NamespaceRegistrationType.ROOT;
-	Uint8List name = Uint8List(0);
+	late TransactionType type;
+	late Amount fee = Amount();
+	late Timestamp deadline = Timestamp();
+	late BlockDuration duration = BlockDuration();
+	late NamespaceId? parentId;
+	late NamespaceId id = NamespaceId();
+	late NamespaceRegistrationType registrationType = NamespaceRegistrationType.ROOT;
+	late Uint8List name = Uint8List(0);
 	final int verifiableEntityHeaderReserved_1 = 0; // reserved field
 	final int entityBodyReserved_1 = 0; // reserved field
 
@@ -11182,15 +11182,15 @@ class EmbeddedNamespaceRegistrationTransactionV1 implements ISerializable, IInne
 		'name': 'bytes_array'
 	};
 
-	PublicKey signerPublicKey = PublicKey();
-	int version = EmbeddedNamespaceRegistrationTransactionV1.TRANSACTION_VERSION;
-	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = EmbeddedNamespaceRegistrationTransactionV1.TRANSACTION_TYPE;
-	BlockDuration duration = BlockDuration();
-	NamespaceId? parentId;
-	NamespaceId id = NamespaceId();
-	NamespaceRegistrationType registrationType = NamespaceRegistrationType.ROOT;
-	Uint8List name = Uint8List(0);
+	late PublicKey signerPublicKey = PublicKey();
+	late int version;
+	late NetworkType network = NetworkType.MAINNET;
+	late TransactionType type;
+	late BlockDuration duration = BlockDuration();
+	late NamespaceId? parentId;
+	late NamespaceId id = NamespaceId();
+	late NamespaceRegistrationType registrationType = NamespaceRegistrationType.ROOT;
+	late Uint8List name = Uint8List(0);
 	final int embeddedTransactionHeaderReserved_1 = 0; // reserved field
 	final int entityBodyReserved_1 = 0; // reserved field
 
@@ -11438,19 +11438,19 @@ class AccountAddressRestrictionTransactionV1 implements ISerializable, ITransact
 	};
 
 	@override
-	Signature signature = Signature();
+	late Signature signature = Signature();
 	@override
-	PublicKey signerPublicKey = PublicKey();
+	late PublicKey signerPublicKey = PublicKey();
 	@override
-	int version = AccountAddressRestrictionTransactionV1.TRANSACTION_VERSION;
-	NetworkType network = NetworkType.MAINNET;
+	late int version;
+	late NetworkType network = NetworkType.MAINNET;
 	@override
-	TransactionType type = AccountAddressRestrictionTransactionV1.TRANSACTION_TYPE;
-	Amount fee = Amount();
-	Timestamp deadline = Timestamp();
-	AccountRestrictionFlags restrictionFlags = AccountRestrictionFlags.ADDRESS;
-	List<UnresolvedAddress> restrictionAdditions = [];
-	List<UnresolvedAddress> restrictionDeletions = [];
+	late TransactionType type;
+	late Amount fee = Amount();
+	late Timestamp deadline = Timestamp();
+	late AccountRestrictionFlags restrictionFlags = AccountRestrictionFlags.ADDRESS;
+	late List<UnresolvedAddress> restrictionAdditions = [];
+	late List<UnresolvedAddress> restrictionDeletions = [];
 	final int verifiableEntityHeaderReserved_1 = 0; // reserved field
 	final int entityBodyReserved_1 = 0; // reserved field
 	final int accountRestrictionTransactionBodyReserved_1 = 0; // reserved field
@@ -11642,13 +11642,13 @@ class EmbeddedAccountAddressRestrictionTransactionV1 implements ISerializable, I
 		'restrictionDeletions': 'array[UnresolvedAddress]'
 	};
 
-	PublicKey signerPublicKey = PublicKey();
-	int version = EmbeddedAccountAddressRestrictionTransactionV1.TRANSACTION_VERSION;
-	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = EmbeddedAccountAddressRestrictionTransactionV1.TRANSACTION_TYPE;
-	AccountRestrictionFlags restrictionFlags = AccountRestrictionFlags.ADDRESS;
-	List<UnresolvedAddress> restrictionAdditions = [];
-	List<UnresolvedAddress> restrictionDeletions = [];
+	late PublicKey signerPublicKey = PublicKey();
+	late int version;
+	late NetworkType network = NetworkType.MAINNET;
+	late TransactionType type;
+	late AccountRestrictionFlags restrictionFlags = AccountRestrictionFlags.ADDRESS;
+	late List<UnresolvedAddress> restrictionAdditions = [];
+	late List<UnresolvedAddress> restrictionDeletions = [];
 	final int embeddedTransactionHeaderReserved_1 = 0; // reserved field
 	final int entityBodyReserved_1 = 0; // reserved field
 	final int accountRestrictionTransactionBodyReserved_1 = 0; // reserved field
@@ -11817,19 +11817,19 @@ class AccountMosaicRestrictionTransactionV1 implements ISerializable, ITransacti
 	};
 
 	@override
-	Signature signature = Signature();
+	late Signature signature = Signature();
 	@override
-	PublicKey signerPublicKey = PublicKey();
+	late PublicKey signerPublicKey = PublicKey();
 	@override
-	int version = AccountMosaicRestrictionTransactionV1.TRANSACTION_VERSION;
-	NetworkType network = NetworkType.MAINNET;
+	late int version;
+	late NetworkType network = NetworkType.MAINNET;
 	@override
-	TransactionType type = AccountMosaicRestrictionTransactionV1.TRANSACTION_TYPE;
-	Amount fee = Amount();
-	Timestamp deadline = Timestamp();
-	AccountRestrictionFlags restrictionFlags = AccountRestrictionFlags.ADDRESS;
-	List<UnresolvedMosaicId> restrictionAdditions = [];
-	List<UnresolvedMosaicId> restrictionDeletions = [];
+	late TransactionType type;
+	late Amount fee = Amount();
+	late Timestamp deadline = Timestamp();
+	late AccountRestrictionFlags restrictionFlags = AccountRestrictionFlags.ADDRESS;
+	late List<UnresolvedMosaicId> restrictionAdditions = [];
+	late List<UnresolvedMosaicId> restrictionDeletions = [];
 	final int verifiableEntityHeaderReserved_1 = 0; // reserved field
 	final int entityBodyReserved_1 = 0; // reserved field
 	final int accountRestrictionTransactionBodyReserved_1 = 0; // reserved field
@@ -12021,13 +12021,13 @@ class EmbeddedAccountMosaicRestrictionTransactionV1 implements ISerializable, II
 		'restrictionDeletions': 'array[UnresolvedMosaicId]'
 	};
 
-	PublicKey signerPublicKey = PublicKey();
-	int version = EmbeddedAccountMosaicRestrictionTransactionV1.TRANSACTION_VERSION;
-	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = EmbeddedAccountMosaicRestrictionTransactionV1.TRANSACTION_TYPE;
-	AccountRestrictionFlags restrictionFlags = AccountRestrictionFlags.ADDRESS;
-	List<UnresolvedMosaicId> restrictionAdditions = [];
-	List<UnresolvedMosaicId> restrictionDeletions = [];
+	late PublicKey signerPublicKey = PublicKey();
+	late int version;
+	late NetworkType network = NetworkType.MAINNET;
+	late TransactionType type;
+	late AccountRestrictionFlags restrictionFlags = AccountRestrictionFlags.ADDRESS;
+	late List<UnresolvedMosaicId> restrictionAdditions = [];
+	late List<UnresolvedMosaicId> restrictionDeletions = [];
 	final int embeddedTransactionHeaderReserved_1 = 0; // reserved field
 	final int entityBodyReserved_1 = 0; // reserved field
 	final int accountRestrictionTransactionBodyReserved_1 = 0; // reserved field
@@ -12196,19 +12196,19 @@ class AccountOperationRestrictionTransactionV1 implements ISerializable, ITransa
 	};
 
 	@override
-	Signature signature = Signature();
+	late Signature signature = Signature();
 	@override
-	PublicKey signerPublicKey = PublicKey();
+	late PublicKey signerPublicKey = PublicKey();
 	@override
-	int version = AccountOperationRestrictionTransactionV1.TRANSACTION_VERSION;
-	NetworkType network = NetworkType.MAINNET;
+	late int version;
+	late NetworkType network = NetworkType.MAINNET;
 	@override
-	TransactionType type = AccountOperationRestrictionTransactionV1.TRANSACTION_TYPE;
-	Amount fee = Amount();
-	Timestamp deadline = Timestamp();
-	AccountRestrictionFlags restrictionFlags = AccountRestrictionFlags.ADDRESS;
-	List<TransactionType> restrictionAdditions = [];
-	List<TransactionType> restrictionDeletions = [];
+	late TransactionType type;
+	late Amount fee = Amount();
+	late Timestamp deadline = Timestamp();
+	late AccountRestrictionFlags restrictionFlags = AccountRestrictionFlags.ADDRESS;
+	late List<TransactionType> restrictionAdditions = [];
+	late List<TransactionType> restrictionDeletions = [];
 	final int verifiableEntityHeaderReserved_1 = 0; // reserved field
 	final int entityBodyReserved_1 = 0; // reserved field
 	final int accountRestrictionTransactionBodyReserved_1 = 0; // reserved field
@@ -12400,13 +12400,13 @@ class EmbeddedAccountOperationRestrictionTransactionV1 implements ISerializable,
 		'restrictionDeletions': 'array[TransactionType]'
 	};
 
-	PublicKey signerPublicKey = PublicKey();
-	int version = EmbeddedAccountOperationRestrictionTransactionV1.TRANSACTION_VERSION;
-	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = EmbeddedAccountOperationRestrictionTransactionV1.TRANSACTION_TYPE;
-	AccountRestrictionFlags restrictionFlags = AccountRestrictionFlags.ADDRESS;
-	List<TransactionType> restrictionAdditions = [];
-	List<TransactionType> restrictionDeletions = [];
+	late PublicKey signerPublicKey = PublicKey();
+	late int version;
+	late NetworkType network = NetworkType.MAINNET;
+	late TransactionType type;
+	late AccountRestrictionFlags restrictionFlags = AccountRestrictionFlags.ADDRESS;
+	late List<TransactionType> restrictionAdditions = [];
+	late List<TransactionType> restrictionDeletions = [];
 	final int embeddedTransactionHeaderReserved_1 = 0; // reserved field
 	final int entityBodyReserved_1 = 0; // reserved field
 	final int accountRestrictionTransactionBodyReserved_1 = 0; // reserved field
@@ -12574,21 +12574,21 @@ class MosaicAddressRestrictionTransactionV1 implements ISerializable, ITransacti
 	};
 
 	@override
-	Signature signature = Signature();
+	late Signature signature = Signature();
 	@override
-	PublicKey signerPublicKey = PublicKey();
+	late PublicKey signerPublicKey = PublicKey();
 	@override
-	int version = MosaicAddressRestrictionTransactionV1.TRANSACTION_VERSION;
-	NetworkType network = NetworkType.MAINNET;
+	late int version;
+	late NetworkType network = NetworkType.MAINNET;
 	@override
-	TransactionType type = MosaicAddressRestrictionTransactionV1.TRANSACTION_TYPE;
-	Amount fee = Amount();
-	Timestamp deadline = Timestamp();
-	UnresolvedMosaicId mosaicId = UnresolvedMosaicId();
-	BigInt restrictionKey = BigInt.from(0);
-	BigInt previousRestrictionValue = BigInt.from(0);
-	BigInt newRestrictionValue = BigInt.from(0);
-	UnresolvedAddress targetAddress = UnresolvedAddress();
+	late TransactionType type;
+	late Amount fee = Amount();
+	late Timestamp deadline = Timestamp();
+	late UnresolvedMosaicId mosaicId = UnresolvedMosaicId();
+	late BigInt restrictionKey = BigInt.from(0);
+	late BigInt previousRestrictionValue = BigInt.from(0);
+	late BigInt newRestrictionValue = BigInt.from(0);
+	late UnresolvedAddress targetAddress = UnresolvedAddress();
 	final int verifiableEntityHeaderReserved_1 = 0; // reserved field
 	final int entityBodyReserved_1 = 0; // reserved field
 
@@ -12774,15 +12774,15 @@ class EmbeddedMosaicAddressRestrictionTransactionV1 implements ISerializable, II
 		'targetAddress': 'pod:UnresolvedAddress'
 	};
 
-	PublicKey signerPublicKey = PublicKey();
-	int version = EmbeddedMosaicAddressRestrictionTransactionV1.TRANSACTION_VERSION;
-	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = EmbeddedMosaicAddressRestrictionTransactionV1.TRANSACTION_TYPE;
-	UnresolvedMosaicId mosaicId = UnresolvedMosaicId();
-	BigInt restrictionKey = BigInt.from(0);
-	BigInt previousRestrictionValue = BigInt.from(0);
-	BigInt newRestrictionValue = BigInt.from(0);
-	UnresolvedAddress targetAddress = UnresolvedAddress();
+	late PublicKey signerPublicKey = PublicKey();
+	late int version;
+	late NetworkType network = NetworkType.MAINNET;
+	late TransactionType type;
+	late UnresolvedMosaicId mosaicId = UnresolvedMosaicId();
+	late BigInt restrictionKey = BigInt.from(0);
+	late BigInt previousRestrictionValue = BigInt.from(0);
+	late BigInt newRestrictionValue = BigInt.from(0);
+	late UnresolvedAddress targetAddress = UnresolvedAddress();
 	final int embeddedTransactionHeaderReserved_1 = 0; // reserved field
 	final int entityBodyReserved_1 = 0; // reserved field
 
@@ -13015,23 +13015,23 @@ class MosaicGlobalRestrictionTransactionV1 implements ISerializable, ITransactio
 	};
 
 	@override
-	Signature signature = Signature();
+	late Signature signature = Signature();
 	@override
-	PublicKey signerPublicKey = PublicKey();
+	late PublicKey signerPublicKey = PublicKey();
 	@override
-	int version = MosaicGlobalRestrictionTransactionV1.TRANSACTION_VERSION;
-	NetworkType network = NetworkType.MAINNET;
+	late int version;
+	late NetworkType network = NetworkType.MAINNET;
 	@override
-	TransactionType type = MosaicGlobalRestrictionTransactionV1.TRANSACTION_TYPE;
-	Amount fee = Amount();
-	Timestamp deadline = Timestamp();
-	UnresolvedMosaicId mosaicId = UnresolvedMosaicId();
-	UnresolvedMosaicId referenceMosaicId = UnresolvedMosaicId();
-	BigInt restrictionKey = BigInt.from(0);
-	BigInt previousRestrictionValue = BigInt.from(0);
-	BigInt newRestrictionValue = BigInt.from(0);
-	MosaicRestrictionType previousRestrictionType = MosaicRestrictionType.NONE;
-	MosaicRestrictionType newRestrictionType = MosaicRestrictionType.NONE;
+	late TransactionType type;
+	late Amount fee = Amount();
+	late Timestamp deadline = Timestamp();
+	late UnresolvedMosaicId mosaicId = UnresolvedMosaicId();
+	late UnresolvedMosaicId referenceMosaicId = UnresolvedMosaicId();
+	late BigInt restrictionKey = BigInt.from(0);
+	late BigInt previousRestrictionValue = BigInt.from(0);
+	late BigInt newRestrictionValue = BigInt.from(0);
+	late MosaicRestrictionType previousRestrictionType = MosaicRestrictionType.NONE;
+	late MosaicRestrictionType newRestrictionType = MosaicRestrictionType.NONE;
 	final int verifiableEntityHeaderReserved_1 = 0; // reserved field
 	final int entityBodyReserved_1 = 0; // reserved field
 
@@ -13237,17 +13237,17 @@ class EmbeddedMosaicGlobalRestrictionTransactionV1 implements ISerializable, IIn
 		'newRestrictionType': 'enum:MosaicRestrictionType'
 	};
 
-	PublicKey signerPublicKey = PublicKey();
-	int version = EmbeddedMosaicGlobalRestrictionTransactionV1.TRANSACTION_VERSION;
-	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = EmbeddedMosaicGlobalRestrictionTransactionV1.TRANSACTION_TYPE;
-	UnresolvedMosaicId mosaicId = UnresolvedMosaicId();
-	UnresolvedMosaicId referenceMosaicId = UnresolvedMosaicId();
-	BigInt restrictionKey = BigInt.from(0);
-	BigInt previousRestrictionValue = BigInt.from(0);
-	BigInt newRestrictionValue = BigInt.from(0);
-	MosaicRestrictionType previousRestrictionType = MosaicRestrictionType.NONE;
-	MosaicRestrictionType newRestrictionType = MosaicRestrictionType.NONE;
+	late PublicKey signerPublicKey = PublicKey();
+	late int version;
+	late NetworkType network = NetworkType.MAINNET;
+	late TransactionType type;
+	late UnresolvedMosaicId mosaicId = UnresolvedMosaicId();
+	late UnresolvedMosaicId referenceMosaicId = UnresolvedMosaicId();
+	late BigInt restrictionKey = BigInt.from(0);
+	late BigInt previousRestrictionValue = BigInt.from(0);
+	late BigInt newRestrictionValue = BigInt.from(0);
+	late MosaicRestrictionType previousRestrictionType = MosaicRestrictionType.NONE;
+	late MosaicRestrictionType newRestrictionType = MosaicRestrictionType.NONE;
 	final int embeddedTransactionHeaderReserved_1 = 0; // reserved field
 	final int entityBodyReserved_1 = 0; // reserved field
 
@@ -13429,19 +13429,19 @@ class TransferTransactionV1 implements ISerializable, ITransaction {
 	};
 
 	@override
-	Signature signature = Signature();
+	late Signature signature = Signature();
 	@override
-	PublicKey signerPublicKey = PublicKey();
+	late PublicKey signerPublicKey = PublicKey();
 	@override
-	int version = TransferTransactionV1.TRANSACTION_VERSION;
-	NetworkType network = NetworkType.MAINNET;
+	late int version;
+	late NetworkType network = NetworkType.MAINNET;
 	@override
-	TransactionType type = TransferTransactionV1.TRANSACTION_TYPE;
-	Amount fee = Amount();
-	Timestamp deadline = Timestamp();
-	UnresolvedAddress recipientAddress = UnresolvedAddress();
-	List<UnresolvedMosaic> mosaics = [];
-	Uint8List message = Uint8List(0);
+	late TransactionType type;
+	late Amount fee = Amount();
+	late Timestamp deadline = Timestamp();
+	late UnresolvedAddress recipientAddress = UnresolvedAddress();
+	late List<UnresolvedMosaic> mosaics = [];
+	late Uint8List message = Uint8List(0);
 	final int verifiableEntityHeaderReserved_1 = 0; // reserved field
 	final int entityBodyReserved_1 = 0; // reserved field
 	final int transferTransactionBodyReserved_1 = 0; // reserved field
@@ -13642,13 +13642,13 @@ class EmbeddedTransferTransactionV1 implements ISerializable, IInnerTransaction 
 		'message': 'bytes_array'
 	};
 
-	PublicKey signerPublicKey = PublicKey();
-	int version = EmbeddedTransferTransactionV1.TRANSACTION_VERSION;
-	NetworkType network = NetworkType.MAINNET;
-	TransactionType type = EmbeddedTransferTransactionV1.TRANSACTION_TYPE;
-	UnresolvedAddress recipientAddress = UnresolvedAddress();
-	List<UnresolvedMosaic> mosaics = [];
-	Uint8List message = Uint8List(0);
+	late PublicKey signerPublicKey = PublicKey();
+	late int version;
+	late NetworkType network = NetworkType.MAINNET;
+	late TransactionType type;
+	late UnresolvedAddress recipientAddress = UnresolvedAddress();
+	late List<UnresolvedMosaic> mosaics = [];
+	late Uint8List message = Uint8List(0);
 	final int embeddedTransactionHeaderReserved_1 = 0; // reserved field
 	final int entityBodyReserved_1 = 0; // reserved field
 	final int transferTransactionBodyReserved_1 = 0; // reserved field
