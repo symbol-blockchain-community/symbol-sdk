@@ -262,7 +262,9 @@ class Transaction implements ISerializable, ITransaction {
 		'deadline': 'pod:Timestamp'
 	};
 
+	@override
 	TransactionType type = TransactionType.TRANSFER;
+	@override
 	int version = 0;
 	NetworkType network = NetworkType.MAINNET;
 	Timestamp timestamp = Timestamp();
@@ -607,7 +609,9 @@ class AccountKeyLinkTransactionV1 implements ISerializable, ITransaction {
 		'remotePublicKey': 'pod:PublicKey'
 	};
 
+	@override
 	TransactionType type = AccountKeyLinkTransactionV1.TRANSACTION_TYPE;
+	@override
 	int version = AccountKeyLinkTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
 	Timestamp timestamp = Timestamp();
@@ -1653,7 +1657,9 @@ class MosaicDefinitionTransactionV1 implements ISerializable, ITransaction {
 		'rentalFee': 'pod:Amount'
 	};
 
+	@override
 	TransactionType type = MosaicDefinitionTransactionV1.TRANSACTION_TYPE;
+	@override
 	int version = MosaicDefinitionTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
 	Timestamp timestamp = Timestamp();
@@ -2094,7 +2100,9 @@ class MosaicSupplyChangeTransactionV1 implements ISerializable, ITransaction {
 		'delta': 'pod:Amount'
 	};
 
+	@override
 	TransactionType type = MosaicSupplyChangeTransactionV1.TRANSACTION_TYPE;
+	@override
 	int version = MosaicSupplyChangeTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
 	Timestamp timestamp = Timestamp();
@@ -2653,7 +2661,9 @@ class MultisigAccountModificationTransactionV1 implements ISerializable, ITransa
 		'modifications': 'array[SizePrefixedMultisigAccountModification]'
 	};
 
+	@override
 	TransactionType type = MultisigAccountModificationTransactionV1.TRANSACTION_TYPE;
+	@override
 	int version = MultisigAccountModificationTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
 	Timestamp timestamp = Timestamp();
@@ -2999,7 +3009,9 @@ class MultisigAccountModificationTransactionV2 implements ISerializable, ITransa
 		'modifications': 'array[SizePrefixedMultisigAccountModification]'
 	};
 
+	@override
 	TransactionType type = MultisigAccountModificationTransactionV2.TRANSACTION_TYPE;
+	@override
 	int version = MultisigAccountModificationTransactionV2.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
 	Timestamp timestamp = Timestamp();
@@ -3652,7 +3664,9 @@ class MultisigTransactionV1 implements ISerializable, ITransaction {
 		'cosignatures': 'array[SizePrefixedCosignatureV1]'
 	};
 
+	@override
 	TransactionType type = MultisigTransactionV1.TRANSACTION_TYPE;
+	@override
 	int version = MultisigTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
 	Timestamp timestamp = Timestamp();
@@ -4012,7 +4026,9 @@ class NamespaceRegistrationTransactionV1 implements ISerializable, ITransaction 
 		'parentName': 'bytes_array'
 	};
 
+	@override
 	TransactionType type = NamespaceRegistrationTransactionV1.TRANSACTION_TYPE;
+	@override
 	int version = NamespaceRegistrationTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
 	Timestamp timestamp = Timestamp();
@@ -4577,7 +4593,9 @@ class TransferTransactionV1 implements ISerializable, ITransaction {
 		'message': 'struct:Message'
 	};
 
+	@override
 	TransactionType type = TransferTransactionV1.TRANSACTION_TYPE;
+	@override
 	int version = TransferTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
 	Timestamp timestamp = Timestamp();
@@ -5018,7 +5036,9 @@ class TransferTransactionV2 implements ISerializable, ITransaction {
 		'mosaics': 'array[SizePrefixedMosaic]'
 	};
 
+	@override
 	TransactionType type = TransferTransactionV2.TRANSACTION_TYPE;
+	@override
 	int version = TransferTransactionV2.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
 	Timestamp timestamp = Timestamp();

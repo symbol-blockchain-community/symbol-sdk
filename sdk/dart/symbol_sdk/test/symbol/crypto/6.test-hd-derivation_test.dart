@@ -9,7 +9,7 @@ void nodeTest(Bip32Node node, List<dynamic> children, String rootPublicKey, List
   var rootKeyPair = KeyPair(node.privateKey);
   expect(rootKeyPair.publicKey.toString(), rootPublicKey);
   for(var i = 0; i < children.length; i++){
-    var childNode = await node.derivePath(childrenPath[i]);
+    var childNode = node.derivePath(childrenPath[i]);
     var childKeyPair = KeyPair(childNode.privateKey);
     expect(childKeyPair.publicKey.toString(), childrenPublicKey[i]);
   }

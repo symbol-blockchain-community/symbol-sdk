@@ -71,7 +71,9 @@ int crypto_sign(Uint8List sm, Uint8List m, int n, Uint8List sk) {
   for (var k = 0; k < longArr.length; k++){
     sm[k] = longArr[k];
   }
-  for (i = 32; i < 64; i++) sm[i] = sk[i];
+  for (i = 32; i < 64; i++) {
+    sm[i] = sk[i];
+  }
 
   crypto_hash(h, sm, n + 64);
   tweet_nacl.TweetNaCl.reduce(h);

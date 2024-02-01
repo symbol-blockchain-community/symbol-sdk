@@ -706,8 +706,10 @@ class Transaction implements ISerializable, ITransaction {
 	Signature signature = Signature();
 	@override
 	PublicKey signerPublicKey = PublicKey();
+	@override
 	int version = 0;
 	NetworkType network = NetworkType.MAINNET;
+	@override
 	TransactionType type = TransactionType.ACCOUNT_KEY_LINK;
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
@@ -4251,8 +4253,10 @@ class AccountKeyLinkTransactionV1 implements ISerializable, ITransaction {
 	Signature signature = Signature();
 	@override
 	PublicKey signerPublicKey = PublicKey();
+	@override
 	int version = AccountKeyLinkTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
+	@override
 	TransactionType type = AccountKeyLinkTransactionV1.TRANSACTION_TYPE;
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
@@ -4560,8 +4564,10 @@ class NodeKeyLinkTransactionV1 implements ISerializable, ITransaction {
 	Signature signature = Signature();
 	@override
 	PublicKey signerPublicKey = PublicKey();
+	@override
 	int version = NodeKeyLinkTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
+	@override
 	TransactionType type = NodeKeyLinkTransactionV1.TRANSACTION_TYPE;
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
@@ -5026,8 +5032,10 @@ class AggregateCompleteTransactionV1 implements ISerializable, ITransaction {
 	Signature signature = Signature();
 	@override
 	PublicKey signerPublicKey = PublicKey();
+	@override
 	int version = AggregateCompleteTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
+	@override
 	TransactionType type = AggregateCompleteTransactionV1.TRANSACTION_TYPE;
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
@@ -5227,8 +5235,10 @@ class AggregateCompleteTransactionV2 implements ISerializable, ITransaction {
 	Signature signature = Signature();
 	@override
 	PublicKey signerPublicKey = PublicKey();
+	@override
 	int version = AggregateCompleteTransactionV2.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
+	@override
 	TransactionType type = AggregateCompleteTransactionV2.TRANSACTION_TYPE;
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
@@ -5428,8 +5438,10 @@ class AggregateBondedTransactionV1 implements ISerializable, ITransaction {
 	Signature signature = Signature();
 	@override
 	PublicKey signerPublicKey = PublicKey();
+	@override
 	int version = AggregateBondedTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
+	@override
 	TransactionType type = AggregateBondedTransactionV1.TRANSACTION_TYPE;
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
@@ -5629,8 +5641,10 @@ class AggregateBondedTransactionV2 implements ISerializable, ITransaction {
 	Signature signature = Signature();
 	@override
 	PublicKey signerPublicKey = PublicKey();
+	@override
 	int version = AggregateBondedTransactionV2.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
+	@override
 	TransactionType type = AggregateBondedTransactionV2.TRANSACTION_TYPE;
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
@@ -5831,8 +5845,10 @@ class VotingKeyLinkTransactionV1 implements ISerializable, ITransaction {
 	Signature signature = Signature();
 	@override
 	PublicKey signerPublicKey = PublicKey();
+	@override
 	int version = VotingKeyLinkTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
+	@override
 	TransactionType type = VotingKeyLinkTransactionV1.TRANSACTION_TYPE;
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
@@ -6182,8 +6198,10 @@ class VrfKeyLinkTransactionV1 implements ISerializable, ITransaction {
 	Signature signature = Signature();
 	@override
 	PublicKey signerPublicKey = PublicKey();
+	@override
 	int version = VrfKeyLinkTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
+	@override
 	TransactionType type = VrfKeyLinkTransactionV1.TRANSACTION_TYPE;
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
@@ -6492,8 +6510,10 @@ class HashLockTransactionV1 implements ISerializable, ITransaction {
 	Signature signature = Signature();
 	@override
 	PublicKey signerPublicKey = PublicKey();
+	@override
 	int version = HashLockTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
+	@override
 	TransactionType type = HashLockTransactionV1.TRANSACTION_TYPE;
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
@@ -6866,8 +6886,10 @@ class SecretLockTransactionV1 implements ISerializable, ITransaction {
 	Signature signature = Signature();
 	@override
 	PublicKey signerPublicKey = PublicKey();
+	@override
 	int version = SecretLockTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
+	@override
 	TransactionType type = SecretLockTransactionV1.TRANSACTION_TYPE;
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
@@ -7240,8 +7262,10 @@ class SecretProofTransactionV1 implements ISerializable, ITransaction {
 	Signature signature = Signature();
 	@override
 	PublicKey signerPublicKey = PublicKey();
+	@override
 	int version = SecretProofTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
+	@override
 	TransactionType type = SecretProofTransactionV1.TRANSACTION_TYPE;
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
@@ -7601,8 +7625,10 @@ class AccountMetadataTransactionV1 implements ISerializable, ITransaction {
 	Signature signature = Signature();
 	@override
 	PublicKey signerPublicKey = PublicKey();
+	@override
 	int version = AccountMetadataTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
+	@override
 	TransactionType type = AccountMetadataTransactionV1.TRANSACTION_TYPE;
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
@@ -7961,8 +7987,10 @@ class MosaicMetadataTransactionV1 implements ISerializable, ITransaction {
 	Signature signature = Signature();
 	@override
 	PublicKey signerPublicKey = PublicKey();
+	@override
 	int version = MosaicMetadataTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
+	@override
 	TransactionType type = MosaicMetadataTransactionV1.TRANSACTION_TYPE;
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
@@ -8342,8 +8370,10 @@ class NamespaceMetadataTransactionV1 implements ISerializable, ITransaction {
 	Signature signature = Signature();
 	@override
 	PublicKey signerPublicKey = PublicKey();
+	@override
 	int version = NamespaceMetadataTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
+	@override
 	TransactionType type = NamespaceMetadataTransactionV1.TRANSACTION_TYPE;
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
@@ -8833,8 +8863,10 @@ class MosaicDefinitionTransactionV1 implements ISerializable, ITransaction {
 	Signature signature = Signature();
 	@override
 	PublicKey signerPublicKey = PublicKey();
+	@override
 	int version = MosaicDefinitionTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
+	@override
 	TransactionType type = MosaicDefinitionTransactionV1.TRANSACTION_TYPE;
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
@@ -9205,8 +9237,10 @@ class MosaicSupplyChangeTransactionV1 implements ISerializable, ITransaction {
 	Signature signature = Signature();
 	@override
 	PublicKey signerPublicKey = PublicKey();
+	@override
 	int version = MosaicSupplyChangeTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
+	@override
 	TransactionType type = MosaicSupplyChangeTransactionV1.TRANSACTION_TYPE;
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
@@ -9535,8 +9569,10 @@ class MosaicSupplyRevocationTransactionV1 implements ISerializable, ITransaction
 	Signature signature = Signature();
 	@override
 	PublicKey signerPublicKey = PublicKey();
+	@override
 	int version = MosaicSupplyRevocationTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
+	@override
 	TransactionType type = MosaicSupplyRevocationTransactionV1.TRANSACTION_TYPE;
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
@@ -9844,8 +9880,10 @@ class MultisigAccountModificationTransactionV1 implements ISerializable, ITransa
 	Signature signature = Signature();
 	@override
 	PublicKey signerPublicKey = PublicKey();
+	@override
 	int version = MultisigAccountModificationTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
+	@override
 	TransactionType type = MultisigAccountModificationTransactionV1.TRANSACTION_TYPE;
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
@@ -10240,8 +10278,10 @@ class AddressAliasTransactionV1 implements ISerializable, ITransaction {
 	Signature signature = Signature();
 	@override
 	PublicKey signerPublicKey = PublicKey();
+	@override
 	int version = AddressAliasTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
+	@override
 	TransactionType type = AddressAliasTransactionV1.TRANSACTION_TYPE;
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
@@ -10571,8 +10611,10 @@ class MosaicAliasTransactionV1 implements ISerializable, ITransaction {
 	Signature signature = Signature();
 	@override
 	PublicKey signerPublicKey = PublicKey();
+	@override
 	int version = MosaicAliasTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
+	@override
 	TransactionType type = MosaicAliasTransactionV1.TRANSACTION_TYPE;
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
@@ -10904,8 +10946,10 @@ class NamespaceRegistrationTransactionV1 implements ISerializable, ITransaction 
 	Signature signature = Signature();
 	@override
 	PublicKey signerPublicKey = PublicKey();
+	@override
 	int version = NamespaceRegistrationTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
+	@override
 	TransactionType type = NamespaceRegistrationTransactionV1.TRANSACTION_TYPE;
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
@@ -11397,8 +11441,10 @@ class AccountAddressRestrictionTransactionV1 implements ISerializable, ITransact
 	Signature signature = Signature();
 	@override
 	PublicKey signerPublicKey = PublicKey();
+	@override
 	int version = AccountAddressRestrictionTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
+	@override
 	TransactionType type = AccountAddressRestrictionTransactionV1.TRANSACTION_TYPE;
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
@@ -11774,8 +11820,10 @@ class AccountMosaicRestrictionTransactionV1 implements ISerializable, ITransacti
 	Signature signature = Signature();
 	@override
 	PublicKey signerPublicKey = PublicKey();
+	@override
 	int version = AccountMosaicRestrictionTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
+	@override
 	TransactionType type = AccountMosaicRestrictionTransactionV1.TRANSACTION_TYPE;
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
@@ -12151,8 +12199,10 @@ class AccountOperationRestrictionTransactionV1 implements ISerializable, ITransa
 	Signature signature = Signature();
 	@override
 	PublicKey signerPublicKey = PublicKey();
+	@override
 	int version = AccountOperationRestrictionTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
+	@override
 	TransactionType type = AccountOperationRestrictionTransactionV1.TRANSACTION_TYPE;
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
@@ -12527,8 +12577,10 @@ class MosaicAddressRestrictionTransactionV1 implements ISerializable, ITransacti
 	Signature signature = Signature();
 	@override
 	PublicKey signerPublicKey = PublicKey();
+	@override
 	int version = MosaicAddressRestrictionTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
+	@override
 	TransactionType type = MosaicAddressRestrictionTransactionV1.TRANSACTION_TYPE;
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
@@ -12966,8 +13018,10 @@ class MosaicGlobalRestrictionTransactionV1 implements ISerializable, ITransactio
 	Signature signature = Signature();
 	@override
 	PublicKey signerPublicKey = PublicKey();
+	@override
 	int version = MosaicGlobalRestrictionTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
+	@override
 	TransactionType type = MosaicGlobalRestrictionTransactionV1.TRANSACTION_TYPE;
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();
@@ -13378,8 +13432,10 @@ class TransferTransactionV1 implements ISerializable, ITransaction {
 	Signature signature = Signature();
 	@override
 	PublicKey signerPublicKey = PublicKey();
+	@override
 	int version = TransferTransactionV1.TRANSACTION_VERSION;
 	NetworkType network = NetworkType.MAINNET;
+	@override
 	TransactionType type = TransferTransactionV1.TRANSACTION_TYPE;
 	Amount fee = Amount();
 	Timestamp deadline = Timestamp();

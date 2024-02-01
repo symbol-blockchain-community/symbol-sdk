@@ -13,13 +13,13 @@ void main() async {
   var contents = await file.readAsString();
   var jsonMap = jsonDecode(contents);
   (jsonMap as List).forEach((element) {
-    test(element['privateKey'], () async {
+    test(element['privateKey'], () {
       var privateKey = PrivateKey(element['privateKey']);
       var keyPair = KeyPair(privateKey);
       var recipientPublicKey = PublicKey(element['otherPublicKey']);
       var clearText = hexToBytes(element['clearText']);
       var iv = element['iv'];
-      final result = await encodeAesGcm(deriveSharedKey, keyPair, recipientPublicKey, clearText, hexToBytes(iv));
+      final result = encodeAesGcm(deriveSharedKey, keyPair, recipientPublicKey, clearText, hexToBytes(iv));
       var tag = element['tag'];
       var cipherText = element['cipherText'];
       expect(hex.encode(result['tag']).toUpperCase(), tag);

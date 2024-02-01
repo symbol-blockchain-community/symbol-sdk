@@ -1,4 +1,3 @@
-import 'package:symbol_sdk/utils/converter.dart';
 import '../CryptoTypes.dart' as ct;
 import 'dart:typed_data';
 import '../Cipher.dart';

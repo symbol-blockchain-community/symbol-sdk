@@ -20,6 +20,7 @@ interface class ITransaction implements IInnerTransaction {
   Uint8List serialize(){
     throw UnimplementedError('unimplement serialize');
   }
+  @override
   void sort(){
     throw UnimplementedError('unimplement sort');
   }

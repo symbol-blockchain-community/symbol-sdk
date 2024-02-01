@@ -27,7 +27,7 @@ class MessageEncorder {
   ct.PublicKey get publicKey => keyPair.publicKey;
 
   Future<Uint8List> encode(ct.PublicKey recipientPublicKey, Uint8List message) async {
-    final result = await encodeAesGcm(deriveSharedKey, keyPair, recipientPublicKey, message);
+    final result = encodeAesGcm(deriveSharedKey, keyPair, recipientPublicKey, message);
 
     return concatArrays([
       Uint8List.fromList([1]),

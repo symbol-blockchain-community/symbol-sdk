@@ -1,5 +1,4 @@
 import './utils/converter.dart';
-import 'dart:typed_data';
 
 class BaseValue {
   final int size;

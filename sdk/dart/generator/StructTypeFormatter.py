@@ -58,7 +58,7 @@ class StructFormatter(AbstractTypeFormatter):
 	
 	@staticmethod
 	def has_field_override(field_name):
-		return True if 'signerPublicKey' == field_name or 'signature' == field_name else False
+		return True if 'signerPublicKey' == field_name or 'signature' == field_name or 'version' == field_name or 'type' == field_name else False
 	
 	def is_fields_one(self):
 		return len(list(self.non_reserved_fields())) == 1
@@ -126,14 +126,15 @@ class StructFormatter(AbstractTypeFormatter):
 			field_name = self.field_name(field)
 			class_name = self.re_name(field.extensions.printer.get_type())
 			if const_field:
+				if self.is_transaction() and self.has_field_override(field_name):
+					body += '@override\n'
 				body += f'{class_name} {field_name} = {self.typename}.{const_field.name};\n'
 			else:
 				if self.is_nullable_field(field):
 					body += f'{class_name}? {field_name};\n'
 				else:
-					if self.is_transaction():
-						if self.has_field_override(field_name):
-							body += '@override\n'
+					if self.is_transaction() and self.has_field_override(field_name):
+						body += '@override\n'
 					body += f'{class_name} {field_name} = {field.extensions.printer.get_default_value()};\n'
 				#body += f'this.{field_name} = {arg_name} ?? {value};\n'
 
