@@ -162,29 +162,22 @@ class StructFormatter(AbstractTypeFormatter):
 
 	def get_ctor_descriptor(self):
 		args = []
-		for field in self.non_reserved_fields():
-			field_name = self.field_name(field, is_argument=True)
-			args.append(f'{self.re_name(field.extensions.printer.get_type())}? {field_name}') if not self.is_fields_one() else args.append(f'[{field_name}]')
-		arguments = args
-
 		body = ''
 		for field in self.non_reserved_fields():
+			arg_name = self.field_name(field, is_argument=True)
+			args.append(f'{self.re_name(field.extensions.printer.get_type())}? {arg_name}') if not self.is_fields_one() else args.append(f'[{arg_name}]')
+
 			const_field = self.get_paired_const_field(field)
 			field_name = self.field_name(field)
-			arg_name = self.field_name(field, is_argument=True)
+
 			if const_field:
 				body += f'this.{field_name} = {arg_name} ?? {self.typename}.{const_field.name};\n'
 			else:
-				value = field.extensions.printer.get_default_value()
-				if self.is_nullable_field(field):
-					value = 'null'  # needs to be null or else field will not be destination when copying descriptor properties
-
+				# needs to be null or else field will not be destination when copying descriptor properties
+				value = 'null' if self.is_nullable_field(field) else field.extensions.printer.get_default_value()
 				body += f'this.{field_name} = {arg_name} ?? {value};\n'
 
-		if not body:
-			return 'null'
-
-		return MethodDescriptor(body=body, arguments=arguments)#, super=super)
+		return MethodDescriptor(body=body, arguments=args)
 
 	def get_comparer_descriptor(self):
 		if not self.struct.comparer:
@@ -300,7 +293,6 @@ class StructFormatter(AbstractTypeFormatter):
 				adjust += f'{buffer_name} = {buffer_name}.sublist(0, size);\n'	
 			adjust += f'{buffer_name} = {buffer_name}.sublist({field_size});\n'
 		deserialize = f'{field_name_} = {load};'
-		#deserialize = f'{load};' if field_name == 'size' else f'{field_name_} = {load};'
 
 		additional_statements = ''
 		if is_reserved(field):
