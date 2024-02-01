@@ -1,7 +1,3 @@
-import 'package:pinenacl/api.dart';
-import 'package:pinenacl/ed25519.dart';
-import 'package:pinenacl/encoding.dart';
-import 'package:pinenacl/x25519.dart';
 import '../CryptoTypes.dart' as ct;
 import '../symbol/KeyPair.dart' as sc;
 import 'dart:typed_data';
