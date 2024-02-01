@@ -1,6 +1,6 @@
 import 'dart:typed_data';
-import 'package:crypto/crypto.dart';
 import 'package:bip39_mnemonic/bip39_mnemonic.dart' as bip39;
+import 'package:pointycastle/export.dart' as pointy;
 
 import 'CryptoTypes.dart';
 
@@ -9,9 +9,8 @@ class Bip32Node {
   late Uint8List chainCode;
 
   Bip32Node(Uint8List hmacKey, Uint8List data) {
-    var hmac = Hmac(sha512, hmacKey);
-    var hmacResult = hmac.convert(data).bytes;
-
+    var hmac = pointy.HMac(pointy.SHA512Digest(), 128)..init(pointy.KeyParameter(hmacKey));
+    var hmacResult = hmac.process(data);
     privateKey = PrivateKey(hmacResult.sublist(0, 32));
     chainCode = Uint8List.fromList(hmacResult.sublist(32));
   }

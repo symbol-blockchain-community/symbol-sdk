@@ -5,11 +5,11 @@ import 'package:symbol_sdk/symbol/KeyPair.dart';
 import 'package:symbol_sdk/utils/converter.dart';
 import 'package:symbol_sdk/Bip32.dart';
 
-void nodeTest(Bip32Node node, List<dynamic> children, String rootPublicKey, List<List<int>> childrenPath, List<String> childrenPublicKey){
+void nodeTest(Bip32Node node, List<dynamic> children, String rootPublicKey, List<List<int>> childrenPath, List<String> childrenPublicKey) async {
   var rootKeyPair = KeyPair(node.privateKey);
   expect(rootKeyPair.publicKey.toString(), rootPublicKey);
   for(var i = 0; i < children.length; i++){
-    var childNode = node.derivePath(childrenPath[i]);
+    var childNode = await node.derivePath(childrenPath[i]);
     var childKeyPair = KeyPair(childNode.privateKey);
     expect(childKeyPair.publicKey.toString(), childrenPublicKey[i]);
   }
@@ -24,7 +24,7 @@ void main() async {
   var testVectors = jsonMap['test_vectors'];
   
   publicNet.forEach((element) {
-    test(counter, () {
+    test(counter, () async {
       var mnemonic = element['mnemonic'];
       var seed = element['seed'];
       var passphrase = element['passphrase'];
@@ -49,7 +49,7 @@ void main() async {
   });
 
   testVectors.forEach((element) {
-    test(counter, () {
+    test(counter, () async {
       var mnemonic = element['mnemonic'];
       var seed = element['seed'];
       var passphrase = element['passphrase'];
