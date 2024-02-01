@@ -1,6 +1,8 @@
+import 'package:symbol_sdk/index.dart';
+
 import './CryptoTypes.dart' as ct;
 import 'package:symbol_sdk/crypto/tweetNacl.dart' as tweet_nacl;
-import 'package:cryptography/cryptography.dart';
+import 'package:pointycastle/export.dart' as pointy;
 
 import 'dart:typed_data';
 var a = tweet_nacl.TweetNaCl().D;
@@ -70,11 +72,12 @@ Uint8List Function(Uint8List privateKeyBytes, ct.PublicKey otherPublicKey) deriv
 
 Function deriveSharedKeyFactory(String info, Function cryptoHash) {
   final deriveSharedSecret = deriveSharedSecretFactory(cryptoHash);
-  return (Uint8List privateKeyBytes, ct.PublicKey otherPublicKey) async  {
+  return (Uint8List privateKeyBytes, ct.PublicKey otherPublicKey) {
     final sharedSecret = deriveSharedSecret(privateKeyBytes, otherPublicKey);
-    var hkdf = Hkdf(hmac: Hmac.sha256(), outputLength: 32);
-    var salt = Uint8List(32);
-    var key = await hkdf.deriveKey(secretKey: SecretKey(sharedSecret), nonce: salt, info: info.codeUnits);
-    return ct.SharedKey256(key.bytes);
+    var hkdf = pointy.KeyDerivator('SHA-256/HKDF');
+    var hkdfParams = pointy.HkdfParameters(sharedSecret, 32, Uint8List(32), utf8ToBytes(info));
+    hkdf.init(hkdfParams);
+    var key = hkdf.process(Uint8List(0));
+    return ct.SharedKey256(key);
   };
 }

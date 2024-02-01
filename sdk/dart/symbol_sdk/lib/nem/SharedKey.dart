@@ -14,6 +14,6 @@ void cryptoHash(Uint8List out, Uint8List m) {
 
 final deriveSharedKeyImpl = deriveSharedKeyFactory('nem-nis1', cryptoHash);
 
-Future<SharedKey256> deriveSharedKey(dynamic keyPair, PublicKey otherPublicKey) {
+SharedKey256 deriveSharedKey(dynamic keyPair, PublicKey otherPublicKey) {
   return deriveSharedKeyImpl(Uint8List.fromList(keyPair.privateKey.bytes.reversed.toList()), otherPublicKey);
 }

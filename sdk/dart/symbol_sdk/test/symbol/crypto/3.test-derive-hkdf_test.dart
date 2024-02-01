@@ -15,7 +15,7 @@ void main() async {
       var privateKey = PrivateKey(element['privateKey']);
       var keyPair = KeyPair(privateKey);
       var otherPublicKey = PublicKey(element['otherPublicKey']);
-      var result = await deriveSharedKey(keyPair, otherPublicKey);
+      var result = deriveSharedKey(keyPair, otherPublicKey);
       var sharedKey = element['sharedKey'];
       expect(hex.encode(result.bytes).toUpperCase(), sharedKey);
     });

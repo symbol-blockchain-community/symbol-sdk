@@ -13,8 +13,8 @@ class MessageEncorder {
   MessageEncorder(sc.KeyPair keyPair) :keyPair = keyPair;
   ct.PublicKey get publicKey => keyPair.publicKey;
 
-  Future<Uint8List> encode(ct.PublicKey recipientPublicKey, Uint8List message) async {
-    final result = await encodeAesGcm(deriveSharedKey, keyPair, recipientPublicKey, message);
+  Uint8List encode(ct.PublicKey recipientPublicKey, Uint8List message) {
+    final result = encodeAesGcm(deriveSharedKey, keyPair, recipientPublicKey, message);
 
     return concatArrays([
       Uint8List.fromList([1]),
@@ -24,11 +24,11 @@ class MessageEncorder {
     ]);
   }
 
-  Future<Map<String, dynamic>> tryDecode(
-    ct.PublicKey recipientPublicKey, Uint8List encodedMessage) async {
+  Map<String, dynamic> tryDecode(
+    ct.PublicKey recipientPublicKey, Uint8List encodedMessage) {
     if (1 == encodedMessage[0]) {
       try {
-        final message = await decodeAesGcm(
+        final message = decodeAesGcm(
             deriveSharedKey, keyPair, recipientPublicKey, encodedMessage.sublist(1));
         return {'isDecoded': true, 'message': message};
       } catch (e) {
@@ -44,7 +44,7 @@ class MessageEncorder {
       final ephemeralPublicKey = ct.PublicKey(encodedMessage.sublist(ephemeralPublicKeyStart, ephemeralPublicKeyEnd));
 
       try {
-        final message = await decodeAesGcm(
+        final message = decodeAesGcm(
             deriveSharedKey, keyPair, ephemeralPublicKey, encodedMessage.sublist(ephemeralPublicKeyEnd));
         return {'isDecoded': true, 'message': message};
       } catch (e) {

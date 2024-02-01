@@ -1,4 +1,4 @@
-import 'package:cryptography/cryptography.dart';
+import 'package:symbol_sdk/utils/converter.dart';
 import '../CryptoTypes.dart' as ct;
 import 'dart:typed_data';
 import '../Cipher.dart';
@@ -20,6 +20,7 @@ Uint8List concatArrays(List<Uint8List> arrays) {
 }
 
 Map<String, Uint8List> decode(int tagSize, int ivSize, Uint8List encodedMessage) {
+  print(encodedMessage.length);
   return {
     'tag': encodedMessage.sublist(0, tagSize),
     'initializationVector': encodedMessage.sublist(tagSize, tagSize + ivSize),
@@ -27,35 +28,34 @@ Map<String, Uint8List> decode(int tagSize, int ivSize, Uint8List encodedMessage)
   };
 }
 
-Future<Uint8List> decodeAesGcm(
-    Future<ct.SharedKey256> Function(dynamic, ct.PublicKey) deriveSharedKey,
+Uint8List decodeAesGcm(
+    ct.SharedKey256 Function(dynamic, ct.PublicKey) deriveSharedKey,
     dynamic keyPair,
     ct.PublicKey recipientPublicKey,
-    Uint8List encodedMessage) async {
+    Uint8List encodedMessage) {
   final decoded = decode(AesGcmCipher.TAG_SIZE, GCM_IV_SIZE, encodedMessage);
 
-  final sharedKey = await deriveSharedKey(keyPair, recipientPublicKey);
+  final sharedKey = deriveSharedKey(keyPair, recipientPublicKey);
   final cipher = AesGcmCipher(Uint8List.fromList(sharedKey.bytes));
-  var secretBox = SecretBox(decoded['encodedMessageData']!, nonce: decoded['initializationVector']!, mac: Mac(decoded['tag']!));
 
-  return await cipher.decrypt(secretBox);
+  return cipher.decrypt(Uint8List.fromList(decoded['encodedMessageData']! + decoded['tag']!), decoded['initializationVector']!);
 }
 
-Future<Map<String, dynamic>> encodeAesGcm (
-    Future<ct.SharedKey256> Function(dynamic, ct.PublicKey) deriveSharedKey,
+Map<String, dynamic> encodeAesGcm (
+    ct.SharedKey256 Function(dynamic, ct.PublicKey) deriveSharedKey,
     dynamic keyPair,
     ct.PublicKey recipientPublicKey,
     Uint8List message,
-    [Uint8List? iv]) async {
-  final sharedKey = await deriveSharedKey(keyPair, recipientPublicKey);
+    [Uint8List? iv]) {
+  final sharedKey = deriveSharedKey(keyPair, recipientPublicKey);
   final cipher = AesGcmCipher(Uint8List.fromList(sharedKey.bytes));
 
   var initializationVector = iv ?? tweet_nacl.TweetNaCl.randombytes(12);
-  final secretBox = await cipher.encrypt(message, initializationVector);
+  final secretBox = cipher.encrypt(message, initializationVector);
 
   return {
-    'tag': secretBox.mac.bytes,
+    'tag': secretBox.sublist(secretBox.length - 16),
     'initializationVector': initializationVector,
-    'cipherText': secretBox.cipherText
+    'cipherText': secretBox.sublist(0, secretBox.length - 16)
   };
 }

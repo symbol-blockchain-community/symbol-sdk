@@ -19,7 +19,7 @@ void main() async {
       var recipientPublicKey = PublicKey(element['otherPublicKey']);
       var clearText = hexToBytes(element['clearText']);
       var iv = element['iv'];
-      final result = await encodeAesGcm(deriveSharedKey, keyPair, recipientPublicKey, clearText, hexToBytes(iv));
+      final result = encodeAesGcm(deriveSharedKey, keyPair, recipientPublicKey, clearText, hexToBytes(iv));
       var tag = element['tag'];
       var cipherText = element['cipherText'];
       expect(hex.encode(result['tag']).toUpperCase(), tag);

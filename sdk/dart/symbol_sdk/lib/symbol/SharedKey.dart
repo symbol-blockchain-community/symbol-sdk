@@ -4,6 +4,6 @@ import '../SharedKey.dart'
 ;
 final deriveSharedKeyImpl = deriveSharedKeyFactory('catapult', tweet_nacl.TweetNaCl.crypto_hash);
 
-Future<SharedKey256> deriveSharedKey(dynamic keyPair, PublicKey otherPublicKey) {
+SharedKey256 deriveSharedKey(dynamic keyPair, PublicKey otherPublicKey) {
   return deriveSharedKeyImpl(keyPair.privateKey.bytes, otherPublicKey);
 }

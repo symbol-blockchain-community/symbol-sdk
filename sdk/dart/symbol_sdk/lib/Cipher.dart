@@ -1,5 +1,5 @@
 import 'dart:typed_data';
-import 'package:cryptography/cryptography.dart';
+import 'package:pointycastle/export.dart' as pointy;
 
 class AesGcmCipher {
   /// Byte size of GCM tag.
@@ -11,31 +11,29 @@ class AesGcmCipher {
   /// Creates a cipher around an aes shared key.
   AesGcmCipher(Uint8List aesKey) : _key = aesKey;
 
-  /// Encrypts clear text and appends tag to encrypted payload.
-  Future<SecretBox> encrypt(Uint8List clearText, Uint8List iv) async {
-    final algorithm = AesGcm.with256bits();
-    final secretKey = SecretKey(_key);
-
-    // Encrypt
-    final secretBox = await algorithm.encrypt(
-      clearText,
-      secretKey: secretKey,
-      nonce: iv,
-    );
-
-    return secretBox;
+  Uint8List encrypt(Uint8List clearText, Uint8List iv) {
+    final cipher = pointy.GCMBlockCipher(pointy.AESEngine())
+    ..init(
+      true, // encrypt
+      pointy.AEADParameters(
+        pointy.KeyParameter(_key), // the 256 bit (32 byte) key
+        128,  //Mac length
+        iv, // the 12 byte nonce
+        Uint8List(0), // empty extra data
+      ));
+    return cipher.process(clearText);
   }
-  /// Decrypts cipher text and verifies tag.
-  Future<Uint8List> decrypt(SecretBox secretBox) async {
-    final algorithm = AesGcm.with256bits();
-    final secretKey = SecretKey(_key);
 
-    // Decrypt
-    final clearText = await algorithm.decrypt(
-      secretBox,
-      secretKey: secretKey,
-    );
-
-    return Uint8List.fromList(clearText);
+  Uint8List decrypt(Uint8List cipherText, Uint8List iv) {
+  final cipher = pointy.GCMBlockCipher(pointy.AESEngine())
+    ..init(
+      false, // decrypt
+      pointy.AEADParameters(
+        pointy.KeyParameter(_key), // the 256 bit (32 byte) key
+        128,  //Mac length
+        iv, // the 12 byte nonce
+        Uint8List(0), // empty extra data
+      ));
+    return cipher.process(cipherText);
   }
 }
