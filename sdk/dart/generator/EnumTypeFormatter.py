@@ -25,10 +25,10 @@ class EnumTypeFormatter(AbstractTypeFormatter):
 
 	def get_fields(self):
 		fields = list(
-        map(
-            lambda e: f'static final {e.name} = {self.typename}({e.value});\n',
-            self.enum_type.values,
-        )
+      map(
+        lambda e: f'static final {e.name} = {self.typename}({e.value});\n',
+        self.enum_type.values,
+      )
     )
 		fields.append('\n')
 		fields.append('int value = 0;\n')

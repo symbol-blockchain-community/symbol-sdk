@@ -104,6 +104,9 @@ class ArrayHelpers {
           ? element.size
           : alignUp(element.size, alignment);
       if (alignedSize > buffer.lengthInBytes) throw RangeError('unexpected buffer length');
+      print(element.size);
+		  print(buffer.length);
+      print(alignedSize);
       buffer = buffer.sublist(alignedSize);
     }
     return elements;

@@ -1,0 +1,22 @@
+{
+  "name": "symbol_ts_sdk",
+  "version": "0.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha --experimental-modules -r ts-node/register test/**/*.spec.ts",
+    "build": "tsc -p ./"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/chai": "^4.3.11",
+    "@types/mocha": "^10.0.6",
+    "chai": "^4.4.1",
+    "typescript": "^5.3.3"
+  }
+}

@@ -92,8 +92,8 @@ class StructFormatter(AbstractTypeFormatter):
 	def re_name(name):
 		if 'Transaction' == name:
 			return 'ITransaction'
-		if 'List<Transaction>' == name:
-			return 'List<ITransaction>'
+		if 'Transaction[]' == name:
+			return 'ITransaction[]'
 		name = name.replace("NonVerifiable", "IInner")
 		name = name.replace("Embedded", "IInner")
 		return name
@@ -162,7 +162,7 @@ class StructFormatter(AbstractTypeFormatter):
 
 	def get_ctor_descriptor(self):
 		args = []
-		body = ''
+		body = 'super()'
 		for field in self.non_reserved_fields():
 			arg_name = self.field_name(field, is_argument=True)
 			args.append(f'{self.re_name(field.extensions.printer.get_type())}? {arg_name}') if not self.is_fields_one() else args.append(f'[{arg_name}]')

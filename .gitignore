@@ -27,9 +27,9 @@ __pycache__/
 build/
 dist/
 
-sdk/dart/symbol_sdk/.dart_tool/
-sdk/dart/symbol_sdk/.packages
-sdk/dart/symbol_sdk/pubspec.lock
-sdk/dart/symbol_sdk/build/
-sdk/dart/symbol_sdk/doc/api/
-sdk/dart/symbol_sdk/.gitignore
+sdk/dart/.dart_tool/
+sdk/dart/.packages
+sdk/dart/pubspec.lock
+sdk/dart/build/
+sdk/dart/doc/api/
+sdk/dart/.gitignore

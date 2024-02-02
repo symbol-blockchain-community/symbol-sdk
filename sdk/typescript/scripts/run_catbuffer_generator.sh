@@ -9,21 +9,20 @@ function generate_code() {
 	local git_root
 	git_root="$(git rev-parse --show-toplevel)"
 
-	echo "${git_root}"
-
 	PYTHONPATH="${git_root}/catbuffer/parser" python3 -m catparser \
 		--schema "${git_root}/catbuffer/schemas/$1/all_generated.cats"  \
 		--include "${git_root}/catbuffer/schemas/$1" \
-		--output "${git_root}/sdk/dart/lib/$2" \
+		--output "${git_root}/sdk/typescript/src/$2" \
 		--quiet \
 		--generator generator.Generator
 }
 
 if [[ $# -eq 0 ]]; then
 	echo "updating generated code in git"
-	for name in "nem" "symbol";
+	#for name in "nem" "symbol";
+	for name in "symbol";
 	do
-		rm -rf "./src/${name}/models.dart"
+		rm -rf "./src/${name}/models.ts"
 		generate_code "${name}" "${name}"
 	done
 elif [[ "$1" = "dryrun" ]]; then
@@ -32,8 +31,8 @@ elif [[ "$1" = "dryrun" ]]; then
 	for name in "nem" "symbol";
 	do
 		generate_code "${name}" "${name}2"
-		diff --strip-trailing-cr "./src/${name}/models.dart" "./src/${name}2/models.dart"
-		rm -rf "./src/${name}2/models.dart"
+		diff --strip-trailing-cr "./src/${name}/models.ts" "./src/${name}2/models.ts"
+		rm -rf "./src/${name}2/models.ts"
 	done
 else
 	echo "unknown options"

@@ -11159,10 +11159,12 @@ class EmbeddedNamespaceRegistrationTransactionV1 implements ISerializable, IInne
 		size += 1;
 		size += network.size;
 		size += type.size;
+    print(size);
 		if (NamespaceRegistrationType.ROOT.value == registrationType.value)
 		{
 			size += duration.size;
 		}
+    print(size);
 		if (NamespaceRegistrationType.CHILD.value == registrationType.value)
 		{
 			size += parentId!.size;
@@ -11223,6 +11225,7 @@ class EmbeddedNamespaceRegistrationTransactionV1 implements ISerializable, IInne
 		buffer = buffer.sublist(1);
 		var name = Uint8List.fromList(buffer.sublist(0, nameSize));
 		buffer = buffer.sublist(nameSize);
+    print('buffer: ${buffer.length}');
 
 		var instance = EmbeddedNamespaceRegistrationTransactionV1(
 			signerPublicKey: signerPublicKey,
@@ -11235,6 +11238,8 @@ class EmbeddedNamespaceRegistrationTransactionV1 implements ISerializable, IInne
 			registrationType: registrationType,
 			name: name,
 		);
+    print(instance.parentId);
+    print(instance.id);
 		return instance;
 	}
 
