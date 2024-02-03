@@ -1,7 +1,7 @@
 using System;
 using System.Text;
 
-namespace CatSdk.Utils
+namespace SymbolSdk.Utils
 {
     public static class Base32
     {

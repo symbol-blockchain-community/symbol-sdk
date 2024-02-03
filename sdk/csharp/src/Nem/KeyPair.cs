@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
-using CatSdk.CryptoTypes;
-using CatSdk.Nem.External;
+using SymbolSdk.CryptoTypes;
+using SymbolSdk.Nem.External;
 
-namespace CatSdk.Nem
+namespace SymbolSdk.Nem
 {
     /**
 	 * Represents an ED25519 private and public key.

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace CatSdk.Crypto
+namespace SymbolSdk.Crypto
 {
     public static class NaclCatapult
     {

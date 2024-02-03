@@ -1,6 +1,6 @@
 using Org.BouncyCastle.Crypto.Digests;
 
-namespace CatSdk.Utils;
+namespace SymbolSdk.Utils;
 
 public static class Transform
 {

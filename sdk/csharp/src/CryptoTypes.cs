@@ -1,6 +1,6 @@
 using System.Security.Cryptography;
 
-namespace CatSdk.CryptoTypes
+namespace SymbolSdk
 {
     /**
 	 *  Represents a private key.

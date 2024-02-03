@@ -1,4 +1,4 @@
-namespace CatSdk.Nem
+namespace SymbolSdk.Nem
 {
     public interface IBaseTransaction : IStruct
     {

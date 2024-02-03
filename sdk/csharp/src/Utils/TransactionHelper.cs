@@ -1,8 +1,8 @@
 using System;
 using System.IO;
-using CatSdk.Symbol;
+using SymbolSdk.Symbol;
 
-namespace CatSdk.Utils
+namespace SymbolSdk.Utils
 {
     public static class TransactionHelper
     {

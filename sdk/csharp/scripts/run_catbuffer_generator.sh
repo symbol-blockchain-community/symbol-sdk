@@ -30,8 +30,8 @@ elif [[ "$1" = "dryrun" ]]; then
 	for name in "Nem" "Symbol";
 	do
 		generate_code "${name}" "${name}2"
-		diff "./CatSdk/${name}/Models.cs" "./CatSdk/${name}2/Models.cs"
-		rm -rf "./CatSdk/${name}2/Models.cs"
+		diff "./SymbolSdk/${name}/Models.cs" "./SymbolSdk/${name}2/Models.cs"
+		rm -rf "./SymbolSdk/${name}2/Models.cs"
 	done
 else
 	echo "unknown options"

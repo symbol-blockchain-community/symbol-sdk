@@ -1,8 +1,8 @@
-using CatSdk.Nem;
-using CatSdk.Nem.Factory;
+using SymbolSdk.Nem;
+using SymbolSdk.Nem.Factory;
 using Org.BouncyCastle.Crypto.Digests;
 
-namespace CatSdk.Facade
+namespace SymbolSdk.Nem
 {
     /**
      * Facade used to interact with NEM blockchain.

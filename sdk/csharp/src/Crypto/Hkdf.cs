@@ -1,7 +1,7 @@
 using System;
 using System.Security.Cryptography;
 
-namespace CatSdk.Crypto
+namespace SymbolSdk.Crypto
 {
     public class Hkdf
     {

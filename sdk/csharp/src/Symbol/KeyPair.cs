@@ -1,9 +1,9 @@
-using CatSdk.CryptoTypes;
-using CatSdk.Utils;
+using SymbolSdk.CryptoTypes;
+using SymbolSdk.Utils;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Crypto.Signers;
 
-namespace CatSdk.Symbol
+namespace SymbolSdk.Symbol
 {
     /**
 	 * Represents an ED25519 private and public key.

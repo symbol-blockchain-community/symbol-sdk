@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using CatSdk.Utils;
+using SymbolSdk.Utils;
 
-namespace CatSdk.Nem.Factory
+namespace SymbolSdk.Nem.Factory
 {
     public class TransactionsFactory
     {
@@ -36,7 +36,7 @@ namespace CatSdk.Nem.Factory
             nonVerifiableClassName = nonVerifiableClassName.Contains("NonVerifiable") ? nonVerifiableClassName : $"NonVerifiable{nonVerifiableClassName}";
             var assm = Assembly.GetExecutingAssembly();
             var types = assm.GetTypes()
-                .Where(p => p.Namespace == "CatSdk.Nem")
+                .Where(p => p.Namespace == "SymbolSdk.Nem")
                 .OrderBy(o => o.Name)
                 .Where(s => !s.Name.Contains("<>"))
                 .ToList();
@@ -88,7 +88,7 @@ namespace CatSdk.Nem.Factory
         {
             var assm = Assembly.GetExecutingAssembly();
             var types = assm.GetTypes()
-                .Where(p => p.Namespace == "CatSdk.Nem")
+                .Where(p => p.Namespace == "SymbolSdk.Nem")
                 .OrderBy(o => o.Name)
                 .Where(s => !s.Name.Contains("<>"))
                 .ToList();

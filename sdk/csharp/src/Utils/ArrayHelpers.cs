@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace CatSdk.Utils
+namespace SymbolSdk.Utils
 {
     public static class ArrayHelpers
     {

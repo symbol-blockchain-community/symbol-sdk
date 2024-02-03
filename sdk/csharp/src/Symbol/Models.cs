@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using CatSdk.Utils;
-namespace CatSdk.Symbol{
+using SymbolSdk.Utils;
+namespace SymbolSdk.Symbol{
 
 public class Amount : BaseValue, ISerializer {
 	public const byte SIZE = 8;

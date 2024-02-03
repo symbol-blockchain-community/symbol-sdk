@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace CatSdk.Utils
+namespace SymbolSdk.Utils
 {
     public static class Converter
     {

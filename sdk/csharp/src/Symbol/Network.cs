@@ -1,14 +1,14 @@
 using System;
 using System.Linq;
-using CatSdk.Utils;
+using SymbolSdk.Utils;
 using Org.BouncyCastle.Crypto.Digests;
 
-namespace CatSdk.Symbol
+namespace SymbolSdk.Symbol
 {
     /**
      * Represents a symbol network timestamp with millisecond resolution.
      */
-    public class NetworkTimestamp : CatSdk.NetworkTimestamp
+    public class NetworkTimestamp : SymbolSdk.NetworkTimestamp
     {
         public NetworkTimestamp(ulong timestamp) : base(timestamp) { }
 
@@ -17,7 +17,7 @@ namespace CatSdk.Symbol
 	     * @param {ulong} count Number of milliseconds to add.
 	     * @returns {NetworkTimestamp} New timestamp that is the specified number of milliseconds past this timestamp.
 	     */
-        public CatSdk.NetworkTimestamp AddMilliseconds(ulong count)
+        public SymbolSdk.NetworkTimestamp AddMilliseconds(ulong count)
         {
             return new NetworkTimestamp(Timestamp + count);
         }
@@ -28,7 +28,7 @@ namespace CatSdk.Symbol
 	     * @param {ulong} count Number of seconds to add.
 	     * @returns {NetworkTimestamp} New timestamp that is the specified number of seconds past this timestamp.
 	     */
-        public override CatSdk.NetworkTimestamp AddSeconds(ulong count)
+        public override SymbolSdk.NetworkTimestamp AddSeconds(ulong count)
         {
             return AddMilliseconds(1000 * count);
         }

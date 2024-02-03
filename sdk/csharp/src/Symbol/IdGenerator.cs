@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using CatSdk.Utils;
+using SymbolSdk.Utils;
 using Org.BouncyCastle.Crypto.Digests;
 
-namespace CatSdk.Symbol
+namespace SymbolSdk.Symbol
 {
     public static class IdGenerator
     {

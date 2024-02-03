@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using CatSdk.Utils;
+using SymbolSdk.Utils;
 
-namespace CatSdk.Symbol.Factory
+namespace SymbolSdk.Symbol.Factory
 {
     /**
      * Factory for creating Symbol transactions.
@@ -136,7 +136,7 @@ namespace CatSdk.Symbol.Factory
         {
             var assm = Assembly.GetExecutingAssembly();
             var types = assm.GetTypes()
-                .Where(p => p.Namespace == "CatSdk.Symbol")
+                .Where(p => p.Namespace == "SymbolSdk.Symbol")
                 .OrderBy(o => o.Name)
                 .Where(s => !s.Name.Contains("<>"))
                 .ToList();

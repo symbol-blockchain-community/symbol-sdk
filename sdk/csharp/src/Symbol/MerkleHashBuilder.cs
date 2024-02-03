@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using Org.BouncyCastle.Crypto.Digests;
 
-namespace CatSdk.Symbol
+namespace SymbolSdk.Symbol
 {
     /**
      * Builder for creating a merkle hash.

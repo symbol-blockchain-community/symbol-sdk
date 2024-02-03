@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using CatSdk.Crypto;
-using CatSdk.Utils;
+using SymbolSdk.Crypto;
+using SymbolSdk.Utils;
 using Org.BouncyCastle.Crypto.Digests;
 
-namespace CatSdk.Nem.External
+namespace SymbolSdk.Nem
 {
     public static class TweetnaclNaclFastKeccak
     {

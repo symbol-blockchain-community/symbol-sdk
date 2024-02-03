@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using CatSdk.Symbol;
-using CatSdk.Symbol.Factory;
-using CatSdk.Utils;
+using SymbolSdk.Symbol;
+using SymbolSdk.Symbol.Factory;
+using SymbolSdk.Utils;
 using Org.BouncyCastle.Crypto.Digests;
 
-namespace CatSdk.Facade
+namespace SymbolSdk.Symbol
 {
     /**
 	 * Facade used to interact with Symbol blockchain.

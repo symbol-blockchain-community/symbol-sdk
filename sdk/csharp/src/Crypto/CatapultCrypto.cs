@@ -1,9 +1,9 @@
 using System;
 using System.Security.Cryptography;
 using System.Text;
-using CatSdk.Utils;
+using SymbolSdk.Utils;
 
-namespace CatSdk.Crypto
+namespace SymbolSdk.Crypto
 {
     public static class CatapultCrypto
     {
