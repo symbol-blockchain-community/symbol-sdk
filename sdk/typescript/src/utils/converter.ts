@@ -242,8 +242,8 @@ const intToBytes = (value: number | bigint, byteSize: number, isSigned: boolean 
 };
 
 const utf8ToUint8 = (input: string): Uint8Array => {
-	const encoder = new TextEncoder();
-	return encoder.encode(input);
+	let buffer = Buffer.from('Hello World', 'utf8');
+	return Uint8Array.from(buffer);
 };
 
 const stringToAddress = (encoded: string): Uint8Array => {

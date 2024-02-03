@@ -1,7 +1,8 @@
-import { PrivateKey, uint8ToHex, utf8ToUint8, intToBytes, bytesToInt, hexToUint8, bytesToBigInt } from "../../../src";
-import { KeyPair, AccountAddressRestrictionTransactionV1, AccountRestrictionFlags, TransferTransactionV1, UnresolvedAddress, UnresolvedMosaic, UnresolvedMosaicId, PublicKey, NetworkType, Timestamp, Signature } from "../../../src/symbol";
-import SymbolFacade from "../../../src/facade/SymbolFacade";
-import { Amount, TransactionFactory } from "../../../src/symbol/models";
+import { PrivateKey, uint8ToHex, utf8ToUint8, intToBytes, bytesToInt, hexToUint8, bytesToBigInt } from ".";
+import { KeyPair, Amount, TransferTransactionV1, UnresolvedAddress, UnresolvedMosaic, UnresolvedMosaicId, PublicKey, NetworkType, Timestamp, Signature } from "./symbol";
+import SymbolFacade from "./facade/SymbolFacade";
+console.log(uint8ToHex(utf8ToUint8("hello, symbol!")));
+/* 
 var facade = new SymbolFacade('testnet');
 var privateKey = new PrivateKey('5DB8324E7EB83E7665D500B014283260EF312139034E86DFB7EE736503EAEC02');
 var keyPair = new KeyPair(privateKey);
@@ -35,4 +36,4 @@ fetch('http://sym-test-01.opening-line.jp:3000/transactions', {
   method: 'PUT'
 }).then(response => {
   response.json().then((r) => console.log(r));
-});
+}); */

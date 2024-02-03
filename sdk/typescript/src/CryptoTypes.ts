@@ -1,12 +1,4 @@
 import ByteArray from './ByteArray';
-import { v4 } from 'uuid';
-
-const generateRandomBytes = (length: number) => {
-  const uuid = v4();
-  const randomBytes = Buffer.from(uuid.replace(/-/g, '').slice(0, length), 'hex');
-  
-  return randomBytes;
-};
 
 /**
  * Represents a 256-bit hash.
@@ -51,14 +43,6 @@ export class PrivateKey extends ByteArray {
 	 */
 	constructor(privateKey: Uint8Array | string) {
 		super(PrivateKey.SIZE, privateKey);
-	}
-
-	/**
-	 * Creates a random private key.
-	 * @returns {PrivateKey} Random private key.
-	 */
-	static random(): PrivateKey {
-		return new PrivateKey(generateRandomBytes(PrivateKey.SIZE));
 	}
 }
 

@@ -1,24 +1,34 @@
 // this file contains implementation details and is not intended to be used directly
+import nacl from 'tweetnacl';
 
-import {
-	HashMode, crypto_private_sign, crypto_private_verify, crypto_sign_keypair
-} from 'symbol-crypto-wasm-node';
+const crypto_sign_keypair = (seed: Uint8Array) => {
+	const keyPair = nacl.sign.keyPair.fromSeed(seed);
+	return keyPair;
+}
 
-const CRYPTO_SIGN_BYTES = 64;
-const CRYPTO_SIGN_PUBLICKEYBYTES = 32;
+const crypto_private_sign = (message: Uint8Array, privateKey: Uint8Array) => {
+	const keyPair = crypto_sign_keypair(privateKey);
+	const secretKey = new Uint8Array(64);
+  secretKey.set(privateKey);
+  secretKey.set(keyPair.publicKey, 32);
+	const signature = nacl.sign.detached(message, secretKey);
+	return signature;
+}
+
+const crypto_private_verify = (data: Uint8Array, signature: Uint8Array, publicKey: Uint8Array) => {
+	return nacl.sign.detached.verify(data, signature, publicKey);
+}
 
 const ed25519 = {
-	keyPairFromSeed: (hashMode: HashMode | number, seed: Uint8Array) => {
-		const publicKey = new Uint8Array(CRYPTO_SIGN_PUBLICKEYBYTES);
-		crypto_sign_keypair(hashMode, seed, publicKey);
+	keyPairFromSeed: (seed: Uint8Array) => {
+		const publicKey = nacl.sign.keyPair.fromSeed(seed).publicKey;	
 		return { publicKey, privateKey: seed };
 	},
-	sign: (hashMode: HashMode | number, message: Uint8Array, privateKey: Uint8Array) => {
-		const signature = new Uint8Array(CRYPTO_SIGN_BYTES);
-		crypto_private_sign(hashMode, privateKey, message, signature);
+	sign: (message: Uint8Array, privateKey: Uint8Array) => {
+		const signature = crypto_private_sign(message, privateKey);
 		return signature;
 	},
-	verify: (hashMode: HashMode, message: Uint8Array, signature: Uint8Array, publicKey: Uint8Array) => crypto_private_verify(hashMode, publicKey, message, signature)
+	verify: (message: Uint8Array, signature: Uint8Array, publicKey: Uint8Array) => crypto_private_verify(message, signature, publicKey)
 };
 
 export default ed25519;

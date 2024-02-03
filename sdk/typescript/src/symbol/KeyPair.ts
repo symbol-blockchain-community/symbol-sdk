@@ -1,9 +1,6 @@
 import { PrivateKey, PublicKey, Signature } from '../CryptoTypes';
-import ed25519 from '../impl/ed25519';
 import { deepCompare } from '../utils/arrayHelpers';
-import { HashMode } from 'symbol-crypto-wasm-node';
-
-const HASH_MODE = HashMode.Sha2_512;
+import ed from '../impl/ed25519';
 
 /**
  * Represents an ED25519 private and public key.
@@ -24,7 +21,10 @@ export class KeyPair {
 		/**
 		 * @private
 		 */
-		this._keyPair = ed25519.keyPairFromSeed(HASH_MODE, this._privateKey.bytes);
+		this._keyPair = {
+			publicKey: ed.keyPairFromSeed(privateKey.bytes).publicKey,
+			privateKey: privateKey.bytes
+		};
 	}
 
 	/**
@@ -49,7 +49,7 @@ export class KeyPair {
 	 * @returns {Signature} Message signature.
 	 */
 	sign(message: Uint8Array): Signature {
-		return new Signature(ed25519.sign(HASH_MODE, message, this._keyPair.privateKey));
+		return new Signature(ed.sign(message, this._keyPair.privateKey));
 	}
 }
 
@@ -88,6 +88,6 @@ export class Verifier {
 	 * @returns {boolean} true if the message signature verifies.
 	 */
 	verify(message: Uint8Array, signature: { bytes: Uint8Array; }): boolean {
-		return ed25519.verify(HASH_MODE, message, signature.bytes, this.publicKey.bytes);
+		return ed.verify(signature.bytes, message, this.publicKey.bytes);
 	}
 }
