@@ -65,7 +65,7 @@ export default class BaseValue implements ISerializable {
 		 */
 		if('string' === typeof value) {
 			if (isHexString(value)) {
-				value = bytesToBigInt(hexToUint8(value), 8, false);
+				value = bytesToBigInt(hexToUint8(value).reverse(), 8, false);
 			} else {
 				throw new Error('this string is not hex');
 			}

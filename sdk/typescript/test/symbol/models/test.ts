@@ -1,7 +1,7 @@
-import { PrivateKey, uint8ToHex, utf8ToUint8 } from "../../../src";
-import { KeyPair, TransferTransactionV1, UnresolvedAddress, UnresolvedMosaic, UnresolvedMosaicId, PublicKey, NetworkType, Timestamp, Signature } from "../../../src/symbol";
+import { PrivateKey, uint8ToHex, utf8ToUint8, intToBytes, bytesToInt, hexToUint8, bytesToBigInt } from "../../../src";
+import { KeyPair, AccountAddressRestrictionTransactionV1, AccountRestrictionFlags, TransferTransactionV1, UnresolvedAddress, UnresolvedMosaic, UnresolvedMosaicId, PublicKey, NetworkType, Timestamp, Signature } from "../../../src/symbol";
 import SymbolFacade from "../../../src/facade/SymbolFacade";
-import { Amount } from "../../../src/symbol/models";
+import { Amount, TransactionFactory } from "../../../src/symbol/models";
 var facade = new SymbolFacade('testnet');
 var privateKey = new PrivateKey('5DB8324E7EB83E7665D500B014283260EF312139034E86DFB7EE736503EAEC02');
 var keyPair = new KeyPair(privateKey);
@@ -10,7 +10,7 @@ var tx = new TransferTransactionV1({
     message: utf8ToUint8("hello, symbol!"),
     mosaics: [
       new UnresolvedMosaic({
-        mosaicId: new UnresolvedMosaicId(8268645399043017678n),
+        mosaicId: new UnresolvedMosaicId('72C0212E67A08BCE'),
         amount: new Amount(1000000n)
       })
     ],
