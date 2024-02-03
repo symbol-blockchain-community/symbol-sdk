@@ -12,26 +12,26 @@ function generate_code() {
 	PYTHONPATH="${git_root}/catbuffer/parser" python3 -m catparser \
 		--schema "${git_root}/catbuffer/schemas/$1/all_generated.cats"  \
 		--include "${git_root}/catbuffer/schemas/$1" \
-		--output "${git_root}/sdk/dart/lib/$2" \
+		--output "${git_root}/sdk/csharp/src/$2" \
 		--quiet \
-		--generator generator.Generator
+		--generator Generator.Generator
 }
 
 if [[ $# -eq 0 ]]; then
 	echo "updating generated code in git"
-	for name in "nem" "symbol";
+	for name in "Nem" "Symbol";
 	do
-		rm -rf "./src/${name}/models.dart"
+		rm -rf "./src/${name}/Models.cs"
 		generate_code "${name}" "${name}"
 	done
 elif [[ "$1" = "dryrun" ]]; then
 	echo "running dryrun diff"
 
-	for name in "nem" "symbol";
+	for name in "Nem" "Symbol";
 	do
 		generate_code "${name}" "${name}2"
-		diff --strip-trailing-cr "./src/${name}/models.dart" "./src/${name}2/models.dart"
-		rm -rf "./src/${name}2/models.dart"
+		diff "./CatSdk/${name}/Models.cs" "./CatSdk/${name}2/Models.cs"
+		rm -rf "./CatSdk/${name}2/Models.cs"
 	done
 else
 	echo "unknown options"
