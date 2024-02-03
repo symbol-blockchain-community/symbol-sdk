@@ -1,5 +1,5 @@
 import ISerializable from "./models/ISerializable";
-
+import { isHexString, hexToUint8, bytesToBigInt } from "./utils/converter";
 const bitmask = (bitsNumber: number) => -1 >>> (32 - bitsNumber);
 
 const check = (byteSize: number, value: any, isSigned: boolean) => {
@@ -63,6 +63,13 @@ export default class BaseValue implements ISerializable {
 		 * Value.
 		 * @type number|bigint
 		 */
+		if('string' === typeof value) {
+			if (isHexString(value)) {
+				value = bytesToBigInt(hexToUint8(value), 8, false);
+			} else {
+				throw new Error('this string is not hex');
+			}
+		}
 		this.value = check(size, value, isSigned);
 	}
 

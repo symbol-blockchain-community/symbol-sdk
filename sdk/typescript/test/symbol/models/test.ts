@@ -1,25 +1,38 @@
-import { AggregateBondedTransactionV2, NamespaceId, utf8ToUint8, NamespaceRegistrationType, EmbeddedNamespaceRegistrationTransactionV1, BlockDuration, Amount, EmbeddedTransferTransactionV1, Hash256, NetworkType, PublicKey, Signature, Timestamp, TransactionFactory, UnresolvedAddress, UnresolvedMosaic, UnresolvedMosaicId, uint8ToHex } from "../../../src";
-console.log(uint8ToHex(utf8ToUint8('newnamespace')));
-var payload = 'F8000000000000004C08B813E15C24982EE1D908942CBC07F7EE373EB78F99935D657CAB1CE6397156FF07C97D334F8E2E71B57E293E98B0523633FF36C052E3AB0B5E3FF4924310C3327284E6AC67B1A558F95797CF2EFC994BCECA4EBBCCB4592CB6B8F645DC2D0000000002984142E0FEEEEFFEEEEFFEE0711EE7711EE77164148373332A1284E316AC070194019D786C29F3B879A0AAFACEC2E393D0FCB550000000000000004E0000000000000000000000000000000000000000000000000000000000000000000000000000000000000001984E4110270000000000007EE9B3B8AFDF53C0000C6E65776E616D6573706163650000';
-    var tx = new AggregateBondedTransactionV2({
-      network: NetworkType.TESTNET,
-      transactions: [
-        new EmbeddedNamespaceRegistrationTransactionV1({
-          network: NetworkType.TESTNET,
-          duration: new BlockDuration(10000n),
-          id: new NamespaceId(13858666424160217470n),
-          registrationType: NamespaceRegistrationType.ROOT,
-          name: utf8ToUint8('newnamespace'),
-        })
-      ],
-      signerPublicKey: new PublicKey('C3327284E6AC67B1A558F95797CF2EFC994BCECA4EBBCCB4592CB6B8F645DC2D'),
-      signature: new Signature('4C08B813E15C24982EE1D908942CBC07F7EE373EB78F99935D657CAB1CE6397156FF07C97D334F8E2E71B57E293E98B0523633FF36C052E3AB0B5E3FF4924310'),
-      fee: new Amount(18370164183782063840n),
-      deadline: new Timestamp(8207562320463688160n),
-      cosignatures: [],
-      transactionsHash: new Hash256('64148373332A1284E316AC070194019D786C29F3B879A0AAFACEC2E393D0FCB5')
-    });
-    console.log(uint8ToHex(tx.serialize()));
-    TransactionFactory.deserialize(payload)
-//console.log(uint8ToHex((TransactionFactory.deserialize(payload)).serialize()));
-//console.log(uint8ToHex(tx.serialize()).toUpperCase());
+import { PrivateKey, uint8ToHex, utf8ToUint8 } from "../../../src";
+import { KeyPair, TransferTransactionV1, UnresolvedAddress, UnresolvedMosaic, UnresolvedMosaicId, PublicKey, NetworkType, Timestamp, Signature } from "../../../src/symbol";
+import SymbolFacade from "../../../src/facade/SymbolFacade";
+import { Amount } from "../../../src/symbol/models";
+var facade = new SymbolFacade('testnet');
+var privateKey = new PrivateKey('5DB8324E7EB83E7665D500B014283260EF312139034E86DFB7EE736503EAEC02');
+var keyPair = new KeyPair(privateKey);
+var tx = new TransferTransactionV1({
+    recipientAddress: new UnresolvedAddress("TA5LGYEWS6L2WYBQ75J2DGK7IOZHYVWFWRLOFWI"),
+    message: utf8ToUint8("hello, symbol!"),
+    mosaics: [
+      new UnresolvedMosaic({
+        mosaicId: new UnresolvedMosaicId(8268645399043017678n),
+        amount: new Amount(1000000n)
+      })
+    ],
+    signerPublicKey: new PublicKey('13B00FBB13C7644E13BD786F0EA4F97820022A2606759793A5D3525A03F92A2F'),
+    network: NetworkType.TESTNET,
+    deadline: new Timestamp(facade.network.fromDatetime(new Date(Date.now())).addHours(2).timestamp)
+});
+tx.fee = new Amount(BigInt(tx.size * 100));
+var signature = facade.signTransaction(keyPair, tx);
+tx.signature = new Signature(signature.bytes);
+
+var hash = facade.hashTransaction(tx);
+console.log(uint8ToHex(hash.bytes));
+const hexPayload = uint8ToHex(tx.serialize());
+const jsonPayload = `{"payload": "${hexPayload}"}`;
+
+fetch('http://sym-test-01.opening-line.jp:3000/transactions', {
+  body: jsonPayload,
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  method: 'PUT'
+}).then(response => {
+  response.json().then((r) => console.log(r));
+});

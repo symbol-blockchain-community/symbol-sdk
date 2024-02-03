@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { PublicKey } from './CryptoTypes.js';
-import { NetworkTimestamp, NetworkTimestampDatetimeConverter } from './NetworkTimestamp.js';
+import { NetworkTimestamp, NetworkTimestampDatetimeConverter } from './NetworkTimestamp';
 /* eslint-enable no-unused-vars */
 import Ripemd160 from 'ripemd160';
 
@@ -12,6 +12,13 @@ const BASE32_RFC4648_ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
  * @template {NetworkTimestamp} TNetworkTimestamp
  */
 export class Network {
+	name: string;
+	identifier: number;
+	datetimeConverter: NetworkTimestampDatetimeConverter;
+	_addressHasher: Function;
+	_createAddress: Function;
+	_AddressClass: AddressConstructable;
+	_NetworkTimestampClass: Constructable;
 	/**
 	 * Creates a new network with the specified name and identifier byte.
 	 * @param {string} name Network name.
@@ -22,7 +29,7 @@ export class Network {
 	 * @param {AddressConstructable} AddressClass Address class associated with this network.
 	 * @param {Constructable} NetworkTimestampClass Network timestamp class associated with this network.
 	 */
-	constructor(name, identifier, datetimeConverter, addressHasher, createAddress, AddressClass, NetworkTimestampClass) {
+	constructor(name: string, identifier: number, datetimeConverter: NetworkTimestampDatetimeConverter, addressHasher: Function, createAddress: Function, AddressClass: AddressConstructable, NetworkTimestampClass: Constructable) {
 		/**
 		 * Network name.
 		 * @type string
@@ -67,7 +74,7 @@ export class Network {
 	 * @param {PublicKey} publicKey Public key to convert.
 	 * @returns {TAddress} Address corresponding to the public key input.
 	 */
-	publicKeyToAddress(publicKey) {
+	publicKeyToAddress(publicKey: PublicKey): any {
 		const partOneHashBuilder = this._addressHasher();
 		partOneHashBuilder.update(publicKey.bytes);
 		const partOneHash = partOneHashBuilder.digest();
@@ -88,7 +95,7 @@ export class Network {
 	 * @param {string} addressString Address to check.
 	 * @returns {boolean} \c true if address is valid and belongs to this network.
 	 */
-	isValidAddressString(addressString) {
+	isValidAddressString(addressString: string): boolean {
 		if (this._AddressClass.ENCODED_SIZE !== addressString.length)
 			return false;
 
@@ -105,7 +112,7 @@ export class Network {
 	 * @param {TAddress} address Address to check.
 	 * @returns {boolean} \c true if address is valid and belongs to this network.
 	 */
-	isValidAddress(address) {
+	isValidAddress(address: any): boolean {
 		if (address.bytes[0] !== this.identifier)
 			return false;
 
@@ -128,7 +135,7 @@ export class Network {
 	 * @param {TNetworkTimestamp} referenceNetworkTimestamp Reference network timestamp to convert.
 	 * @returns {Date} Datetime representation of the reference network timestamp.
 	 */
-	toDatetime(referenceNetworkTimestamp) {
+	toDatetime(referenceNetworkTimestamp: any): Date {
 		return this.datetimeConverter.toDatetime(Number(referenceNetworkTimestamp.timestamp));
 	}
 
@@ -137,7 +144,7 @@ export class Network {
 	 * @param {Date} referenceDatetime Reference datetime to convert.
 	 * @returns {TNetworkTimestamp} Network timestamp representation of the reference datetime.
 	 */
-	fromDatetime(referenceDatetime) {
+	fromDatetime(referenceDatetime: Date): any {
 		return new this._NetworkTimestampClass(this.datetimeConverter.toDifference(referenceDatetime));
 	}
 
@@ -145,7 +152,7 @@ export class Network {
 	 * Returns string representation of this object.
 	 * @returns {string} String representation of this object
 	 */
-	toString() {
+	toString(): string {
 		return this.name;
 	}
 }
@@ -161,7 +168,7 @@ export class NetworkLocator {
 	 * @param {Array<string>|string} singleOrMultipleNames Names for which to search.
 	 * @returns {TNetwork} First network with a name in the supplied list.
 	 */
-	static findByName(networks, singleOrMultipleNames) {
+	static findByName(networks: Array<any>, singleOrMultipleNames: Array<string> | string): any {
 		const names = Array.isArray(singleOrMultipleNames) ? singleOrMultipleNames : [singleOrMultipleNames];
 		const matchingNetwork = networks.find(network => names.some(name => name === network.name));
 		if (undefined === matchingNetwork)
@@ -177,7 +184,7 @@ export class NetworkLocator {
 	 * @param {Array<number>|number} singleOrMultipleIdentifiers Identifiers for which to search.
 	 * @returns {TNetwork} First network with an identifier in the supplied list.
 	 */
-	static findByIdentifier(networks, singleOrMultipleIdentifiers) {
+	static findByIdentifier(networks: Array<any>, singleOrMultipleIdentifiers: Array<number> | number): any {
 		const identifiers = Array.isArray(singleOrMultipleIdentifiers) ? singleOrMultipleIdentifiers : [singleOrMultipleIdentifiers];
 		const matchingNetwork = networks.find(network => identifiers.some(identifier => identifier === network.identifier));
 		if (undefined === matchingNetwork)
@@ -192,13 +199,13 @@ export class NetworkLocator {
 /**
  * Constructable class type.
  * @class
- * @typedef {{new(...args: any[]): object}} Constructable
  */
+type Constructable = { new(...args: any[]): object; };
 
 /**
  * Address class type.
  * @class
- * @typedef {{new(...args: any[]): object, ENCODED_SIZE: number}} AddressConstructable
  */
+type AddressConstructable = { new(...args: any[]): object; ENCODED_SIZE: number; };
 
 // endregion

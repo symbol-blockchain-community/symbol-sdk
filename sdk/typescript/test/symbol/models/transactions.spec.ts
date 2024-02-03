@@ -1,12 +1,12 @@
-import { hexToUint8, LinkAction, Address, NamespaceId, AliasAction, 
+import { LinkAction, Address, NamespaceId, AliasAction, 
   EmbeddedAddressAliasTransactionV1, AddressAliasTransactionV1, TransactionType, 
   EmbeddedAccountOperationRestrictionTransactionV1, UnresolvedMosaicId, 
   AccountOperationRestrictionTransactionV1, EmbeddedAccountMosaicRestrictionTransactionV1, AccountMosaicRestrictionTransactionV1, 
   EmbeddedAccountMetadataTransactionV1, AccountMetadataTransactionV1, EmbeddedAccountKeyLinkTransactionV1, AccountKeyLinkTransactionV1, 
   AggregateBondedTransactionV2, Hash256, EmbeddedAccountAddressRestrictionTransactionV1, AccountAddressRestrictionTransactionV1, 
-  NetworkType, AccountRestrictionFlags, UnresolvedAddress, PublicKey, Signature, Amount, Timestamp, uint8ToHex, 
+  NetworkType, AccountRestrictionFlags, UnresolvedAddress, PublicKey, Signature, Amount, Timestamp, 
   TransactionFactory, EmbeddedMosaicSupplyChangeTransactionV1, UnresolvedMosaic, EmbeddedTransferTransactionV1, AggregateBondedTransactionV1,
-  MosaicSupplyChangeAction, Cosignature, AggregateCompleteTransactionV1, utf8ToUint8, AggregateCompleteTransactionV2, BlockDuration, HashLockTransactionV1,
+  MosaicSupplyChangeAction, Cosignature, AggregateCompleteTransactionV1, AggregateCompleteTransactionV2, BlockDuration, HashLockTransactionV1,
   EmbeddedHashLockTransactionV1, EmbeddedMosaicAddressRestrictionTransactionV1, MosaicAddressRestrictionTransactionV1, MosaicId, MosaicAliasTransactionV1,
   EmbeddedMosaicAliasTransactionV1, EmbeddedMosaicDefinitionTransactionV1, MosaicDefinitionTransactionV1, MosaicNonce, MosaicFlags,
   EmbeddedMosaicGlobalRestrictionTransactionV1, MosaicRestrictionType, MosaicGlobalRestrictionTransactionV1, EmbeddedMosaicMetadataTransactionV1, MosaicMetadataTransactionV1,
@@ -16,7 +16,8 @@ import { hexToUint8, LinkAction, Address, NamespaceId, AliasAction,
   EmbeddedVotingKeyLinkTransactionV1, VotingKeyLinkTransactionV1, EmbeddedVrfKeyLinkTransactionV1, VrfKeyLinkTransactionV1, NamespaceRegistrationType,
   LockHashAlgorithm, TransferTransactionV1, FinalizationEpoch, FinalizationPoint, VotingPublicKey, 
 
- } from '../../../src'
+} from '../../../src/symbol'
+import { utf8ToUint8, uint8ToHex, hexToUint8 } from '../../../src'
 import * as mocha from 'mocha';
 import { expect } from 'chai';
 
