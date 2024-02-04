@@ -1,8 +1,5 @@
-using System;
-using System.IO;
 using System.Security.Cryptography;
 using System.Text;
-using SymbolSdk.Utils;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Engines;
 using Org.BouncyCastle.Crypto.Modes;

@@ -1,7 +1,5 @@
-using System;
 using System.Security.Cryptography;
 using System.Text;
-using SymbolSdk.Utils;
 
 namespace SymbolSdk.Crypto
 {

@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using SymbolSdk.Symbol;
-using SymbolSdk.Symbol.Factory;
-using SymbolSdk.Utils;
 using Org.BouncyCastle.Crypto.Digests;
 
 namespace SymbolSdk.Symbol
@@ -14,7 +8,6 @@ namespace SymbolSdk.Symbol
     public class SymbolFacade
     {
         public Network Network;
-        public readonly TransactionsFactory TransactionFactory;
 
         private readonly int TRANSACTION_HEADER_SIZE = new List<int> { 4, 4, Signature.SIZE, PublicKey.SIZE, 4 }.Aggregate((x, y) => x + y);
         private readonly int AGGREGATE_HASHED_SIZE = new List<int> { 4, 8, 8, Hash256.SIZE }.Aggregate((x, y) => x + y);
@@ -26,7 +19,6 @@ namespace SymbolSdk.Symbol
         public SymbolFacade(Network network)
         {
             Network = network;
-            TransactionFactory = new TransactionsFactory(Network);
         }
 
         /**

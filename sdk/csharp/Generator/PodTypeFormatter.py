@@ -43,7 +43,7 @@ class PodTypeFormatter(AbstractTypeFormatter):
 		if self._is_array:
 			return MethodDescriptor(body='return bytes;')
 
-		return MethodDescriptor(body=f'return {self.printer.store("Value")};')
+		return MethodDescriptor(body=f'return {self.printer.store("Value", False)};')
 
 	def get_size_descriptor(self):
 		return None

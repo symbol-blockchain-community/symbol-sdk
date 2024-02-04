@@ -1,9 +1,8 @@
-using System.Collections.Generic;
+using SymbolSdk;
 
 namespace SymbolSdk
 {
     public interface IStruct : ISerializer
     {
-        public Dictionary<string, string> TypeHints { get; }
     }
 }

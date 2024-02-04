@@ -5,7 +5,7 @@ from catparser.DisplayType import DisplayType
 
 from .AbstractTypeFormatter import AbstractTypeFormatter, MethodDescriptor
 from .format import indent
-from .name_formatting import fix_size_name, lang_field_name, pascal_name
+from .name_formatting import fix_size_name, lang_field_name, pascal_name, camel_case_name
 
 
 def is_reserved(field):
@@ -73,8 +73,20 @@ class StructFormatter(AbstractTypeFormatter):
 	@property
 	def typename(self):
 		return self.struct.name
+	
+	@staticmethod
+	def re_name(name):
+		if 'Transaction' == name:
+			return 'ITransaction'
+		if 'Transaction[]' == name:
+			return 'ITransaction[]'
+		name = name.replace("NonVerifiable", "IBase")
+		name = name.replace("Embedded", "IBase")
+		return name
 
-	def field_name(self, field, object_name='this'):
+	def field_name(self, field, object_name='this', is_argument=False):
+		if is_argument:
+			return field.extensions.printer.name
 		name = pascal_name(field.extensions.printer.name)
 		if is_computed(field):
 			# add _computed postfix for easier filtering in bespoke code
@@ -94,10 +106,6 @@ class StructFormatter(AbstractTypeFormatter):
 	def _is_struct(self):
 		return self.struct.display_type.STRUCT
 
-	#@property
-	#def provider_type(self):
-	#	return 'struct'
-
 	def generate_type_hints(self):
 		body = 'public Dictionary<string, string> TypeHints { get; } = new Dictionary<string, string>(){\n'
 		hints = []
@@ -112,7 +120,7 @@ class StructFormatter(AbstractTypeFormatter):
 
 	def get_base_class(self):
 		base_transaction = ''
-		if 'Transaction' in self.typename:
+		if 'Transaction' in self.typename or 'CosignatureV1' == self.typename:
 			if 'Embedded' in self.typename or 'NonVerifiable' in self.typename:
 				base_transaction = 'IBaseTransaction'
 			else:
@@ -122,18 +130,18 @@ class StructFormatter(AbstractTypeFormatter):
 				if "TransactionType" in i:
 					base_transaction = 'ITransaction'
 				else:
-					base_transaction = 'IStruct'
+					base_transaction = 'ISerializer'
 		if 'Statement' in self.typename:
 			base_transaction = 'ISerializer'
 		return base_transaction if self._is_struct else None
 
 	def get_fields(self):
-		return list(map(self.generate_class_field, self.const_fields())) + [self.get_reserved_fields(), self.generate_type_hints()]
+		return list(map(self.generate_class_field, self.const_fields())) + [self.get_reserved_fields()]
 
 	def get_reserved_fields(self):
 		fields = ''
 		for field in self.reserved_fields():
-			fields += f'private readonly int {self.field_name(field)};\n'
+			fields += f'private readonly {field.extensions.printer.get_type()} {self.field_name(field)};\n'
 		return fields
 
 	def get_property(self):
@@ -163,10 +171,12 @@ class StructFormatter(AbstractTypeFormatter):
 
 		body = ''
 		for field in self.non_reserved_fields():
+			arg_name = self.field_name(field, is_argument=True)
+			arguments.append(f'{self.re_name(field.extensions.printer.get_type())}? {arg_name} = null')
 			const_field = self.get_paired_const_field(field)
 			field_name = self.field_name(field)
 			if const_field:
-				body += f'{field_name} = {self.typename}.{const_field.name};\n'
+				body += f'{field_name} = {arg_name} ?? {self.typename}.{const_field.name};\n'
 			else:
 				value = field.extensions.printer.get_default_value()
 				if field.is_conditional:
@@ -179,7 +189,7 @@ class StructFormatter(AbstractTypeFormatter):
 					if f'{condition_model.name}.{conditional.value}' != condition_field.extensions.printer.get_default_value():
 						value = 'null'  # needs to be null or else field will not be destination when copying descriptor properties
 
-				body += f'{field_name} = {value};\n'
+				body += f'{field_name} = {arg_name} ?? {value};\n'
 
 		body += '\n'.join(
 			map(
@@ -379,13 +389,13 @@ class StructFormatter(AbstractTypeFormatter):
 
 		# create call to ctor
 		body += '\n'
-		body += f'var instance = new {self.typename}()\n{{\n'
-
+		body += f'var instance = new {self.typename}(\n'
 		for field in self.non_reserved_fields():
 			field_name = self.field_name(field, 'instance')
-			body += indent(f'{field_name} = {field.extensions.printer.name},\n')
+			body += indent(f'{field.extensions.printer.name},\n')
 		body = body.rstrip(',\n')
-		body += '\n};\nreturn instance;'
+		body += ');\n'
+		body += 'return instance;'
 		return MethodDescriptor(body=body)
 
 	def generate_serialize_field(self, field):
@@ -417,14 +427,14 @@ class StructFormatter(AbstractTypeFormatter):
 			elif field.is_size_reference:
 				field_value = bound_field.extensions.printer.get_size()
 		elif DisplayType.INTEGER == field.display_type:
-			field_value = f'({field.extensions.printer.get_type()}){self.field_name(field)}'
+			field_value = f'{self.field_name(field)}'
 		else:
 			field_value = self.field_name(field)
 
 		serialize_line = None
 		if DisplayType.TYPED_ARRAY == field.display_type:
 			serialize_field = field.extensions.printer.store(field_value, 'bw')
-			serialize_line = f'{serialize_field};{field_comment}\n'
+			serialize_line = f'Sort();\n{serialize_field};{field_comment}\n'
 		else:
 			serialize_field = field.extensions.printer.store(field_value)
 			serialize_line = f'bw.Write({serialize_field}); {field_comment}\n'
@@ -469,7 +479,10 @@ class StructFormatter(AbstractTypeFormatter):
 	def create_getter_setter_descriptor(self, field):
 		class_name = field.extensions.printer.get_type()
 		if self.field_name(field) == 'Transactions':
-			class_name = 'IBaseTransaction[]'
+			if 'Aggregate' in self.typename:
+				class_name = 'IBaseTransaction[]'
+			else:
+				class_name = 'ITransaction[]'
 		elif self.field_name(field) == 'InnerTransaction':
 			class_name = 'IBaseTransaction'
 

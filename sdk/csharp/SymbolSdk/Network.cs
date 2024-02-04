@@ -1,8 +1,4 @@
 using Org.BouncyCastle.Crypto.Digests;
-using SymbolSdk.Utils;
-using System;
-using System.Linq;
-using SymbolSdk.Nem;
 
 namespace SymbolSdk
 {

@@ -1,6 +1,3 @@
-using System;
-using System.Linq;
-using SymbolSdk.Utils;
 using Org.BouncyCastle.Crypto.Digests;
 
 namespace SymbolSdk.Symbol

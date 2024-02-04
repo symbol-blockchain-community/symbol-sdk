@@ -65,7 +65,7 @@ class FactoryFormatter(AbstractTypeFormatter):
 		elif self.abstract.name == "EmbeddedTransaction" or self.abstract.name == "NonVerifiableTransaction":
 			return "IBaseTransaction"
 		elif self.abstract.name == "Block" or self.abstract.name == "Receipt":
-			return "IStruct"
+			return "ISerializer"
 
 	def get_ctor_descriptor(self):
 		raise NotImplementedError('`get_ctor_descriptor` not supported by FactoryFormatter')

@@ -1,5 +1,3 @@
-using System;
-using SymbolSdk.Utils;
 using Org.BouncyCastle.Crypto.Digests;
 
 namespace SymbolSdk.Nem

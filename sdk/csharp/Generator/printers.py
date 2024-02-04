@@ -6,6 +6,10 @@ from .name_formatting import fix_name, fix_size_name, lang_field_name, underline
 def js_bool(value):
 	return 'true' if value else 'false'
 
+def re_name(name):
+	if 'Transaction' == name:
+		return 'ITransaction'
+	return name.replace("Embedded", "IBase")
 
 class Printer:
 	def __init__(self, descriptor, name):
@@ -51,12 +55,13 @@ class IntPrinter(Printer):
 	def advancement_size(self):
 		return self.get_size()
 
-	def store(self, field_name):
+	def store(self, field_name, is_struct = True):
 		bit_size = self.get_bit_size(self.get_size())
 		if bit_size == '8':
 			return f'{field_name}'
 		else:
-			return f'BitConverter.GetBytes(({self.get_type()}){field_name})'
+			cast = f'({self.get_type()})' if bit_size != '64' and not is_struct else ''
+			return f'BitConverter.GetBytes({cast}{field_name})'
 
 	def get_modifier(self, field_name = None):
 		return 'public const byte '
@@ -79,7 +84,8 @@ class TypedArrayPrinter(Printer):
 		return f'{self.descriptor.field_type.element_type}[]'
 
 	def get_default_value(self):
-		class_name = 'IBaseTransaction' if self.descriptor.field_type.element_type == 'EmbeddedTransaction' else self.descriptor.field_type.element_type
+		class_name = 'ITransaction' if self.descriptor.field_type.element_type == 'Transaction' else self.descriptor.field_type.element_type
+		class_name = 'IBaseTransaction' if self.descriptor.field_type.element_type == 'EmbeddedTransaction' else class_name
 		return f'Array.Empty<{class_name}>()'
 
 	@property
@@ -91,16 +97,9 @@ class TypedArrayPrinter(Printer):
 	def get_size(self):
 		if self.is_variable_size:
 			alignment = self.descriptor.field_type.alignment
-			#skip_last_element_padding = js_bool(not self.descriptor.field_type.is_last_element_padded)
-			#return f'ArrayHelpers.Size({self.name[:1].upper() + self.name[1:]}, {alignment}, {skip_last_element_padding})'
 			return f'ArrayHelpers.Size({self.name[:1].upper() + self.name[1:]}, {alignment})'
 
 		return f'ArrayHelpers.Size({self.name[:1].upper() + self.name[1:]})'
-
-	#def _get_sort_comparer(self, variable_name):
-		#sort_key = lang_field_name(self.descriptor.field_type.sort_key)
-		#comparer = f'({variable_name}.{sort_key}.comparer ? {variable_name}.{sort_key}.comparer() : {variable_name}.{sort_key}.value)'
-		#return comparer
 
 	def _get_sort_accessor(self):
 		accessor = f'e => ({self._get_sort_comparer("e")})'
@@ -135,9 +134,6 @@ class TypedArrayPrinter(Printer):
 			f'{element_type}.Deserialize',
 			f'(byte){lang_field_name(str(self.descriptor.size))}',
 		]
-		#if self.descriptor.field_type.sort_key:
-		#	accessor = f'e => e.{lang_field_name(self.descriptor.field_type.sort_key)}.value'
-		#	args.append(accessor)
 
 		args_str = ', '.join(args)
 		return f'ArrayHelpers.ReadArrayCount({args_str})'
@@ -183,14 +179,8 @@ class TypedArrayPrinter(Printer):
 			return None
 
 		sort_key = pascal_name(lang_field_name(self.descriptor.field_type.sort_key))
-		body = f'Array.Sort({field_name}, (lhs, rhs) => {{\n'
-		body += f'\tvar comparerMethod = lhs.{sort_key}.GetType().GetMethod("Comparer");'
-		body += f'\treturn comparerMethod != null\n'
-		body += f'\t\t? ArrayHelpers.DeepCompare(comparerMethod.Invoke(lhs.{sort_key}, new object[] {{ }}),\n'
-		body += f'\t\t\tcomparerMethod.Invoke(rhs.{sort_key}, new object[] {{ }}))\n'
-		body += f'\t\t: ArrayHelpers.DeepCompare(lhs.{sort_key}.GetType().GetField("Value").GetValue(lhs.{sort_key}) ?? throw new InvalidOperationException(),\n'
-		body += f'rhs.{sort_key}.GetType().GetField("Value").GetValue(rhs.{sort_key}) ?? throw new InvalidOperationException());\n'
-		body += f'}});'
+		body = f'Array.Sort({field_name}, (lhs, rhs) => \n'
+		body += f'\tArrayHelpers.DeepCompare(ArrayHelpers.GetValue(lhs.{sort_key}), ArrayHelpers.GetValue(rhs.{sort_key})));'
 		return body
 	@staticmethod
 	def to_string(field_name):
@@ -206,7 +196,7 @@ class ArrayPrinter(Printer):
 		return 'byte[]'
 
 	def get_default_value(self):
-		return 'null'
+		return 'Array.Empty<byte>()'
 	
 	def get_default_value_ctor(self):
 		return 'null'
@@ -224,7 +214,7 @@ class ArrayPrinter(Printer):
 		if not isinstance(self.descriptor.size, str):
 			return f'{buffer_name}({self.advancement_size()})'
 		else:
-			return f'{buffer_name}.ReadBytes((int){self.advancement_size()})'
+			return f'{buffer_name}.ReadBytes((int){self.advancement_size()})' if self.get_size() != 4 else f'{buffer_name}.ReadBytes({self.advancement_size()})'
 
 	def advancement_size(self):
 		# like get_size() but without self prefix, as this refers to local method field

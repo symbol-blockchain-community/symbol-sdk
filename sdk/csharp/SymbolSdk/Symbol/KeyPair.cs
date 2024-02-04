@@ -1,4 +1,3 @@
-using SymbolSdk.Utils;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Crypto.Signers;
 

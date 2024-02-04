@@ -22,9 +22,8 @@ namespace SymbolSdk
             Value = value switch
             {
                 string str => ulong.Parse(str, NumberStyles.HexNumber),
-                ulong val => val,
                 null => 0,
-                _ => throw new System.Exception("Invalid value type.")
+                _ => ConvertToUlong(value)
             };
         }
         
@@ -35,6 +34,22 @@ namespace SymbolSdk
         public override string ToString()
         {
             return "0x" + $"{Value:X}".PadLeft((int)Size * 2, '0');
+        }
+        
+        public static ulong ConvertToUlong(object value)
+        {
+            return value switch
+            {
+                byte b => b,
+                sbyte sb => (ulong) sb,
+                short s => (ulong) s,
+                ushort us => us,
+                int i => (ulong) i,
+                uint ui => ui,
+                long l => (ulong) l,
+                ulong ul => ul,
+                _ => throw new ArgumentException("Invalid value type.")
+            };
         }
     }
 }

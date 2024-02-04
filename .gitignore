@@ -33,3 +33,11 @@ sdk/dart/pubspec.lock
 sdk/dart/build/
 sdk/dart/doc/api/
 sdk/dart/.gitignore
+
+sdk/csharp/SymbolSdk/.idea
+sdk/csharp/SymbolSdk/bin
+sdk/csharp/SymbolSdk/obj
+sdk/csharp/SymbolSdk.sln
+sdk/csharp/SymbolSdk.sln.DotSettings.user
+sdk/csharp/Test/bin
+sdk/csharp/Test/obj

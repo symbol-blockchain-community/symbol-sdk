@@ -10,7 +10,6 @@ def _to_upper(matchobj):
 
 
 def lang_field_name(name):
-	#return name[:1].upper() + name[1:]
 	return SNAKE_CASE_PATTERN.sub(_to_upper, name)
 
 def underline_name(name):
@@ -22,6 +21,9 @@ def pascal_name(name):
 def fix_size_name(name):
 	return name
 
-
 def fix_name(name):
 	return name
+
+def camel_case_name(name):
+  words = name.split('_')
+  return words[0].lower() + ''.join(word.capitalize() for word in words[1:])
