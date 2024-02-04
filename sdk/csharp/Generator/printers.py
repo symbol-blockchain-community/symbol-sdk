@@ -26,6 +26,9 @@ class IntPrinter(Printer):
 
 	def get_default_value(self):
 		return '0'
+	
+	def get_default_value_ctor(self):
+		return 'null'
 
 	def get_size(self):
 		return self.descriptor.size
@@ -203,7 +206,10 @@ class ArrayPrinter(Printer):
 		return 'byte[]'
 
 	def get_default_value(self):
-		return 'Array.Empty<byte>()'
+		return 'null'
+	
+	def get_default_value_ctor(self):
+		return 'null'
 
 	def get_size(self, message=False):
 		size = self.descriptor.size

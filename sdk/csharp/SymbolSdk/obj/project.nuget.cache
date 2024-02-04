@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "EozBPoEZBTh/HJTOCtUAj9Buy3wbC6q4zivyBDY3Ar4Qn5pBLDiSjvXapPCyIax2++yx80Z0/1SxEqPQEbd7Zg==",
+  "success": true,
+  "projectFilePath": "/Users/matsukawatoshiya/programs/symbol-sdk/symbol/sdk/csharp/SymbolSdk/SymbolSdk.csproj",
+  "expectedPackageFiles": [
+    "/Users/matsukawatoshiya/.nuget/packages/bouncycastle.netcore/2.2.1/bouncycastle.netcore.2.2.1.nupkg.sha512"
+  ],
+  "logs": []
+}

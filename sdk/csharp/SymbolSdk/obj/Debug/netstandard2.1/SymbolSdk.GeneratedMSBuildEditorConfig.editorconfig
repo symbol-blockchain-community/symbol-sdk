@@ -1,0 +1,5 @@
+is_global = true
+build_property.RootNamespace = SymbolSdk
+build_property.ProjectDir = /Users/matsukawatoshiya/programs/symbol-sdk/symbol/sdk/csharp/SymbolSdk/
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 

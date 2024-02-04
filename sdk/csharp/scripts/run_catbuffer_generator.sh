@@ -12,7 +12,7 @@ function generate_code() {
 	PYTHONPATH="${git_root}/catbuffer/parser" python3 -m catparser \
 		--schema "${git_root}/catbuffer/schemas/$1/all_generated.cats"  \
 		--include "${git_root}/catbuffer/schemas/$1" \
-		--output "${git_root}/sdk/csharp/src/$2" \
+		--output "${git_root}/sdk/csharp/SymbolSdk/$2" \
 		--quiet \
 		--generator Generator.Generator
 }

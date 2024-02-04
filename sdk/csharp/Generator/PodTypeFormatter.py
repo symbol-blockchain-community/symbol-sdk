@@ -22,10 +22,6 @@ class PodTypeFormatter(AbstractTypeFormatter):
 	def _is_array(self):
 		return self.pod.display_type.is_array
 
-	#@property
-	#def provider_type(self):
-	#	return 'pod'
-
 	def get_fields(self):
 		return [f'public const byte SIZE = {self.pod.size};']
 
@@ -35,10 +31,7 @@ class PodTypeFormatter(AbstractTypeFormatter):
 	def get_ctor_descriptor(self):
 		variable_name = self.printer.name
 		base = f': base(SIZE, {variable_name})'
-		if self._is_array:
-			arguments = [f'{self.printer.get_type()}? {variable_name} = null']
-		else:
-			arguments = [f'{self.printer.get_type()} {variable_name} = {self.printer.get_default_value()}']
+		arguments = [f'object? {variable_name} = {self.printer.get_default_value_ctor()}']
 
 		return MethodDescriptor(arguments=arguments, base=base)
 

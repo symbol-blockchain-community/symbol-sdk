@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>SymbolSdk</id>
+    <version>1.0.0</version>
+    <authors>SymbolSdk</authors>
+    <readme>README.md</readme>
+    <description>C# SDK for Symbol</description>
+    <copyright>toshi</copyright>
+    <repository type="git" commit="eafb91fe74e246f3edf72a58d47b2cffe6c0834a" />
+    <dependencies>
+      <group targetFramework=".NETStandard2.1">
+        <dependency id="BouncyCastle.NetCore" version="2.2.1" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="/Users/matsukawatoshiya/programs/symbol-sdk/symbol/sdk/csharp/SymbolSdk/bin/Debug/netstandard2.1/SymbolSdk.dll" target="lib/netstandard2.1/SymbolSdk.dll" />
+    <file src="/Users/matsukawatoshiya/programs/symbol-sdk/symbol/sdk/csharp/SymbolSdk/README.md" target="/README.md" />
+  </files>
+</package>
