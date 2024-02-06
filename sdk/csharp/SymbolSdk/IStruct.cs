@@ -1,8 +1,6 @@
-using SymbolSdk;
-
 namespace SymbolSdk
 {
-    public interface IStruct : ISerializer
+    public interface IStruct: ISerializer, IDeserializer
     {
     }
 }

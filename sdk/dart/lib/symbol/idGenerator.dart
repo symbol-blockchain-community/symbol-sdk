@@ -29,7 +29,6 @@ int generateNamespaceId(dynamic name, [int parentNamespaceId = 0]) {
   hasher.update(name, 0, name.length);
   var digest = Uint8List(32);
   hasher.doFinal(digest, 0);
-  print(bytesToHex(digest));
   
   final result = bytesToInt(digest, 8);
   return result | NAMESPACE_FLAG;

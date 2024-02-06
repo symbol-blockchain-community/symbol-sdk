@@ -25,7 +25,7 @@ public static class ArrayHelpers
         if (lhsArray.Length != rhsArray.Length)
             return lhsArray.Length > rhsArray.Length ? 1 : -1;
 
-        return lhsArray.Cast<object>().Select((t, i) => 
+        return lhsArray.Cast<object>().Select((_, i) => 
             DeepCompare(lhsArray.GetValue(i), rhsArray.GetValue(i))).FirstOrDefault(compareResult => compareResult != 0);
     }
     
@@ -48,13 +48,7 @@ public static class ArrayHelpers
         }
         return 0 == size % alignment ? 0 : alignment - (size % alignment);
     }
-
-    private static void SkipPadding(int size, BinaryReader dataInputStream, int alignment)
-    {
-        var padding = GetPadding(size, alignment);
-        dataInputStream.BaseStream.Position += padding;
-    }
-
+    
     public static void WriteArray<T>(BinaryWriter bw, IEnumerable<T> elements) where T : ISerializer
     {
         foreach (var t in elements)
@@ -74,22 +68,16 @@ public static class ArrayHelpers
     {
         return (uint)Math.Floor((size + alignment - 1) / (float)alignment) * alignment;
     }
-
-    /**
-	 * Calculates size of variable size objects.
-	 * @param {array&lt;T&gt;} elements Serializable elements.
-	 * @param {uint} alignment Alignment used for calculations.
-	 * @param {bool} skipLastElementPadding true if last element should not be aligned.
-	 * @returns {uint} Computed size.
-	 */
+    
     public static uint Size<T>(T[] elements, uint alignment = 0, bool skipLastElementPadding = false) where T : ISerializer
     {
-        if (alignment == 0) return (uint)elements.Sum((e) => e.Size);
+        if (!elements.Any()) return 0;
+        if (alignment == 0) return (uint)elements.Sum(e => e.Size);
 
-        if (!skipLastElementPadding) return (uint)elements.Sum((e) => AlignUp(e.Size, alignment));
+        if (!skipLastElementPadding) return (uint)elements.Sum(e => AlignUp(e.Size, alignment));
 
-        var sum = elements.Take(elements.Length - 1).Sum((e) => e.Size);
-        return (uint)(sum + elements[elements.Length - 1].Size);
+        return (uint)elements.Take(elements.Length - 1).Sum(e => AlignUp(e.Size, alignment)) +
+               (uint)elements.Skip(elements.Length - 1).Sum(e => e.Size);
     }
 
     /**
@@ -121,20 +109,26 @@ public static class ArrayHelpers
 	 * @param {bool} skipLastElementPadding true if last element is not aligned/padded.
 	 * @returns {array&lt;T&gt;} Array of deserialized objects.
 	 */
-    public static T[] ReadVariableSizeElements<T>(BinaryReader br, Func<BinaryReader, T> factory, uint payloadSize, int alignment, bool skipLastElementPadding = false) where T : ISerializer
+    public static T[] ReadVariableSizeElements<T>(BinaryReader br, Func<BinaryReader, T> factoryClass, uint payloadSize, uint alignment, bool skipLastElementPadding = false) where T : IStruct
     {
         var elements = new List<T>();
         if (alignment == 0) return elements.ToArray();
         var remainingByteSizes = (int)payloadSize;
         while (remainingByteSizes > 0)
         {
-            var entity = factory(br);
+            var entity = factoryClass(br);
             elements.Add(entity);
-            var size = (int)entity.Size;
-            var itemSize = size + GetPadding(size, alignment);
-            remainingByteSizes -= itemSize;
-            SkipPadding(size, br, alignment);
+            Console.WriteLine(entity);
+            var alignedSize = (skipLastElementPadding && entity.Size >= br.BaseStream.Length - br.BaseStream.Position)
+                ? (int)entity.Size
+                : (int)AlignUp(entity.Size, alignment);
+            if (alignedSize > remainingByteSizes)
+                throw new Exception("unexpected buffer length");
+            br.ReadBytes((int)(alignedSize - entity.Size));
+            remainingByteSizes -= alignedSize;
+            Console.WriteLine("entity");
         }
+        Console.WriteLine("entity_END");
         return elements.ToArray();
     }
 

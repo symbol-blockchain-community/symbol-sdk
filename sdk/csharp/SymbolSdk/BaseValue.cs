@@ -18,7 +18,6 @@ namespace SymbolSdk
         protected BaseValue(byte size, object? value)
         {
             Size = size;
-
             Value = value switch
             {
                 string str => ulong.Parse(str, NumberStyles.HexNumber),

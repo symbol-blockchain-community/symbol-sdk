@@ -1,4 +1,4 @@
-using SymbolSdk.Crypto;
+using System.Security.Cryptography;
 using Org.BouncyCastle.Crypto.Digests;
 
 namespace SymbolSdk.Nem
@@ -30,7 +30,10 @@ namespace SymbolSdk.Nem
         {
             var d = new byte[64];
             var p = new[] { NaclCatapult.Gf(), NaclCatapult.Gf(), NaclCatapult.Gf(), NaclCatapult.Gf() };
-            if (!seeded) sk = Crypto.Crypto.RandomBytes(32);
+            var rngCsp = RandomNumberGenerator.Create();
+            var randomBytes = new byte[32];
+            rngCsp.GetBytes(randomBytes);
+            if (!seeded) sk = randomBytes;
             CryptoHash(d, sk, 32);
             d[0] &= 248;
             d[31] &= 127;
@@ -124,12 +127,12 @@ namespace SymbolSdk.Nem
             Reduce(r);
             ScalarBase(p, r);
 
-            var longArr = new long[sm.Length];
-            for (var k = 0; k < longArr.Length; k++)
-                longArr[k] = sm[k];
-            NaclCatapult.Pack(longArr, p);
-            for (var k = 0; k < longArr.Length; k++)
-                sm[k] = (byte)longArr[k];
+            var intArr = new long[sm.Length];
+            for (var k = 0; k < intArr.Length; k++)
+                intArr[k] = sm[k];
+            NaclCatapult.Pack(intArr, p);
+            for (var k = 0; k < intArr.Length; k++)
+                sm[k] = (byte)intArr[k];
             for (i = 32; i < 64; i++) sm[i] = sk[i];
 
             CryptoHash(h, sm, n + 64);
@@ -212,7 +215,7 @@ namespace SymbolSdk.Nem
         public static int CryptoSignOpen(byte[] m, byte[] sm, int n, byte[] pk)
         {
             int i;
-            long[] t = new long[32]; byte[] h = new byte[64];
+            var t = new long[32]; byte[] h = new byte[64];
             var p = new[] { NaclCatapult.Gf(), NaclCatapult.Gf(), NaclCatapult.Gf(), NaclCatapult.Gf() };
             var q = new[] { NaclCatapult.Gf(), NaclCatapult.Gf(), NaclCatapult.Gf(), NaclCatapult.Gf() };
 
@@ -235,18 +238,18 @@ namespace SymbolSdk.Nem
             NaclCatapult.Add(p, q);
             NaclCatapult.Pack(t, p);
             n -= 64;
-            var longArr = new long[sm.Length];
-            for (var k = 0; k < longArr.Length; k++)
-                longArr[k] = sm[k];
+            var intArr = new long[sm.Length];
+            for (var k = 0; k < intArr.Length; k++)
+                intArr[k] = sm[k];
 
-            if (NaclCatapult.CryptoVerify32(longArr, 0, t, 0) != 0)
+            if (NaclCatapult.CryptoVerify32(intArr, 0, t, 0) != 0)
             {
                 for (i = 0; i < n; i++)
                     m[i] = 0;
                 return -1;
             }
-            for (var k = 0; k < longArr.Length; k++)
-                sm[k] = (byte)longArr[k];
+            for (var k = 0; k < intArr.Length; k++)
+                sm[k] = (byte)intArr[k];
 
             for (i = 0; i < n; i++)
                 m[i] = sm[i + 64];

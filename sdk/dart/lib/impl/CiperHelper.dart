@@ -19,7 +19,6 @@ Uint8List concatArrays(List<Uint8List> arrays) {
 }
 
 Map<String, Uint8List> decode(int tagSize, int ivSize, Uint8List encodedMessage) {
-  print(encodedMessage.length);
   return {
     'tag': encodedMessage.sublist(0, tagSize),
     'initializationVector': encodedMessage.sublist(tagSize, tagSize + ivSize),

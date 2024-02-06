@@ -97,7 +97,8 @@ class TypedArrayPrinter(Printer):
 	def get_size(self):
 		if self.is_variable_size:
 			alignment = self.descriptor.field_type.alignment
-			return f'ArrayHelpers.Size({self.name[:1].upper() + self.name[1:]}, {alignment})'
+			skip_last_element_padding = not self.descriptor.field_type.is_last_element_padded
+			return f'ArrayHelpers.Size({self.name[:1].upper() + self.name[1:]}, {alignment}, {str(skip_last_element_padding).lower()})'
 
 		return f'ArrayHelpers.Size({self.name[:1].upper() + self.name[1:]})'
 
@@ -119,11 +120,9 @@ class TypedArrayPrinter(Printer):
 				data_size = '(uint)(br.BaseStream.Length - br.BaseStream.Position)'
 			else:
 				data_size = lang_field_name(self.descriptor.size)
-
 			alignment = self.descriptor.field_type.alignment
-			#skip_last_element_padding = js_bool(not self.descriptor.field_type.is_last_element_padded)
-			#return f'ArrayHelpers.ReadVariableSizeElements(br, {element_type}, {alignment}, {skip_last_element_padding})'
-			return f'ArrayHelpers.ReadVariableSizeElements(br, {element_type}, {data_size}, {alignment})'
+			skip_last_element_padding = js_bool(not self.descriptor.field_type.is_last_element_padded)
+			return f'ArrayHelpers.ReadVariableSizeElements(br, {element_type}, {data_size}, {alignment}, {skip_last_element_padding})'
 
 		if self.descriptor.field_type.is_expandable:
 			element_type = f'{element_type}.Deserialize'
@@ -152,9 +151,9 @@ class TypedArrayPrinter(Printer):
 	def store(self, field_name, buffer_name):
 		if self.is_variable_size:
 			alignment = self.descriptor.field_type.alignment
-			#skip_last_element_padding = js_bool(not self.descriptor.field_type.is_last_element_padded)
-			return f'ArrayHelpers.WriteVariableSizeElements({buffer_name}, {field_name}, {alignment})'
-			#return f'ArrayHelpers.WriteVariableSizeElements({buffer_name}, {field_name}, {alignment}, {skip_last_element_padding})'
+			skip_last_element_padding = js_bool(not self.descriptor.field_type.is_last_element_padded)
+			#return f'ArrayHelpers.WriteVariableSizeElements({buffer_name}, {field_name}, {alignment})'
+			return f'ArrayHelpers.WriteVariableSizeElements({buffer_name}, {field_name}, {alignment}, {skip_last_element_padding})'
 
 		if self.descriptor.field_type.is_expandable:
 			return f'ArrayHelpers.WriteArray({buffer_name}, {field_name})'

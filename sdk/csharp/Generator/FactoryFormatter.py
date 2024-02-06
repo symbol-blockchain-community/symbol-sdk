@@ -2,7 +2,7 @@ from catparser.ast import FixedSizeInteger
 
 from .AbstractTypeFormatter import AbstractTypeFormatter, MethodDescriptor
 from .format import indent
-from .name_formatting import fix_name, underline_name
+from .name_formatting import pascal_name, underline_name
 from .printers import BuiltinPrinter
 from .TypeFormatter import ClassFormatter
 
@@ -82,7 +82,7 @@ class FactoryFormatter(AbstractTypeFormatter):
 			return f'{name}.{value}.Value'
 
 	def get_base_class(self):
-		return ''
+		return 'IDeserializer'
 
 	def create_discriminator(self ,name):
 		field_values = self.factory_descriptor.discriminator_values
@@ -94,13 +94,6 @@ class FactoryFormatter(AbstractTypeFormatter):
 	def get_deserialize_descriptor(self):
 		body = 'var position = br.BaseStream.Position;\n'
 		body += f'var {self.printer.name} = {self.printer.load()};\n'
-		
-		if self.abstract.name == "Block":
-			key_type = 'BlockType'
-		elif self.abstract.name == "Receipt":
-			key_type = 'ReceiptType'
-		else:
-			key_type = 'TransactionType'
 		body += f'var mapping = new Dictionary<ulong, Func<BinaryReader, {self.return_class}>>\n{{\n'
 		
 		if self.factory_descriptor:
@@ -112,7 +105,11 @@ class FactoryFormatter(AbstractTypeFormatter):
 
 		body += '};\n'
 		body += 'br.BaseStream.Position = position;\n'
-		body += 'return mapping[ToKey(new uint[]{parent.Type.Value, parent.Version})](br);'
+		discriminators = [] if not self.factory_descriptor else map(pascal_name, self.factory_descriptor.discriminator_names)
+		discriminator_types = self.factory_descriptor.discriminator_types
+
+		values = ', '.join(map(lambda value_type: self.map_to_value(self.printer.name, *value_type), zip(discriminators, discriminator_types)))
+		body += f'return mapping[ToKey(new uint[]{{{values}}})](br);'
 
 		return MethodDescriptor(body=body)
 

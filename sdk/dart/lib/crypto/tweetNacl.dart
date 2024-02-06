@@ -1185,7 +1185,6 @@ class TweetNaCl {
     t12 += 38 * t28;
     t13 += 38 * t29;
     t14 += 38 * t30;
-
     var c = 1;
     v = t0 + c + 0xffff;
     c = v ~/ 0x10000;
@@ -1287,7 +1286,7 @@ class TweetNaCl {
     c = v ~/ 0x10000;
     t15 = v - c * 0x10000;
     t0 += 38 * (c - 1);
-
+    
     o[0 + ooff] = t0;
     o[1 + ooff] = t1;
     o[2 + ooff] = t2;
@@ -1882,7 +1881,6 @@ class TweetNaCl {
     final p = List<Int32List>.generate(4, (_) => Int32List(16));
 
     _crypto_hash_off(k, seed, 0, 32);
-    print(bytesToHex(k));
     k[0] &= 248;
     k[31] &= 127;
     k[31] |= 64;
@@ -2067,9 +2065,9 @@ class TweetNaCl {
     final den2 = Int32List(16);
     final den4 = Int32List(16);
     final den6 = Int32List(16);
-
     _set25519(r[2], _gf1);
     _unpack25519(r[1], p);
+    
     _S(inum, r[1]);
     _M(den, inum, Int32List.fromList(_D));
     _Z(inum, inum, r[2]);
@@ -2082,9 +2080,11 @@ class TweetNaCl {
     _M(t, t, den);
 
     _pow2523(t, t);
+    
     _M(t, t, inum);
     _M(t, t, den);
     _M(t, t, den);
+
     _M(r[0], t, den);
 
     _S(chk, r[0]);
@@ -2098,9 +2098,7 @@ class TweetNaCl {
     if (_par25519(r[0]) == _shr32(p[31], 7)) {
       _Z(r[0], _gf0, r[0]);
     }
-
     _M(r[3], r[0], r[1]);
-
     return 0;
   }
 

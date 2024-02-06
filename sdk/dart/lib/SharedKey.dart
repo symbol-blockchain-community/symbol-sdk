@@ -45,11 +45,9 @@ Uint8List Function(Uint8List privateKeyBytes, ct.PublicKey otherPublicKey) deriv
     var point = [gf(), gf(), gf(), gf()];
 
     tweet_nacl.TweetNaCl.unpackneg(point, otherPublicKey.bytes);
-
     if (!isCanonicalKey(otherPublicKey) || 0 != tweet_nacl.TweetNaCl.unpackneg(point, otherPublicKey.bytes) || !isInMainSubgroup(point)){
       throw Exception('invalid point');
     }
-
     // negate point == negate X coordinate and 't'
     Z(point[0], gf(), point[0]);
     Z(point[3], gf(), point[3]);
@@ -63,7 +61,7 @@ Uint8List Function(Uint8List privateKeyBytes, ct.PublicKey otherPublicKey) deriv
 
     var result = [gf(), gf(), gf(), gf()];
     scalarmult(result, point, scalar, 0);
-
+  
     var sharedSecret = Uint8List(32);
     tweetNacl.pack(sharedSecret, result);
     return sharedSecret;
@@ -75,6 +73,7 @@ Function deriveSharedKeyFactory(String info, Function cryptoHash) {
   return (Uint8List privateKeyBytes, ct.PublicKey otherPublicKey) {
     final sharedSecret = deriveSharedSecret(privateKeyBytes, otherPublicKey);
     var hkdf = pointy.KeyDerivator('SHA-256/HKDF');
+    print(bytesToHex(sharedSecret));
     var hkdfParams = pointy.HkdfParameters(sharedSecret, 32, Uint8List(32), utf8ToBytes(info));
     hkdf.init(hkdfParams);
     var key = hkdf.process(Uint8List(0));

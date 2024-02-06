@@ -5002,7 +5002,7 @@ public class NonVerifiableTransferTransactionV2 : IBaseTransaction {
 	}
 }
 
-public class TransactionFactory {
+public class TransactionFactory : IDeserializer {
 	public static ulong ToKey(uint[] values) {
 		if (values.Length == 1)
 			return (ulong)values[0];
@@ -5056,7 +5056,7 @@ public class TransactionFactory {
 	}
 }
 
-public class NonVerifiableTransactionFactory {
+public class NonVerifiableTransactionFactory : IDeserializer {
 	public static ulong ToKey(uint[] values) {
 		if (values.Length == 1)
 			return (ulong)values[0];

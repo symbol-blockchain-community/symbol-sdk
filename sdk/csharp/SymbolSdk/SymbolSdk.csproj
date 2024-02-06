@@ -20,6 +20,7 @@
 
     <ItemGroup>
       <PackageReference Include="BouncyCastle.NetCore" Version="2.2.1" />
+      <PackageReference Include="dotnetstandard-bip39" Version="1.0.2" />
     </ItemGroup>
 
 </Project>

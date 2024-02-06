@@ -1401,7 +1401,7 @@ public class NemesisBlockV1 : ISerializer {
 			size += 8;
 			size += TotalVotingBalance.Size;
 			size += PreviousImportanceBlockHash.Size;
-			size += ArrayHelpers.Size(Transactions, 8);
+			size += ArrayHelpers.Size(Transactions, 8, true);
 			return size;
 		}
 	}
@@ -1434,7 +1434,7 @@ public class NemesisBlockV1 : ISerializer {
 		var harvestingEligibleAccountsCount = br.ReadUInt64();
 		var totalVotingBalance = Amount.Deserialize(br);
 		var previousImportanceBlockHash = Hash256.Deserialize(br);
-		var transactions = ArrayHelpers.ReadVariableSizeElements(br, TransactionFactory.Deserialize, (uint)(br.BaseStream.Length - br.BaseStream.Position), 8);
+		var transactions = ArrayHelpers.ReadVariableSizeElements(br, TransactionFactory.Deserialize, (uint)(br.BaseStream.Length - br.BaseStream.Position), 8, true);
 
 		var instance = new NemesisBlockV1(
 			signature,
@@ -1486,7 +1486,7 @@ public class NemesisBlockV1 : ISerializer {
 		bw.Write(TotalVotingBalance.Serialize()); 
 		bw.Write(PreviousImportanceBlockHash.Serialize()); 
 		Sort();
-		ArrayHelpers.WriteVariableSizeElements(bw, Transactions, 8);
+		ArrayHelpers.WriteVariableSizeElements(bw, Transactions, 8, true);
 		return ms.ToArray();
 	}
 
@@ -1655,7 +1655,7 @@ public class NormalBlockV1 : ISerializer {
 			size += BeneficiaryAddress.Size;
 			size += FeeMultiplier.Size;
 			size += 4;
-			size += ArrayHelpers.Size(Transactions, 8);
+			size += ArrayHelpers.Size(Transactions, 8, true);
 			return size;
 		}
 	}
@@ -1687,7 +1687,7 @@ public class NormalBlockV1 : ISerializer {
 		var blockHeaderReserved_1 = br.ReadUInt32();
 		if (0 != blockHeaderReserved_1)
 			throw new Exception($"Invalid value of reserved field ({blockHeaderReserved_1})");
-		var transactions = ArrayHelpers.ReadVariableSizeElements(br, TransactionFactory.Deserialize, (uint)(br.BaseStream.Length - br.BaseStream.Position), 8);
+		var transactions = ArrayHelpers.ReadVariableSizeElements(br, TransactionFactory.Deserialize, (uint)(br.BaseStream.Length - br.BaseStream.Position), 8, true);
 
 		var instance = new NormalBlockV1(
 			signature,
@@ -1732,7 +1732,7 @@ public class NormalBlockV1 : ISerializer {
 		bw.Write(FeeMultiplier.Serialize()); 
 		bw.Write(BitConverter.GetBytes(BlockHeaderReserved_1)); 
 		Sort();
-		ArrayHelpers.WriteVariableSizeElements(bw, Transactions, 8);
+		ArrayHelpers.WriteVariableSizeElements(bw, Transactions, 8, true);
 		return ms.ToArray();
 	}
 
@@ -1922,7 +1922,7 @@ public class ImportanceBlockV1 : ISerializer {
 			size += 8;
 			size += TotalVotingBalance.Size;
 			size += PreviousImportanceBlockHash.Size;
-			size += ArrayHelpers.Size(Transactions, 8);
+			size += ArrayHelpers.Size(Transactions, 8, true);
 			return size;
 		}
 	}
@@ -1955,7 +1955,7 @@ public class ImportanceBlockV1 : ISerializer {
 		var harvestingEligibleAccountsCount = br.ReadUInt64();
 		var totalVotingBalance = Amount.Deserialize(br);
 		var previousImportanceBlockHash = Hash256.Deserialize(br);
-		var transactions = ArrayHelpers.ReadVariableSizeElements(br, TransactionFactory.Deserialize, (uint)(br.BaseStream.Length - br.BaseStream.Position), 8);
+		var transactions = ArrayHelpers.ReadVariableSizeElements(br, TransactionFactory.Deserialize, (uint)(br.BaseStream.Length - br.BaseStream.Position), 8, true);
 
 		var instance = new ImportanceBlockV1(
 			signature,
@@ -2007,7 +2007,7 @@ public class ImportanceBlockV1 : ISerializer {
 		bw.Write(TotalVotingBalance.Serialize()); 
 		bw.Write(PreviousImportanceBlockHash.Serialize()); 
 		Sort();
-		ArrayHelpers.WriteVariableSizeElements(bw, Transactions, 8);
+		ArrayHelpers.WriteVariableSizeElements(bw, Transactions, 8, true);
 		return ms.ToArray();
 	}
 
@@ -4725,7 +4725,7 @@ public class AggregateCompleteTransactionV1 : ITransaction {
 			size += TransactionsHash.Size;
 			size += 4;
 			size += 4;
-			size += ArrayHelpers.Size(Transactions, 8);
+			size += ArrayHelpers.Size(Transactions, 8, false);
 			size += ArrayHelpers.Size(Cosignatures);
 			return size;
 		}
@@ -4752,7 +4752,7 @@ public class AggregateCompleteTransactionV1 : ITransaction {
 		var aggregateTransactionHeaderReserved_1 = br.ReadUInt32();
 		if (0 != aggregateTransactionHeaderReserved_1)
 			throw new Exception($"Invalid value of reserved field ({aggregateTransactionHeaderReserved_1})");
-		var transactions = ArrayHelpers.ReadVariableSizeElements(br, EmbeddedTransactionFactory.Deserialize, payloadSize, 8);
+		var transactions = ArrayHelpers.ReadVariableSizeElements(br, EmbeddedTransactionFactory.Deserialize, payloadSize, 8, false);
 		var cosignatures = ArrayHelpers.ReadArray(br, Cosignature.Deserialize);
 
 		var instance = new AggregateCompleteTransactionV1(
@@ -4783,10 +4783,10 @@ public class AggregateCompleteTransactionV1 : ITransaction {
 		bw.Write(Fee.Serialize()); 
 		bw.Write(Deadline.Serialize()); 
 		bw.Write(TransactionsHash.Serialize()); 
-		bw.Write(BitConverter.GetBytes(ArrayHelpers.Size(Transactions, 8)));  // bound: payload_size
+		bw.Write(BitConverter.GetBytes(ArrayHelpers.Size(Transactions, 8, false)));  // bound: payload_size
 		bw.Write(BitConverter.GetBytes(AggregateTransactionHeaderReserved_1)); 
 		Sort();
-		ArrayHelpers.WriteVariableSizeElements(bw, Transactions, 8);
+		ArrayHelpers.WriteVariableSizeElements(bw, Transactions, 8, false);
 		Sort();
 		ArrayHelpers.WriteArray(bw, Cosignatures);
 		return ms.ToArray();
@@ -4904,7 +4904,7 @@ public class AggregateCompleteTransactionV2 : ITransaction {
 			size += TransactionsHash.Size;
 			size += 4;
 			size += 4;
-			size += ArrayHelpers.Size(Transactions, 8);
+			size += ArrayHelpers.Size(Transactions, 8, false);
 			size += ArrayHelpers.Size(Cosignatures);
 			return size;
 		}
@@ -4931,7 +4931,7 @@ public class AggregateCompleteTransactionV2 : ITransaction {
 		var aggregateTransactionHeaderReserved_1 = br.ReadUInt32();
 		if (0 != aggregateTransactionHeaderReserved_1)
 			throw new Exception($"Invalid value of reserved field ({aggregateTransactionHeaderReserved_1})");
-		var transactions = ArrayHelpers.ReadVariableSizeElements(br, EmbeddedTransactionFactory.Deserialize, payloadSize, 8);
+		var transactions = ArrayHelpers.ReadVariableSizeElements(br, EmbeddedTransactionFactory.Deserialize, payloadSize, 8, false);
 		var cosignatures = ArrayHelpers.ReadArray(br, Cosignature.Deserialize);
 
 		var instance = new AggregateCompleteTransactionV2(
@@ -4962,10 +4962,10 @@ public class AggregateCompleteTransactionV2 : ITransaction {
 		bw.Write(Fee.Serialize()); 
 		bw.Write(Deadline.Serialize()); 
 		bw.Write(TransactionsHash.Serialize()); 
-		bw.Write(BitConverter.GetBytes(ArrayHelpers.Size(Transactions, 8)));  // bound: payload_size
+		bw.Write(BitConverter.GetBytes(ArrayHelpers.Size(Transactions, 8, false)));  // bound: payload_size
 		bw.Write(BitConverter.GetBytes(AggregateTransactionHeaderReserved_1)); 
 		Sort();
-		ArrayHelpers.WriteVariableSizeElements(bw, Transactions, 8);
+		ArrayHelpers.WriteVariableSizeElements(bw, Transactions, 8, false);
 		Sort();
 		ArrayHelpers.WriteArray(bw, Cosignatures);
 		return ms.ToArray();
@@ -5083,7 +5083,7 @@ public class AggregateBondedTransactionV1 : ITransaction {
 			size += TransactionsHash.Size;
 			size += 4;
 			size += 4;
-			size += ArrayHelpers.Size(Transactions, 8);
+			size += ArrayHelpers.Size(Transactions, 8, false);
 			size += ArrayHelpers.Size(Cosignatures);
 			return size;
 		}
@@ -5110,7 +5110,7 @@ public class AggregateBondedTransactionV1 : ITransaction {
 		var aggregateTransactionHeaderReserved_1 = br.ReadUInt32();
 		if (0 != aggregateTransactionHeaderReserved_1)
 			throw new Exception($"Invalid value of reserved field ({aggregateTransactionHeaderReserved_1})");
-		var transactions = ArrayHelpers.ReadVariableSizeElements(br, EmbeddedTransactionFactory.Deserialize, payloadSize, 8);
+		var transactions = ArrayHelpers.ReadVariableSizeElements(br, EmbeddedTransactionFactory.Deserialize, payloadSize, 8, false);
 		var cosignatures = ArrayHelpers.ReadArray(br, Cosignature.Deserialize);
 
 		var instance = new AggregateBondedTransactionV1(
@@ -5141,10 +5141,10 @@ public class AggregateBondedTransactionV1 : ITransaction {
 		bw.Write(Fee.Serialize()); 
 		bw.Write(Deadline.Serialize()); 
 		bw.Write(TransactionsHash.Serialize()); 
-		bw.Write(BitConverter.GetBytes(ArrayHelpers.Size(Transactions, 8)));  // bound: payload_size
+		bw.Write(BitConverter.GetBytes(ArrayHelpers.Size(Transactions, 8, false)));  // bound: payload_size
 		bw.Write(BitConverter.GetBytes(AggregateTransactionHeaderReserved_1)); 
 		Sort();
-		ArrayHelpers.WriteVariableSizeElements(bw, Transactions, 8);
+		ArrayHelpers.WriteVariableSizeElements(bw, Transactions, 8, false);
 		Sort();
 		ArrayHelpers.WriteArray(bw, Cosignatures);
 		return ms.ToArray();
@@ -5262,7 +5262,7 @@ public class AggregateBondedTransactionV2 : ITransaction {
 			size += TransactionsHash.Size;
 			size += 4;
 			size += 4;
-			size += ArrayHelpers.Size(Transactions, 8);
+			size += ArrayHelpers.Size(Transactions, 8, false);
 			size += ArrayHelpers.Size(Cosignatures);
 			return size;
 		}
@@ -5289,7 +5289,7 @@ public class AggregateBondedTransactionV2 : ITransaction {
 		var aggregateTransactionHeaderReserved_1 = br.ReadUInt32();
 		if (0 != aggregateTransactionHeaderReserved_1)
 			throw new Exception($"Invalid value of reserved field ({aggregateTransactionHeaderReserved_1})");
-		var transactions = ArrayHelpers.ReadVariableSizeElements(br, EmbeddedTransactionFactory.Deserialize, payloadSize, 8);
+		var transactions = ArrayHelpers.ReadVariableSizeElements(br, EmbeddedTransactionFactory.Deserialize, payloadSize, 8, false);
 		var cosignatures = ArrayHelpers.ReadArray(br, Cosignature.Deserialize);
 
 		var instance = new AggregateBondedTransactionV2(
@@ -5320,10 +5320,10 @@ public class AggregateBondedTransactionV2 : ITransaction {
 		bw.Write(Fee.Serialize()); 
 		bw.Write(Deadline.Serialize()); 
 		bw.Write(TransactionsHash.Serialize()); 
-		bw.Write(BitConverter.GetBytes(ArrayHelpers.Size(Transactions, 8)));  // bound: payload_size
+		bw.Write(BitConverter.GetBytes(ArrayHelpers.Size(Transactions, 8, false)));  // bound: payload_size
 		bw.Write(BitConverter.GetBytes(AggregateTransactionHeaderReserved_1)); 
 		Sort();
-		ArrayHelpers.WriteVariableSizeElements(bw, Transactions, 8);
+		ArrayHelpers.WriteVariableSizeElements(bw, Transactions, 8, false);
 		Sort();
 		ArrayHelpers.WriteArray(bw, Cosignatures);
 		return ms.ToArray();
@@ -12637,7 +12637,7 @@ public class EmbeddedTransferTransactionV1 : IBaseTransaction {
 	}
 }
 
-public class TransactionFactory {
+public class TransactionFactory : IDeserializer {
 	public static ulong ToKey(uint[] values) {
 		if (values.Length == 1)
 			return (ulong)values[0];
@@ -12725,7 +12725,7 @@ public class TransactionFactory {
 	}
 }
 
-public class EmbeddedTransactionFactory {
+public class EmbeddedTransactionFactory : IDeserializer {
 	public static ulong ToKey(uint[] values) {
 		if (values.Length == 1)
 			return (ulong)values[0];
@@ -12805,7 +12805,7 @@ public class EmbeddedTransactionFactory {
 	}
 }
 
-public class BlockFactory {
+public class BlockFactory : IDeserializer {
 	public static ulong ToKey(uint[] values) {
 		if (values.Length == 1)
 			return (ulong)values[0];
@@ -12824,7 +12824,7 @@ public class BlockFactory {
 			{ToKey(new uint[]{ImportanceBlockV1.BLOCK_TYPE.Value}), ImportanceBlockV1.Deserialize}
 		};
 		br.BaseStream.Position = position;
-		return mapping[ToKey(new uint[]{parent.Type.Value, parent.Version})](br);
+		return mapping[ToKey(new uint[]{parent.Type.Value})](br);
 	}
 
 	public static ISerializer Deserialize(string payload) {
@@ -12845,7 +12845,7 @@ public class BlockFactory {
 	}
 }
 
-public class ReceiptFactory {
+public class ReceiptFactory : IDeserializer {
 	public static ulong ToKey(uint[] values) {
 		if (values.Length == 1)
 			return (ulong)values[0];
@@ -12874,7 +12874,7 @@ public class ReceiptFactory {
 			{ToKey(new uint[]{NamespaceRentalFeeReceipt.RECEIPT_TYPE.Value}), NamespaceRentalFeeReceipt.Deserialize}
 		};
 		br.BaseStream.Position = position;
-		return mapping[ToKey(new uint[]{parent.Type.Value, parent.Version})](br);
+		return mapping[ToKey(new uint[]{parent.Type.Value})](br);
 	}
 
 	public static ISerializer Deserialize(string payload) {

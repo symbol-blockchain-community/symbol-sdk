@@ -1,3 +1,4 @@
+using System.Security.Cryptography;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Crypto.Signers;
 
@@ -13,7 +14,10 @@ namespace SymbolSdk.Symbol
 	     */
 		static public KeyPair GenerateNewKeyPair()
 		{
-			var _privateKey = new PrivateKey(Crypto.Crypto.RandomBytes(32));
+			var rngCsp = RandomNumberGenerator.Create();
+			var randomBytes = new byte[32];
+			rngCsp.GetBytes(randomBytes);
+			var _privateKey = new PrivateKey(randomBytes);
 			return new KeyPair(_privateKey);
 		}
 		/**

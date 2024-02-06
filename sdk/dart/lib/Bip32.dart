@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'package:bip39_mnemonic/bip39_mnemonic.dart' as bip39;
 import 'package:pointycastle/export.dart' as pointy;
+import 'package:symbol_sdk/index.dart';
 
 import 'CryptoTypes.dart';
 
@@ -9,6 +10,8 @@ class Bip32Node {
   late Uint8List chainCode;
 
   Bip32Node(Uint8List hmacKey, Uint8List data) {
+    print(bytesToHex(hmacKey));
+    print(bytesToHex(pointy.KeyParameter(hmacKey).key));
     var hmac = pointy.HMac(pointy.SHA512Digest(), 128)..init(pointy.KeyParameter(hmacKey));
     var hmacResult = hmac.process(data);
     privateKey = PrivateKey(hmacResult.sublist(0, 32));
@@ -55,11 +58,14 @@ class Bip32 {
   }
 
   Bip32Node fromMnemonic(String mnemonic, String password) {
+    var a = bip39.Mnemonic.fromSentence(mnemonic, mnemonicLanguage, passphrase: password);
+    print(bytesToHex(Uint8List.fromList(a.seed)));
     return fromSeed(Uint8List.fromList(bip39.Mnemonic.fromSentence(mnemonic, mnemonicLanguage, passphrase: password).seed));
   }
 
   String random([int seedLength = 32]) {
     var wordList = bip39.Mnemonic.generate(mnemonicLanguage, passphrase: '', entropyLength: seedLength * 8);
+    print(wordList.words);
     return bip39.Mnemonic(wordList.entropy, mnemonicLanguage).sentence;
   }
 }

@@ -39,5 +39,6 @@ sdk/csharp/SymbolSdk/bin
 sdk/csharp/SymbolSdk/obj
 sdk/csharp/SymbolSdk.sln
 sdk/csharp/SymbolSdk.sln.DotSettings.user
+sdk/csharp/ConsoleApp
 sdk/csharp/Test/bin
 sdk/csharp/Test/obj
