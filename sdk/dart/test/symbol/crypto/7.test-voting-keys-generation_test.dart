@@ -7,7 +7,7 @@ import 'package:symbol_sdk/symbol/VotingKeysGenerator.dart';
 import 'package:symbol_sdk/utils/converter.dart';
 
 void main() async {
-  var file = File('../../../../../symbol/tests/vectors/symbol/crypto/7.test-voting-keys-generation.json');
+  var file = File('../../../../../tests/vectors/symbol/crypto/7.test-voting-keys-generation.json');
   var contents = await file.readAsString();
   var jsonMap = jsonDecode(contents);
   (jsonMap as List).forEach((element) {

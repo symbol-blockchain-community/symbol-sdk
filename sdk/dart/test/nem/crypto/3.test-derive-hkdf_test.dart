@@ -7,7 +7,7 @@ import 'package:symbol_sdk/nem/SharedKey.dart';
 import 'package:symbol_sdk/CryptoTypes.dart';
 
 void main() async {
-  var file = File('../../../../../symbol/tests/vectors/nem/crypto/3.test-derive-hkdf.json');
+  var file = File('../../../../../tests/vectors/nem/crypto/3.test-derive-hkdf.json');
   var contents = await file.readAsString();
   var jsonMap = jsonDecode(contents);
   (jsonMap as List).forEach((element) {

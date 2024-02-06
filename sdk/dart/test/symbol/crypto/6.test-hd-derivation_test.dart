@@ -16,7 +16,7 @@ void nodeTest(Bip32Node node, List<dynamic> children, String rootPublicKey, List
 }
 
 void main() async {
-  var file = File('../../../../../symbol/tests/vectors/symbol/crypto/6.test-hd-derivation.json');
+  var file = File('../../../../../tests/vectors/symbol/crypto/6.test-hd-derivation.json');
   var contents = await file.readAsString();
   var jsonMap = jsonDecode(contents);
   var counter = 0;

@@ -6,7 +6,7 @@ import 'package:symbol_sdk/CryptoTypes.dart';
 import 'package:symbol_sdk/symbol/Network.dart';
 
 void main() async {
-  var file = File('../../../../../symbol/tests/vectors/symbol/crypto/1.test-address.json');
+  var file = File('../../../../../tests/vectors/symbol/crypto/1.test-address.json');
   var contents = await file.readAsString();
   var jsonMap = jsonDecode(contents);
   (jsonMap as List).forEach((element) {
