@@ -41,6 +41,12 @@ public class NemFacade
 	 */
     public Signature SignTransaction(KeyPair keyPair, IBaseTransaction transaction)
     {
+	    if (Converter.BytesToHex(transaction.SignerPublicKey.bytes) != Converter.BytesToHex(new PublicKey().bytes))
+	    {
+		    if(Converter.BytesToHex(transaction.SignerPublicKey.bytes) != Converter.BytesToHex(keyPair.PublicKey.bytes))
+			    throw new Exception("Transaction signer public key does not match key pair public key.");
+	    }
+	    transaction.SignerPublicKey = keyPair.PublicKey;
         var nonVerifiableTransaction = TransactionHelper.ToNonVerifiableTransaction(transaction);
         return keyPair.Sign(nonVerifiableTransaction.Serialize());
     }

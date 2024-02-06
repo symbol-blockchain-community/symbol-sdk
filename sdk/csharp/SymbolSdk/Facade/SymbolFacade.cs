@@ -59,7 +59,14 @@ namespace SymbolSdk.Symbol
 		 */
         public Signature SignTransaction(KeyPair keyPair, IBaseTransaction transaction)
         {
-            var txByte = TransactionDataBuffer(transaction.Serialize());
+	        if (Converter.BytesToHex(transaction.SignerPublicKey.bytes) != Converter.BytesToHex(new PublicKey().bytes))
+	        {
+		        if(Converter.BytesToHex(transaction.SignerPublicKey.bytes) != Converter.BytesToHex(keyPair.PublicKey.bytes))
+			        throw new Exception("Transaction signer public key does not match key pair public key.");
+	        }
+	        transaction.SignerPublicKey = keyPair.PublicKey;
+
+	        var txByte = TransactionDataBuffer(transaction.Serialize());
             if (Network.GenerationHashSeed == null) throw new Exception("GenerationHashSeed is Null");
             var newBytes = new byte[Network.GenerationHashSeed.bytes.Length + txByte.Length];
             Network.GenerationHashSeed.bytes.CopyTo(newBytes, 0);
@@ -89,8 +96,12 @@ namespace SymbolSdk.Symbol
 		 * @param {array&lt;ITransaction&gt;} embeddedTransactions Embedded transactions to hash.
 		 * @returns {Hash256} Aggregate transactions hash.
 		 */
-        public static Hash256 HashEmbeddedTransactions(IBaseTransaction[] embeddedTransactions)
+        public static Hash256 HashEmbeddedTransactions(IBaseTransaction[] embeddedTransactions, NetworkType? network = null)
         {
+	        if (network != null) {
+		        foreach (var innerTransaction in embeddedTransactions)
+			        innerTransaction.Network = network;
+	        }
             var hashBuilder = new MerkleHashBuilder();
             embeddedTransactions.ToList().ForEach(embeddedTransaction =>
             {

@@ -57,7 +57,6 @@ public static class Converter
      */
     public static byte[] StringToAddress(string encoded)
     {
-        Console.WriteLine(encoded.Length);
         if (_constants["sizes"]["symbolAddressEncoded"] == encoded.Length)
         {
             var bytes = Base32.Decode(encoded + "A");
