@@ -49,6 +49,12 @@ class SymbolFacade {
   }
 
   Signature signTransaction(KeyPair keyPair, ITransaction transaction) {
+    if(bytesToHex(transaction.signerPublicKey.bytes) != bytesToHex((PublicKey('')).bytes)){
+      if(bytesToHex(transaction.signerPublicKey.bytes) != bytesToHex(keyPair.publicKey.bytes)){
+        throw Exception('Transaction signerPublicKey does not match keyPair public key');
+      }
+    }
+    transaction.signerPublicKey = sc.PublicKey(keyPair.publicKey.bytes);
     var bytes = Uint8List.fromList([
       ...network.generationHashSeed.bytes,
       ...transactionDataBuffer(transaction.serialize())

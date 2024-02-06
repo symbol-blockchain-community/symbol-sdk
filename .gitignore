@@ -42,3 +42,4 @@ sdk/csharp/SymbolSdk.sln.DotSettings.user
 sdk/csharp/ConsoleApp
 sdk/csharp/Test/bin
 sdk/csharp/Test/obj
+sdk/csharp/TestByNuget
