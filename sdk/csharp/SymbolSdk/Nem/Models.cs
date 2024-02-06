@@ -1433,7 +1433,7 @@ public class MosaicDefinition : ISerializer {
 		var propertiesCount = br.ReadUInt32();
 		var properties = ArrayHelpers.ReadArrayCount(br, SizePrefixedMosaicProperty.Deserialize, (byte)propertiesCount);
 		var levySize = br.ReadUInt32();
-		var levy = new MosaicLevy();
+		MosaicLevy? levy = null;
 		if (0 != levySize) {
 			{
 				levy = MosaicLevy.Deserialize(br);
@@ -3449,7 +3449,7 @@ public class MultisigTransactionV1 : ITransaction {
 		var deadline = Timestamp.Deserialize(br);
 		var innerTransactionSize = br.ReadUInt32();
 		// marking sizeof field
-		var innerTransaction = (NonVerifiableTransaction)NonVerifiableTransactionFactory.Deserialize(br);
+		var innerTransaction = NonVerifiableTransactionFactory.Deserialize(br);
 		var cosignaturesCount = br.ReadUInt32();
 		var cosignatures = ArrayHelpers.ReadArrayCount(br, SizePrefixedCosignatureV1.Deserialize, (byte)cosignaturesCount);
 
@@ -3486,6 +3486,7 @@ public class MultisigTransactionV1 : ITransaction {
 		bw.Write(BitConverter.GetBytes((uint)Cosignatures.Length));  // bound: cosignatures_count
 		Sort();
 		ArrayHelpers.WriteArray(bw, Cosignatures);
+		
 		return ms.ToArray();
 	}
 
@@ -3606,7 +3607,7 @@ public class NonVerifiableMultisigTransactionV1 : IBaseTransaction {
 		var deadline = Timestamp.Deserialize(br);
 		var innerTransactionSize = br.ReadUInt32();
 		// marking sizeof field
-		var innerTransaction = (NonVerifiableTransaction)NonVerifiableTransactionFactory.Deserialize(br);
+		var innerTransaction = NonVerifiableTransactionFactory.Deserialize(br);
 
 		var instance = new NonVerifiableMultisigTransactionV1(
 			type,
@@ -4318,7 +4319,7 @@ public class TransferTransactionV1 : ITransaction {
 		var recipientAddress = Address.Deserialize(br);
 		var amount = Amount.Deserialize(br);
 		var messageEnvelopeSize = br.ReadUInt32();
-		var message = new Message();
+		Message? message = null;
 		if (0 != messageEnvelopeSize) {
 			{
 				message = Message.Deserialize(br);
@@ -4512,7 +4513,7 @@ public class NonVerifiableTransferTransactionV1 : IBaseTransaction {
 		var recipientAddress = Address.Deserialize(br);
 		var amount = Amount.Deserialize(br);
 		var messageEnvelopeSize = br.ReadUInt32();
-		var message = new Message();
+		Message? message = null;
 		if (0 != messageEnvelopeSize) {
 			{
 				message = Message.Deserialize(br);
@@ -4724,7 +4725,7 @@ public class TransferTransactionV2 : ITransaction {
 		var recipientAddress = Address.Deserialize(br);
 		var amount = Amount.Deserialize(br);
 		var messageEnvelopeSize = br.ReadUInt32();
-		var message = new Message();
+		Message? message = null;
 		if (0 != messageEnvelopeSize) {
 			{
 				message = Message.Deserialize(br);
@@ -4933,7 +4934,7 @@ public class NonVerifiableTransferTransactionV2 : IBaseTransaction {
 		var recipientAddress = Address.Deserialize(br);
 		var amount = Amount.Deserialize(br);
 		var messageEnvelopeSize = br.ReadUInt32();
-		var message = new Message();
+		Message? message = null;
 		if (0 != messageEnvelopeSize) {
 			{
 				message = Message.Deserialize(br);

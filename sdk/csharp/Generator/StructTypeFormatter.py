@@ -309,6 +309,7 @@ class StructFormatter(AbstractTypeFormatter):
 
 		load = field.extensions.printer.load(buffer_load_name) if use_custom_buffer_name else field.extensions.printer.load('br')
 		const_field = 'var ' if not condition else ''
+
 		deserialize = f'{const_field}{field_name} = {load};\n'
 
 		# hack: if there's passed buffer name it means it's a name of temporary buffer (used for coditionals)
@@ -348,7 +349,7 @@ class StructFormatter(AbstractTypeFormatter):
 			if field.extensions.printer.get_type() == "byte[]":
 				condition = f'var {field.extensions.printer.name} = new {field.extensions.printer.get_type()}{{}};\n' + condition
 			else:
-				condition = f'var {field.extensions.printer.name} = new {field.extensions.printer.get_type()}();\n' + condition
+				condition = f'{field.extensions.printer.get_type()}? {field.extensions.printer.name} = null;\n' + condition
 
 		return indent_if_conditional(condition, deserialize_field)
 

@@ -57,6 +57,7 @@ public static class Converter
      */
     public static byte[] StringToAddress(string encoded)
     {
+        Console.WriteLine(encoded.Length);
         if (_constants["sizes"]["symbolAddressEncoded"] == encoded.Length)
         {
             var bytes = Base32.Decode(encoded + "A");
@@ -65,7 +66,7 @@ public static class Converter
         }
         if (_constants["sizes"]["nemAddressEncoded"] == encoded.Length)
         {
-            return Base32.Decode(encoded);
+            return Utf8ToBytes(encoded);
         }
         throw new Exception(encoded + " does not represent a valid encoded address");
     }
@@ -85,7 +86,7 @@ public static class Converter
         }
         if (_constants["sizes"]["nemAddressDecoded"] == decoded.Length)
         {
-            return Base32.Encode(decoded);
+            return BytesToUtf8(decoded);
         }
         throw new Exception(BytesToHex(decoded) + " does not represent a valid decoded address");
     }
@@ -106,6 +107,11 @@ public static class Converter
     public static byte[] Utf8ToBytes(string input)
     {
         return Encoding.UTF8.GetBytes(input);
+    }
+    
+    public static string BytesToUtf8(byte[] input)
+    {
+        return Encoding.UTF8.GetString(input);
     }
 
     public static string HexToUtf8(string input)

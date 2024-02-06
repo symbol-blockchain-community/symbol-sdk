@@ -10155,7 +10155,7 @@ public class NamespaceRegistrationTransactionV1 : ITransaction {
 		var durationTemporary = BlockDuration.Deserialize(br);
 		var id = NamespaceId.Deserialize(br);
 		var registrationType = NamespaceRegistrationType.Deserialize(br);
-		var duration = new BlockDuration();
+		BlockDuration? duration = null;
 		if (NamespaceRegistrationType.ROOT.Value == registrationType.Value) {
 			{
 				var tempMs = new MemoryStream(durationTemporary.Serialize());
@@ -10163,7 +10163,7 @@ public class NamespaceRegistrationTransactionV1 : ITransaction {
 				duration = BlockDuration.Deserialize(tempBr);
 			}
 		}
-		var parentId = new NamespaceId();
+		NamespaceId? parentId = null;
 		if (NamespaceRegistrationType.CHILD.Value == registrationType.Value) {
 			{
 				var tempMs = new MemoryStream(durationTemporary.Serialize());
@@ -10351,7 +10351,7 @@ public class EmbeddedNamespaceRegistrationTransactionV1 : IBaseTransaction {
 		var durationTemporary = BlockDuration.Deserialize(br);
 		var id = NamespaceId.Deserialize(br);
 		var registrationType = NamespaceRegistrationType.Deserialize(br);
-		var duration = new BlockDuration();
+		BlockDuration? duration = null;
 		if (NamespaceRegistrationType.ROOT.Value == registrationType.Value) {
 			{
 				var tempMs = new MemoryStream(durationTemporary.Serialize());
@@ -10359,7 +10359,7 @@ public class EmbeddedNamespaceRegistrationTransactionV1 : IBaseTransaction {
 				duration = BlockDuration.Deserialize(tempBr);
 			}
 		}
-		var parentId = new NamespaceId();
+		NamespaceId? parentId = null;
 		if (NamespaceRegistrationType.CHILD.Value == registrationType.Value) {
 			{
 				var tempMs = new MemoryStream(durationTemporary.Serialize());

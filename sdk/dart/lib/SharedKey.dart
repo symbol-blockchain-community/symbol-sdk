@@ -73,7 +73,6 @@ Function deriveSharedKeyFactory(String info, Function cryptoHash) {
   return (Uint8List privateKeyBytes, ct.PublicKey otherPublicKey) {
     final sharedSecret = deriveSharedSecret(privateKeyBytes, otherPublicKey);
     var hkdf = pointy.KeyDerivator('SHA-256/HKDF');
-    print(bytesToHex(sharedSecret));
     var hkdfParams = pointy.HkdfParameters(sharedSecret, 32, Uint8List(32), utf8ToBytes(info));
     hkdf.init(hkdfParams);
     var key = hkdf.process(Uint8List(0));

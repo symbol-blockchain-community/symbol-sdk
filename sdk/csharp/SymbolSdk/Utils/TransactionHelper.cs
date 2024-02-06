@@ -1,4 +1,5 @@
 using System.Reflection;
+using SymbolSdk.Nem;
 
 namespace SymbolSdk;
 public static class TransactionHelper
@@ -73,5 +74,153 @@ public static class TransactionHelper
         var signatureHex = signature.ToString();
         var jsonPayload = "{\"data\":\"" + transactionHex + "\",\"signature\":\"" + signatureHex + "\"}";
         return jsonPayload;
+    }
+    
+    public static IBaseTransaction ToNonVerifiableTransaction(ITransaction transaction)
+    {
+      return (transaction.Type.Value, transaction.Version) switch
+      {
+        (257, 1) => ToNonVerifiableTransferTransactionV1(transaction as TransferTransactionV1 ??
+                                                         throw new InvalidOperationException(
+                                                           "Invalid transaction type")),
+        (257, 2) => ToNonVerifiableTransferTransactionV2(transaction as TransferTransactionV2 ??
+                                                         throw new InvalidOperationException(
+                                                           "Invalid transaction type")),
+        (2049, 1) => ToNonVerifiableAccountKeyLinkTransactionV1(transaction as AccountKeyLinkTransactionV1 ??
+                                                                throw new InvalidOperationException(
+                                                                  "Invalid transaction type")),
+        (4097, 1) => ToNonVerifiableMultisigAccountModificationTransactionV1(
+          transaction as MultisigAccountModificationTransactionV1 ??
+          throw new InvalidOperationException("Invalid transaction type")),
+        (4097, 2) => ToNonVerifiableMultisigAccountModificationTransactionV2(
+          transaction as MultisigAccountModificationTransactionV2 ??
+          throw new InvalidOperationException("Invalid transaction type")),
+        (4100, 1) => ToNonVerifiableMultisigTransactionV1(transaction as MultisigTransactionV1 ??
+                                                          throw new InvalidOperationException(
+                                                            "Invalid transaction type")),
+        (8193, 1) => ToNonVerifiableNamespaceRegistrationTransactionV1(
+          transaction as NamespaceRegistrationTransactionV1 ??
+          throw new InvalidOperationException("Invalid transaction type")),
+        (16385, 1) => ToNonVerifiableMosaicDefinitionTransactionV1(transaction as MosaicDefinitionTransactionV1 ??
+                                                                   throw new InvalidOperationException(
+                                                                     "Invalid transaction type")),
+        (16386, 1) => ToNonVerifiableMosaicSupplyChangeTransactionV1(transaction as MosaicSupplyChangeTransactionV1 ??
+                                                                     throw new InvalidOperationException(
+                                                                       "Invalid transaction type")),
+        _ => throw new Exception("unsupported transaction type")
+      };
+    }
+    
+    private static NonVerifiableAccountKeyLinkTransactionV1 ToNonVerifiableAccountKeyLinkTransactionV1(AccountKeyLinkTransactionV1 tx) {
+      return new NonVerifiableAccountKeyLinkTransactionV1(
+        network: tx.Network,
+        timestamp: tx.Timestamp,
+        signerPublicKey: tx.SignerPublicKey,
+        fee: tx.Fee,
+        deadline: tx.Deadline,
+        linkAction: tx.LinkAction,
+        remotePublicKey: tx.RemotePublicKey
+      );
+    }
+    
+    private static NonVerifiableMosaicDefinitionTransactionV1 ToNonVerifiableMosaicDefinitionTransactionV1(MosaicDefinitionTransactionV1 tx) {
+      return new NonVerifiableMosaicDefinitionTransactionV1(
+        network: tx.Network,
+        timestamp: tx.Timestamp,
+        signerPublicKey: tx.SignerPublicKey,
+        fee: tx.Fee,
+        deadline: tx.Deadline,
+        mosaicDefinition: tx.MosaicDefinition,
+        rentalFeeSink: tx.RentalFeeSink,
+        rentalFee: tx.RentalFee
+      );
+    }
+
+    private static NonVerifiableMosaicSupplyChangeTransactionV1 ToNonVerifiableMosaicSupplyChangeTransactionV1(MosaicSupplyChangeTransactionV1 tx) {
+      return new NonVerifiableMosaicSupplyChangeTransactionV1(
+        network: tx.Network,
+        timestamp: tx.Timestamp,
+        signerPublicKey: tx.SignerPublicKey,
+        fee: tx.Fee,
+        deadline: tx.Deadline,
+        mosaicId: tx.MosaicId,
+        action: tx.Action,
+        delta: tx.Delta
+      );
+    }
+
+    private static NonVerifiableMultisigAccountModificationTransactionV1 ToNonVerifiableMultisigAccountModificationTransactionV1(MultisigAccountModificationTransactionV1 tx) {
+      return new NonVerifiableMultisigAccountModificationTransactionV1(
+        network: tx.Network,
+        timestamp: tx.Timestamp,
+        signerPublicKey: tx.SignerPublicKey,
+        fee: tx.Fee,
+        deadline: tx.Deadline,
+        modifications: tx.Modifications
+      );
+    }
+
+    private static NonVerifiableMultisigAccountModificationTransactionV2 ToNonVerifiableMultisigAccountModificationTransactionV2(MultisigAccountModificationTransactionV2 tx) {
+      return new NonVerifiableMultisigAccountModificationTransactionV2(
+        network: tx.Network,
+        timestamp: tx.Timestamp,
+        signerPublicKey: tx.SignerPublicKey,
+        fee: tx.Fee,
+        deadline: tx.Deadline,
+        modifications: tx.Modifications,
+        minApprovalDelta: tx.MinApprovalDelta
+      );
+    }
+
+    private static NonVerifiableMultisigTransactionV1 ToNonVerifiableMultisigTransactionV1(MultisigTransactionV1 tx) {
+      return new NonVerifiableMultisigTransactionV1(
+        network: tx.Network,
+        timestamp: tx.Timestamp,
+        signerPublicKey: tx.SignerPublicKey,
+        fee: tx.Fee,
+        deadline: tx.Deadline,
+        innerTransaction: tx.InnerTransaction
+      );
+    }
+
+    private static NonVerifiableNamespaceRegistrationTransactionV1 ToNonVerifiableNamespaceRegistrationTransactionV1(NamespaceRegistrationTransactionV1 tx) {
+      return new NonVerifiableNamespaceRegistrationTransactionV1(
+        network: tx.Network,
+        timestamp: tx.Timestamp,
+        signerPublicKey: tx.SignerPublicKey,
+        fee: tx.Fee,
+        deadline: tx.Deadline,
+        rentalFeeSink: tx.RentalFeeSink,
+        rentalFee: tx.RentalFee,
+        name: tx.Name,
+        parentName: tx.ParentName
+      );
+    }
+
+    private static NonVerifiableTransferTransactionV1 ToNonVerifiableTransferTransactionV1(TransferTransactionV1 tx) {
+      return new NonVerifiableTransferTransactionV1(
+        network: tx.Network,
+        timestamp: tx.Timestamp,
+        signerPublicKey: tx.SignerPublicKey,
+        fee: tx.Fee,
+        deadline: tx.Deadline,
+        recipientAddress: tx.RecipientAddress,
+        amount: tx.Amount,
+        message: tx.Message
+      );
+    }
+
+    private static NonVerifiableTransferTransactionV2 ToNonVerifiableTransferTransactionV2(TransferTransactionV2 tx) {
+      return new NonVerifiableTransferTransactionV2(
+        network: tx.Network,
+        timestamp: tx.Timestamp,
+        signerPublicKey: tx.SignerPublicKey,
+        fee: tx.Fee,
+        deadline: tx.Deadline,
+        recipientAddress: tx.RecipientAddress,
+        amount: tx.Amount,
+        message: tx.Message,
+        mosaics: tx.Mosaics
+      );
     }
 }

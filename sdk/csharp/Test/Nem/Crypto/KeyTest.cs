@@ -1,15 +1,15 @@
 using Newtonsoft.Json;
 using SymbolSdk;
-using SymbolSdk.Symbol;
+using SymbolSdk.Nem;
 
-namespace Test.Symbol.Crypto;
+namespace Test.Nem.Crypto;
 
 public class KeyTest
 {
     [Test]
     public async Task Key()
     {
-        var file = new FileInfo("../../../../../../tests/vectors/symbol/crypto/1.test-keys.json");
+        var file = new FileInfo("../../../../../../tests/vectors/nem/crypto/1.test-keys.json");
         var contents = await File.ReadAllTextAsync(file.FullName);
         var jsonMap = JsonConvert.DeserializeObject<List<Dictionary<string, string>>>(contents);
 

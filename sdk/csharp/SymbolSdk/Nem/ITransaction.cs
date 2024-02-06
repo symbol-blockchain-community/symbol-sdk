@@ -4,5 +4,6 @@ namespace SymbolSdk.Nem
     {
         public Signature Signature { get; set; }
         public PublicKey SignerPublicKey { get; }
+        public byte Version { get; }
     }
 }

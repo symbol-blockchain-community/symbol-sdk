@@ -265,7 +265,7 @@ class BuiltinPrinter(Printer):
 			# HACK: factories use this printers as well, ignore them
 			if 'parent' != self.name:
 				factory_name = self.get_type() + 'Factory'
-				return f'({self.get_type()}){factory_name}.Deserialize({buffer_name})'
+				return f'{factory_name}.Deserialize({buffer_name})'
 
 		return f'{self.get_type()}.Deserialize({buffer_name})'
 

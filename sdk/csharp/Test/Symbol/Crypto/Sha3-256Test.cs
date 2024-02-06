@@ -1,7 +1,5 @@
 using Newtonsoft.Json;
 using SymbolSdk;
-using SymbolSdk.Symbol;
-using NUnit.Framework;
 using Org.BouncyCastle.Crypto.Digests;
 
 namespace Test.Symbol.Crypto;
