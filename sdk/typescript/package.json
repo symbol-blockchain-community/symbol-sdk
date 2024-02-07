@@ -9,6 +9,13 @@
   "scripts": {
     "test": "mocha --experimental-modules -r ts-node/register test/**/*.spec.ts",
     "test:transaction": "mocha --experimental-modules -r ts-node/register test/symbol/models/transactions.spec.ts",
+    "test:keccak256": "mocha --experimental-modules -r ts-node/register test/symbol/crypto/0.test-keccak-256.spec.ts",
+    "test:sha3-256": "mocha --experimental-modules -r ts-node/register test/symbol/crypto/0.test-sha3-256.spec.ts",
+    "test:address": "mocha --experimental-modules -r ts-node/register test/symbol/crypto/1.test-address.spec.ts",
+    "test:keys": "mocha --experimental-modules -r ts-node/register test/symbol/crypto/1.test-keys.spec.ts",
+    "test:sign": "mocha --experimental-modules -r ts-node/register test/symbol/crypto/2.test-sign.spec.ts",
+    "test:derive-hkdf": "mocha --experimental-modules -r ts-node/register test/symbol/crypto/3.test-derive-hkdf.spec.ts",
+    "test:cipher": "mocha --experimental-modules -r ts-node/register test/symbol/crypto/4.test-cipher.spec.ts",
     "build": "tsc -p ./"
   },
   "keywords": [],

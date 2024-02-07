@@ -266,7 +266,7 @@ const addressToString = (decoded: Uint8Array): string =>  {
   if (_constants['sizes']['nemAddressDecoded'] === decoded.length) {
     return base32.encode(decoded);
   }
-  throw new Error('Bytes to Hex function is not implemented yet. It does not represent a valid decoded address');
+  throw new Error('It does not represent a valid decoded address');
 }
 
 export {

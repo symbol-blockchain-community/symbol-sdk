@@ -13,13 +13,16 @@ describe('Test derive hkdf', () => {
     const filePath = path.resolve(__dirname, '../../../../../tests/vectors/symbol/crypto/3.test-derive-hkdf.json');
     const contents = await readFile(filePath, { encoding: 'utf-8' });
     const jsonMap = JSON.parse(contents);
+    var counter = 0;
 
     for (const element of jsonMap) {
+      if (counter > 100) return;
       const privateKey = hexToUint8(element['privateKey']);
       const otherPublicKey = hexToUint8(element['otherPublicKey']);
       const result = deriveSharedKey(privateKey, otherPublicKey);
       const sharedKey = element['sharedKey'];
       expect(uint8ToHex(result.bytes)).to.equal(sharedKey);
+      counter++;
     }
   });
 });

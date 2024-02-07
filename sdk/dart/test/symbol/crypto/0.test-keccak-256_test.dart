@@ -4,8 +4,7 @@ import 'package:test/test.dart';
 import 'package:convert/convert.dart';
 import 'dart:typed_data';
 import 'package:pointycastle/export.dart';
-// /Users/matsukawatoshiya/programs/symbol-sdk/symbol/sdk/dart/test/symbol/crypto/0.test-keccak-256_test.dart
-// /Users/matsukawatoshiya/programs/symbol-sdk/symbol/tests/vectors/symbol/crypto/0.test-keccak-256.json
+
 void main() async {
   var file = File('../../../../../tests/vectors/symbol/crypto/0.test-keccak-256.json');
   var contents = await file.readAsString();

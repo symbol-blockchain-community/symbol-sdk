@@ -1,6 +1,6 @@
 import { KeyPair } from './KeyPair';
 import { deriveSharedKey } from './SharedKey';
-import { PublicKey } from '../CryptoTypes.js';
+import { PublicKey } from '../CryptoTypes';
 import { concatArrays, decodeAesGcm, encodeAesGcm } from '../impl/CipherHelpers';
 import { deepCompare } from '../utils/arrayHelpers';
 import { hexToUint8, isHexString, uint8ToHex } from '../utils/converter';
