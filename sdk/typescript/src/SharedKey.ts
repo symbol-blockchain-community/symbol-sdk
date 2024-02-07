@@ -3,7 +3,6 @@
 import { SharedKey256 } from './CryptoTypes';
 import { hkdf } from '@noble/hashes/hkdf';
 import { sha256 } from '@noble/hashes/sha256';
-import { bytesToHex } from '@noble/hashes/utils';
 import tweetnacl from 'tweetnacl';
 
 declare module 'tweetnacl' {

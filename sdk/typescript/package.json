@@ -1,6 +1,6 @@
 {
   "name": "symbol_ts_sdk",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "",
   "main": "dist/index.js",
   "directories": {
@@ -23,9 +23,10 @@
   "license": "ISC",
   "dependencies": {
     "@noble/hashes": "^1.3.3",
-    "tweetnacl": "^1.0.3",
+    "bitcore-mnemonic": "~10.0.11",
+    "crypto-aes-gcm": "^2.0.3",
     "ripemd160": "^2.0.2",
-    "bitcore-mnemonic": "~10.0.11"
+    "tweetnacl": "^1.0.3"
   },
   "devDependencies": {
     "@types/ripemd160": "^2.0.3",
