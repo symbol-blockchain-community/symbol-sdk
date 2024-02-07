@@ -1,24 +1,26 @@
 // this file contains implementation details and is not intended to be used directly
 
-import {
-	/* eslint-disable no-unused-vars */
-	PublicKey,
-	/* eslint-enable no-unused-vars */
-	SharedKey256
-} from './CryptoTypes.js';
+import { SharedKey256 } from './CryptoTypes';
 import { hkdf } from '@noble/hashes/hkdf';
 import { sha256 } from '@noble/hashes/sha256';
+import { bytesToHex } from '@noble/hashes/utils';
 import tweetnacl from 'tweetnacl';
 
+declare module 'tweetnacl' {
+  interface nacl {
+    lowlevel: any;
+  }
+}
 // order matches order of exported methods
-const tweetnacl_lowlevel = (/** @type {any} */ (tweetnacl)).lowlevel;
+const tweetnacl_lowlevel = (tweetnacl as any).lowlevel;
+
 const {
 	crypto_verify_32, gf, pack25519, unpack25519, pow2523, set25519
 } = tweetnacl_lowlevel;
 
 // region curve operations - unfortunatelly tweetnacl.lowlevel does not expose those functions, so needed to copy them here
 
-const neq25519 = (a, b) => {
+const neq25519 = (a: any, b: any) => {
 	const c = new Uint8Array(32);
 	const d = new Uint8Array(32);
 	pack25519(c, a);
@@ -26,13 +28,13 @@ const neq25519 = (a, b) => {
 	return crypto_verify_32(c, 0, d, 0);
 };
 
-const par25519 = a => {
+const par25519 = (a: any) => {
 	const d = new Uint8Array(32);
 	pack25519(d, a);
 	return d[0] & 1;
 };
 
-const inv25519 = (o, i) => {
+const inv25519 = (o: any[], i: any[]) => {
 	const { M, S } = tweetnacl_lowlevel;
 
 	const c = gf();
@@ -48,7 +50,7 @@ const inv25519 = (o, i) => {
 		o[a] = c[a];
 };
 
-const pack = (r, p) => {
+const pack = (r: Uint8Array | number[], p: any[]) => {
 	const { M } = tweetnacl_lowlevel;
 	const tx = gf();
 	const ty = gf();
@@ -62,7 +64,7 @@ const pack = (r, p) => {
 	r[31] ^= par25519(tx) << 7;
 };
 
-const unpackNeg = (r, p) => {
+const unpackNeg = (r: any[], p: any[]) => {
 	const {
 		D, M, A, S, Z
 	} = tweetnacl_lowlevel;
@@ -122,8 +124,8 @@ const unpackNeg = (r, p) => {
 // publicKey is canonical if the y coordinate is smaller than 2^255 - 19
 // note: this version is based on server version and should be constant-time
 // note 2: don't touch it, you'll break it
-const isCanonicalKey = publicKey => {
-	const buffer = publicKey.bytes;
+const isCanonicalKey = (publicKey: Uint8Array ) => {
+	const buffer = publicKey;
 	let a = (buffer[31] & 0x7F) ^ 0x7F;
 	for (let i = 30; 0 < i; --i)
 		a |= buffer[i] ^ 0xFF;
@@ -134,7 +136,7 @@ const isCanonicalKey = publicKey => {
 	return 0 !== 1 - (a & b & 1);
 };
 
-const isInMainSubgroup = point => {
+const isInMainSubgroup = (point: any[]) => {
 	const { scalarmult, L } = tweetnacl_lowlevel;
 	const result = [gf(), gf(), gf(), gf()];
 	// multiply by group order
@@ -154,11 +156,11 @@ const isInMainSubgroup = point => {
  * @param {function} cryptoHash Hash function to use.
  * @returns {function(Uint8Array, PublicKey): Uint8Array} Creates a shared secret from a raw private key and public key.
  */
-const deriveSharedSecretFactory = cryptoHash => (privateKeyBytes, otherPublicKey) => {
+const deriveSharedSecretFactory = (cryptoHash: Function): (privateKey: Uint8Array, publicKey: Uint8Array) => Uint8Array => (privateKey, otherPublicKey) => {
 	const { scalarmult, Z } = tweetnacl_lowlevel;
 	const point = [gf(), gf(), gf(), gf()];
 
-	if (!isCanonicalKey(otherPublicKey) || 0 !== unpackNeg(point, otherPublicKey.bytes) || !isInMainSubgroup(point))
+	if (!isCanonicalKey(otherPublicKey) || 0 !== unpackNeg(point, Array.from(otherPublicKey)) || !isInMainSubgroup(point))
 		throw Error('invalid point');
 
 	// negate point == negate X coordinate and 't'
@@ -167,7 +169,7 @@ const deriveSharedSecretFactory = cryptoHash => (privateKeyBytes, otherPublicKey
 
 	const scalar = new Uint8Array(64);
 
-	cryptoHash(scalar, privateKeyBytes, 32);
+	cryptoHash(scalar, privateKey, 32);
 	scalar[0] &= 248;
 	scalar[31] &= 127;
 	scalar[31] |= 64;
@@ -186,10 +188,10 @@ const deriveSharedSecretFactory = cryptoHash => (privateKeyBytes, otherPublicKey
  * @param {function} cryptoHash Hash function to use.
  * @returns {function(Uint8Array, PublicKey): SharedKey256} Creates a shared key from a raw private key and public key.
  */
-const deriveSharedKeyFactory = (info, cryptoHash) => {
+const deriveSharedKeyFactory = (info: string, cryptoHash: Function): (privateKey: Uint8Array, otherPublicKey: Uint8Array) => SharedKey256 => {
 	const deriveSharedSecret = deriveSharedSecretFactory(cryptoHash);
-	return (privateKeyBytes, otherPublicKey) => {
-		const sharedSecret = deriveSharedSecret(privateKeyBytes, otherPublicKey);
+	return (privateKey, otherPublicKey) => {
+		const sharedSecret = deriveSharedSecret(privateKey, otherPublicKey);
 		return new SharedKey256(hkdf(sha256, sharedSecret, undefined, info, 32));
 	};
 };

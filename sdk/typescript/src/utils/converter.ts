@@ -242,7 +242,7 @@ const intToBytes = (value: number | bigint, byteSize: number, isSigned: boolean 
 };
 
 const utf8ToUint8 = (input: string): Uint8Array => {
-	let buffer = Buffer.from('Hello World', 'utf8');
+	let buffer = Buffer.from(input, 'utf8');
 	return Uint8Array.from(buffer);
 };
 

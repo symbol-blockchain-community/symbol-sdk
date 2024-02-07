@@ -1718,7 +1718,7 @@ class TweetNaCl {
     }
   }
 
-  static int _crypto_hash_off(Uint8List out, Uint8List m, int moff, int n) {
+  static int _crypto_hash_off(Uint8List out, Uint8List m, int moff, int n) { 
     final x = Uint8List(256);
     int i;
     final b = n;
@@ -1738,7 +1738,7 @@ class TweetNaCl {
       crypto_hashblocks_hl(iv, m, moff, n);
       n %= 128;
     }
-
+    print(m);
     for (i = 0; i < n; i++) {
       x[i] = m[b - n + i + moff];
     }
@@ -1754,7 +1754,6 @@ class TweetNaCl {
     for (i = 0; i < 8; i++) {
       _ts64(out, 8 * i, iv[i * 2], iv[i * 2 + 1]);
     }
-
     return 0;
   }
 

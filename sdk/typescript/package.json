@@ -8,6 +8,7 @@
   },
   "scripts": {
     "test": "mocha --experimental-modules -r ts-node/register test/**/*.spec.ts",
+    "test:transaction": "mocha --experimental-modules -r ts-node/register test/symbol/models/transactions.spec.ts",
     "build": "tsc -p ./"
   },
   "keywords": [],

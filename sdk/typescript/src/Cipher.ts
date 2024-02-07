@@ -1,9 +1,9 @@
 /* eslint-disable no-unused-vars */
-import { PublicKey, SharedKey256 } from './CryptoTypes.js';
+import { PublicKey, SharedKey256 } from './CryptoTypes';
 /* eslint-enable no-unused-vars */
 import crypto from 'crypto';
 
-const concatArrays = (lhs, rhs) => {
+const concatArrays = (lhs: any, rhs: any) => {
 	const result = new Uint8Array(lhs.length + rhs.length);
 	result.set(lhs);
 	result.set(rhs, lhs.length);
@@ -16,11 +16,12 @@ const concatArrays = (lhs, rhs) => {
  * Performs AES CBC encryption and decryption with a given key.
  */
 export class AesCbcCipher {
+	private readonly _key: SharedKey256;
 	/**
 	 * Creates a cipher around an aes shared key.
 	 * @param {SharedKey256} aesKey AES shared key.
 	 */
-	constructor(aesKey) {
+	constructor(aesKey: SharedKey256) {
 		/**
 		 * @private
 		 */
@@ -33,7 +34,7 @@ export class AesCbcCipher {
 	 * @param {Uint8Array} iv IV bytes.
 	 * @returns {Uint8Array} Cipher text.
 	 */
-	encrypt(clearText, iv) {
+	encrypt(clearText: Uint8Array, iv: Uint8Array): Uint8Array {
 		const cipher = crypto.createCipheriv('aes-256-cbc', this._key.bytes, iv);
 
 		const cipherText = cipher.update(clearText);
@@ -48,7 +49,7 @@ export class AesCbcCipher {
 	 * @param {Uint8Array} iv IV bytes.
 	 * @returns {Uint8Array} Clear text.
 	 */
-	decrypt(cipherText, iv) {
+	decrypt(cipherText: Uint8Array, iv: Uint8Array): Uint8Array {
 		const decipher = crypto.createDecipheriv('aes-256-cbc', this._key.bytes, iv);
 
 		const clearText = decipher.update(cipherText);
@@ -66,17 +67,19 @@ export class AesCbcCipher {
  * Performs AES GCM encryption and decryption with a given key.
  */
 export class AesGcmCipher {
+	private _key: SharedKey256;
+
 	/**
 	 * Byte size of GCM tag.
 	 * @type number
 	 */
-	static TAG_SIZE = 16;
+	static TAG_SIZE: number = 16;
 
 	/**
 	 * Creates a cipher around an aes shared key.
 	 * @param {SharedKey256} aesKey AES shared key.
 	 */
-	constructor(aesKey) {
+	constructor(aesKey: SharedKey256) {
 		/**
 		 * @private
 		 */
@@ -89,7 +92,7 @@ export class AesGcmCipher {
 	 * @param {Uint8Array} iv IV bytes.
 	 * @returns {Uint8Array} Cipher text with appended tag.
 	 */
-	encrypt(clearText, iv) {
+	encrypt(clearText: Uint8Array, iv: Uint8Array): Uint8Array {
 		const cipher = crypto.createCipheriv('aes-256-gcm', this._key.bytes, iv);
 
 		const cipherText = cipher.update(clearText);
@@ -106,7 +109,7 @@ export class AesGcmCipher {
 	 * @param {Uint8Array} iv IV bytes.
 	 * @returns {Uint8Array} Clear text.
 	 */
-	decrypt(cipherText, iv) {
+	decrypt(cipherText: Uint8Array, iv: Uint8Array): Uint8Array {
 		const decipher = crypto.createDecipheriv('aes-256-gcm', this._key.bytes, iv);
 
 		const tagStartOffset = cipherText.length - AesGcmCipher.TAG_SIZE;

@@ -1,17 +1,20 @@
 import { PrivateKey } from './CryptoTypes.js';
-import Mnemonic from 'bitcore-mnemonic';
+const Mnemonic = require('bitcore-mnemonic') as any;
+
 import crypto from 'crypto';
 
 /**
  * Representation of a BIP32 node.
  */
 export class Bip32Node {
+	privateKey: PrivateKey;
+	chainCode: Buffer;
 	/**
 	 * Creates a BIP32 node around a key and data.
 	 * @param {Uint8Array} hmacKey BIP32 HMAC key.
 	 * @param {Uint8Array} data BIP32 seed.
 	 */
-	constructor(hmacKey, data) {
+	constructor(hmacKey: Uint8Array, data: Uint8Array) {
 		const hmac = crypto.createHmac('sha512', hmacKey);
 		hmac.update(data);
 		const hmacResult = hmac.digest();
@@ -34,7 +37,7 @@ export class Bip32Node {
 	 * @param {number} identifier Child identifier.
 	 * @returns {Bip32Node} BIP32 child node.
 	 */
-	deriveOne(identifier) {
+	deriveOne(identifier: number): Bip32Node {
 		const childData = new Uint8Array(1 + PrivateKey.SIZE + 4);
 		childData[0] = 0;
 		childData[childData.length - 4] = 0x80;
@@ -53,9 +56,9 @@ export class Bip32Node {
 	 * @param {Array<number>} path BIP32 path.
 	 * @returns {Bip32Node} BIP32 node at the end of the path.
 	 */
-	derivePath(path) {
-		/** @type Bip32Node */
-		let nextNode = this;
+	derivePath(path: Array<number>): Bip32Node {
+		/** @type {Bip32Node} */
+		let nextNode: Bip32Node = this;
 		path.forEach(identifier => {
 			nextNode = nextNode.deriveOne(identifier);
 		});
@@ -68,6 +71,8 @@ export class Bip32Node {
  * Factory of BIP32 root nodes.
  */
 export class Bip32 {
+	private _rootHmacKey: Buffer;
+	private _mnemonicLanguage: string;
 	/**
 	 * Creates a BIP32 root node factory.
 	 * @param {string} curveName Elliptic curve to use.
@@ -90,7 +95,7 @@ export class Bip32 {
 	 * @param {Uint8Array} seed BIP32 seed.
 	 * @returns {Bip32Node} BIP32 root node.
 	 */
-	fromSeed(seed) {
+	fromSeed(seed: Uint8Array): Bip32Node {
 		return new Bip32Node(this._rootHmacKey, seed);
 	}
 
@@ -100,7 +105,7 @@ export class Bip32 {
 	 * @param {string} password BIP32 mnemonic password.
 	 * @returns {Bip32Node} BIP32 root node.
 	 */
-	fromMnemonic(mnemonic, password) {
+	fromMnemonic(mnemonic: string, password: string): Bip32Node {
 		const wordlist = Mnemonic.Words[this._mnemonicLanguage.toUpperCase()];
 		return this.fromSeed(new Mnemonic(mnemonic, wordlist).toSeed(password));
 	}
@@ -110,7 +115,7 @@ export class Bip32 {
 	 * @param {number} seedLength Length of random seed to use when generating mnemonic.
 	 * @returns {string} Random mnemonic created with the specified entropy.
 	 */
-	random(seedLength = 32) {
+	random(seedLength: number = 32): string {
 		const wordlist = Mnemonic.Words[this._mnemonicLanguage.toUpperCase()];
 		return new Mnemonic(seedLength * 8, wordlist).phrase;
 	}

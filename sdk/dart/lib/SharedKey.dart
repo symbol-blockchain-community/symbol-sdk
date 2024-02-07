@@ -55,6 +55,7 @@ Uint8List Function(Uint8List privateKeyBytes, ct.PublicKey otherPublicKey) deriv
     var scalar = Uint8List(64);
 
     cryptoHash(scalar, privateKeyBytes);
+  
     scalar[0] &= 248;
     scalar[31] &= 127;
     scalar[31] |= 64;
