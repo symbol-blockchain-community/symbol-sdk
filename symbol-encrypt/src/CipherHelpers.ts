@@ -39,7 +39,7 @@ const encrypt = (plainText: string, isBinary: boolean, key: string) => {
 	const cipherText = cipher.encrypt(message, initializationVector);
 	const tagStartOffset = cipherText.length - AesGcmCipher.TAG_SIZE;
 	const tag = Buffer.from(cipherText.subarray(tagStartOffset)).toString('base64');
-	return { initializationVector: Buffer.from(initializationVector).toString('base64'), tag, cipherText: Buffer.from(cipherText.subarray(0, tagStartOffset)).toString('base64') };
+	return { iv: Buffer.from(initializationVector).toString('base64'), tag, content: Buffer.from(cipherText.subarray(0, tagStartOffset)).toString('base64') };
 };
 
 export {

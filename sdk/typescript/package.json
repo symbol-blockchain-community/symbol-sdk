@@ -1,6 +1,6 @@
 {
   "name": "symbol_ts_sdk",
-  "version": "0.0.10",
+  "version": "0.1.10",
   "description": "",
   "main": "dist/index.js",
   "directories": {

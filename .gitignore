@@ -43,3 +43,4 @@ sdk/csharp/ConsoleApp
 sdk/csharp/Test/bin
 sdk/csharp/Test/obj
 sdk/csharp/TestByNuget
+test.ts
