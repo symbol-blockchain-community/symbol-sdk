@@ -2,24 +2,35 @@ import { KeyPair } from './KeyPair';
 import { deriveSharedKey } from './SharedKey';
 import { PublicKey } from '../CryptoTypes';
 import { Buffer } from 'buffer';
-import { deepCompare } from '../utils/arrayHelpers';
-import { concatArrays, decodeAesGcm, encodeAesGcm } from '../impl/CipherHelpers';
 
-const DELEGATION_MARKER = Uint8Array.from(Buffer.from('FE2A8061577301E2', 'hex'));
+const GCM_IV_SIZE = 12;
+const TAG_SIZE = 16;
 
 interface TryDecodeResult {
   isDecoded: boolean;
   message: any;
 }
 
-const filterExceptions = (statement: () => any, exceptions: any[]) => {
+const concatArrays = (...arrays: any[]) => {
+	const totalLength = arrays.map(buffer => buffer.length).reduce((accumulator, currentValue) => accumulator + currentValue);
+	const result = new Uint8Array(totalLength);
+	let targetOffset = 0;
+	arrays.forEach(buffer => {
+		result.set(buffer, targetOffset);
+		targetOffset += buffer.length;
+	});
+	return result;
+};
+
+const filterExceptions = async (statement: () => Promise<any>, exceptions: any[]) => {
 	try {
-			const message = statement();
+			const message = await statement();
 			return [true, message];
 	} catch (exception: unknown) {
 			if (!exceptions.some((exceptionMessage: any) => (exception as Error).message.includes(exceptionMessage)))
 					throw exception;
 	}
+
 	return [false, undefined];
 };
 
@@ -47,33 +58,30 @@ export default class MessageEncoder {
 		return this._keyPair.publicKey;
 	}
 
+	decode(tagSize: number, ivSize: number, encodedMessage: Uint8Array){
+		return {
+			tag: Buffer.from(encodedMessage.subarray(0, tagSize)).toString('hex'),
+			initializationVector: Buffer.from(encodedMessage.subarray(tagSize, tagSize + ivSize)).toString('hex'),
+			encodedMessageData: Buffer.from(encodedMessage.subarray(tagSize + ivSize)).toString('base64')
+		}
+	};
+
 	/**
 	 * Tries to decode encoded message.
 	 * @param {PublicKey} recipientPublicKey Recipient's public key.
 	 * @param {Uint8Array} encodedMessage Encoded message.
 	 * @returns {TryDecodeResult} Tuple containing decoded status and message.
 	 */
-	tryDecode(recipientPublicKey: PublicKey, encodedMessage: Uint8Array): TryDecodeResult {
+	async tryDecode(recipientPublicKey: PublicKey, encodedMessage: Uint8Array, decryptFunction: Function
+		): Promise<TryDecodeResult> {
+		var key = deriveSharedKey(this._keyPair.privateKey.bytes, recipientPublicKey.bytes);
+		const decoded = this.decode(TAG_SIZE, GCM_IV_SIZE, encodedMessage.subarray(1));
+		console.log(decoded);
+		const key64String = Buffer.from(key.bytes).toString('base64');
 		if (1 === encodedMessage[0]) {
-			const [result, message] = filterExceptions(
-				() => decodeAesGcm(deriveSharedKey, this._keyPair.privateKey.bytes, recipientPublicKey.bytes, encodedMessage.subarray(1)),
+			const [result, message] = await filterExceptions(
+				async () => await decryptFunction(decoded.encodedMessageData, key64String, decoded.initializationVector, decoded.tag, false),
 				['Unsupported state or unable to authenticate data']
-			);
-			if (result)
-				return { isDecoded: true, message };
-		}
-
-		if (0xFE === encodedMessage[0] && 0 === deepCompare(DELEGATION_MARKER, encodedMessage.slice(0, 8))) {
-			const ephemeralPublicKeyStart = DELEGATION_MARKER.length;
-			const ephemeralPublicKeyEnd = ephemeralPublicKeyStart + PublicKey.SIZE;
-			const ephemeralPublicKey = new PublicKey(encodedMessage.subarray(ephemeralPublicKeyStart, ephemeralPublicKeyEnd));
-
-			const [result, message] = filterExceptions(
-				() => decodeAesGcm(deriveSharedKey, this._keyPair.privateKey.bytes, ephemeralPublicKey.bytes, encodedMessage.subarray(ephemeralPublicKeyEnd)),
-				[
-					'Unsupported state or unable to authenticate data',
-					'invalid point'
-				]
 			);
 			if (result)
 				return { isDecoded: true, message };
@@ -87,10 +95,15 @@ export default class MessageEncoder {
 	 * @param {Uint8Array} message Message to encode.
 	 * @returns {Uint8Array} Encrypted and encoded message.
 	 */
-	encode(recipientPublicKey: PublicKey, message: Uint8Array, iv: Uint8Array): Uint8Array {
-		const { tag, initializationVector, cipherText } = encodeAesGcm(deriveSharedKey, this._keyPair.privateKey.bytes, recipientPublicKey.bytes, message, iv);
-
-		return concatArrays(new Uint8Array([1]), tag, initializationVector, cipherText);
+	async encode(recipientPublicKey: PublicKey, message: string, encryptFunction: Function): Promise<Uint8Array> {
+		var key = deriveSharedKey(this._keyPair.privateKey.bytes, recipientPublicKey.bytes);
+		const base64String = Buffer.from(message, 'utf8').toString('base64');
+		const key64String = Buffer.from(key.bytes).toString('base64');
+		const result = await encryptFunction(base64String, true, key64String);
+		const tag = result.tag;
+		const initializationVector = result.iv;
+		const cipherText = result.content;
+		return concatArrays(new Uint8Array([1]), Buffer.from(tag, 'hex'), Buffer.from(initializationVector, 'hex'), Buffer.from(cipherText, 'base64'));
 	}
 }
 

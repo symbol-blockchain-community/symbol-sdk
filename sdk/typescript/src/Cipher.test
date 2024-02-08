@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { PublicKey, SharedKey256 } from './CryptoTypes';
 /* eslint-enable no-unused-vars */
-import crypto from 'crypto';
+import * as crypto from 'crypto';
 
 const concatArrays = (lhs: any, rhs: any) => {
 	const result = new Uint8Array(lhs.length + rhs.length);

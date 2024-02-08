@@ -10,6 +10,6 @@
     "strict": true,
     "skipLibCheck": true,
   },
-  "include": ["./src/**/*.ts", "./types/**/*.d.ts",],
+  "include": ["./src/**/*.ts", "./types/**/*.d.ts", "src/Cipher.ts",],
   "exclude": ["node_modules", "test"]
 }

@@ -1,7 +1,8 @@
 // this file contains implementation details and is not intended to be used directly
 
-import { AesCbcCipher, AesGcmCipher } from '../Cipher';
+import { AesCbcCipher, AesGcmCipher } from '../Cipher.ts';
 import { SharedKey256, PrivateKey, PublicKey } from '../CryptoTypes';
+import crypto from 'crypto';
 
 const GCM_IV_SIZE = 12;
 const CBC_IV_SIZE = 16;
@@ -42,11 +43,11 @@ const decodeAesCbc = (deriveSharedKey: (privateKey: Uint8Array, recipientPublicK
 	return new Uint8Array(cipher.decrypt(encodedMessageData, initializationVector));
 };
 
-const encodeAesGcm = (deriveSharedKey: (privateKey: Uint8Array, recipientPublicKey: Uint8Array) => SharedKey256, privateKey: Uint8Array, recipientPublicKey: Uint8Array, message: Uint8Array, iv: Uint8Array) => {
+const encodeAesGcm = (deriveSharedKey: (privateKey: Uint8Array, recipientPublicKey: Uint8Array) => SharedKey256, privateKey: Uint8Array, recipientPublicKey: Uint8Array, message: Uint8Array) => {
 	const sharedKey = deriveSharedKey(privateKey, recipientPublicKey);
 	const cipher = new AesGcmCipher(sharedKey);
 
-	const initializationVector = iv;
+	const initializationVector = new Uint8Array(crypto.randomBytes(GCM_IV_SIZE));
 	const cipherText = cipher.encrypt(message, initializationVector);
 	const tagStartOffset = cipherText.length - AesGcmCipher.TAG_SIZE;
 	const tag = cipherText.subarray(tagStartOffset);
