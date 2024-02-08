@@ -1,7 +1,7 @@
 // this file contains implementation details and is not intended to be used directly
 
 import { AesGcmCipher } from './Cipher';
-import * as crypto from 'crypto';
+import crypto from 'crypto';
 
 const GCM_IV_SIZE = 12;
 
