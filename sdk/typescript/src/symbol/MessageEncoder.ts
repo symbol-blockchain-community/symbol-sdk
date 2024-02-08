@@ -87,8 +87,8 @@ export default class MessageEncoder {
 	 * @param {Uint8Array} message Message to encode.
 	 * @returns {Uint8Array} Encrypted and encoded message.
 	 */
-	encode(recipientPublicKey: PublicKey, message: Uint8Array): Uint8Array {
-		const { tag, initializationVector, cipherText } = encodeAesGcm(deriveSharedKey, this._keyPair.privateKey.bytes, recipientPublicKey.bytes, message);
+	encode(recipientPublicKey: PublicKey, message: Uint8Array, iv: Uint8Array): Uint8Array {
+		const { tag, initializationVector, cipherText } = encodeAesGcm(deriveSharedKey, this._keyPair.privateKey.bytes, recipientPublicKey.bytes, message, iv);
 
 		return concatArrays(new Uint8Array([1]), tag, initializationVector, cipherText);
 	}
