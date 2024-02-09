@@ -5,7 +5,7 @@ namespace SymbolSdk.Nem
     /**
      * Represents a NEM network timestamp with millisecond resolution.
      */
-    public class NetworkTimestamp : SymbolSdk.NetworkTimestamp
+    public class NetworkTimestamp : BaseNetworkTimestamp
     {
         public NetworkTimestamp(ulong timestamp) : base(timestamp) { }
 
@@ -15,7 +15,7 @@ namespace SymbolSdk.Nem
 	     * @param {ulong} count Number of seconds to add.
 	     * @returns {NetworkTimestamp} New timestamp that is the specified number of seconds past this timestamp.
 	     */
-        public override SymbolSdk.NetworkTimestamp AddSeconds(ulong count)
+        public override BaseNetworkTimestamp AddSeconds(ulong count)
         {
             return new NetworkTimestamp(Timestamp + count);
         }
@@ -24,7 +24,7 @@ namespace SymbolSdk.Nem
     /**
      * Represents a NEM network.
      */
-    public class Network : BaseNetwork<NemAddress>
+    public class Network : BaseNetwork<Address>
     {
         private Hash256? GenerationHashSeed { get; }
 
@@ -51,45 +51,18 @@ namespace SymbolSdk.Nem
             new NetworkTimestampDatetimeConverter(epochTime, "seconds"),
             new KeccakDigest(256),
             CreateAddressFunc,
-            typeof(Address),
             typeof(NetworkTimestamp)
         )
         {
             GenerationHashSeed = generationHashSeed;
         }
 
-        private static NemAddress CreateAddressFunc(byte[] addressWithoutChecksum, byte[] checksum)
+        private static Address CreateAddressFunc(byte[] addressWithoutChecksum, byte[] checksum)
         {
             var newBytes = new byte[addressWithoutChecksum.Length + checksum.Length];
             addressWithoutChecksum.CopyTo(newBytes, 0);
             checksum.CopyTo(newBytes, addressWithoutChecksum.Length);
-            return new NemAddress(newBytes);
-        }
-    }
-
-    /**
-     * Represents a NEM address.
-     */
-    public class NemAddress : ByteArray
-    {
-        private const byte SIZE = 25;
-        private const byte ENCODED_SIZE = 40;
-
-        /**
-	     * Creates a NEM address.
-	     * @param {Uint8Array|string|Address} address Input string, byte array or address.
-	     */
-        public NemAddress(string address) : base(SIZE, Base32.Decode(address)) { }
-        public NemAddress(ByteArray address) : base(SIZE, address.bytes) { }
-        public NemAddress(byte[] address) : base(SIZE, address) { }
-
-        /**
-	     * Returns string representation of this object.
-	     * @returns {string} String representation of this object
-	     */
-        public override string ToString()
-        {
-            return Base32.Encode(bytes);
+            return new Address(newBytes);
         }
     }
 }

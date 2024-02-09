@@ -1,19 +1,17 @@
-using System;
-
 namespace SymbolSdk
 {
     /**
      * Represents a network timestamp.
      */
-    public class NetworkTimestamp
+    public class BaseNetworkTimestamp
     {
-        public readonly ulong Timestamp;
+        public ulong Timestamp { get; set; }
 
         /**
 	     * Creates a timestamp.
 	     * @param {ulong} timestamp Raw network timestamp.
 	     */
-        public NetworkTimestamp(ulong timestamp)
+        public BaseNetworkTimestamp(ulong timestamp)
         {
             Timestamp = timestamp;
         }
@@ -32,7 +30,7 @@ namespace SymbolSdk
 	     * @param {ulong} count Number of seconds to add.
 	     * @returns {NetworkTimestamp} New timestamp that is the specified number of seconds past this timestamp.
 	     */
-        public virtual NetworkTimestamp AddSeconds(ulong count)
+        public virtual BaseNetworkTimestamp AddSeconds(ulong count)
         {
             throw new Exception("addSeconds be implemented by concrete class");
         }
@@ -42,7 +40,7 @@ namespace SymbolSdk
 		 * @param {ulong} count Number of minutes to add.
 		 * @returns {NetworkTimestamp} New timestamp that is the specified number of minutes past this timestamp.
 		 */
-        public NetworkTimestamp AddMinutes(ulong count)
+        public BaseNetworkTimestamp AddMinutes(ulong count)
         {
             return AddSeconds(60 * count);
         }
@@ -52,7 +50,7 @@ namespace SymbolSdk
 		 * @param {ulong} count Number of hours to add.
 		 * @returns {NetworkTimestamp} New timestamp that is the specified number of hours past this timestamp.
 		 */
-        public NetworkTimestamp AddHours(ulong count)
+        public BaseNetworkTimestamp AddHours(ulong count)
         {
             return AddMinutes(60 * count);
         }

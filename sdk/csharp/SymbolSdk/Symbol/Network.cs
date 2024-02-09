@@ -5,7 +5,7 @@ namespace SymbolSdk.Symbol
     /**
      * Represents a symbol network timestamp with millisecond resolution.
      */
-    public class NetworkTimestamp : SymbolSdk.NetworkTimestamp
+    public class NetworkTimestamp : BaseNetworkTimestamp
     {
         public NetworkTimestamp(ulong timestamp) : base(timestamp) { }
 
@@ -14,7 +14,7 @@ namespace SymbolSdk.Symbol
 	     * @param {ulong} count Number of milliseconds to add.
 	     * @returns {NetworkTimestamp} New timestamp that is the specified number of milliseconds past this timestamp.
 	     */
-        public SymbolSdk.NetworkTimestamp AddMilliseconds(ulong count)
+        public NetworkTimestamp AddMilliseconds(ulong count)
         {
             return new NetworkTimestamp(Timestamp + count);
         }
@@ -25,7 +25,7 @@ namespace SymbolSdk.Symbol
 	     * @param {ulong} count Number of seconds to add.
 	     * @returns {NetworkTimestamp} New timestamp that is the specified number of seconds past this timestamp.
 	     */
-        public override SymbolSdk.NetworkTimestamp AddSeconds(ulong count)
+        public override BaseNetworkTimestamp AddSeconds(ulong count)
         {
             return AddMilliseconds(1000 * count);
         }
@@ -34,7 +34,7 @@ namespace SymbolSdk.Symbol
     /**
      * Represents a Symbol network.
      */
-    public class Network : BaseNetwork<SymbolAddress>
+    public class Network : BaseNetwork<UnresolvedAddress>
     {
         public Hash256? GenerationHashSeed { get; }
         public DateTime? epocTime { get; }
@@ -65,7 +65,6 @@ namespace SymbolSdk.Symbol
             new NetworkTimestampDatetimeConverter(epochTime, "milliseconds'"),
             new Sha3Digest(256),
             CreateAddressFunc,
-            typeof(Address),
             typeof(NetworkTimestamp)
         )
         {
@@ -73,38 +72,12 @@ namespace SymbolSdk.Symbol
             epocTime = epochTime;
         }
 
-        private static SymbolAddress CreateAddressFunc(byte[] addressWithoutChecksum, byte[] checksum)
+        private static UnresolvedAddress CreateAddressFunc(byte[] addressWithoutChecksum, byte[] checksum)
         {
             var newBytes = new byte[addressWithoutChecksum.Length + checksum.Length - 1];
             addressWithoutChecksum.CopyTo(newBytes, 0);
             checksum.ToList().CopyTo(0, newBytes, addressWithoutChecksum.Length, checksum.Length - 1);
-            return new SymbolAddress(newBytes);
-        }
-    }
-
-    /**
-     * Represents a Symbol address.
-     */
-    public class SymbolAddress : ByteArray
-    {
-        private const byte SIZE = 24;
-        private const byte ENCODED_SIZE = 39;
-
-        /**
-	     * Creates a Symbol address.
-	     * @param {byte[]|string|Address} address Input string, byte array or address.
-	     */
-        public SymbolAddress(string address) : base(SIZE, Converter.StringToAddress(address)) { }
-        public SymbolAddress(ByteArray address) : base(SIZE, address.bytes) { }
-        public SymbolAddress(byte[] address) : base(SIZE, address) { }
-
-        /**
-	     * Returns string representation of this object.
-	     * @returns {string} String representation of this object
-	     */
-        public override string ToString()
-        {
-            return Converter.AddressToString(bytes);
+            return new UnresolvedAddress(newBytes);
         }
     }
 }

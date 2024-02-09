@@ -12,7 +12,6 @@ namespace SymbolSdk
         public readonly NetworkTimestampDatetimeConverter DatetimeConverter;
         public readonly KeccakDigest AddressHasher;
         public readonly Func<byte[], byte[], T> CreateAddress;
-        public Type AddressClass;
         public readonly Type NetworkTimestampClass;
 
         /**
@@ -25,14 +24,13 @@ namespace SymbolSdk
 		 * @param {Type} AddressClass Address class associated with this network.
 		 * @param {Type} NetworkTimestampClass Network timestamp class associated with this network.
 		 */
-        protected BaseNetwork(string name, byte identifier, NetworkTimestampDatetimeConverter datetimeConverter, KeccakDigest addressHasher, Func<byte[], byte[], T> createAddress, Type addressClass, Type networkTimestampClass)
+        protected BaseNetwork(string name, byte identifier, NetworkTimestampDatetimeConverter datetimeConverter, KeccakDigest addressHasher, Func<byte[], byte[], T> createAddress, Type networkTimestampClass)
         {
             Name = name;
             Identifier = identifier;
             DatetimeConverter = datetimeConverter;
             AddressHasher = addressHasher;
             CreateAddress = createAddress;
-            AddressClass = addressClass;
             NetworkTimestampClass = networkTimestampClass;
         }
         
@@ -89,14 +87,14 @@ namespace SymbolSdk
 		 * @param {NetworkTimestamp} referenceNetworkTimestamp Reference network timestamp to convert.
 		 * @returns {DateTime} Datetime representation of the reference network timestamp.
 		 */
-        public DateTime ToDatetime(NetworkTimestamp referenceNetworkTimestamp) => DatetimeConverter.ToDatetime(referenceNetworkTimestamp.Timestamp);
+        public DateTime ToDatetime(BaseNetworkTimestamp referenceNetworkTimestamp) => DatetimeConverter.ToDatetime(referenceNetworkTimestamp.Timestamp);
 
         /**
 		 * Converts a datetime to a network timestamp.
 		 * @param {DateTime} referenceDatetime Reference datetime to convert.
 		 * @returns {NetworkTimestamp} Network timestamp representation of the reference datetime.
 		 */
-        public E FromDatetime<E>(DateTime referenceDatetime) where E : NetworkTimestamp
+        public E FromDatetime<E>(DateTime referenceDatetime) where E : BaseNetworkTimestamp
         {
             var instance = Activator.CreateInstance(NetworkTimestampClass, DatetimeConverter.ToDifference(referenceDatetime));
             if (NetworkTimestampClass is null) throw new NullReferenceException("");

@@ -1,10 +1,10 @@
 namespace SymbolSdk.Symbol;
 
-public class MessageEncorder
+public class MessageEncoder
 {
     private KeyPair keyPair { get; set; }
 
-    public MessageEncorder(KeyPair keyPair)
+    public MessageEncoder(KeyPair keyPair)
     {
         this.keyPair = keyPair;
     }
