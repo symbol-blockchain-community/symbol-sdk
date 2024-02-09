@@ -46,15 +46,14 @@ Console.WriteLine($"bobAddress: {bobAddress}");
 
 トランザクションを作成します。
 ```cs
-var tx = new TransferTransactionV1
-{
-    Network = NetworkType.TESTNET, //テストネット・メインネット区分
-    RecipientAddress = new UnresolvedAddress(bobAddress.bytes),
-    SignerPublicKey = alicePublicKey,
-    Message = Converter.Utf8ToPlainMessage("Hello, Symbol"), //メッセージ
-    Deadline = new Timestamp(facade.Network.FromDatetime<NetworkTimestamp>(DateTime.UtcNow).AddHours(2).Timestamp) //Deadline:有効期限
-};
-TransactionHelper.SetMaxFee(tx, 100); //手数料
+var tx = new TransferTransactionV1(
+    network: NetworkType.TESTNET, //テストネット・メインネット区分
+    recipientAddress: bobAddress.bytes,
+    signerPublicKey: alicePublicKey,
+    message: Converter.Utf8ToPlainMessage("Hello, Symbol"), //メッセージ
+    deadline: new Timestamp(facade.Network.FromDatetime<SymbolSdk.Symbol.NetworkTimestamp>(DateTime.UtcNow).AddHours(2).Timestamp) //Deadline:有効期限
+    )
+);
 ```
 
 各設定項目について説明します。
@@ -63,7 +62,7 @@ TransactionHelper.SetMaxFee(tx, 100); //手数料
 この例では2時間で設定しています。
 最大6時間まで指定可能です。
 ```cs
-Deadline = new Timestamp(facade.Network.FromDatetime<NetworkTimestamp>(DateTime.UtcNow).AddHours(6).Timestamp)
+deadline: new Timestamp(facade.Network.FromDatetime<NetworkTimestamp>(DateTime.UtcNow).AddHours(2).Timestamp) //Deadline:有効期限
 ```
 
 #### メッセージ
@@ -75,17 +74,17 @@ Messageプロパティを設定しないでください
 
 ##### 平文メッセージ
 ```cs
-Message = Converter.Utf8ToPlainMessage("Hello, Symbol")
+message: Converter.Utf8ToPlainMessage("Hello, Symbol"), //メッセージ
 ```
 
 ##### 暗号文メッセージ
 ```cs
-var encrypted = Crypto.Encode("SENDER_PRIVATE_KEY", "RECIPIENT_PUBLIC_KEY", "MESSAGE");
-var encryptedMessage = Converter.Utf8ToEncryptoMessage(encrypted);
+var encoder = new MessageEncoder(aliceKeyPair);
+var encoded = encoder.Encode(bobKeyPair.PublicKey, Converter.Utf8ToBytes("hello, symbol"));
   ,,,,
-Message = encryptedMessage
+message: encryptedMessage
 ```
-Crypto.Encodeの第一引数に送信者の秘密鍵（16進数）、第二引数に受信者の公開鍵（16進数）、第三引数にString型の文字列を渡して暗号化された文字列を作成し、Converter.Utf8ToEncryptoMessageにて、「指定したメッセージが暗号化されています」という意味のフラグ（目印）をつけます。
+MessageEncoder().Encodeの第一引数に送信者の秘密鍵（16進数）、第二引数に受信者の公開鍵（16進数）、第三引数にString型の文字列を渡して暗号化された文字列を作成し、Converter.Utf8ToEncryptoMessageにて、「指定したメッセージが暗号化されています」という意味のフラグ（目印）をつけます。
 エクスプローラーやウォレットはそのフラグを参考にメッセージを無用にデコードしなかったり、非表示にしたりなどの処理を行います。そのためこのフラグを使用することが暗黙の了解とされています。
 
 ##### 生データ
@@ -104,9 +103,8 @@ MessageプロパティにRawデータのByte[]を渡してください。
 
 ##### feeMultiprier = 100として指定する方法
 ```cs
-var tx = new TransferTransactionV1
-{
-  Network = NetworkType.TESTNET,
+var tx = new TransferTransactionV1(
+    network: NetworkType.TESTNET,
   ,,,,
 );
 TransactionHelper.SetMaxFee(tx, 100);
@@ -116,9 +114,9 @@ TransactionHelper.SetMaxFee(tx, 100);
 ```cs
 var tx = new TransferTransactionV1
 {
-  Network = NetworkType.TESTNET,
+  network: NetworkType.TESTNET,
   ,,,,
-  Fee = new Amount(17600);
+  fee: new Amount(17600);
 );
 ```
 
@@ -161,7 +159,7 @@ static async Task<string> Announce(string payload)
 ```
 ### アナウンス
 ```cs
-var payload = TransactionsFactory.AttachSignature(tx, signature);
+var payload = TransactionHelper.AttachSignature(tx, signature);
 Console.WriteLine(payload);
 var hash = facade.HashTransaction(tx, signature);
 Console.WriteLine(hash);
@@ -362,34 +360,32 @@ var bobAddress = facade.Network.PublicKeyToAddress(bobKeyPair.PublicKey);
 var carolKeyPair = KeyPair.GenerateNewKeyPair();
 var carolAddress = facade.Network.PublicKeyToAddress(carolKeyPair.PublicKey);
 
-var innerTx1 = new EmbeddedTransferTransactionV1()
-{
-    Network = NetworkType.TESTNET,
-    RecipientAddress = new UnresolvedAddress(bobAddress.bytes),
-    SignerPublicKey = alicePublicKey,
-    Message = Converter.Utf8ToPlainMessage("tx1")
-};
-var innerTx2 = new EmbeddedTransferTransactionV1()
-{
-    Network = NetworkType.TESTNET,
-    RecipientAddress = new UnresolvedAddress(carolAddress.bytes),
-    SignerPublicKey = alicePublicKey,
-    Message = Converter.Utf8ToPlainMessage("tx2")
-};
+var innerTx1 = new EmbeddedTransferTransactionV1(
+    network: NetworkType.TESTNET,
+    recipientAddress: bobAddress,
+    signerPublicKey: alicePublicKey,
+    message: Converter.Utf8ToPlainMessage("tx1")
+);
+var innerTx2 = new EmbeddedTransferTransactionV1(
+    network: NetworkType.TESTNET,
+    recipientAddress: carolAddress,
+    signerPublicKey: alicePublicKey,
+    message: Converter.Utf8ToPlainMessage("tx2")
+);
+
 var innerTransactions = new IBaseTransaction[] { innerTx1, innerTx2 };
 var merkleHash = SymbolFacade.HashEmbeddedTransactions(innerTransactions);
-var aggregateTx = new AggregateCompleteTransactionV2()
-{
-    Network = NetworkType.TESTNET,
-    SignerPublicKey = alicePublicKey,
-    Deadline = new Timestamp(facade.Network.FromDatetime<NetworkTimestamp>(DateTime.UtcNow).AddHours(2).Timestamp),
-    Transactions = innerTransactions,
-    TransactionsHash = merkleHash,
-};
+var aggregateTx = new AggregateCompleteTransactionV2(
+    network: NetworkType.TESTNET,
+    signerPublicKey: alicePublicKey,
+    deadline: new Timestamp(facade.Network.FromDatetime<NetworkTimestamp>(DateTime.UtcNow).AddHours(2).Timestamp),
+    transactions: innerTransactions,
+    transactionsHash: merkleHash
+);
 TransactionHelper.SetMaxFee(aggregateTx, 100);
 
 var signature = facade.SignTransaction(aliceKeyPair, aggregateTx);
-var payload = TransactionsFactory.AttachSignature(aggregateTx, signature);
+var payload = TransactionHelper.AttachSignature(aggregateTx, signature);
 var hash = facade.HashTransaction(aggregateTx, signature);
 
 var result = await Announce(payload);
