@@ -56,4 +56,12 @@ class MessageEncorder {
 
     return {'isDecoded': false, 'message': encodedMessage};
   }
+
+  static Uint8List toPlainMessage(String message) {
+    var messageByte = utf8ToBytes(message);
+    var messageWithZero = Uint8List(messageByte.length + 1);
+    messageWithZero[0] = 0;
+    messageWithZero.setRange(1, message.length + 1, messageByte);
+    return messageWithZero;
+  }
 }

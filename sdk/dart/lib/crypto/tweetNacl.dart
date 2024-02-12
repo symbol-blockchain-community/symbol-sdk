@@ -1,6 +1,5 @@
 import 'dart:math';
 import 'dart:typed_data';
-import '../utils/converter.dart';
 import 'poly1305.dart';
 
 class TweetNaCl {

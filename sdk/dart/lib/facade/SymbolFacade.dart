@@ -49,7 +49,7 @@ class SymbolFacade {
   }
 
   Signature signTransaction(KeyPair keyPair, ITransaction transaction) {
-    if(bytesToHex(transaction.signerPublicKey.bytes) != bytesToHex((PublicKey('')).bytes)){
+    if(bytesToHex(transaction.signerPublicKey.bytes) != bytesToHex((PublicKey('0' * 64)).bytes)){
       if(bytesToHex(transaction.signerPublicKey.bytes) != bytesToHex(keyPair.publicKey.bytes)){
         throw Exception('Transaction signerPublicKey does not match keyPair public key');
       }
