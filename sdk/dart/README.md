@@ -16,7 +16,7 @@ void main(){
     deadline: Timestamp(facade.network.fromDatetime(DateTime.now().toUtc()).addHours(2).timestamp),
     signerPublicKey: PublicKey(keyPair.publicKey.bytes),
     recipientAddress: UnresolvedAddress('TA5LGYEWS6L2WYBQ75J2DGK7IOZHYVWFWRLOFWI'),
-    message: utf8ToBytes('Hello, Symbol!!')
+    message: MessageEncorder.toPlainMessage('Hello, Symbol!!')
   );
   tx.fee = Amount(tx.size * 100);
   var signature = facade.signTransaction(keyPair, tx);
