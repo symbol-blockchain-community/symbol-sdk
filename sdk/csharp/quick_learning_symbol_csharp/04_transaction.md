@@ -51,7 +51,7 @@ var tx = new TransferTransactionV1(
     recipientAddress: bobAddress.bytes,
     signerPublicKey: alicePublicKey,
     message: Converter.Utf8ToPlainMessage("Hello, Symbol"), //メッセージ
-    deadline: new Timestamp(facade.Network.FromDatetime<SymbolSdk.Symbol.NetworkTimestamp>(DateTime.UtcNow).AddHours(2).Timestamp) //Deadline:有効期限
+    deadline: facade.Network.CreateDeadline(3600) //Deadline:有効期限
     )
 );
 ```
@@ -59,10 +59,10 @@ var tx = new TransferTransactionV1(
 各設定項目について説明します。
 
 #### 有効期限
-この例では2時間で設定しています。
+この例では2時間で設定しています。単位は秒単位です。
 最大6時間まで指定可能です。
 ```cs
-deadline: new Timestamp(facade.Network.FromDatetime<NetworkTimestamp>(DateTime.UtcNow).AddHours(2).Timestamp) //Deadline:有効期限
+deadline: facade.Network.CreateDeadline(3600) //Deadline:有効期限
 ```
 
 #### メッセージ
@@ -378,7 +378,7 @@ var merkleHash = SymbolFacade.HashEmbeddedTransactions(innerTransactions);
 var aggregateTx = new AggregateCompleteTransactionV2(
     network: NetworkType.TESTNET,
     signerPublicKey: alicePublicKey,
-    deadline: new Timestamp(facade.Network.FromDatetime<NetworkTimestamp>(DateTime.UtcNow).AddHours(2).Timestamp),
+    deadline: facade.Network.CreateDeadline(3600),
     transactions: innerTransactions,
     transactionsHash: merkleHash
 );

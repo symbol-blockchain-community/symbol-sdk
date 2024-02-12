@@ -16,19 +16,17 @@ var restrictable = true; //制限設定の可否
 var revokable = true; //発行者からの還収可否
 
 //モザイク定義
-var nonce = BitConverter.ToUInt32(Crypto.RandomBytes(8), 0);
-var mosaicId = IdGenerator.GenerateMosaicId(aliceAddress, nonce);
+var (nonce, mosaicId) = IdGenerator.GenerateMosaicId(aliceAddress);
 
-var mosaicDefTx = new EmbeddedMosaicDefinitionTransactionV1()
-{
-    Network = NetworkType.TESTNET,
-    Nonce = new MosaicNonce(nonce),
-    SignerPublicKey = alicePublicKey,
-    Id = new MosaicId(mosaicId),
-    Duration = new BlockDuration(0),
-    Divisibility = 2,
-    Flags = new MosaicFlags(Converter.CreateMosaicFlags(supplyMutable, transferable, restrictable, revokable)),
-};
+var mosaicDefTx = new EmbeddedMosaicDefinitionTransactionV1(
+    network: NetworkType.TESTNET,
+    nonce: new MosaicNonce(nonce),
+    signerPublicKey: alicePublicKey,
+    id: new MosaicId(mosaicId),
+    duration: new BlockDuration(0),
+    divisibility: 2,
+    flags: new MosaicFlags(Converter.CreateMosaicFlags(supplyMutable, transferable, restrictable, revokable))
+);
 ```
 
 MosaicFlagsは以下の通りです。
@@ -59,14 +57,13 @@ divisibility:2 = 1.00
 次に数量を変更します
 ```cs
 //モザイク変更
-var mosaicChangeTx = new EmbeddedMosaicSupplyChangeTransactionV1()
-{
-    Network = NetworkType.TESTNET,
-    SignerPublicKey = alicePublicKey,
-    MosaicId = new UnresolvedMosaicId(mosaicId),
-    Action = MosaicSupplyChangeAction.INCREASE,
-    Delta = new Amount(1000000),
-};
+var mosaicChangeTx = new EmbeddedMosaicSupplyChangeTransactionV1(
+    network: NetworkType.TESTNET,
+    signerPublicKey: alicePublicKey,
+    mosaicId: new UnresolvedMosaicId(mosaicId),
+    action: MosaicSupplyChangeAction.INCREASE,
+    delta: new Amount(1000000)
+);
 ```
 supplyMutable:falseの場合、全モザイクが発行者にある場合だけ数量の変更が可能です。
 divisibility > 0 の場合は、最小単位を1として整数値で定義してください。
@@ -82,18 +79,17 @@ MosaicSupplyChangeActionは以下の通りです。
 ```cs
 var innerTransactions = new IBaseTransaction[] { mosaicDefTx, mosaicChangeTx };
 var merkleHash = SymbolFacade.HashEmbeddedTransactions(innerTransactions);
-var aggregateTx = new AggregateCompleteTransactionV2()
-{
-    Network = NetworkType.TESTNET,
-    SignerPublicKey = alicePublicKey,
-    Deadline = new Timestamp(facade.Network.FromDatetime<NetworkTimestamp>(DateTime.UtcNow).AddHours(2).Timestamp),
-    Transactions = innerTransactions,
-    TransactionsHash = merkleHash,
-};
+var aggregateTx = new AggregateCompleteTransactionV2(
+    network: NetworkType.TESTNET,
+    signerPublicKey: alicePublicKey,
+    deadline: facade.Network.CreateDeadline(3600),
+    transactions: innerTransactions,
+    transactionsHash: merkleHash
+);
 TransactionHelper.SetMaxFee(aggregateTx, 100);
 
 var signature = facade.SignTransaction(aliceKeyPair, aggregateTx);
-var payload = TransactionsFactory.AttachSignature(aggregateTx, signature);
+var payload = TransactionHelper.AttachSignature(aggregateTx, signature);
 var hash = facade.HashTransaction(aggregateTx, signature);
 
 var result = await Announce(payload);
@@ -140,31 +136,27 @@ Console.WriteLine($"Mosaic: {mosaic}");
 正確にはブロックチェーンへ「トランザクションを送信」することにより、アカウント間でのトークン残量を組み替える操作のことを言います。
 
 ```cs
-var tx = new TransferTransactionV1
-{
-    Network = NetworkType.TESTNET,
-    RecipientAddress = new UnresolvedAddress(bobAddress.bytes),
-    SignerPublicKey = alicePublicKey,
-    Mosaics = new UnresolvedMosaic[]
+var tx = new TransferTransactionV1(
+    network: NetworkType.TESTNET,
+    recipientAddress: bobAddress,
+    signerPublicKey: alicePublicKey,
+    mosaics: new UnresolvedMosaic[]
     {
-        new ()
-          {
-              MosaicId = new UnresolvedMosaicId(0x72C0212E67A08BCE), //テストネットXYM
-              Amount = new Amount(1000000) //1XYM(divisibility:6)
-          },
-        new ()
-        {
-            MosaicId = new UnresolvedMosaicId(0x780EFB7E05B64285), // 5.1 で作成したモザイク
-            Amount = new Amount(1) // 数量:0.01(divisibility:2 の場合)
-        }
+        new(
+            mosaicId: new UnresolvedMosaicId(0x72C0212E67A08BCE), //テストネットXYM
+            amount: new Amount(1000000) //1XYM(divisibility:6)
+        ),
+        new(
+            mosaicId: new UnresolvedMosaicId(0x780EFB7E05B64285), // 5.1 で作成したモザイク
+            amount: new Amount(1) // 数量:0.01(divisibility:2 の場合)
+        )
     },
-    Deadline = new Timestamp(facade.Network.FromDatetime<NetworkTimestamp>(DateTime.UtcNow).AddHours(2).Timestamp) //Deadline:有効期限
-};
-tx.Sort();
+    deadline: facade.Network.CreateDeadline(3600) //Deadline:有効期限
+);
 TransactionHelper.SetMaxFee(tx, 100); //手数料
 
 var signature = facade.SignTransaction(aliceKeyPair, tx);
-var payload = TransactionsFactory.AttachSignature(tx, signature);
+var payload = TransactionHelper.AttachSignature(tx, signature);
 var hash = facade.HashTransaction(tx, signature);
 Console.WriteLine(hash);
 var result = await Announce(payload);
@@ -248,45 +240,44 @@ NFTの実現方法はいろいろありますが、その一例の処理概要�
 var supplyMutable = false; //供給量変更の可否
 
 //モザイク定義
-var mosaicDefTx = new EmbeddedMosaicDefinitionTransactionV1()
-{
-    Network = NetworkType.TESTNET,
-    Nonce = new MosaicNonce(nonce),
-    SignerPublicKey = alicePublicKey,
-    Id = new MosaicId(mosaicId),
-    Duration = new BlockDuration(0),  //duration:無期限
-    Divisibility = 0, //divisibility:可分性
-    Flags = new MosaicFlags(Converter.CreateMosaicFlags(supplyMutable, transferable, restrictable, revokable)),
-};
+var mosaicDefTx = new EmbeddedMosaicDefinitionTransactionV1(
+    network: NetworkType.TESTNET,
+    nonce: new MosaicNonce(nonce),
+    signerPublicKey: alicePublicKey,
+    id: new MosaicId(mosaicId),
+    duration: new BlockDuration(0), //duration:無期限
+    divisibility: 0, //divisibility:可分性
+    flags: new MosaicFlags(Converter.CreateMosaicFlags(supplyMutable, transferable, restrictable, revokable))
+);
 
 //モザイク数量固定
-var mosaicChangeTx = new EmbeddedMosaicSupplyChangeTransactionV1()
-{
-    Network = NetworkType.TESTNET,
-    SignerPublicKey = alicePublicKey,
-    MosaicId = new UnresolvedMosaicId(mosaicId),
-    Action = MosaicSupplyChangeAction.INCREASE,  //増やす
-    Delta = new Amount(1),  //数量1
-};
+var mosaicChangeTx = new EmbeddedMosaicSupplyChangeTransactionV1(
+    network: NetworkType.TESTNET,
+    signerPublicKey: alicePublicKey,
+    mosaicId: new UnresolvedMosaicId(mosaicId),
+    action: MosaicSupplyChangeAction.INCREASE, //増やす
+    delta: new Amount(1) //数量1
+);
 
 //NFTデータ
-var nftTx = new EmbeddedTransferTransactionV1()
-{
-    Network = NetworkType.TESTNET,
-    RecipientAddress = new UnresolvedAddress(aliceAddress.bytes),
-    SignerPublicKey = alicePublicKey,
-    Message = Converter.Utf8ToPlainMessage("Hello Symbol!")  //NFTデータ実体
-};
+var nftTx = new EmbeddedTransferTransactionV1(
+    network: NetworkType.TESTNET,
+    signerPublicKey: alicePublicKey,
+    recipientAddress: aliceAddress,
+    message: Converter.Utf8ToPlainMessage("Hello Symbol!") //NFTデータ実体
+);
 
 //モザイクの生成とNFTデータをアグリゲートしてブロックに登録
-var aggregateTx = new AggregateCompleteTransactionV2()
-{
-    Network = NetworkType.TESTNET,
-    SignerPublicKey = alicePublicKey,
-    Deadline = new Timestamp(facade.Network.FromDatetime<NetworkTimestamp>(DateTime.UtcNow).AddHours(2).Timestamp),
-    Transactions = innerTransactions,
-    TransactionsHash = merkleHash,
-};
+var innerTransactions = new IBaseTransaction[] { mosaicDefTx, mosaicChangeTx, nftTx };
+var merkleHash = SymbolFacade.HashEmbeddedTransactions(innerTransactions);
+var aggregateTx = new AggregateCompleteTransactionV2(
+    network: NetworkType.TESTNET,
+    signerPublicKey: alicePublicKey,
+    deadline: facade.Network.CreateDeadline(3600),
+    transactions: innerTransactions,
+    transactionsHash: merkleHash
+);
+
 TransactionHelper.SetMaxFee(aggregateTx, 100);
 ```
 
@@ -312,17 +303,15 @@ var revokable = true; //発行者からの還収可否
 トランザクションは以下のように記述します。
 
 ```cs
-var revocationTx = new MosaicSupplyRevocationTransactionV1()
-{
-    Network = NetworkType.TESTNET,
-    Deadline = new Timestamp(facade.Network.FromDatetime<NetworkTimestamp>(DateTime.UtcNow).AddHours(2).Timestamp), //Deadline:有効期限
-    SourceAddress = new UnresolvedAddress(bobAddress.bytes), //回収先アドレス
-    Mosaic = new UnresolvedMosaic()
-    {
-        MosaicId = new UnresolvedMosaicId(mosaicId),
-        Amount = new Amount(3)
-    }
-};
+var revocationTx = new MosaicSupplyRevocationTransactionV1(
+    network: NetworkType.TESTNET,
+    signerPublicKey: alicePublicKey,
+    deadline: facade.Network.CreateDeadline(3600), //Deadline:有効期限
+    mosaic: new UnresolvedMosaic(
+        mosaicId: new UnresolvedMosaicId(mosaicId),
+        amount: new Amount(3)
+    )
+);
 TransactionHelper.SetMaxFee(revocationTx, 100);
 ```
 

@@ -13,35 +13,30 @@ Aliceが起案者となりトランザクションを作成し、署名します
 
 ## 12.1 トランザクション作成
 ```cs
-var innerTx1 = new EmbeddedTransferTransactionV1()
-{
-    Network = NetworkType.TESTNET,
-    RecipientAddress = new UnresolvedAddress(bobAddress.bytes),
-    SignerPublicKey = alicePublicKey,
-    Message = Converter.Utf8ToPlainMessage("tx1"),
-};
-var innerTx2 = new EmbeddedTransferTransactionV1()
-{
-    Network = NetworkType.TESTNET,
-    RecipientAddress = new UnresolvedAddress(aliceAddress.bytes),
-    SignerPublicKey = bobPublicKey,
-    Message = Converter.Utf8ToPlainMessage("tx2"),
-};
+var innerTx1 = new EmbeddedTransferTransactionV1(
+    recipientAddress: bobAddress,
+    signerPublicKey: alicePublicKey,
+    message: Converter.Utf8ToPlainMessage("tx1")
+);
+
+var innerTx2 = new EmbeddedTransferTransactionV1(
+    recipientAddress: aliceAddress,
+    signerPublicKey: bobPublicKey,
+    message: Converter.Utf8ToPlainMessage("tx2")
+);
 var innerTransactions = new IBaseTransaction[] { innerTx1, innerTx2 };
-var merkleHash = SymbolFacade.HashEmbeddedTransactions(innerTransactions);
-var aggregateTx = new AggregateCompleteTransactionV2()
-{
-    Network = NetworkType.TESTNET,
-    SignerPublicKey = alicePublicKey,
-    Deadline = new Timestamp(facade.Network.FromDatetime<NetworkTimestamp>(DateTime.UtcNow).AddHours(2).Timestamp),
-    Transactions = innerTransactions,
-    TransactionsHash = merkleHash,
-};
+var merkleHash = SymbolFacade.HashEmbeddedTransactions(innerTransactions, NetworkType.TESTNET);
+var aggregateTx = new AggregateCompleteTransactionV2(
+    network: NetworkType.TESTNET,
+    transactions: innerTransactions,
+    signerPublicKey: alicePublicKey,
+    transactionsHash: merkleHash,
+    deadline: facade.Network.CreateDeadline(3600)
+);
 TransactionHelper.SetMaxFee(aggregateTx, 100, 1);
 
 var signature = facade.SignTransaction(aliceKeyPair, aggregateTx);
-TransactionsFactory.AttachSignature(aggregateTx, signature);
-var signedPayload = TransactionHelper.GetPayload(aggregateTx);
+var signedPayload = TransactionHelper.AttachSignature(aggregateTx, signature);
 Console.WriteLine(signedPayload);
 ```
 ###### 出力例
@@ -81,10 +76,10 @@ Console.WriteLine(res);
 次にBobが連署します。
 ```cs
 var hash = facade.HashTransaction(tx, tx.Signature);
-var cosignature = new Cosignature(){
-    Signature = bobKeyPair.Sign(hash.bytes),
-    SignerPublicKey = bobPublicKey
-};
+var cosignature = new Cosignature(
+    signature: bobKeyPair.Sign(hash.bytes),
+    signerPublicKey: bobPublicKey
+);
 Console.WriteLine(Converter.BytesToHex(cosignature.Serialize()));
 ```
 ###### 出力例
@@ -107,7 +102,7 @@ var cosignatureHex = "00000000000000004C4BD7F8E1E1AC61DB817089F9416A7EDC18339F06
 var cosignature = TransactionHelper.CosignatureDeserializer(cosignatureHex);
 (tx as AggregateCompleteTransactionV2)!.Cosignatures = new[] {cosignature};
 
-var payload = TransactionsFactory.CreatePayload(tx);
+var payload = TransactionHelper.GetPayload(tx);
 var result = await Announce(payload);
 Console.WriteLine(result);
 ```

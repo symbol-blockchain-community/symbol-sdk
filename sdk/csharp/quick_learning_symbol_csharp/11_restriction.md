@@ -18,19 +18,22 @@ Console.WriteLine("https://testnet.symbol.tools/?recipient=" + carolAddress +"&a
 
 ### 指定アドレスからの受信制限・指定アドレスへの送信制限
 ```cs
-var tx = new AccountAddressRestrictionTransactionV1()
-{
-    Network = NetworkType.TESTNET,
-    SignerPublicKey = carolKeyPair.PublicKey,
-    Deadline = new Timestamp(facade.Network.FromDatetime<NetworkTimestamp>(DateTime.UtcNow).AddHours(2).Timestamp),
-    RestrictionFlags = new AccountRestrictionFlags((ushort)new[] {AccountRestrictionFlags.ADDRESS,AccountRestrictionFlags.BLOCK}.ToList().Select(flag => (int)flag.Value).Sum()), // Flag
-    RestrictionAdditions = new UnresolvedAddress[] { new (bobAddress.bytes) },　//設定アドレス
+var tx = new AccountAddressRestrictionTransactionV1(
+    network: NetworkType.TESTNET,
+    signerPublicKey: carolPublicKey,
+    deadline: facade.Network.CreateDeadline(3600),
+    restrictionFlags: new AccountRestrictionFlags(
+        (ushort)(AccountRestrictionFlags.ADDRESS.Value + AccountRestrictionFlags.BLOCK.Value)), // Flag
+    restrictionAdditions: new UnresolvedAddress[]
+    {
+        new (bobAddress) //設定アドレス
+    }
     //解除アドレスは空
-};
+);
 TransactionHelper.SetMaxFee(tx, 100);
 
 var signature = facade.SignTransaction(carolKeyPair, tx);
-var payload = TransactionsFactory.AttachSignature(tx, signature);
+var payload = TransactionHelper.AttachSignature(tx, signature);
 var result = await Announce(payload);
 Console.WriteLine(result);
 ```
@@ -66,18 +69,21 @@ RestrictionFlags = new AccountRestrictionFlags((ushort)new[] {AccountRestriction
 
 ### 指定モザイクの受信制限
 ```cs
-var tx = new AccountMosaicRestrictionTransactionV1()
-{
-    Network = NetworkType.TESTNET,
-    SignerPublicKey = carolKeyPair.PublicKey,
-    Deadline = new Timestamp(facade.Network.FromDatetime<NetworkTimestamp>(DateTime.UtcNow).AddHours(2).Timestamp),
-    RestrictionFlags = new AccountRestrictionFlags((ushort)new[] {AccountRestrictionFlags.MOSAIC_ID,AccountRestrictionFlags.BLOCK}.ToList().Select(flag => (int)flag.Value).Sum()), //モザイク制限フラグ
-    RestrictionAdditions = new UnresolvedMosaicId[]{new (IdGenerator.GenerateNamespaceId("symbol.xym"))} //設定モザイク
-};
+var tx = new AccountMosaicRestrictionTransactionV1(
+    network: NetworkType.TESTNET,
+    signerPublicKey: carolPublicKey,
+    deadline: facade.Network.CreateDeadline(3600),
+    restrictionFlags: new AccountRestrictionFlags(
+        (ushort) (AccountRestrictionFlags.MOSAIC_ID.Value + AccountRestrictionFlags.BLOCK.Value)), //モザイク制限フラグ
+    restrictionAdditions: new UnresolvedMosaicId[]
+    {
+        new(IdGenerator.GenerateNamespaceId("symbol.xym")) //設定モザイク
+    }
+);
 TransactionHelper.SetMaxFee(tx, 100);
 
 var signature = facade.SignTransaction(carolKeyPair, tx);
-var payload = TransactionsFactory.AttachSignature(tx, signature);
+var payload = TransactionHelper.AttachSignature(tx, signature);
 var result = await Announce(payload);
 Console.WriteLine(result);
 ```
@@ -92,9 +98,9 @@ MosaicRestrictionFlagについては以下の通りです。
 
 ```cs
 // AllowMosaic
-RestrictionFlags = new AccountRestrictionFlags(AccountRestrictionFlags.MOSAIC_ID.Value),
+restrictionFlags: new AccountRestrictionFlags(AccountRestrictionFlags.MOSAIC_ID.Value),
 // BlockMosaic
-RestrictionFlags = new AccountRestrictionFlags((ushort)new[] {AccountRestrictionFlags.MOSAIC_ID,AccountRestrictionFlags.BLOCK}.ToList().Select(flag => (int)flag.Value).Sum()),
+restrictionFlags: new AccountRestrictionFlags((ushort)(AccountRestrictionFlags.MOSAIC_ID.Value + AccountRestrictionFlags.BLOCK.Value)),
 ```
 
 解除する際は同じく`RestrictionDeletions = new UnresolvedMosaicId[]{new (IdGenerator.GenerateNamespaceId("symbol.xym"))}`です。
@@ -105,18 +111,21 @@ RestrictionFlags = new AccountRestrictionFlags((ushort)new[] {AccountRestriction
 ### 指定トランザクションの送信制限
 
 ```cs
-var tx = new AccountOperationRestrictionTransactionV1()
-{
-    Network = NetworkType.TESTNET,
-    SignerPublicKey = carolKeyPair.PublicKey,
-    Deadline = new Timestamp(facade.Network.FromDatetime<NetworkTimestamp>(DateTime.UtcNow).AddHours(2).Timestamp),
-    RestrictionFlags = new AccountRestrictionFlags((ushort)new[] {AccountRestrictionFlags.TRANSACTION_TYPE,AccountRestrictionFlags.OUTGOING}.ToList().Select(flag => (int)flag.Value).Sum()),
-    RestrictionAdditions = new TransactionType[]{new (TransactionType.ACCOUNT_OPERATION_RESTRICTION.Value)} //設定トランザクション
-};
+var tx = new AccountOperationRestrictionTransactionV1(
+    network: NetworkType.TESTNET,
+    signerPublicKey: carolPublicKey,
+    deadline: facade.Network.CreateDeadline(3600),
+    restrictionFlags: new AccountRestrictionFlags((ushort) (AccountRestrictionFlags.TRANSACTION_TYPE.Value +
+                                                            AccountRestrictionFlags.OUTGOING.Value)),
+    restrictionAdditions: new TransactionType[]
+    {
+        TransactionType.ACCOUNT_OPERATION_RESTRICTION
+    }
+);
 TransactionHelper.SetMaxFee(tx, 100);
 
 var signature = facade.SignTransaction(carolKeyPair, tx);
-var payload = TransactionsFactory.AttachSignature(tx, signature);
+var payload = TransactionHelper.AttachSignature(tx, signature);
 var result = await Announce(payload);
 Console.WriteLine(result);
 ```
@@ -131,9 +140,9 @@ OperationRestrictionFlagについては以下の通りです。
 
 ```cs
 // AllowOutgoingTransactionType
-RestrictionFlags = new AccountRestrictionFlags((ushort)new[] {AccountRestrictionFlags.TRANSACTION_TYPE,AccountRestrictionFlags.OUTGOING}.ToList().Select(flag => (int)flag.Value).Sum()),
+restrictionFlags: new AccountRestrictionFlags((ushort)(AccountRestrictionFlags.TRANSACTION_TYPE.Value + AccountRestrictionFlags.OUTGOING.Value)),
 // BlockOutgoingTransactionType
-RestrictionFlags = new AccountRestrictionFlags((ushort)new[] {AccountRestrictionFlags.TRANSACTION_TYPE,AccountRestrictionFlags.OUTGOING,AccountRestrictionFlags.BLOCK}.ToList().Select(flag => (int)flag.Value).Sum()),
+restrictionFlags: new AccountRestrictionFlags((ushort)(AccountRestrictionFlags.TRANSACTION_TYPE.Value + AccountRestrictionFlags.OUTGOING.Value + AccountRestrictionFlags.BLOCK.Value)),
 ```
 
 トランザクション受信の制限機能はありません。指定できるオペレーションは以下の通りです。
@@ -198,14 +207,22 @@ Console.WriteLine($"AccountRestrictions: {restrictionsinfo}");
 なお、ここで先ほどと同じCarolを使用する場合は現在は`TransactionType.ACCOUNT_OPERATION_RESTRICTION`のみが許可されているため、これから使用するトランザクションを許可するか新たにKeyPairを作成するなどの対応をしてください。
 
 ```cs
-var tx = new AccountOperationRestrictionTransactionV1()
-{
-    Network = NetworkType.TESTNET,
-    SignerPublicKey = carolKeyPair.PublicKey,
-    Deadline = new Timestamp(facade.Network.FromDatetime<NetworkTimestamp>(DateTime.UtcNow).AddHours(2).Timestamp),
-    RestrictionFlags = new AccountRestrictionFlags((ushort)new[] {AccountRestrictionFlags.TRANSACTION_TYPE,AccountRestrictionFlags.OUTGOING}.ToList().Select(flag => (int)flag.Value).Sum()),
-    RestrictionAdditions = new TransactionType[]{new (TransactionType.MOSAIC_DEFINITION.Value),new (TransactionType.MOSAIC_SUPPLY_CHANGE.Value),new (TransactionType.MOSAIC_GLOBAL_RESTRICTION.Value),new (TransactionType.AGGREGATE_COMPLETE.Value),new (TransactionType.MOSAIC_ADDRESS_RESTRICTION.Value),new (TransactionType.TRANSFER.Value)} //設定トランザクション
-};
+var tx = new AccountOperationRestrictionTransactionV1(
+    network: NetworkType.TESTNET,
+    signerPublicKey: carolPublicKey,
+    deadline: facade.Network.CreateDeadline(3600),
+    restrictionFlags: new AccountRestrictionFlags(
+        (ushort) (AccountRestrictionFlags.TRANSACTION_TYPE.Value + AccountRestrictionFlags.OUTGOING.Value)),
+    restrictionAdditions: new TransactionType[]
+    {
+        TransactionType.MOSAIC_DEFINITION,
+        TransactionType.MOSAIC_SUPPLY_CHANGE,
+        TransactionType.MOSAIC_GLOBAL_RESTRICTION,
+        TransactionType.AGGREGATE_COMPLETE,
+        TransactionType.MOSAIC_ADDRESS_RESTRICTION,
+        TransactionType.TRANSFER //設定トランザクション
+    }
+);
 ```
 
 ### グローバル制限機能つきモザイクの作成
@@ -233,41 +250,36 @@ var mosaicDefTx = new EmbeddedMosaicDefinitionTransactionV1()
 };
 
 //モザイク変更
-var mosaicChangeTx = new EmbeddedMosaicSupplyChangeTransactionV1()
-{
-    Network = NetworkType.TESTNET,
-    SignerPublicKey = carolKeyPair.PublicKey,
-    MosaicId = new UnresolvedMosaicId(mosaicId),
-    Action = MosaicSupplyChangeAction.INCREASE,
-    Delta = new Amount(1000000),
-};
+var mosaicChangeTx = new EmbeddedMosaicSupplyChangeTransactionV1(
+    signerPublicKey: carolPublicKey,
+    mosaicId: new UnresolvedMosaicId(mosaicId),
+    action: MosaicSupplyChangeAction.INCREASE,
+    delta: new Amount(1000000)
+);
 
 //グローバルモザイク制限
 var key = IdGenerator.GenerateUlongKey("KYC"); // restrictionKey 
-var mosaicGlobalResTx = new EmbeddedMosaicGlobalRestrictionTransactionV1()
-{
-    Network = NetworkType.TESTNET,
-    SignerPublicKey = carolKeyPair.PublicKey,
-    MosaicId = new UnresolvedMosaicId(mosaicId),
-    RestrictionKey = key,
-    NewRestrictionValue = 1,
-    NewRestrictionType = MosaicRestrictionType.EQ,
-};
+var mosaicGlobalResTx = new EmbeddedMosaicGlobalRestrictionTransactionV1(
+    signerPublicKey: carolPublicKey,
+    mosaicId: new UnresolvedMosaicId(mosaicId),
+    restrictionKey: key,
+    newRestrictionValue: 1,
+    newRestrictionType: MosaicRestrictionType.EQ
+);
 
 var innerTransactions = new IBaseTransaction[] { mosaicDefTx, mosaicChangeTx, mosaicGlobalResTx };
-var merkleHash = SymbolFacade.HashEmbeddedTransactions(innerTransactions);
-var aggregateTx = new AggregateCompleteTransactionV2()
-{
-    Network = NetworkType.TESTNET,
-    SignerPublicKey = carolKeyPair.PublicKey,
-    Deadline = new Timestamp(facade.Network.FromDatetime<NetworkTimestamp>(DateTime.UtcNow).AddHours(2).Timestamp),
-    Transactions = innerTransactions,
-    TransactionsHash = merkleHash,
-};
+var merkleHash = SymbolFacade.HashEmbeddedTransactions(innerTransactions, NetworkType.TESTNET);
+var aggregateTx = new AggregateCompleteTransactionV2(
+    network: NetworkType.TESTNET,
+    transactions: innerTransactions,
+    signerPublicKey: carol1PublicKey,
+    transactionsHash: merkleHash,
+    deadline: facade.Network.CreateDeadline(3600)
+);
 TransactionHelper.SetMaxFee(aggregateTx, 100);
 
 var signature = facade.SignTransaction(carolKeyPair, aggregateTx);
-var payload = TransactionsFactory.AttachSignature(aggregateTx, signature);
+var payload = TransactionHelper.AttachSignature(aggregateTx, signature);
 var result = await Announce(payload);
 Console.WriteLine(result);
 ```
@@ -297,40 +309,38 @@ Carol,Bobに対してグローバル制限モザイクに対しての適格情�
 
 ```cs
 //Carolに適用
-var carolMosaicAddressResTx = new MosaicAddressRestrictionTransactionV1()
-{
-    Network = NetworkType.TESTNET,
-    SignerPublicKey = carolKeyPair.PublicKey,
-    Deadline = new Timestamp(facade.Network.FromDatetime<NetworkTimestamp>(DateTime.UtcNow).AddHours(2).Timestamp),
-    MosaicId = new UnresolvedMosaicId(0x388F6F55BE55BB6E), // mosaicId
-    RestrictionKey = IdGenerator.GenerateUlongKey("KYC"), // restrictionKey
-    TargetAddress = new UnresolvedAddress(carolAddress.bytes), // address
-    NewRestrictionValue = 1, // newRestrictionValue
-    PreviousRestrictionValue = 0xFFFFFFFFFFFFFFFF // previousRestrictionValue
-};
+var carolMosaicAddressResTx = new MosaicAddressRestrictionTransactionV1(
+    network: NetworkType.TESTNET,
+    signerPublicKey: carolPublicKey,
+    deadline: facade.Network.CreateDeadline(3600),
+    mosaicId: new UnresolvedMosaicId(0x388F6F55BE55BB6E), // mosaicId
+    restrictionKey: IdGenerator.GenerateUlongKey("KYC"), // restrictionKey
+    targetAddress: carolAddress, // address
+    newRestrictionValue: 1, // newRestrictionValue
+    previousRestrictionValue: 0xFFFFFFFFFFFFFFFF // previousRestrictionValue
+);
 TransactionHelper.SetMaxFee(carolMosaicAddressResTx, 100);
 
 var signature1 = facade.SignTransaction(carolKeyPair, carolMosaicAddressResTx);
-var payload1 = TransactionsFactory.AttachSignature(carolMosaicAddressResTx, signature1);
+var payload1 = TransactionHelper.AttachSignature(carolMosaicAddressResTx, signature1);
 var result1 = await Announce(payload1);
 Console.WriteLine(result1);
 
 //Bobに適用
-var bobMosaicAddressResTx = new MosaicAddressRestrictionTransactionV1()
-{
-    Network = NetworkType.TESTNET,
-    SignerPublicKey = carolKeyPair.PublicKey,
-    Deadline = new Timestamp(facade.Network.FromDatetime<NetworkTimestamp>(DateTime.UtcNow).AddHours(2).Timestamp),
-    MosaicId = new UnresolvedMosaicId(0x388F6F55BE55BB6E), // mosaicId
-    RestrictionKey = IdGenerator.GenerateUlongKey("KYC"), // restrictionKey
-    TargetAddress = new UnresolvedAddress(bobAddress.bytes), // address
-    NewRestrictionValue = 1, // newRestrictionValue
-    PreviousRestrictionValue = 0xFFFFFFFFFFFFFFFF // previousRestrictionValue
-};
+var bobMosaicAddressResTx = new MosaicAddressRestrictionTransactionV1(
+    network: NetworkType.TESTNET,
+    signerPublicKey: carolPublicKey,
+    deadline: facade.Network.CreateDeadline(3600),
+    mosaicId: new UnresolvedMosaicId(0x388F6F55BE55BB6E), // mosaicId
+    restrictionKey: IdGenerator.GenerateUlongKey("KYC"), // restrictionKey
+    targetAddress: bobAddress, // address
+    newRestrictionValue: 1, // newRestrictionValue
+    previousRestrictionValue: 0xFFFFFFFFFFFFFFFF // previousRestrictionValue
+);
 TransactionHelper.SetMaxFee(bobMosaicAddressResTx, 100);
 
 var signature2 = facade.SignTransaction(carolKeyPair, bobMosaicAddressResTx);
-var payload2 = TransactionsFactory.AttachSignature(bobMosaicAddressResTx, signature2);
+var payload2 = TransactionHelper.AttachSignature(bobMosaicAddressResTx, signature2);
 var result2 = await Announce(payload2);
 Console.WriteLine(result2);
 ```
@@ -393,24 +403,22 @@ Console.WriteLine($"MosaicRestrictions: {mosaicRestrictionsInfo}");
 
 ```cs
 //成功（CarolからBobに送信）
-var trTx = new TransferTransactionV1
-{
-    Network = NetworkType.TESTNET,
-    RecipientAddress = new UnresolvedAddress(bobAddress.bytes),
-    SignerPublicKey = carolKeyPair.PublicKey,
-    Mosaics = new UnresolvedMosaic[]
+var trTx = new TransferTransactionV1(
+    network: NetworkType.TESTNET,
+    signerPublicKey: carolPublicKey,
+    deadline: facade.Network.CreateDeadline(3600),
+    recipientAddress: bobAddress,
+    mosaics: new UnresolvedMosaic[]
     {
-        new ()
-        {
-            MosaicId = new UnresolvedMosaicId(0x388F6F55BE55BB6E),
-            Amount = new Amount(1)
-        }
-    },
-    Deadline = new Timestamp(facade.Network.FromDatetime<NetworkTimestamp>(DateTime.UtcNow).AddHours(2).Timestamp)
-};
+        new(
+            mosaicId: new UnresolvedMosaicId(0x388F6F55BE55BB6E),
+            amount: new Amount(1)
+        )
+    }
+);
 TransactionHelper.SetMaxFee(trTx, 100); 
 var signature = facade.SignTransaction(carolKeyPair, trTx);
-var payload = TransactionsFactory.AttachSignature(trTx, signature);
+var payload = TransactionHelper.AttachSignature(trTx, signature);
 var result = await Announce(payload);
 Console.WriteLine(result);
 
@@ -418,24 +426,23 @@ Console.WriteLine(result);
 var dave = KeyPair.GenerateNewKeyPair();
 var daveAddress = facade.Network.PublicKeyToAddress(dave.PublicKey);
 
-var trTx = new TransferTransactionV1
-{
-    Network = NetworkType.TESTNET,
-    RecipientAddress = new UnresolvedAddress(daveAddress.bytes),
-    SignerPublicKey = carolKeyPair.PublicKey,
-    Mosaics = new UnresolvedMosaic[]
+var trTx = new TransferTransactionV1(
+    network: NetworkType.TESTNET,
+    signerPublicKey: carolPublicKey,
+    deadline: facade.Network.CreateDeadline(3600),
+    recipientAddress: daveAddress,
+    mosaics: new UnresolvedMosaic[]
     {
-        new ()
-        {
-            MosaicId = new UnresolvedMosaicId(0x388F6F55BE55BB6E),
-            Amount = new Amount(1)
-        }
-    },
-    Deadline = new Timestamp(facade.Network.FromDatetime<NetworkTimestamp>(DateTime.UtcNow).AddHours(2).Timestamp)
-};
+        new(
+            mosaicId: new UnresolvedMosaicId(0x388F6F55BE55BB6E),
+            amount: new Amount(1)
+        )
+    }
+);
+
 TransactionHelper.SetMaxFee(trTx, 100); 
 var signature = facade.SignTransaction(carolKeyPair, trTx);
-var payload = TransactionsFactory.AttachSignature(trTx, signature);
+var payload = TransactionHelper.AttachSignature(trTx, signature);
 var result = await Announce(payload);
 Console.WriteLine(result);
 ```

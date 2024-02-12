@@ -12,45 +12,37 @@ Symbolブロックチェーンにはハッシュロックとシークレット�
 ### アグリゲートボンデッドトランザクションの作成
 
 ```cs
-var bobPublicKey = new PublicKey(Converter.HexToBytes("4C4BD7F8E1E1AC61DB817089F9416A7EDC18339F06CDC851495B271533FAD13B"));
+var bobPublicKey = new PublicKey("4C4BD7F8E1E1AC61DB817089F9416A7EDC18339F06CDC851495B271533FAD13B");
 var bobAddress = facade.Network.PublicKeyToAddress(bobPublicKey);
 
 var namespaceId = IdGenerator.GenerateNamespaceId("symbol.xym");
 
-var tx1 = new EmbeddedTransferTransactionV1()
-{
-    Network = NetworkType.TESTNET,
-    RecipientAddress = new UnresolvedAddress(bobAddress.bytes),  //Bobへの送信
-    SignerPublicKey = alicePublicKey,
-    Mosaics = new [] //1XYM
+var tx1 = new EmbeddedTransferTransactionV1(
+    recipientAddress: bobAddress, //Bobへの送信
+    signerPublicKey: alicePublicKey,
+    mosaics: new UnresolvedMosaic[] //1XYM
     {
-        new UnresolvedMosaic()
-        {
-            MosaicId = new UnresolvedMosaicId(namespaceId),
-            Amount = new Amount(1000000)
-        }
-    },
-    //メッセージ無し
-};
-var tx2 = new EmbeddedTransferTransactionV1()
-{
-    Network = NetworkType.TESTNET,
-    RecipientAddress = new UnresolvedAddress(aliceAddress.bytes), // Aliceへの送信
-    SignerPublicKey = bobPublicKey,
-    Message = Converter.Utf8ToPlainMessage("thank you!") //メッセージ
-};
+        new(mosaicId: new UnresolvedMosaicId(namespaceId), amount: new Amount(1000000))
+    } //メッセージ無し
+);
+
+var tx2 = new EmbeddedTransferTransactionV1(
+    recipientAddress: aliceAddress, // Aliceへの送信
+    signerPublicKey: bobPublicKey,
+    message: Converter.Utf8ToPlainMessage("thank you!") //メッセージ
+    );
 
 var innerTransactions = new IBaseTransaction[] {tx1, tx2};
-var merkleHash = SymbolFacade.HashEmbeddedTransactions(innerTransactions);
+var merkleHash = SymbolFacade.HashEmbeddedTransactions(innerTransactions, NetworkType.TESTNET);
 
-var aggregateTx = new AggregateBondedTransactionV2() {
-    Network = NetworkType.TESTNET,
-    Transactions = 	innerTransactions,
-    SignerPublicKey = aliceKeyPair.PublicKey,
-    TransactionsHash = merkleHash,
-    Deadline = new Timestamp(facade.Network.FromDatetime<NetworkTimestamp>(DateTime.UtcNow).AddHours(2).Timestamp),
-};
-TransactionHelper.SetMaxFee(aggregateTx, 100, 2/*連署者の数*/);
+var aggregateTx = new AggregateBondedTransactionV2(
+    network: NetworkType.TESTNET,
+    transactions: innerTransactions,
+    signerPublicKey: alicePublicKey,
+    transactionsHash: merkleHash,
+    deadline: facade.Network.CreateDeadline(3600)
+    );
+TransactionHelper.SetMaxFee(aggregateTx, 100, 1/*連署者の数*/);
 
 //署名
 var aliceSignature = facade.SignTransaction(aliceKeyPair, aggregateTx);
@@ -67,7 +59,7 @@ tx1,tx2の2つのトランザクション作成する際に送信元アカウン
 
 ```cs
 // Bonded用payload作成
-var payloadBonded = TransactionsFactory.AttachSignature(aggregateTx, aliceSignature);
+var payloadBonded = TransactionHelper.AttachSignature(aggregateTx, aliceSignature);
 Console.WriteLine(payloadBonded);
 
 var hash = facade.HashTransaction(aggregateTx);
@@ -78,24 +70,21 @@ Console.WriteLine(hash);
 ```cs
 
 //ハッシュロックTX作成
-var hashLockTx = new HashLockTransactionV1()
-{
-    Network = NetworkType.TESTNET,
-    SignerPublicKey = aliceKeyPair.PublicKey,
-    Mosaic = new UnresolvedMosaic() //10xym固定値
-    {
-        MosaicId = new UnresolvedMosaicId(namespaceId),
-        Amount = new Amount(10 * 1000000)
-    },
-    Duration = new BlockDuration(480), // ロック有効期限
-    Hash = hash, // このハッシュ値を登録
-    Deadline = new Timestamp(facade.Network.FromDatetime<NetworkTimestamp>(DateTime.UtcNow).AddHours(2).Timestamp),
-};
+var hashLockTx = new HashLockTransactionV1(
+    network: NetworkType.TESTNET,
+    signerPublicKey: alicePublicKey,
+    mosaic: new UnresolvedMosaic(
+        mosaicId: new UnresolvedMosaicId(namespaceId),
+        amount: new Amount(10 * 1000000)),
+    duration: new BlockDuration(480), // ロック有効期限
+    hash: hash, // このハッシュ値を登録
+    deadline: facade.Network.CreateDeadline(3600)
+);
 TransactionHelper.SetMaxFee(hashLockTx, 100);
 
 //署名
 var signature = facade.SignTransaction(aliceKeyPair, hashLockTx);
-var payload = TransactionsFactory.AttachSignature(hashLockTx, signature);
+var payload = TransactionHelper.AttachSignature(hashLockTx, signature);
 
 //ハッシュロックTXをアナウンス
 var result = await Announce(payload);
@@ -194,32 +183,31 @@ proof: 99BA16BDC20BBE77617993AB21877D0C8E71C147
 トランザクションを作成・署名・アナウンスします
 ```cs
 var namespaceId = IdGenerator.GenerateNamespaceId("symbol.xym");
-var lockTx = new SecretLockTransactionV1()
-{
-    Network = NetworkType.TESTNET,
-    RecipientAddress = new UnresolvedAddress(bobAddress.bytes), //解除時の転送先:Bob
-    Mosaic = new UnresolvedMosaic
-    {
-        MosaicId = new UnresolvedMosaicId(namespaceId),
-        Amount = new Amount(1000000) //1XYM
-    }, //ロックするモザイク
-    Secret = new Hash256(secret), //ロック用キーワード
-    Duration = new BlockDuration(480), //ロック期間(ブロック数)
-    HashAlgorithm = new LockHashAlgorithm(0), //ロックキーワード生成に使用したアルゴリズム
-    SignerPublicKey = alicePublicKey,
-    Deadline = new Timestamp(facade.Network.FromDatetime<NetworkTimestamp>(DateTime.UtcNow).AddHours(2).Timestamp),
-};
+var lockTx = new SecretLockTransactionV1(
+    network: NetworkType.TESTNET,
+    signerPublicKey: alicePublicKey,
+    recipientAddress: bobAddress,
+    mosaic: new UnresolvedMosaic(
+        mosaicId: new UnresolvedMosaicId(namespaceId),
+        amount: new Amount(1000000)), //1XYM
+    secret: new Hash256(secret),
+    duration: new BlockDuration(480), //ロック期間(ブロック数)
+    hashAlgorithm: LockHashAlgorithm.SHA3_256, //ロックキーワード生成に使用したアルゴリズム
+    deadline: facade.Network.CreateDeadline(3600)
+);
 TransactionHelper.SetMaxFee(lockTx, 100);
 
 var signature = facade.SignTransaction(aliceKeyPair, lockTx);
-var payload = TransactionsFactory.AttachSignature(lockTx, signature);
+var payload = TransactionHelper.AttachSignature(lockTx, signature);
 var result = await Announce(payload);
 Console.WriteLine(result);
 ```
 
 LockHashAlgorithmは以下の通りです。
 ```js
-{0: 'SHA3_256', 1: 'HASH_160', 2: 'HASH_256'}
+LockHashAlgorithm.SHA3_256
+LockHashAlgorithm.HASH_160
+LockHashAlgorithm.HASH_256
 ```
 
 ロック時に解除先を指定するのでBob以外のアカウントが解除しても転送先（Bob）を変更することはできません。
@@ -273,22 +261,21 @@ Bobは事前に解除用キーワードを入手しておく必要がありま�
 ```cs
 var secret = Converter.HexToBytes("196191F74708E2B4A52AEB643A3BA7E19655A64E7FAC6FBBA4F267BC18EDFF9E"); //ロックキーワード
 var proof = Converter.HexToBytes("91B7E1E02D98C8DB6CFA90AF810D120FED9D854E"); //解除用キーワード
-var proofTx = new SecretProofTransactionV1()
-{
-    Network = NetworkType.TESTNET,
-    RecipientAddress = new UnresolvedAddress(bobAddress.bytes), //解除アカウント（受信アカウント）
-    Proof = proof,
-    Secret = new Hash256(secret), //ロックキーワード
-    HashAlgorithm = new LockHashAlgorithm(0), //ロック作成に使用したアルゴリズム
-    SignerPublicKey = bobPublicKey,
-    Deadline = new Timestamp(facade.Network.FromDatetime<NetworkTimestamp>(DateTime.UtcNow).AddHours(2).Timestamp),
-};
+var proofTx = new SecretProofTransactionV1(
+    network: NetworkType.TESTNET,
+    signerPublicKey: bobPublicKey,
+    recipientAddress: bobAddress, //解除アカウント（受信アカウント）
+    proof: proof,
+    secret: new Hash256(secret), //ロックキーワード
+    hashAlgorithm: LockHashAlgorithm.SHA3_256, //ロック作成に使用したアルゴリズム
+    deadline: facade.Network.CreateDeadline(3600)
+);
 TransactionHelper.SetMaxFee(proofTx, 100);
 
 var signature = facade.SignTransaction(bobKeyPair, proofTx);
 var hash = facade.HashTransaction(proofTx);
 Console.WriteLine(hash);
-var payload = TransactionsFactory.AttachSignature(proofTx, signature);
+var payload = TransactionHelper.AttachSignature(proofTx, signature);
 var result = await Announce(payload);
 Console.WriteLine(result);
 ```

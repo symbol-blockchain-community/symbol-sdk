@@ -48,20 +48,19 @@ Console.WriteLine($"childNamespaceRentalFee: {childNamespaceRentalFee}");
 ルートネームスペースをレンタルします(例:xembook)
 ```cs
 var namespaceId = IdGenerator.GenerateNamespaceId("xembook");
-var tx = new NamespaceRegistrationTransactionV1()
-{
-    Network = NetworkType.TESTNET,
-    Id = new NamespaceId(namespaceId),
-    Name = Converter.Utf8ToBytes("xembook"),
-    RegistrationType = NamespaceRegistrationType.ROOT,
-    Duration = new BlockDuration(86400),
-    SignerPublicKey = alicePublicKey,
-    Deadline = new Timestamp(facade.Network.FromDatetime<NetworkTimestamp>(DateTime.UtcNow).AddHours(2).Timestamp) //Deadline:有効期限
-};
+var tx = new NamespaceRegistrationTransactionV1(
+    network: NetworkType.TESTNET,
+    id: new NamespaceId(namespaceId),
+    name: Converter.Utf8ToBytes("xembook"),
+    registrationType: NamespaceRegistrationType.ROOT,
+    duration: new BlockDuration(86400),
+    signerPublicKey: alicePublicKey,
+    deadline: facade.Network.CreateDeadline(3600)
+);
 TransactionHelper.SetMaxFee(tx, 100);
 
 var signature = facade.SignTransaction(aliceKeyPair, tx);
-var payload = TransactionsFactory.AttachSignature(tx, signature);
+var payload = TransactionHelper.AttachSignature(tx, signature);
 var hash = facade.HashTransaction(tx, signature);
 Console.WriteLine(hash);
 var result = await Announce(payload);
@@ -72,21 +71,20 @@ Console.WriteLine(result);
 ```cs
 var parentId = IdGenerator.GenerateNamespaceId("xembook");
 var namespaceId = IdGenerator.GenerateNamespaceId("tomato", parentId);
-var subNamespaceTx = new NamespaceRegistrationTransactionV1()
-{
-    Network = NetworkType.TESTNET,
-    ParentId = new NamespaceId(parentId),
-    Id = new NamespaceId(namespaceId),
-    Name = Converter.Utf8ToBytes("tomato"),
-    RegistrationType = NamespaceRegistrationType.CHILD,
-    Duration = new BlockDuration(86400),
-    SignerPublicKey = alicePublicKey,
-    Deadline = new Timestamp(facade.Network.FromDatetime<NetworkTimestamp>(DateTime.UtcNow).AddHours(2).Timestamp) //Deadline:有効期限
-};
+var subNamespaceTx = new NamespaceRegistrationTransactionV1(
+    network: NetworkType.TESTNET,
+    parentId: new NamespaceId(parentId),
+    id: new NamespaceId(namespaceId),
+    name: Converter.Utf8ToBytes("tomato"),
+    registrationType: NamespaceRegistrationType.CHILD,
+    duration: new BlockDuration(86400),
+    signerPublicKey: alicePublicKey,
+    deadline: facade.Network.CreateDeadline(3600)
+);
 TransactionHelper.SetMaxFee(subNamespaceTx, 100);
 
 var signature = facade.SignTransaction(aliceKeyPair, subNamespaceTx);
-var payload = TransactionsFactory.AttachSignature(subNamespaceTx, signature);
+var payload = TransactionHelper.AttachSignature(subNamespaceTx, signature);
 var hash = facade.HashTransaction(subNamespaceTx, signature);
 Console.WriteLine(hash);
 var result = await Announce(payload);
@@ -99,17 +97,16 @@ Console.WriteLine(result);
 ```cs
 var parentId = IdGenerator.GenerateNamespaceId("xembook.tomato"); //紐づけたいルートネームスペース
 var namespaceId = IdGenerator.GenerateNamespaceId("morning", parentId); //作成するサブネームスペース
-var subNamespaceTx = new NamespaceRegistrationTransactionV1()
-{
-    Network = NetworkType.TESTNET,
-    ParentId = new NamespaceId(parentId),
-    Id = new NamespaceId(namespaceId),
-    Name = Converter.Utf8ToBytes("morning"),
-    RegistrationType = NamespaceRegistrationType.CHILD,
-    Duration = new BlockDuration(86400),
-    SignerPublicKey = alicePublicKey,
-    Deadline = new Timestamp(facade.Network.FromDatetime<NetworkTimestamp>(DateTime.UtcNow).AddHours(2).Timestamp) //Deadline:有効期限
-};
+var subNamespaceTx = new NamespaceRegistrationTransactionV1(
+    network: NetworkType.TESTNET,
+    parentId: new NamespaceId(parentId),
+    id: new NamespaceId(namespaceId),
+    name: Converter.Utf8ToBytes("morning"),
+    registrationType: NamespaceRegistrationType.CHILD,
+    duration: new BlockDuration(86400),
+    signerPublicKey: alicePublicKey,
+    deadline: facade.Network.CreateDeadline(3600)
+);
 ```
 
 ### 有効期限の計算
@@ -158,19 +155,18 @@ Console.WriteLine(endDate.ToString("yyyy/MM/dd HH:mm:ss", CultureInfo.InvariantC
 ```cs
 var namespaceId = IdGenerator.GenerateNamespaceId("xembook");
 var address = Converter.StringToAddress("TA5LGYEWS6L2WYBQ75J2DGK7IOZHYVWFWRLOFWI");
-var tx = new AddressAliasTransactionV1()
-{
-    Network = NetworkType.TESTNET,
-    NamespaceId = new NamespaceId(namespaceId),
-    Address = new Address(address),
-    AliasAction = AliasAction.LINK,
-    SignerPublicKey = alicePublicKey,
-    Deadline = new Timestamp(facade.Network.FromDatetime<NetworkTimestamp>(DateTime.UtcNow).AddHours(2).Timestamp)
-};
+var tx = new AddressAliasTransactionV1(
+    network: NetworkType.TESTNET,
+    namespaceId: new NamespaceId(namespaceId),
+    address: new Address(address),
+    aliasAction: AliasAction.LINK,
+    signerPublicKey: alicePublicKey,
+    deadline: facade.Network.CreateDeadline(3600)
+);
 TransactionHelper.SetMaxFee(tx, 100);
 
 var signature = facade.SignTransaction(aliceKeyPair, tx);
-var payload = TransactionsFactory.AttachSignature(tx, signature);
+var payload = TransactionHelper.AttachSignature(tx, signature);
 var hash = facade.HashTransaction(tx, signature);
 Console.WriteLine(hash);
 var result = await Announce(payload);
@@ -183,19 +179,18 @@ Console.WriteLine(result);
 ```cs
 var namespaceId = IdGenerator.GenerateNamespaceId("xembook.tomato");
 
-var tx = new MosaicAliasTransactionV1()
-{
-    Network = NetworkType.TESTNET,
-    NamespaceId = new NamespaceId(namespaceId),
-    MosaicId = new MosaicId(0x5E033AC6CE11E654),
-    AliasAction = AliasAction.LINK,
-    SignerPublicKey = alicePublicKey,
-    Deadline = new Timestamp(facade.Network.FromDatetime<NetworkTimestamp>(DateTime.UtcNow).AddHours(2).Timestamp)
-};
+var tx = new MosaicAliasTransactionV1(
+    network: NetworkType.TESTNET,
+    namespaceId: new NamespaceId(namespaceId),
+    mosaicId: new MosaicId(0x5E033AC6CE11E654),
+    aliasAction: AliasAction.LINK,
+    signerPublicKey: alicePublicKey,
+    deadline: facade.Network.CreateDeadline(3600)
+);
 TransactionHelper.SetMaxFee(tx, 100);
 
 var signature = facade.SignTransaction(aliceKeyPair, tx);
-var payload = TransactionsFactory.AttachSignature(tx, signature);
+var payload = TransactionHelper.AttachSignature(tx, signature);
 var hash = facade.HashTransaction(tx, signature);
 Console.WriteLine(hash);
 var result = await Announce(payload);
@@ -212,34 +207,32 @@ Console.WriteLine(result);
 チェーン側で解決されたアカウントに対しての送信が実施されます。
 ```cs
 var namespaceId = IdGenerator.GenerateNamespaceId("xembook");
-var tx = new TransferTransactionV1
-{
-    Network = NetworkType.TESTNET,
-    RecipientAddress = new UnresolvedAddress(Converter.AliasToRecipient(namespaceId, Network.TestNet.Identifier)), //UnresolvedAccount:未解決アカウントアドレス
-    SignerPublicKey = alicePublicKey,
-    Deadline = new Timestamp(facade.Network.FromDatetime<NetworkTimestamp>(DateTime.UtcNow).AddHours(2).Timestamp)
-};
+var tx = new TransferTransactionV1(
+    network: NetworkType.TESTNET,
+    recipientAddress: new UnresolvedAddress(Converter.AliasToRecipient(namespaceId,
+        Network.TestNet.Identifier)), //UnresolvedAccount:未解決アカウントアドレス
+    signerPublicKey: alicePublicKey,
+    deadline: facade.Network.CreateDeadline(3600)
+);
 TransactionHelper.SetMaxFee(tx, 100);
 ```
 送信モザイクにUnresolvedMosaicとして指定して、モザイクIDを特定しないままトランザクションを署名・アナウンスします。
 
 ```cs
 var namespaceId = IdGenerator.GenerateNamespaceId("xembook.tomato");
-var tx = new TransferTransactionV1
-{
-    Network = NetworkType.TESTNET,
-    RecipientAddress = new UnresolvedAddress(bobAddress.bytes),
-    SignerPublicKey = alicePublicKey,
-    Mosaics = new []
+var tx = new TransferTransactionV1(
+    network: NetworkType.TESTNET,
+    recipientAddress: bobAddress,
+    signerPublicKey: alicePublicKey,
+    mosaics: new UnresolvedMosaic[]
     {
-        new UnresolvedMosaic()
-        {
-            MosaicId = new UnresolvedMosaicId(namespaceId), //UnresolvedMosaic:未解決モザイク
-            Amount = new Amount(1) //送信量
-        }
+        new (
+            mosaicId: new UnresolvedMosaicId(namespaceId), //UnresolvedMosaic:未解決モザイク
+            amount: new Amount(1) //送信量
+            )
     },
-    Deadline = new Timestamp(facade.Network.FromDatetime<NetworkTimestamp>(DateTime.UtcNow).AddHours(2).Timestamp)
-};
+    deadline: facade.Network.CreateDeadline(3600)
+);
 TransactionHelper.SetMaxFee(tx, 100);
 ```
 

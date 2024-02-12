@@ -12,30 +12,28 @@ Valueの最大値は1024バイトです。
 var key = IdGenerator.GenerateUlongKey("key_account");
 var valueBytes = Converter.Utf8ToBytes("test");
 
-var tx = new EmbeddedAccountMetadataTransactionV1()
-{
-    Network = NetworkType.TESTNET,
-    SignerPublicKey = alicePublicKey,
-    TargetAddress = new UnresolvedAddress(aliceAddress.bytes),
-    ScopedMetadataKey = key,
-    Value = valueBytes,
-    ValueSizeDelta = (byte) valueBytes.Length
-};
+var tx = new EmbeddedAccountMetadataTransactionV1(
+    network: NetworkType.TESTNET,
+    signerPublicKey: alicePublicKey,
+    targetAddress: aliceAddress,
+    scopedMetadataKey: key,
+    value: valueBytes,
+    valueSizeDelta: (byte)valueBytes.Length)
+);
 var innerTransactions = new IBaseTransaction[] {tx};
 var merkleHash = SymbolFacade.HashEmbeddedTransactions(innerTransactions);
 
-var aggregateTx = new AggregateCompleteTransactionV2()
-{
-    Network = NetworkType.TESTNET,
-    SignerPublicKey = alicePublicKey,
-    Transactions = innerTransactions,
-    TransactionsHash = merkleHash,
-    Deadline = new Timestamp(facade.Network.FromDatetime<NetworkTimestamp>(DateTime.UtcNow).AddHours(2).Timestamp)
-};
+var aggregateTx = new AggregateCompleteTransactionV2(
+    network: NetworkType.TESTNET,
+    signerPublicKey: alicePublicKey,
+    transactions: innerTransactions,
+    transactionsHash: merkleHash,
+    deadline: facade.Network.CreateDeadline(3600)
+);
 TransactionHelper.SetMaxFee(aggregateTx, 100);
 
 var signature = facade.SignTransaction(aliceKeyPair, aggregateTx);
-var payload = TransactionsFactory.AttachSignature(aggregateTx, signature);
+var payload = TransactionHelper.AttachSignature(aggregateTx, signature);
 var hash = facade.HashTransaction(aggregateTx, signature);
 Console.WriteLine(hash);
 var result = await Announce(payload);
@@ -52,43 +50,40 @@ Console.WriteLine(result);
 var key = IdGenerator.GenerateUlongKey("key_account");
 var valueBytes = Converter.Utf8ToBytes("test");
 
-var tx = new EmbeddedAccountMetadataTransactionV1()
-{
-    Network = NetworkType.TESTNET,
-    SignerPublicKey = alicePublicKey,
-    TargetAddress = new UnresolvedAddress(bobAddress.bytes),
-    ScopedMetadataKey = key,
-    Value = valueBytes,
-    ValueSizeDelta = (byte) valueBytes.Length
-};
+var tx = new EmbeddedAccountMetadataTransactionV1(
+    network: NetworkType.TESTNET,
+    signerPublicKey: alicePublicKey,
+    targetAddress: bobAddress,
+    scopedMetadataKey: key,
+    value: valueBytes,
+    valueSizeDelta: (byte)valueBytes.Length
+);
 var innerTransactions = new IBaseTransaction[] {tx};
 var merkleHash = SymbolFacade.HashEmbeddedTransactions(innerTransactions);
 
-var aggregateTx = new AggregateCompleteTransactionV2()
-{
-    Network = NetworkType.TESTNET,
-    SignerPublicKey = alicePublicKey,
-    Transactions = innerTransactions,
-    TransactionsHash = merkleHash,
-    Deadline = new Timestamp(facade.Network.FromDatetime<NetworkTimestamp>(DateTime.UtcNow).AddHours(2).Timestamp)
-};
+var aggregateTx = new AggregateCompleteTransactionV2(
+    network: NetworkType.TESTNET,
+    signerPublicKey: alicePublicKey,
+    transactions: innerTransactions,
+    transactionsHash: merkleHash,
+    deadline: facade.Network.CreateDeadline(3600)
+);
 TransactionHelper.SetMaxFee(aggregateTx, 100, 1/*連署者の数*/);
 
 // 署名
 var aliceSignature = facade.SignTransaction(aliceKeyPair, aggregateTx);
-TransactionsFactory.AttachSignature(aggregateTx, aliceSignature);
+TransactionHelper.AttachSignature(aggregateTx, aliceSignature);
 
 var hash = facade.HashTransaction(aggregateTx);
 
 // 連署者による署名
-var bobCosignature = new Cosignature
-{
-    Signature = bobKeyPair.Sign(hash.bytes),
-    SignerPublicKey = bobKeyPair.PublicKey
-};
+var bobCosignature = new Cosignature(
+    signature: bobKeyPair.Sign(hash.bytes),
+    signerPublicKey: bobKeyPair.PublicKey
+);
 aggregateTx.Cosignatures = new [] {bobCosignature};
 
-var payload = TransactionsFactory.CreatePayload(aggregateTx);
+var payload = TransactionHelper.GetPayload(aggregateTx);
 var result = await Announce(payload);
 Console.WriteLine(result);
 ```
@@ -105,31 +100,28 @@ bobの秘密鍵が分からない場合はこの後の章で説明する
 var key = IdGenerator.GenerateUlongKey("key_mosaic");
 var valueBytes = Converter.Utf8ToBytes("test");
 
-var tx = new EmbeddedMosaicMetadataTransactionV1()
-{
-    Network = NetworkType.TESTNET,
-    SignerPublicKey = alicePublicKey,
-    TargetAddress = new UnresolvedAddress(aliceAddress.bytes), //モザイク作成者アドレス
-    TargetMosaicId = new UnresolvedMosaicId(0x1F75D061E31413F7), // mosaic id
-    ScopedMetadataKey = key, // Key
-    Value = valueBytes, // Value
-    ValueSizeDelta = (byte) valueBytes.Length
-};
+var tx = new EmbeddedMosaicMetadataTransactionV1(
+    network: NetworkType.TESTNET,
+    signerPublicKey: alicePublicKey, //モザイク作成者アドレス
+    targetMosaicId: new UnresolvedMosaicId(0x1F75D061E31413F7), // mosaic id
+    scopedMetadataKey: key, // Key
+    value: valueBytes, // Value
+    valueSizeDelta: (byte)valueBytes.Length
+);
 var innerTransactions = new IBaseTransaction[] {tx};
 var merkleHash = SymbolFacade.HashEmbeddedTransactions(innerTransactions);
 
-var aggregateTx = new AggregateCompleteTransactionV2()
-{
-    Network = NetworkType.TESTNET,
-    SignerPublicKey = alicePublicKey,
-    Transactions = innerTransactions,
-    TransactionsHash = merkleHash,
-    Deadline = new Timestamp(facade.Network.FromDatetime<NetworkTimestamp>(DateTime.UtcNow).AddHours(2).Timestamp)
-};
+var aggregateTx = new AggregateCompleteTransactionV2(
+    network: NetworkType.TESTNET,
+    signerPublicKey: alicePublicKey,
+    transactions: innerTransactions,
+    transactionsHash: merkleHash,
+    deadline: facade.Network.CreateDeadline(3600)
+);
 TransactionHelper.SetMaxFee(aggregateTx, 100);
 
 var signature = facade.SignTransaction(aliceKeyPair, aggregateTx);
-var payload = TransactionsFactory.AttachSignature(aggregateTx, signature);
+var payload = TransactionHelper.AttachSignature(aggregateTx, signature);
 var result = await Announce(payload);
 Console.WriteLine(result);
 ```
@@ -144,31 +136,29 @@ var namespaceId = IdGenerator.GenerateNamespaceId("xembook");
 var key = IdGenerator.GenerateUlongKey("key_namespace");
 var valueBytes = Converter.Utf8ToBytes("test");
 
-var tx = new EmbeddedNamespaceMetadataTransactionV1()
-{
-    Network = NetworkType.TESTNET,
-    SignerPublicKey = alicePublicKey, //メタデータの登録者
-    TargetAddress = new UnresolvedAddress(aliceAddress.bytes), //ネームスペースの作成者アドレス
-    TargetNamespaceId = new NamespaceId(namespaceId),
-    ScopedMetadataKey = key, //Key
-    Value = valueBytes, //Value
-    ValueSizeDelta = (byte) valueBytes.Length
-};
+var tx = new EmbeddedNamespaceMetadataTransactionV1(
+    network: NetworkType.TESTNET,
+    signerPublicKey: alicePublicKey, //メタデータの登録者
+    targetAddress: aliceAddress, //ネームスペースの作成者アドレス
+    targetNamespaceId: new NamespaceId(namespaceId),
+    scopedMetadataKey: key, //Key
+    value: valueBytes, //Value
+    valueSizeDelta: (byte) valueBytes.Length
+    );
 var innerTransactions = new IBaseTransaction[] {tx};
 var merkleHash = SymbolFacade.HashEmbeddedTransactions(innerTransactions);
 
-var aggregateTx = new AggregateCompleteTransactionV2()
-{
-    Network = NetworkType.TESTNET,
-    SignerPublicKey = alicePublicKey,
-    Transactions = innerTransactions,
-    TransactionsHash = merkleHash,
-    Deadline = new Timestamp(facade.Network.FromDatetime<NetworkTimestamp>(DateTime.UtcNow).AddHours(2).Timestamp)
-};
+var aggregateTx = new AggregateCompleteTransactionV2(
+    network: NetworkType.TESTNET,
+    signerPublicKey: alicePublicKey,
+    transactions: innerTransactions,
+    transactionsHash: merkleHash,
+    deadline: facade.Network.CreateDeadline(3600)
+);
 TransactionHelper.SetMaxFee(aggregateTx, 100);
 
 var signature = facade.SignTransaction(aliceKeyPair, aggregateTx);
-var payload = TransactionsFactory.AttachSignature(aggregateTx, signature);
+var payload = TransactionHelper.AttachSignature(aggregateTx, signature);
 var result = await Announce(payload);
 Console.WriteLine(result);
 ```

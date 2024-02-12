@@ -54,58 +54,57 @@ Symbolではマルチシグアカウントを新規に作成するのではな�
 マルチシグ化には連署者に指定されたアカウントの承諾署名(オプトイン)が必要なため、アグリゲートトランザクションを使用します。
 
 ```cs
-var multisigTx = new EmbeddedMultisigAccountModificationTransactionV1()
-{
-    MinApprovalDelta = 3, //minApproval:承認のために必要な最小署名者数増分
-    MinRemovalDelta = 3, //minRemoval:除名のために必要な最小署名者数増分
-    AddressAdditions = new[]
+var multisigTx = new EmbeddedMultisigAccountModificationTransactionV1(
+    signerPublicKey: bobPublicKey, //マルチシグ化したいアカウントの公開鍵を指定
+    minApprovalDelta: 3, //minApproval:承認のために必要な最小署名者数増分
+    minRemovalDelta: 3, //minRemoval:除名のために必要な最小署名者数増分
+    addressAdditions: new UnresolvedAddress[]
     {
-        new UnresolvedAddress(carol1Address.bytes),
-        new UnresolvedAddress(carol2Address.bytes),
-        new UnresolvedAddress(carol3Address.bytes),
-        new UnresolvedAddress(carol4Address.bytes),
-    }, //追加対象アドレスリスト
-    SignerPublicKey = bobKeyPair.PublicKey, //マルチシグ化したいアカウントの公開鍵を指定
-    Network = NetworkType.TESTNET
-};
-var innerTransactions = new IBaseTransaction[] {multisigTx};
-var merkleHash = SymbolFacade.HashEmbeddedTransactions(innerTransactions);
+        new(carol1Address),
+        new(carol2Address),
+        new(carol3Address),
+        new(carol4Address),
+    }
+);
 
-var aggregateTx = new AggregateCompleteTransactionV2(){
-    Network = NetworkType.TESTNET,
-    Transactions = 	innerTransactions,
-    SignerPublicKey = bobKeyPair.PublicKey,
-    TransactionsHash = merkleHash,
-    Deadline = new Timestamp(facade.Network.FromDatetime<NetworkTimestamp>(DateTime.UtcNow).AddHours(2).Timestamp)
-};
+var innerTransactions = new IBaseTransaction[] {multisigTx};
+var merkleHash = SymbolFacade.HashEmbeddedTransactions(innerTransactions, NetworkType.TESTNET);
+
+var aggregateTx = new AggregateCompleteTransactionV2(
+    network: NetworkType.TESTNET,
+    transactions: innerTransactions,
+    signerPublicKey: bobPublicKey,
+    transactionsHash: merkleHash,
+    deadline: facade.Network.CreateDeadline(3600)
+);
 TransactionHelper.SetMaxFee(aggregateTx, 100, 4/*連署者の数*/);
 Console.WriteLine(aggregateTx.Fee);
 
 var bobSignature = facade.SignTransaction(bobKeyPair, aggregateTx); //マルチシグ化したいアカウント
-TransactionsFactory.AttachSignature(aggregateTx, bobSignature);
+TransactionHelper.AttachSignature(aggregateTx, bobSignature);
 
 var hash = facade.HashTransaction(aggregateTx);
 
-var caror1Cosignature = new Cosignature
-{
-    Signature = carol1KeyPair.Sign(hash.bytes),
-    SignerPublicKey = carol1KeyPair.PublicKey
-};  //追加・除外対象として指定したアカウント
-var caror2Cosignature = new Cosignature
-{
-    Signature = carol2KeyPair.Sign(hash.bytes),
-    SignerPublicKey = carol2KeyPair.PublicKey
-};  //追加・除外対象として指定したアカウント
-var caror3Cosignature = new Cosignature
-{
-    Signature = carol3KeyPair.Sign(hash.bytes),
-    SignerPublicKey = carol3KeyPair.PublicKey
-};  //追加・除外対象として指定したアカウント
-var caror4Cosignature = new Cosignature
-{
-    Signature = carol4KeyPair.Sign(hash.bytes),
-    SignerPublicKey = carol4KeyPair.PublicKey
-};  //追加・除外対象として指定したアカウント
+var caror1Cosignature = new Cosignature(
+    signature: carol1KeyPair.Sign(hash.bytes),
+    signerPublicKey: carol1PublicKey
+); //追加・除外対象として指定したアカウント
+
+var caror2Cosignature = new Cosignature(
+    signature: carol2KeyPair.Sign(hash.bytes),
+    signerPublicKey: carol2PublicKey
+); //追加・除外対象として指定したアカウント
+
+var caror3Cosignature = new Cosignature(
+    signature: carol3KeyPair.Sign(hash.bytes),
+    signerPublicKey: carol3PublicKey
+); //追加・除外対象として指定したアカウント
+
+var caror4Cosignature = new Cosignature(
+    signature: carol4KeyPair.Sign(hash.bytes),
+    signerPublicKey: carol4PublicKey
+); //追加・除外対象として指定したアカウント
+
 aggregateTx.Cosignatures = new []
 {
     caror1Cosignature,
@@ -114,7 +113,7 @@ aggregateTx.Cosignatures = new []
     caror4Cosignature
 };
 
-var payload = TransactionsFactory.CreatePayload(aggregateTx);
+var payload = GetPayload.GetPayload(aggregateTx);
 var result = await Announce(payload);
 Console.WriteLine(result);
 ```
@@ -184,52 +183,48 @@ multisigAddresses に対して連署する権利を持っていることが分�
 アグリゲートコンプリートトランザクションの場合、ノードにアナウンスする前に連署者の署名を全て集めてからトランザクションを作成します。
 
 ```cs
-var tx = new EmbeddedTransferTransactionV1()
-{
-    Network = NetworkType.TESTNET,
-    RecipientAddress = new UnresolvedAddress(aliceAddress.bytes),
-    SignerPublicKey = bobKeyPair.PublicKey, //マルチシグ化したアカウントの公開鍵を指定
-    Mosaics = new UnresolvedMosaic[]
+var tx = new EmbeddedTransferTransactionV1(
+    network: NetworkType.TESTNET,
+    recipientAddress: aliceAddress,
+    signerPublicKey: bobPublicKey, 
+    mosaics: new UnresolvedMosaic[]
     {
-        new()
-        {
-            MosaicId = new UnresolvedMosaicId(IdGenerator.GenerateNamespaceId("symbol.xym")),
-            Amount = new Amount(1000000)
-        }
+        new (
+            mosaicId: new UnresolvedMosaicId(IdGenerator.GenerateNamespaceId("symbol.xym")),
+            amount: new Amount(1000000)
+            )
     },
-    Message = Converter.Utf8ToPlainMessage("test")
-};
+    message: Converter.Utf8ToPlainMessage("test")
+);
 
 var innerTransactions = new IBaseTransaction[] {tx};
 var merkleHash = SymbolFacade.HashEmbeddedTransactions(innerTransactions);
 
-var aggregateTx = new AggregateCompleteTransactionV2()
-{
-    Network = NetworkType.TESTNET,
-    SignerPublicKey = carol1KeyPair.PublicKey,
-    Transactions = innerTransactions,
-    TransactionsHash = merkleHash,
-    Deadline = new Timestamp(facade.Network.FromDatetime<NetworkTimestamp>(DateTime.UtcNow).AddHours(2).Timestamp)
-};
+var aggregateTx = new AggregateCompleteTransactionV2(
+    network: NetworkType.TESTNET,
+    signerPublicKey: carol1PublicKey,
+    transactions: innerTransactions,
+    transactionsHash: merkleHash,
+    deadline: facade.Network.CreateDeadline(3600)
+);
+
 TransactionHelper.SetMaxFee(aggregateTx, 100, 2/*連署者の数*/);
 
 var signature = facade.SignTransaction(carol1KeyPair, aggregateTx); //起案者による署名
-TransactionsFactory.AttachSignature(aggregateTx, signature);
+TransactionHelper.AttachSignature(aggregateTx, signature);
 
 var hash = facade.HashTransaction(aggregateTx);
-var cosignature1 = new Cosignature
-{
-    Signature = carol2KeyPair.Sign(hash.bytes),
-    SignerPublicKey = carol2KeyPair.PublicKey
-};//連署者による署名
-var cosignature2 = new Cosignature
-{
-    Signature = carol3KeyPair.Sign(hash.bytes),
-    SignerPublicKey = carol3KeyPair.PublicKey
-};//連署者による署名
+var cosignature1 = new Cosignature(
+    signature: carol2KeyPair.Sign(hash.bytes),
+    signerPublicKey: carol2PublicKey
+); //連署者による署名
+var cosignature2 = new Cosignature(
+    signature: carol3KeyPair.Sign(hash.bytes),
+    signerPublicKey: carol3PublicKey
+); //連署者による署名
 aggregateTx.Cosignatures = new [] {cosignature1, cosignature2};
 
-var payload = TransactionsFactory.CreatePayload(aggregateTx);
+var payload = TransactionHelper.GetPayload(aggregateTx);
 var result = await Announce(payload);
 Console.WriteLine(result);
 ```
@@ -240,39 +235,33 @@ Console.WriteLine(result);
 事前にハッシュロックでトランザクションを留め置きしておくことを宣言しておき、連署者がネットワーク上に留め置きされたトランザクションに追加署名することで完成となります。
 
 ```cs
-var namespaceId = IdGenerator.GenerateNamespaceId("symbol.xym");
-
-var tx = new EmbeddedTransferTransactionV1()
-{
-    Network = NetworkType.TESTNET,
-    RecipientAddress = new UnresolvedAddress(aliceAddress.bytes),  //Aliceへの送信
-    SignerPublicKey = bobKeyPair.PublicKey, //マルチシグ化したアカウントの公開鍵を指定
-    Mosaics = new [] //1XYM
+var tx = new EmbeddedTransferTransactionV1(
+    recipientAddress: aliceAddress,
+    signerPublicKey: bobPublicKey,
+    mosaics: new UnresolvedMosaic[]
     {
-        new UnresolvedMosaic()
-        {
-            MosaicId = new UnresolvedMosaicId(IdGenerator.GenerateNamespaceId("symbol.xym")),
-            Amount = new Amount(1000000)
-        }
+        new(
+            mosaicId: new UnresolvedMosaicId(IdGenerator.GenerateNamespaceId("symbol.xym")),
+            amount: new Amount(1000000))
     },
-    Message = Converter.Utf8ToPlainMessage("test")
-};
+    message: Converter.Utf8ToPlainMessage("test")
+);
 
 var innerTransactions = new IBaseTransaction[] {tx};
-var merkleHash = SymbolFacade.HashEmbeddedTransactions(innerTransactions);
+var merkleHash = SymbolFacade.HashEmbeddedTransactions(innerTransactions, NetworkType.TESTNET);
 
-var aggregateTx = new AggregateBondedTransactionV2() {
-    Network = NetworkType.TESTNET,
-    Transactions = 	innerTransactions,
-    SignerPublicKey = carol1KeyPair.PublicKey,
-    TransactionsHash = merkleHash,
-    Deadline = new Timestamp(facade.Network.FromDatetime<NetworkTimestamp>(DateTime.UtcNow).AddHours(2).Timestamp),
-};
+var aggregateTx = new AggregateBondedTransactionV2(
+    network: NetworkType.TESTNET,
+    transactions: innerTransactions,
+    signerPublicKey: carol1PublicKey,
+    transactionsHash: merkleHash,
+    deadline: facade.Network.CreateDeadline(3600)
+);
 TransactionHelper.SetMaxFee(aggregateTx, 100, 2/*連署者の数*/);
 
 //署名
 var carol1Signature = facade.SignTransaction(carol1KeyPair, aggregateTx);
-var payloadBonded = TransactionsFactory.AttachSignature(aggregateTx, carol1Signature);
+var payloadBonded = TransactionHelper.AttachSignature(aggregateTx, carol1Signature);
 //ボンデッドのペイロードを控えておく
 Console.WriteLine(payloadBonded);
 
@@ -281,24 +270,22 @@ var hash = facade.HashTransaction(aggregateTx);
 Console.WriteLine(hash);
 
 //ハッシュロックTX作成
-var hashLockTx = new HashLockTransactionV1()
-{
-    Network = NetworkType.TESTNET,
-    SignerPublicKey = carol1KeyPair.PublicKey,
-    Mosaic = new UnresolvedMosaic() //10xym固定値
-    {
-        MosaicId = new UnresolvedMosaicId(namespaceId),
-        Amount = new Amount(10 * 1000000)
-    },
-    Duration = new BlockDuration(480),
-    Hash = hash,
-    Deadline = new Timestamp(facade.Network.FromDatetime<NetworkTimestamp>(DateTime.UtcNow).AddHours(2).Timestamp),
-};
+var hashLockTx = new HashLockTransactionV1(
+    network: NetworkType.TESTNET,
+    signerPublicKey: carol1PublicKey,
+    mosaic: new UnresolvedMosaic(
+        mosaicId: new UnresolvedMosaicId(namespaceId),
+        amount: new Amount(10 * 1000000)
+    ),
+    duration: new BlockDuration(480),
+    hash: hash,
+    deadline: facade.Network.CreateDeadline(3600)
+);
 TransactionHelper.SetMaxFee(hashLockTx, 100);
 
 //署名
 var signature = facade.SignTransaction(carol1KeyPair, hashLockTx);
-var payload = TransactionsFactory.AttachSignature(hashLockTx, signature);
+var payload = TransactionHelper.AttachSignature(hashLockTx, signature);
 
 //ハッシュロックTXをアナウンス
 var result = await Announce(payload);
@@ -412,51 +399,47 @@ Console.WriteLine($"TxInfo: {txInfo}");
 除名対象者を連署者に含む必要はありません。
 
 ```cs
-
-var multisigTx = new EmbeddedMultisigAccountModificationTransactionV1()
-{
-    Network = NetworkType.TESTNET,
-    MinApprovalDelta = 255, //承認のために必要な最小署名者数増分
-    MinRemovalDelta = 255, //除名のために必要な最小署名者数増分
-    AddressDeletions = new UnresolvedAddress[]
+var multisigTx = new EmbeddedMultisigAccountModificationTransactionV1(
+    minApprovalDelta: 255, //承認のために必要な最小署名者数増分
+    minRemovalDelta: 255, //除名のために必要な最小署名者数増分
+    addressAdditions: new UnresolvedAddress[]
     {
-        new (carol3Address.bytes)
-    }, //除名対象アドレス
-    SignerPublicKey = bobKeyPair.PublicKey, //構成変更したいマルチシグアカウントの公開鍵を指定
-};
+        new(carol3Address)
+    },
+    signerPublicKey: bobPublicKey //構成変更したいマルチシグアカウントの公開鍵を指定
+);
 
 var innerTransactions = new IBaseTransaction[] {multisigTx};
-var merkleHash = SymbolFacade.HashEmbeddedTransactions(innerTransactions);
+var merkleHash = SymbolFacade.HashEmbeddedTransactions(innerTransactions, NetworkType.TESTNET);
 
-var aggregateTx = new AggregateCompleteTransactionV2() {
-    Network = NetworkType.TESTNET,
-    Transactions = 	innerTransactions,
-    SignerPublicKey = carol1KeyPair.PublicKey,
-    TransactionsHash = merkleHash,
-    Deadline = new Timestamp(facade.Network.FromDatetime<NetworkTimestamp>(DateTime.UtcNow).AddHours(2).Timestamp),
-};
+var aggregateTx = new AggregateCompleteTransactionV2(
+    network: NetworkType.TESTNET,
+    transactions: innerTransactions,
+    signerPublicKey: carol1PublicKey,
+    transactionsHash: merkleHash,
+    deadline: facade.Network.CreateDeadline(3600)
+);
 TransactionHelper.SetMaxFee(aggregateTx, 100, 2/*連署者の数*/);
 
 //署名
 var carol1Signature = facade.SignTransaction(carol1KeyPair, aggregateTx);
-TransactionsFactory.AttachSignature(aggregateTx, carol1Signature);
+TransactionHelper.AttachSignature(aggregateTx, carol1Signature);
 
 var hash = facade.HashTransaction(aggregateTx);
 Console.WriteLine(hash);
 
-var cosignature1 = new Cosignature
-{
-    Signature = carol2KeyPair.Sign(hash.bytes),
-    SignerPublicKey = carol2KeyPair.PublicKey
-};//連署者による署名
-var cosignature2 = new Cosignature
-{
-    Signature = carol4KeyPair.Sign(hash.bytes),
-    SignerPublicKey = carol4KeyPair.PublicKey
-};//連署者による署名
+var cosignature1 = new Cosignature(
+    signature: carol2KeyPair.Sign(hash.bytes),
+    signerPublicKey: carol2PublicKey
+); //連署者による署名
+
+var cosignature2 = new Cosignature(
+    signature: carol4KeyPair.Sign(hash.bytes),
+    signerPublicKey: carol4PublicKey
+); //連署者による署名
 aggregateTx.Cosignatures = new [] {cosignature1, cosignature2};
 
-var payload = TransactionsFactory.CreatePayload(aggregateTx);
+var payload = TransactionHelper.GetPayload(aggregateTx);
 var result = await Announce(payload);
 Console.WriteLine(result);
 ```
@@ -469,52 +452,51 @@ Console.WriteLine(result);
 新たに追加指定するアカウントの連署は必ず必要です。
 
 ```cs
-var multisigTx = new EmbeddedMultisigAccountModificationTransactionV1()
-{
-    Network = NetworkType.TESTNET,
-    AddressAdditions = new UnresolvedAddress[]
+var multisigTx = new EmbeddedMultisigAccountModificationTransactionV1(
+    addressAdditions: new UnresolvedAddress[]
     {
-        new (carol5Address.bytes)  
+        new(carol5Address)
     }, //追加対象アドレス
-    AddressDeletions = new UnresolvedAddress[]
+    addressDeletions: new UnresolvedAddress[]
     {
-        new (carol4Address.bytes)
+        new(carol4Address)
     }, //除名対象アドレス
-    SignerPublicKey = bobKeyPair.PublicKey, //構成変更したいマルチシグアカウントの公開鍵を指定
-};　// 承認、除名共に人数の増減はないため、MinApprovalDelta, MinRemovalDeltaは不要
+    signerPublicKey: bobPublicKey //構成変更したいマルチシグアカウントの公開鍵を指定
+); // 承認、除名共に人数の増減はないため、MinApprovalDelta, MinRemovalDeltaは不要
 
 var innerTransactions = new IBaseTransaction[] {multisigTx};
-var merkleHash = SymbolFacade.HashEmbeddedTransactions(innerTransactions);
+var merkleHash = SymbolFacade.HashEmbeddedTransactions(innerTransactions, NetworkType.TESTNET);
 
-var aggregateTx = new AggregateCompleteTransactionV2() {
-    Network = NetworkType.TESTNET,
-    Transactions = 	innerTransactions,
-    SignerPublicKey = carol1KeyPair.PublicKey,
-    TransactionsHash = merkleHash,
-    Deadline = new Timestamp(facade.Network.FromDatetime<NetworkTimestamp>(DateTime.UtcNow).AddHours(2).Timestamp),
-};
+var aggregateTx = new AggregateCompleteTransactionV2(
+    network: NetworkType.TESTNET,
+    transactions: innerTransactions,
+    signerPublicKey: carol1PublicKey,
+    transactionsHash: merkleHash,
+    deadline: facade.Network.CreateDeadline(3600)
+);
+
 TransactionHelper.SetMaxFee(aggregateTx, 100, 2/*連署者の数*/);
 
 //署名
 var carol1Signature = facade.SignTransaction(carol1KeyPair, aggregateTx); //起案者による署名
-TransactionsFactory.AttachSignature(aggregateTx, carol1Signature);
+TransactionHelper.AttachSignature(aggregateTx, carol1Signature);
 
 var hash = facade.HashTransaction(aggregateTx);
 Console.WriteLine(hash);
 
-var cosignature1 = new Cosignature
-{
-    Signature = carol2KeyPair.Sign(hash.bytes),
-    SignerPublicKey = carol2KeyPair.PublicKey
-};//連署者による署名
-var cosignature2 = new Cosignature
-{
-    Signature = carol5KeyPair.Sign(hash.bytes),
-    SignerPublicKey = carol5KeyPair.PublicKey
-}; //承諾アカウントによる署名
+var cosignature1 = new Cosignature(
+    signature: carol2KeyPair.Sign(hash.bytes),
+    signerPublicKey: carol2PublicKey
+); //連署者による署名
+
+var cosignature2 = new Cosignature(
+    signature: carol5KeyPair.Sign(hash.bytes),
+    signerPublicKey: carol5PublicKey
+); //承諾アカウントによる署名
+
 aggregateTx.Cosignatures = new [] {cosignature1, cosignature2};
 
-var payload = TransactionsFactory.CreatePayload(aggregateTx);
+var payload = TransactionHelper.GetPayload(aggregateTx);
 var result = await Announce(payload);
 Console.WriteLine(result);
 ```
