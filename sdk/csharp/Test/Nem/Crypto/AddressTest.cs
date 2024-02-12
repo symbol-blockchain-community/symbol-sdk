@@ -18,7 +18,7 @@ public class AddressTest
 	    if (jsonMap != null)
 		    foreach (var t in jsonMap)
             {
-                var publicKey = new SymbolSdk.Nem.PublicKey((string)t["publicKey"]);
+                var publicKey = new PublicKey((string)t["publicKey"]);
 			    var mainNetwork = Network.MainNet;
 			    var testNetwork = Network.TestNet;
 			    var mainAddress = mainNetwork.PublicKeyToAddress(publicKey).ToString();

@@ -12,7 +12,7 @@ public static class Converter
             new Dictionary<string, byte>{
                 {"ripemd160", 20},
                 {"symbolAddressDecoded", 24},
-                {"nemAddressDecoded", 40},
+                {"nemAddressDecoded", 25},
                 {"symbolAddressEncoded", 39},
                 {"nemAddressEncoded", 40},
                 {"key", 32},
@@ -85,7 +85,7 @@ public static class Converter
         }
         if (_constants["sizes"]["nemAddressDecoded"] == decoded.Length)
         {
-            return BytesToUtf8(decoded);
+            return Base32.Encode(decoded);
         }
         throw new Exception(BytesToHex(decoded) + " does not represent a valid decoded address");
     }

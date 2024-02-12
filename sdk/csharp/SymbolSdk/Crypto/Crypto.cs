@@ -1,4 +1,4 @@
-/*using System.Security.Cryptography;
+using System.Security.Cryptography;
 using System.Text;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Engines;
@@ -14,7 +14,7 @@ public static class Crypto
      * @param {byte} length - The length of the random bytes
      *
      * @return {byte[]}
-     #1#
+    */
     public static byte[] RandomBytes(byte length)
     {
         var rngCsp = RandomNumberGenerator.Create();
@@ -88,13 +88,14 @@ public static class Crypto
      * @param {Uint8Array} iv - An initialization vector
      * @param {Uint8Array} salt - A salt
      * @return {string} - The encoded message
-     #1#
-    /*private static string _Encode(byte[] senderPrivateKey, byte[] recipientPub, string msg, byte[] iv)
+     * */
+    
+    private static string _Encode(byte[] senderPrivateKey, byte[] recipientPub, string msg, byte[] iv)
     {
-        var encKey = CatapultCrypto.DeriveSharedKey(senderPrivateKey, recipientPub);
-        var cipher = Encrypt(msg, encKey, iv);
+        var encKey = SymbolSdk.Symbol.SharedKey.DeriveSharedKey(senderPrivateKey, recipientPub);
+        var cipher = Encrypt(msg, encKey.bytes, iv);
         return Converter.BytesToHex(cipher);
-    }#1#
+    }
 
     /**
      * Encode a message using AES-GCM algorithm
@@ -104,7 +105,7 @@ public static class Crypto
      * @param {string} msg - A text message
      * @param {boolean} isHexString - Is payload string a hexadecimal string (default = false)
      * @return {string} - The encoded message
-     #1#
+     */
     public static string Encode(string senderPrivateKey, string recipientPub, string msg, bool isHexString = false, byte[]? iv = null)
     {
         iv ??= RandomBytes(12);
@@ -145,11 +146,11 @@ public static class Crypto
      * @param {Uint8Array} payload - An encrypted message payload in bytes
      * @param {Uint8Array} tagAndIv - 16-bytes AES auth tag and 12-byte AES initialization vector
      * @return {string} - The decoded payload as hex
-     #1#
+    */
     public static string? _Decode(byte[] recipientPrivateKey, byte[] senderPublic, byte[] payload)
     {
-        var encKey = CatapultCrypto.DeriveSharedKey(recipientPrivateKey, senderPublic);
-        var cipher = Decrypt(payload, encKey);
+        var encKey = Symbol.SharedKey.DeriveSharedKey(recipientPrivateKey, senderPublic);
+        var cipher = Decrypt(payload, encKey.bytes);
         return cipher == null ? null : Converter.BytesToHex(cipher);
     }
 
@@ -160,7 +161,7 @@ public static class Crypto
      * @param {string} senderPublic - A sender public key
      * @param {string} payload - An encrypted message payload
      * @return {string?} - The decoded payload as hex
-     #1#
+     */
     public static string? Decode(string recipientPrivateKey, string senderPublic, string payload)
     {
         var decoded = _Decode(Converter.HexToBytes(recipientPrivateKey), Converter.HexToBytes(senderPublic), Converter.HexToBytes(payload));
@@ -281,4 +282,4 @@ public static class Crypto
         sha256Hasher.DoFinal(secret, 0);
         return (proof, secret);
     }
-}*/
+}

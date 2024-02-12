@@ -45,9 +45,14 @@ public abstract class ByteArray
 	 */
     public override string ToString()
     {
-        if (GetType() == typeof(Symbol.UnresolvedAddress) || GetType() == typeof(Nem.Address) || GetType() == typeof(Symbol.Address) || GetType() == typeof(Symbol.UnresolvedAddress) || GetType() == typeof(Nem.Address))
+        if (GetType() == typeof(Symbol.UnresolvedAddress) || GetType() == typeof(Symbol.Address) || GetType() == typeof(Symbol.UnresolvedAddress))
         {
             return Converter.AddressToString(bytes);
+        }
+
+        if (GetType() == typeof(Nem.Address))
+        {
+            return Converter.BytesToUtf8(bytes);
         }
         return Converter.BytesToHex(bytes);
     }

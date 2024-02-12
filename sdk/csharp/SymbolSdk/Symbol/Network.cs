@@ -34,7 +34,7 @@ namespace SymbolSdk.Symbol
     /**
      * Represents a Symbol network.
      */
-    public class Network : BaseNetwork<UnresolvedAddress>
+    public class Network : BaseNetwork
     {
         public Hash256? GenerationHashSeed { get; }
         public DateTime? epocTime { get; }
@@ -63,8 +63,6 @@ namespace SymbolSdk.Symbol
             name,
             identifier,
             new NetworkTimestampDatetimeConverter(epochTime, "milliseconds'"),
-            new Sha3Digest(256),
-            CreateAddressFunc,
             typeof(NetworkTimestamp)
         )
         {
@@ -78,6 +76,42 @@ namespace SymbolSdk.Symbol
             addressWithoutChecksum.CopyTo(newBytes, 0);
             checksum.ToList().CopyTo(0, newBytes, addressWithoutChecksum.Length, checksum.Length - 1);
             return new UnresolvedAddress(newBytes);
+        }
+        
+        /**
+         * Converts a public key to an address.
+         * @param {byte[]} publicKey Public key to convert.
+         * @returns {Address} Address corresponding to the public key input.
+         */
+        public UnresolvedAddress PublicKeyToAddress(byte[] publicKey)
+        {
+            var (version, checksum) = PublicKeyToAddressFunc(publicKey, new Sha3Digest(256));
+            return CreateAddressFunc(version, checksum);
+        }
+        
+        public UnresolvedAddress PublicKeyToAddress(PublicKey publicKey)
+        {
+            return PublicKeyToAddress(publicKey.bytes);
+        }
+        
+        public UnresolvedAddress PublicKeyToAddress(string publicKey)
+        {
+            return PublicKeyToAddress(Converter.HexToBytes(publicKey));
+        }
+        
+        /**
+         * Converts a datetime to a network timestamp.
+         * @param {DateTime} referenceDatetime Reference datetime to convert.
+         * @returns {NetworkTimestamp} Network timestamp representation of the reference datetime.
+         */
+        public NetworkTimestamp FromDatetime(DateTime referenceDatetime)
+        {
+            return new NetworkTimestamp(DatetimeConverter.ToDifference(referenceDatetime));
+        }
+
+        public Timestamp CreateDeadline(int addseconds)
+        {
+            return new Timestamp(FromDatetime(DateTime.UtcNow).AddSeconds((ulong)addseconds).Timestamp);
         }
     }
 }

@@ -13,17 +13,19 @@ namespace SymbolSdk.Symbol
          * @param {ulong} nonce Nonce.
          * @returns {ulong} Computed mosaic id.
          */
-        public static ulong GenerateMosaicId<T>(T ownerAddress, ulong nonce) where T : ByteArray
+        public static (ulong nonce, ulong mosaicId) GenerateMosaicId<T>(T ownerAddress, ulong? nonce = null) where T : ByteArray
         {
+            var _nonce = nonce ??= BitConverter.ToUInt64(Crypto.RandomBytes(8));
+            if (nonce == null) throw new Exception("nonce is required");
             var hasher = new Sha3Digest(256);
             var arr = new byte[32];
-            hasher.BlockUpdate(BitConverter.GetBytes(nonce), 0, 4);
+            hasher.BlockUpdate(BitConverter.GetBytes(_nonce), 0, 4);
             hasher.BlockUpdate(ownerAddress.bytes, 0, ownerAddress.bytes.Length);
             hasher.DoFinal(arr, 0);
             Console.WriteLine(Converter.BytesToHex(arr));
             var result = BitConverter.ToUInt64(arr, 0);
             if ((result & NAMESPACE_FLAG) != 0) result -= NAMESPACE_FLAG;
-            return result;
+            return (_nonce, result);
         }
         
         /**
