@@ -1,7 +1,7 @@
 // this file contains implementation details and is not intended to be used directly
 
-import { AesCbcCipher, AesGcmCipher } from '../Cipher.ts';
-import { SharedKey256, PrivateKey, PublicKey } from '../CryptoTypes';
+import { AesCbcCipher, AesGcmCipher } from '../Cipher';
+import { SharedKey256 } from '../CryptoTypes';
 import crypto from 'crypto';
 
 const GCM_IV_SIZE = 12;

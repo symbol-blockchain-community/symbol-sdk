@@ -1,6 +1,4 @@
-/* eslint-disable no-unused-vars */
-import { PublicKey, SharedKey256 } from './CryptoTypes';
-/* eslint-enable no-unused-vars */
+import { SharedKey256 } from './CryptoTypes';
 import * as crypto from 'crypto';
 
 const concatArrays = (lhs: any, rhs: any) => {
@@ -35,7 +33,7 @@ export class AesCbcCipher {
 	 * @returns {Uint8Array} Cipher text.
 	 */
 	encrypt(clearText: Uint8Array, iv: Uint8Array): Uint8Array {
-		const cipher = crypto.createCipheriv('aes-256-cbc', this._key.bytes, iv);
+		const cipher = crypto.createCipheriv('aes-256-cbc', Buffer.from(this._key.bytes), Buffer.from(iv));
 
 		const cipherText = cipher.update(clearText);
 		const padding = cipher.final();
@@ -50,9 +48,9 @@ export class AesCbcCipher {
 	 * @returns {Uint8Array} Clear text.
 	 */
 	decrypt(cipherText: Uint8Array, iv: Uint8Array): Uint8Array {
-		const decipher = crypto.createDecipheriv('aes-256-cbc', this._key.bytes, iv);
+		const decipher = crypto.createDecipheriv('aes-256-cbc', Buffer.from(this._key.bytes), Buffer.from(iv));
 
-		const clearText = decipher.update(cipherText);
+		const clearText = decipher.update(Buffer.from(cipherText));
 		const padding = decipher.final();
 
 		return concatArrays(clearText, padding);
@@ -93,7 +91,7 @@ export class AesGcmCipher {
 	 * @returns {Uint8Array} Cipher text with appended tag.
 	 */
 	encrypt(clearText: Uint8Array, iv: Uint8Array): Uint8Array {
-		const cipher = crypto.createCipheriv('aes-256-gcm', this._key.bytes, iv);
+		const cipher = crypto.createCipheriv('aes-256-gcm', Buffer.from(this._key.bytes), Buffer.from(iv));
 
 		const cipherText = cipher.update(clearText);
 		cipher.final(); // no padding for GCM
@@ -110,12 +108,12 @@ export class AesGcmCipher {
 	 * @returns {Uint8Array} Clear text.
 	 */
 	decrypt(cipherText: Uint8Array, iv: Uint8Array): Uint8Array {
-		const decipher = crypto.createDecipheriv('aes-256-gcm', this._key.bytes, iv);
+		const decipher = crypto.createDecipheriv('aes-256-gcm', Buffer.from(this._key.bytes), Buffer.from(iv));
 
 		const tagStartOffset = cipherText.length - AesGcmCipher.TAG_SIZE;
 		decipher.setAuthTag(cipherText.subarray(tagStartOffset));
 
-		const clearText = decipher.update(cipherText.subarray(0, tagStartOffset));
+		const clearText = decipher.update(Buffer.from(cipherText.subarray(0, tagStartOffset)));
 		decipher.final(); // no padding for GCM
 		return clearText;
 	}

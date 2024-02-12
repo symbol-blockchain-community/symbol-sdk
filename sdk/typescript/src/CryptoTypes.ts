@@ -1,4 +1,5 @@
 import ByteArray from './ByteArray';
+import crypto from 'crypto';
 
 /**
  * Represents a 256-bit hash.
@@ -43,6 +44,14 @@ export class PrivateKey extends ByteArray {
 	 */
 	constructor(privateKey: Uint8Array | string) {
 		super(PrivateKey.SIZE, privateKey);
+	}
+
+	/**
+	 * Creates a random private key.
+	 * @returns {PrivateKey} Random private key.
+	 */
+	static random(): PrivateKey {
+		return new PrivateKey(crypto.randomBytes(PrivateKey.SIZE));
 	}
 }
 
