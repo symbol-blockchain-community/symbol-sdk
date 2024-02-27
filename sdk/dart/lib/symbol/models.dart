@@ -881,7 +881,6 @@ class EmbeddedTransaction implements ISerializable, IInnerTransaction {
 	EmbeddedTransaction deserialize(Uint8List payload) {
 		var buffer = payload;
 		var size = bytesToInt(buffer.sublist(0, 4), 4);
-    print('size: $size');
 		buffer = buffer.sublist(0, size);
 		buffer = buffer.sublist(4);
 		var embeddedTransactionHeaderReserved_1 = bytesToInt(buffer.sublist(0, 4), 4);

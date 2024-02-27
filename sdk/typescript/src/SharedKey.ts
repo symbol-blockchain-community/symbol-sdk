@@ -83,7 +83,10 @@ const unpackNeg = (r: any[], p: any[]) => {
 	const den6 = gf();
 
 	set25519(r[2], gf1);
+	console.log('p1', p);
 	unpack25519(r[1], p);
+	console.log('p2', r);
+
 	S(num, r[1]);
 	M(den, num, D);
 	Z(num, num, r[2]);

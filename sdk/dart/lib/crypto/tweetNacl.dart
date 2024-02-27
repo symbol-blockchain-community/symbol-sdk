@@ -1737,7 +1737,6 @@ class TweetNaCl {
       crypto_hashblocks_hl(iv, m, moff, n);
       n %= 128;
     }
-    print(m);
     for (i = 0; i < n; i++) {
       x[i] = m[b - n + i + moff];
     }

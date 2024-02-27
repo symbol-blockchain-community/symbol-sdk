@@ -21,8 +21,12 @@ public class SharedKey
     private static bool IsInMainSubgroup(long[][] point)
     {
         var result = new List<long[]> { NaclCatapult.Gf(), NaclCatapult.Gf(), NaclCatapult.Gf(), NaclCatapult.Gf() };
+        Console.WriteLine(result[1][0]);
+        Console.WriteLine(result[2][0]);
         // multiply by group order
         NaclCatapult.Scalarmult(result.ToArray(), point, NaclCatapult.L);
+        Console.WriteLine(result[1][0]);
+        Console.WriteLine(result[2][0]);
         // check if result is neutral element
         var areEqual = NaclCatapult.Neq25519(result[1], result[2]);
         var isZero = NaclCatapult.Neq25519(NaclCatapult.Gf(), result[0]);
