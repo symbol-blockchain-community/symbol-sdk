@@ -43,7 +43,7 @@ const decodeAesCbc = (deriveSharedKey: (privateKey: Uint8Array, recipientPublicK
 	return new Uint8Array(cipher.decrypt(encodedMessageData, initializationVector));
 };
 
-const encodeAesGcm = (deriveSharedKey: (privateKey: Uint8Array, recipientPublicKey: Uint8Array) => SharedKey256, privateKey: Uint8Array, recipientPublicKey: Uint8Array, message: Uint8Array) => {
+const encodeAesGcm = (deriveSharedKey: (privateKey: Uint8Array, recipientPublicKey: Uint8Array) => SharedKey256, privateKey: Uint8Array, recipientPublicKey: Uint8Array, message: Uint8Array, iv: Uint8Array | undefined = undefined) => {
 	const sharedKey = deriveSharedKey(privateKey, recipientPublicKey);
 	const cipher = new AesGcmCipher(sharedKey);
 
