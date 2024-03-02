@@ -118,7 +118,6 @@ public static class ArrayHelpers
         {
             var entity = factoryClass(br);
             elements.Add(entity);
-            Console.WriteLine(entity);
             var alignedSize = (skipLastElementPadding && entity.Size >= br.BaseStream.Length - br.BaseStream.Position)
                 ? (int)entity.Size
                 : (int)AlignUp(entity.Size, alignment);
@@ -126,9 +125,7 @@ public static class ArrayHelpers
                 throw new Exception("unexpected buffer length");
             br.ReadBytes((int)(alignedSize - entity.Size));
             remainingByteSizes -= alignedSize;
-            Console.WriteLine("entity");
         }
-        Console.WriteLine("entity_END");
         return elements.ToArray();
     }
 

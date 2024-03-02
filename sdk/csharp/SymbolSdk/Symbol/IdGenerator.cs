@@ -22,7 +22,6 @@ namespace SymbolSdk.Symbol
             hasher.BlockUpdate(BitConverter.GetBytes(_nonce), 0, 4);
             hasher.BlockUpdate(ownerAddress.bytes, 0, ownerAddress.bytes.Length);
             hasher.DoFinal(arr, 0);
-            Console.WriteLine(Converter.BytesToHex(arr));
             var result = BitConverter.ToUInt64(arr, 0);
             if ((result & NAMESPACE_FLAG) != 0) result -= NAMESPACE_FLAG;
             return (_nonce, result);
@@ -101,7 +100,6 @@ namespace SymbolSdk.Symbol
             hasher.BlockUpdate(BitConverter.GetBytes((parentNamespaceId >> 32) & 0xFFFFFFFF), 0, 4);
             hasher.BlockUpdate(name, 0, name.Length);
             hasher.DoFinal(arr, 0);
-            Console.WriteLine(Converter.BytesToHex(arr));
             var result = BitConverter.ToUInt64(arr, 0);
             return result | NAMESPACE_FLAG;
         }
