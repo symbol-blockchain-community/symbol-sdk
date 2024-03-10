@@ -10,11 +10,12 @@ final DELEGATION_MARKER = Uint8List.fromList(hexToBytes('FE2A8061577301E2'));
 
 class MessageEncorder {
   sc.KeyPair keyPair;
-  MessageEncorder(sc.KeyPair keyPair) :keyPair = keyPair;
+  MessageEncorder(sc.KeyPair keyPair) : keyPair = keyPair;
   ct.PublicKey get publicKey => keyPair.publicKey;
 
   Uint8List encode(ct.PublicKey recipientPublicKey, Uint8List message) {
-    final result = encodeAesGcm(deriveSharedKey, keyPair, recipientPublicKey, message);
+    final result =
+        encodeAesGcm(deriveSharedKey, keyPair, recipientPublicKey, message);
 
     return concatArrays([
       Uint8List.fromList([1]),
@@ -25,30 +26,37 @@ class MessageEncorder {
   }
 
   Map<String, dynamic> tryDecode(
-    ct.PublicKey recipientPublicKey, Uint8List encodedMessage) {
+      ct.PublicKey recipientPublicKey, Uint8List encodedMessage) {
     if (1 == encodedMessage[0]) {
       try {
-        final message = decodeAesGcm(
-            deriveSharedKey, keyPair, recipientPublicKey, encodedMessage.sublist(1));
+        final message = decodeAesGcm(deriveSharedKey, keyPair,
+            recipientPublicKey, encodedMessage.sublist(1));
         return {'isDecoded': true, 'message': message};
       } catch (e) {
-        if (e.toString() != 'SecretBoxAuthenticationError: SecretBox has wrong message authentication code (MAC)') {
+        if (e.toString() !=
+            'SecretBoxAuthenticationError: SecretBox has wrong message authentication code (MAC)') {
           rethrow;
         }
       }
     }
 
-    if (0xFE == encodedMessage[0] && 0 == ArrayHelpers.deepCompare(DELEGATION_MARKER, encodedMessage.sublist(0, 8))) {
+    if (0xFE == encodedMessage[0] &&
+        0 ==
+            ArrayHelpers.deepCompare(
+                DELEGATION_MARKER, encodedMessage.sublist(0, 8))) {
       final ephemeralPublicKeyStart = DELEGATION_MARKER.length;
       final ephemeralPublicKeyEnd = ephemeralPublicKeyStart + ct.PublicKey.SIZE;
-      final ephemeralPublicKey = ct.PublicKey(encodedMessage.sublist(ephemeralPublicKeyStart, ephemeralPublicKeyEnd));
+      final ephemeralPublicKey = ct.PublicKey(encodedMessage.sublist(
+          ephemeralPublicKeyStart, ephemeralPublicKeyEnd));
 
       try {
-        final message = decodeAesGcm(
-            deriveSharedKey, keyPair, ephemeralPublicKey, encodedMessage.sublist(ephemeralPublicKeyEnd));
+        final message = decodeAesGcm(deriveSharedKey, keyPair,
+            ephemeralPublicKey, encodedMessage.sublist(ephemeralPublicKeyEnd));
         return {'isDecoded': true, 'message': message};
       } catch (e) {
-        if (e.toString() != 'Unsupported state or unable to authenticate data' && e.toString() != 'invalid point') {
+        if (e.toString() !=
+                'Unsupported state or unable to authenticate data' &&
+            e.toString() != 'invalid point') {
           rethrow;
         }
       }
@@ -61,7 +69,7 @@ class MessageEncorder {
     var messageByte = utf8ToBytes(message);
     var messageWithZero = Uint8List(messageByte.length + 1);
     messageWithZero[0] = 0;
-    messageWithZero.setRange(1, message.length + 1, messageByte);
+    messageWithZero.setRange(1, messageByte.length + 1, messageByte);
     return messageWithZero;
   }
 }
