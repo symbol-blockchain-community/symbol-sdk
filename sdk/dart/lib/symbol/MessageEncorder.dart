@@ -65,6 +65,18 @@ class MessageEncorder {
     return {'isDecoded': false, 'message': encodedMessage};
   }
 
+  Map<String, dynamic> tryDecodeDeprecated(
+      ct.PublicKey recipientPublicKey, Uint8List encodedMessage) {
+    final encodedHexString = bytesToHex(encodedMessage.sublist(1));
+    if (1 == encodedMessage[0] && isHexString(encodedHexString)) {
+      // wallet additionally hex encodes
+      return tryDecode(recipientPublicKey,
+          Uint8List.fromList([1, ...hexToBytes(encodedHexString)]));
+    }
+
+    return tryDecode(recipientPublicKey, encodedMessage);
+  }
+
   static Uint8List toPlainMessage(String message) {
     var messageByte = utf8ToBytes(message);
     var messageWithZero = Uint8List(messageByte.length + 1);
