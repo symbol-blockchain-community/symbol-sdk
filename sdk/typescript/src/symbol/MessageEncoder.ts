@@ -2,10 +2,6 @@ import { KeyPair } from './KeyPair'
 import { deriveSharedKey } from './SharedKey'
 import { concatArrays, decodeAesGcm, encodeAesGcm } from '../impl/CipherHelpers'
 import { PublicKey } from '../CryptoTypes'
-import { Buffer } from 'buffer'
-
-const GCM_IV_SIZE = 12
-const TAG_SIZE = 16
 
 interface TryDecodeResult {
   isDecoded: boolean
