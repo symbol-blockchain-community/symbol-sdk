@@ -34,7 +34,8 @@ class MessageEncorder {
         return {'isDecoded': true, 'message': message};
       } catch (e) {
         if (e.toString() !=
-            'SecretBoxAuthenticationError: SecretBox has wrong message authentication code (MAC)') {
+                'SecretBoxAuthenticationError: SecretBox has wrong message authentication code (MAC)' &&
+            e.toString() != 'Instance of \'InvalidCipherTextException\'') {
           rethrow;
         }
       }
