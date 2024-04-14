@@ -15,7 +15,7 @@ final Map<String, Map<String, int>> _constants = {
   }
 };
 
-String intToHex(dynamic num){
+String intToHex(dynamic num) {
   return num.toRadixString(16).padLeft(16, '0').toUpperCase();
 }
 
@@ -96,7 +96,8 @@ BigInt intToUnsignedInt(int i) {
 Uint8List stringToAddress(String encoded) {
   if (_constants['sizes']!['symbolAddressEncoded'] == encoded.length) {
     var bytes = base32.decode(encoded + 'A');
-    return Uint8List.fromList(bytes.sublist(0, _constants['sizes']!['symbolAddressDecoded']));
+    return Uint8List.fromList(
+        bytes.sublist(0, _constants['sizes']!['symbolAddressDecoded']));
   }
   if (_constants['sizes']!['nemAddressEncoded'] == encoded.length) {
     return utf8ToBytes(encoded);
@@ -108,12 +109,15 @@ String addressToString(Uint8List decoded) {
   if (_constants['sizes']!['symbolAddressDecoded'] == decoded.length) {
     var padded = Uint8List(_constants['sizes']!['symbolAddressDecoded']! + 1);
     padded.setRange(0, decoded.length, decoded);
-    return base32.encode(padded).substring(0, _constants['sizes']!['symbolAddressEncoded']);
+    return base32
+        .encode(padded)
+        .substring(0, _constants['sizes']!['symbolAddressEncoded']);
   }
   if (_constants['sizes']!['nemAddressDecoded'] == decoded.length) {
     return base32.encode(decoded);
   }
-  throw Exception('Bytes to Hex function is not implemented yet. It does not represent a valid decoded address');
+  throw Exception(
+      'Bytes to Hex function is not implemented yet. It does not represent a valid decoded address');
 }
 
 bool isHexString(String value) {
@@ -129,9 +133,16 @@ void tryHexString(String value) {
 
 String utf8ToHex(String input) {
   List<int> bytes = utf8.encode(input);
-  return bytes.map((byte) => byte.toRadixString(16).padLeft(2, '0')).join().toUpperCase();
+  return bytes
+      .map((byte) => byte.toRadixString(16).padLeft(2, '0'))
+      .join()
+      .toUpperCase();
 }
 
 Uint8List utf8ToBytes(String input) {
-  return utf8.encode(input);  
+  return utf8.encode(input);
+}
+
+String bytesToUtf8(Uint8List input) {
+  return utf8.decode(input);
 }
