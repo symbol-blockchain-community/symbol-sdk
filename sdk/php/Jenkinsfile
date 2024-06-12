@@ -1,0 +1,14 @@
+defaultCiPipeline {
+	operatingSystem = ['ubuntu', 'windows']
+	instanceSize = 'medium'
+
+	environment = 'javascript'
+	otherEnvironments = ['javascript-windows-lts']
+
+	packageId = 'sdk-javascript'
+
+	publisher = 'npm'
+
+	codeCoverageTool = 'c8'
+	minimumCodeCoverage = 90
+}
