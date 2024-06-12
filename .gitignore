@@ -33,6 +33,7 @@ sdk/dart/pubspec.lock
 sdk/dart/build/
 sdk/dart/doc/api/
 sdk/dart/.gitignore
+sdk/dart/test/test.dart
 
 sdk/csharp/SymbolSdk/.idea
 sdk/csharp/SymbolSdk/bin
@@ -44,3 +45,5 @@ sdk/csharp/Test/bin
 sdk/csharp/Test/obj
 sdk/csharp/TestByNuget
 test.ts
+
+.mono

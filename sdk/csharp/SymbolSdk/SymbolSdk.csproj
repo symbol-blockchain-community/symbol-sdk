@@ -7,11 +7,11 @@
         <RootNamespace>SymbolSdk</RootNamespace>
         <Description>C# SDK for Symbol</Description>
         <Copyright>toshi</Copyright>
-        <FileVersion>1.0.7</FileVersion>
+        <FileVersion>1.0.8</FileVersion>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <LangVersion>10</LangVersion>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <Version>1.0.7</Version>
+        <Version>1.0.8</Version>
     </PropertyGroup>
 
     <ItemGroup>
