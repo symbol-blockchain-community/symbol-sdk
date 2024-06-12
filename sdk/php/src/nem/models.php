@@ -1,11 +1,10 @@
 <?php
 $base_path = dirname(dirname(__FILE__));
 require_once $base_path . '/BaseValue.php';
+require_once $base_path . '/ByteArray.php';
 require_once $base_path . '/utils/converter.php';
 
 /*
-import BaseValue from '../BaseValue.js';
-import ByteArray from '../ByteArray.js';
 import BufferView from '../utils/BufferView.js';
 import Writer from '../utils/Writer.js';
 import * as arrayHelpers from '../utils/arrayHelpers.js';
@@ -16,6 +15,7 @@ class Amount extends BaseValue {
 	const SIZE = 8;
 
 	public function __construct($amount = 0) {
+		$amount = $amount ?? str_repeat("0", self::SIZE * 2);
 		parent::__construct(self::SIZE, $amount);
 	}
 
@@ -38,6 +38,7 @@ class Height extends BaseValue {
 	const SIZE = 8;
 
 	public function __construct($height = 0) {
+		$height = $height ?? str_repeat("0", self::SIZE * 2);
 		parent::__construct(self::SIZE, $height);
 	}
 
@@ -60,6 +61,7 @@ class Timestamp extends BaseValue {
 	const SIZE = 4;
 
 	public function __construct($timestamp = 0) {
+		$timestamp = $timestamp ?? str_repeat("0", self::SIZE * 2);
 		parent::__construct(self::SIZE, $timestamp);
 	}
 
@@ -81,84 +83,88 @@ class Timestamp extends BaseValue {
 class Address extends ByteArray {
 	const SIZE = 40;
 
-	public function __construct($address = new Uint8Array(40)) {
+	public function __construct($address = null) {
+		$address = $address ?? str_repeat("0", self::SIZE * 2);
 		parent::__construct(self::SIZE, $address);
 	}
 
-	get size() {
+	public function size() {
 		return 40;
 	}
 
 	public static function deserialize($payload) {
 		$hexBinary = $payload;
-		return new self(new Uint8Array(byteArray.buffer, byteArray.byteOffset, 40));
+		return new self($hexBinary);
 	}
 
 	public function serialize() {
-		return this.bytes;
+		return $this->hexBinary;
 	}
 }
 
 class Hash256 extends ByteArray {
 	const SIZE = 32;
 
-	public function __construct($hash256 = new Uint8Array(32)) {
+	public function __construct($hash256 = null) {
+		$hash256 = $hash256 ?? str_repeat("0", self::SIZE * 2);
 		parent::__construct(self::SIZE, $hash256);
 	}
 
-	get size() {
+	public function size() {
 		return 32;
 	}
 
 	public static function deserialize($payload) {
 		$hexBinary = $payload;
-		return new self(new Uint8Array(byteArray.buffer, byteArray.byteOffset, 32));
+		return new self($hexBinary);
 	}
 
 	public function serialize() {
-		return this.bytes;
+		return $this->hexBinary;
 	}
 }
 
 class PublicKey extends ByteArray {
 	const SIZE = 32;
 
-	public function __construct($publicKey = new Uint8Array(32)) {
+	public function __construct($publicKey = null) {
+		$publicKey = $publicKey ?? str_repeat("0", self::SIZE * 2);
 		parent::__construct(self::SIZE, $publicKey);
 	}
 
-	get size() {
+	public function size() {
 		return 32;
 	}
 
 	public static function deserialize($payload) {
 		$hexBinary = $payload;
-		return new self(new Uint8Array(byteArray.buffer, byteArray.byteOffset, 32));
+		return new self($hexBinary);
 	}
 
 	public function serialize() {
-		return this.bytes;
+		return $this->hexBinary;
 	}
 }
 
 class Signature extends ByteArray {
 	const SIZE = 64;
 
-	public function __construct($signature = new Uint8Array(64)) {
+	public function __construct($signature = null) {
+		$signature = $signature ?? str_repeat("0", self::SIZE * 2);
 		parent::__construct(self::SIZE, $signature);
 	}
 
-	get size() {
+	public function size() {
 		return 64;
 	}
 
 	public static function deserialize($payload) {
 		$hexBinary = $payload;
-		return new self(new Uint8Array(byteArray.buffer, byteArray.byteOffset, 64));
+		return new self($hexBinary);
 	}
 
 	public function serialize() {
-		return this.bytes;
+		return $this->hexBinary;
 	}
 }
 
@@ -190,7 +196,7 @@ class NetworkType {
 		return NetworkType[this.valueToKey(value)];
 	}
 
-	get size() {
+	public function size() {
 		return 1;
 	}
 
@@ -254,7 +260,7 @@ class TransactionType {
 		return TransactionType[this.valueToKey(value)];
 	}
 
-	get size() {
+	public function size() {
 		return 4;
 	}
 
@@ -369,7 +375,7 @@ class Transaction {
 		this._$deadline = value;
 	}
 
-	get size() {
+	public function size() {
 		let size = 0;
 		size += this.$type.size;
 		size += 1;
@@ -540,7 +546,7 @@ class NonVerifiableTransaction {
 		this._$deadline = value;
 	}
 
-	get size() {
+	public function size() {
 		let size = 0;
 		size += this.$type.size;
 		size += 1;
@@ -646,7 +652,7 @@ class LinkAction {
 		return LinkAction[this.valueToKey(value)];
 	}
 
-	get size() {
+	public function size() {
 		return 4;
 	}
 
@@ -786,7 +792,7 @@ class AccountKeyLinkTransactionV1 {
 		this._$remotePublicKey = value;
 	}
 
-	get size() {
+	public function size() {
 		let size = 0;
 		size += this.$type.size;
 		size += 1;
@@ -1000,7 +1006,7 @@ class NonVerifiableAccountKeyLinkTransactionV1 {
 		this._$remotePublicKey = value;
 	}
 
-	get size() {
+	public function size() {
 		let size = 0;
 		size += this.$type.size;
 		size += 1;
@@ -1102,7 +1108,7 @@ class NamespaceId {
 	};
 
 	public function __construct() {
-		this._$name = new Uint8Array();
+		this._$name = ;
 	}
 
 	sort() {
@@ -1116,7 +1122,7 @@ class NamespaceId {
 		this._$name = value;
 	}
 
-	get size() {
+	public function size() {
 		let size = 0;
 		size += 4;
 		size += this._$name.length;
@@ -1127,7 +1133,7 @@ class NamespaceId {
 		const view = new BufferView(payload);
 		const $nameSize = Converter::hexToInt(view.buffer, 4);
 		view.shiftRight(4);
-		const $name = new Uint8Array(view.buffer.buffer, view.buffer.byteOffset, nameSize);
+		const $name = $hexBinary;
 		view.shiftRight(nameSize);
 
 		const instance = new NamespaceId();
@@ -1158,7 +1164,7 @@ class MosaicId {
 
 	public function __construct() {
 		this._$namespaceId = new NamespaceId();
-		this._$name = new Uint8Array();
+		this._$name = ;
 	}
 
 	sort() {
@@ -1181,7 +1187,7 @@ class MosaicId {
 		this._$name = value;
 	}
 
-	get size() {
+	public function size() {
 		let size = 0;
 		size += this.$namespaceId.size;
 		size += 4;
@@ -1195,7 +1201,7 @@ class MosaicId {
 		view.shiftRight($namespaceId.size);
 		const $nameSize = Converter::hexToInt(view.buffer, 4);
 		view.shiftRight(4);
-		const $name = new Uint8Array(view.buffer.buffer, view.buffer.byteOffset, nameSize);
+		const $name = $hexBinary;
 		view.shiftRight(nameSize);
 
 		const instance = new MosaicId();
@@ -1252,7 +1258,7 @@ class Mosaic {
 		this._$amount = value;
 	}
 
-	get size() {
+	public function size() {
 		let size = 0;
 		size += 4;
 		size += this.$mosaicId.size;
@@ -1314,7 +1320,7 @@ class SizePrefixedMosaic {
 		this._$mosaic = value;
 	}
 
-	get size() {
+	public function size() {
 		let size = 0;
 		size += 4;
 		size += this.$mosaic.size;
@@ -1377,7 +1383,7 @@ class MosaicTransferFeeType {
 		return MosaicTransferFeeType[this.valueToKey(value)];
 	}
 
-	get size() {
+	public function size() {
 		return 4;
 	}
 
@@ -1452,7 +1458,7 @@ class MosaicLevy {
 		this._$fee = value;
 	}
 
-	get size() {
+	public function size() {
 		let size = 0;
 		size += this.$transferFeeType.size;
 		size += 4;
@@ -1518,8 +1524,8 @@ class MosaicProperty {
 	};
 
 	public function __construct() {
-		this._$name = new Uint8Array();
-		this._$value = new Uint8Array();
+		this._$name = ;
+		this._$value = ;
 	}
 
 	sort() {
@@ -1541,7 +1547,7 @@ class MosaicProperty {
 		this._$value = value;
 	}
 
-	get size() {
+	public function size() {
 		let size = 0;
 		size += 4;
 		size += this._$name.length;
@@ -1554,11 +1560,11 @@ class MosaicProperty {
 		const view = new BufferView(payload);
 		const $nameSize = Converter::hexToInt(view.buffer, 4);
 		view.shiftRight(4);
-		const $name = new Uint8Array(view.buffer.buffer, view.buffer.byteOffset, nameSize);
+		const $name = $hexBinary;
 		view.shiftRight(nameSize);
 		const $valueSize = Converter::hexToInt(view.buffer, 4);
 		view.shiftRight(4);
-		const $value = new Uint8Array(view.buffer.buffer, view.buffer.byteOffset, valueSize);
+		const $value = $hexBinary;
 		view.shiftRight(valueSize);
 
 		const instance = new MosaicProperty();
@@ -1606,7 +1612,7 @@ class SizePrefixedMosaicProperty {
 		this._$property = value;
 	}
 
-	get size() {
+	public function size() {
 		let size = 0;
 		size += 4;
 		size += this.$property.size;
@@ -1653,7 +1659,7 @@ class MosaicDefinition {
 	public function __construct() {
 		this._$ownerPublicKey = new PublicKey();
 		this._$id = new MosaicId();
-		this._$description = new Uint8Array();
+		this._$description = ;
 		this._$properties = [];
 		this._$levy = null;
 		this._$ownerPublicKeySize = 32; // reserved field
@@ -1709,7 +1715,7 @@ class MosaicDefinition {
 		return this.levy ? this.levy.size + 0 : 0;
 	}
 
-	get size() {
+	public function size() {
 		let size = 0;
 		size += 4;
 		size += this.$ownerPublicKey.size;
@@ -1741,7 +1747,7 @@ class MosaicDefinition {
 		view.shiftRight($id.size);
 		const $descriptionSize = Converter::hexToInt(view.buffer, 4);
 		view.shiftRight(4);
-		const $description = new Uint8Array(view.buffer.buffer, view.buffer.byteOffset, descriptionSize);
+		const $description = $hexBinary;
 		view.shiftRight(descriptionSize);
 		const $propertiesCount = Converter::hexToInt(view.buffer, 4);
 		view.shiftRight(4);
@@ -1923,7 +1929,7 @@ class MosaicDefinitionTransactionV1 {
 		this._$rentalFee = value;
 	}
 
-	get size() {
+	public function size() {
 		let size = 0;
 		size += this.$type.size;
 		size += 1;
@@ -2159,7 +2165,7 @@ class NonVerifiableMosaicDefinitionTransactionV1 {
 		this._$rentalFee = value;
 	}
 
-	get size() {
+	public function size() {
 		let size = 0;
 		size += this.$type.size;
 		size += 1;
@@ -2294,7 +2300,7 @@ class MosaicSupplyChangeAction {
 		return MosaicSupplyChangeAction[this.valueToKey(value)];
 	}
 
-	get size() {
+	public function size() {
 		return 4;
 	}
 
@@ -2444,7 +2450,7 @@ class MosaicSupplyChangeTransactionV1 {
 		this._$delta = value;
 	}
 
-	get size() {
+	public function size() {
 		let size = 0;
 		size += this.$type.size;
 		size += 1;
@@ -2673,7 +2679,7 @@ class NonVerifiableMosaicSupplyChangeTransactionV1 {
 		this._$delta = value;
 	}
 
-	get size() {
+	public function size() {
 		let size = 0;
 		size += this.$type.size;
 		size += 1;
@@ -2802,7 +2808,7 @@ class MultisigAccountModificationType {
 		return MultisigAccountModificationType[this.valueToKey(value)];
 	}
 
-	get size() {
+	public function size() {
 		return 4;
 	}
 
@@ -2863,7 +2869,7 @@ class MultisigAccountModification {
 		this._$cosignatoryPublicKey = value;
 	}
 
-	get size() {
+	public function size() {
 		let size = 0;
 		size += this.$modificationType.size;
 		size += 4;
@@ -2926,7 +2932,7 @@ class SizePrefixedMultisigAccountModification {
 		this._$modification = value;
 	}
 
-	get size() {
+	public function size() {
 		let size = 0;
 		size += 4;
 		size += this.$modification.size;
@@ -3071,7 +3077,7 @@ class MultisigAccountModificationTransactionV1 {
 		this._$modifications = value;
 	}
 
-	get size() {
+	public function size() {
 		let size = 0;
 		size += this.$type.size;
 		size += 1;
@@ -3270,7 +3276,7 @@ class NonVerifiableMultisigAccountModificationTransactionV1 {
 		this._$modifications = value;
 	}
 
-	get size() {
+	public function size() {
 		let size = 0;
 		size += this.$type.size;
 		size += 1;
@@ -3478,7 +3484,7 @@ class MultisigAccountModificationTransactionV2 {
 		this._$minApprovalDelta = value;
 	}
 
-	get size() {
+	public function size() {
 		let size = 0;
 		size += this.$type.size;
 		size += 1;
@@ -3699,7 +3705,7 @@ class NonVerifiableMultisigAccountModificationTransactionV2 {
 		this._$minApprovalDelta = value;
 	}
 
-	get size() {
+	public function size() {
 		let size = 0;
 		size += this.$type.size;
 		size += 1;
@@ -3918,7 +3924,7 @@ class CosignatureV1 {
 		this._$multisigAccountAddress = value;
 	}
 
-	get size() {
+	public function size() {
 		let size = 0;
 		size += this.$type.size;
 		size += 1;
@@ -4059,7 +4065,7 @@ class SizePrefixedCosignatureV1 {
 		this._$cosignature = value;
 	}
 
-	get size() {
+	public function size() {
 		let size = 0;
 		size += 4;
 		size += this.$cosignature.size;
@@ -4211,7 +4217,7 @@ class MultisigTransactionV1 {
 		this._$cosignatures = value;
 	}
 
-	get size() {
+	public function size() {
 		let size = 0;
 		size += this.$type.size;
 		size += 1;
@@ -4418,7 +4424,7 @@ class NonVerifiableMultisigTransactionV1 {
 		this._$innerTransaction = value;
 	}
 
-	get size() {
+	public function size() {
 		let size = 0;
 		size += this.$type.size;
 		size += 1;
@@ -4537,7 +4543,7 @@ class NamespaceRegistrationTransactionV1 {
 		this._$deadline = new Timestamp();
 		this._$rentalFeeSink = new Address();
 		this._$rentalFee = new Amount();
-		this._$name = new Uint8Array();
+		this._$name = ;
 		this._$parentName = null;
 		this._$entityBodyReserved_1 = 0; // reserved field
 		this._$signerPublicKeySize = 32; // reserved field
@@ -4644,7 +4650,7 @@ class NamespaceRegistrationTransactionV1 {
 		this._$parentName = value;
 	}
 
-	get size() {
+	public function size() {
 		let size = 0;
 		size += this.$type.size;
 		size += 1;
@@ -4709,13 +4715,13 @@ class NamespaceRegistrationTransactionV1 {
 		view.shiftRight($rentalFee.size);
 		const $nameSize = Converter::hexToInt(view.buffer, 4);
 		view.shiftRight(4);
-		const $name = new Uint8Array(view.buffer.buffer, view.buffer.byteOffset, nameSize);
+		const $name = $hexBinary;
 		view.shiftRight(nameSize);
 		const $parentNameSize = Converter::hexToInt(view.buffer, 4);
 		view.shiftRight(4);
 		let $parentName = null;
 		if (4294967295 !== parentNameSize) {
-			$parentName = new Uint8Array(view.buffer.buffer, view.buffer.byteOffset, parentNameSize);
+			$parentName = $hexBinary;
 			view.shiftRight(parentNameSize);
 		}
 
@@ -4809,7 +4815,7 @@ class NonVerifiableNamespaceRegistrationTransactionV1 {
 		this._$deadline = new Timestamp();
 		this._$rentalFeeSink = new Address();
 		this._$rentalFee = new Amount();
-		this._$name = new Uint8Array();
+		this._$name = ;
 		this._$parentName = null;
 		this._$entityBodyReserved_1 = 0; // reserved field
 		this._$signerPublicKeySize = 32; // reserved field
@@ -4907,7 +4913,7 @@ class NonVerifiableNamespaceRegistrationTransactionV1 {
 		this._$parentName = value;
 	}
 
-	get size() {
+	public function size() {
 		let size = 0;
 		size += this.$type.size;
 		size += 1;
@@ -4964,13 +4970,13 @@ class NonVerifiableNamespaceRegistrationTransactionV1 {
 		view.shiftRight($rentalFee.size);
 		const $nameSize = Converter::hexToInt(view.buffer, 4);
 		view.shiftRight(4);
-		const $name = new Uint8Array(view.buffer.buffer, view.buffer.byteOffset, nameSize);
+		const $name = $hexBinary;
 		view.shiftRight(nameSize);
 		const $parentNameSize = Converter::hexToInt(view.buffer, 4);
 		view.shiftRight(4);
 		let $parentName = null;
 		if (4294967295 !== parentNameSize) {
-			$parentName = new Uint8Array(view.buffer.buffer, view.buffer.byteOffset, parentNameSize);
+			$parentName = $hexBinary;
 			view.shiftRight(parentNameSize);
 		}
 
@@ -5060,7 +5066,7 @@ class MessageType {
 		return MessageType[this.valueToKey(value)];
 	}
 
-	get size() {
+	public function size() {
 		return 4;
 	}
 
@@ -5091,7 +5097,7 @@ class Message {
 
 	public function __construct() {
 		this._$messageType = MessageType.PLAIN;
-		this._$message = new Uint8Array();
+		this._$message = ;
 	}
 
 	sort() {
@@ -5113,7 +5119,7 @@ class Message {
 		this._$message = value;
 	}
 
-	get size() {
+	public function size() {
 		let size = 0;
 		size += this.$messageType.size;
 		size += 4;
@@ -5127,7 +5133,7 @@ class Message {
 		view.shiftRight($messageType.size);
 		const $messageSize = Converter::hexToInt(view.buffer, 4);
 		view.shiftRight(4);
-		const $message = new Uint8Array(view.buffer.buffer, view.buffer.byteOffset, messageSize);
+		const $message = $hexBinary;
 		view.shiftRight(messageSize);
 
 		const instance = new Message();
@@ -5286,7 +5292,7 @@ class TransferTransactionV1 {
 		return this.message ? this.message.size + 0 : 0;
 	}
 
-	get size() {
+	public function size() {
 		let size = 0;
 		size += this.$type.size;
 		size += 1;
@@ -5535,7 +5541,7 @@ class NonVerifiableTransferTransactionV1 {
 		return this.message ? this.message.size + 0 : 0;
 	}
 
-	get size() {
+	public function size() {
 		let size = 0;
 		size += this.$type.size;
 		size += 1;
@@ -5793,7 +5799,7 @@ class TransferTransactionV2 {
 		return this.message ? this.message.size + 0 : 0;
 	}
 
-	get size() {
+	public function size() {
 		let size = 0;
 		size += this.$type.size;
 		size += 1;
@@ -6062,7 +6068,7 @@ class NonVerifiableTransferTransactionV2 {
 		return this.message ? this.message.size + 0 : 0;
 	}
 
-	get size() {
+	public function size() {
 		let size = 0;
 		size += this.$type.size;
 		size += 1;

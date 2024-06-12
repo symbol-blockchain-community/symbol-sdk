@@ -1,6 +1,21 @@
 <?php
+$base_path = dirname(dirname(__FILE__));
+require_once $base_path . '/Base2n.php';
+
 class Converter
 {
+	private static $constants = [
+		'sizes' => [
+			'ripemd160' => 20,
+			'symbolAddressDecoded' => 24,
+			'nemAddressDecoded' => 25,
+			'symbolAddressEncoded' => 39,
+			'nemAddressEncoded' => 40,
+			'key' => 32,
+			'checksum' => 3,
+		]
+	];
+
 	/**
 	 * Converts siez to format
 	 * @param int bytes size.
@@ -40,5 +55,39 @@ class Converter
 	public static function intToHex($int, $size)
 	{
 		return bin2hex(pack(self::sizeToFormat($size), $int));
+	}
+
+	public static function isHexString($value)
+	{
+		$hexPattern = '/^[0-9a-fA-F]+$/i';
+		return preg_match($hexPattern, $value);
+	}
+
+	public static function addressToHexAddress($encoded)
+	{
+		$base32 = new Base2n(5, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567', FALSE, TRUE, TRUE);
+		$constants = self::$constants;
+		if ($constants['sizes']['symbolAddressEncoded'] == strlen($encoded)) {
+			return strtoupper(substr(bin2hex($base32->decode($encoded . "A")), 0, -2));
+		}
+		if ($constants['sizes']['nemAddressEncoded'] == strlen($encoded)) {
+			return mb_convert_encoding($encoded, 'UTF-8', 'ISO-8859-1');
+		}
+		throw new Exception("$encoded does not represent a valid encoded address");
+	}
+
+	public static function hexAddressToAddress($decoded)
+	{
+		$base32 = new Base2n(5, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567', FALSE, TRUE, TRUE);
+		$constants = self::$constants;
+		if ($constants['sizes']['symbolAddressDecoded'] * 2 == strlen($decoded)) {
+			$padded = $decoded . "00";
+			$encoded = $base32->encode(hex2bin($padded));
+			return substr($encoded, 0, $constants['sizes']['symbolAddressEncoded']);
+		}
+		if ($constants['sizes']['nemAddressDecoded'] == strlen($decoded)) {
+			return $base32->encode($decoded);
+		}
+		throw new Exception("Bytes to Hex function is not implemented yet. It does not represent a valid decoded address");
 	}
 }

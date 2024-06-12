@@ -30,7 +30,8 @@ class PodTypeFormatter(AbstractTypeFormatter):
 
 	def get_ctor_descriptor(self):
 		variable_name = self.printer.name
-		body = f'parent::__construct(self::SIZE, {variable_name});'
+		body = f'{variable_name} = {variable_name} ?? str_repeat("0", self::SIZE * 2);\n'
+		body += f'parent::__construct(self::SIZE, {variable_name});'
 		if self._is_array:
 			arguments = [f'{variable_name} = {self.printer.get_default_value()}']
 		else:
@@ -53,7 +54,7 @@ class PodTypeFormatter(AbstractTypeFormatter):
 
 	def get_serialize_descriptor(self):
 		if self._is_array:
-			return MethodDescriptor(body='return this.bytes;')
+			return MethodDescriptor(body='return $this->hexBinary;')
 		return MethodDescriptor(body=f'return {self.printer.store("$this->value")};')
 
 	def get_size_descriptor(self):

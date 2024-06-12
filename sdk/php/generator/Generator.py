@@ -45,11 +45,10 @@ def generate_files(ast_models, output_directory: Path):
 			'''<?php
 $base_path = dirname(dirname(__FILE__));
 require_once $base_path . '/BaseValue.php';
+require_once $base_path . '/ByteArray.php';
 require_once $base_path . '/utils/converter.php';
 
 /*
-import BaseValue from '../BaseValue.js';
-import ByteArray from '../ByteArray.js';
 import BufferView from '../utils/BufferView.js';
 import Writer from '../utils/Writer.js';
 import * as arrayHelpers from '../utils/arrayHelpers.js';

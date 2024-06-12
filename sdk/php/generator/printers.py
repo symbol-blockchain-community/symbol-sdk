@@ -188,9 +188,9 @@ class ArrayPrinter(Printer):
 	def get_default_value(self):
 		size = self.descriptor.size
 		if isinstance(size, str):
-			return 'new Uint8Array()'
+			return ""
 
-		return f'new Uint8Array({self.get_size()})'
+		return f'null'
 
 	def get_size(self):
 		size = self.descriptor.size
@@ -199,9 +199,9 @@ class ArrayPrinter(Printer):
 
 		return size
 
-	def load(self, buffer_name='byteArray', is_aligned=False):
+	def load(self, buffer_name='$hexBinary', is_aligned=False):
 		del is_aligned
-		return f'new Uint8Array({buffer_name}.buffer, {buffer_name}.byteOffset, {self.advancement_size()})'
+		return f'$hexBinary'
 
 	def advancement_size(self):
 		# like get_size() but without self prefix, as this refers to local method field
