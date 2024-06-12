@@ -46,4 +46,6 @@ sdk/csharp/Test/obj
 sdk/csharp/TestByNuget
 test.ts
 
+sdk/php/test.php
+
 .mono

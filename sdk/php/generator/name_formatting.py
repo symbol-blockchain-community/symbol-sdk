@@ -22,4 +22,4 @@ def fix_size_name(name):
 
 
 def fix_name(name):
-	return name
+	return f'${name}'

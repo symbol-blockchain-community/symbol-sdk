@@ -19,16 +19,12 @@ class ClassFormatter(ABC):
 
 		body = indent(method_descriptor.body)
 
-		disabled_warnings = ''
-		if method_descriptor.disabled_warnings:
-			disabled_warnings = f' // eslint-disable-line {" ".join(method_descriptor.disabled_warnings)}'
-
-		return f'{method_descriptor.method_name}({arguments}) {{{disabled_warnings}\n{body}}}\n'
+		return f'{method_descriptor.method_name}({arguments}) {{\n{body}}}\n'
 
 	def generate_class_header(self):
 		base_class = self.provider.get_base_class()
 		base_class = f' extends {base_class}' if base_class else ''
-		header = f'export class {self.provider.typename}{base_class} {{\n'
+		header = f'class {self.provider.typename}{base_class} {{\n'
 		comment = ''
 		return header + indent(comment)
 
@@ -69,7 +65,7 @@ class TypeFormatter(ClassFormatter):
 		if not method_descriptor:
 			return None
 
-		method_descriptor.method_name = 'constructor'
+		method_descriptor.method_name = 'public function __construct'
 		return self.generate_method(method_descriptor)
 
 	def generate_comparer(self):
@@ -103,14 +99,14 @@ class TypeFormatter(ClassFormatter):
 			return None
 
 		generated_name = generated_name or name
-		method_descriptor.method_name = f'static {generated_name}'
-		method_descriptor.arguments = ['payload']
-		method_descriptor.annotations = []
+		method_descriptor.method_name = f'public static function {generated_name}'
+		method_descriptor.arguments = ['$payload']
+
 		return self.generate_method(method_descriptor)
 
 	def generate_serializer(self):
 		method_descriptor = self.provider.get_serialize_descriptor()
-		method_descriptor.method_name = 'serialize'
+		method_descriptor.method_name = 'public function serialize'
 		return self.generate_method(method_descriptor)
 
 	def generate_size(self):

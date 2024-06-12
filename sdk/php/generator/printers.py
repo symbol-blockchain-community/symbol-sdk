@@ -27,27 +27,26 @@ class IntPrinter(Printer):
 		return 'int'
 
 	def get_default_value(self):
-		return '0n' if 8 == self.descriptor.size else '0'
+		return '0'
 
 	def get_size(self):
 		return self.descriptor.size
 
-	def load(self, buffer_name='byteArray', is_aligned=False):
+	def load(self, buffer_name='$hexBinary', is_aligned=False):
 		data_size = self.get_size()
-		arguments = f'{buffer_name}, {data_size}, {js_bool(not self.descriptor.is_unsigned)}'
-		qualifier = '' if data_size < 8 else 'Big'
+		arguments = f'{buffer_name}, {data_size}'
 
 		# is_aligned - handles both generation of deserializeAligned for pod and enum types and generation of fields within struct
 		if is_aligned:
-			return f'converter.bytesTo{qualifier}Int({arguments})'
+			return f'Converter::hexToInt({arguments})'
 
-		return f'converter.bytesTo{qualifier}IntUnaligned({arguments})'
-
+		return f'Converter::hexToInt({arguments})'
+	
 	def advancement_size(self):
 		return self.get_size()
 
 	def store(self, field_name):
-		return f'converter.intToBytes({field_name}, {self.get_size()}, {js_bool(not self.descriptor.is_unsigned)})'
+		return f'Converter::intToHex({field_name}, {self.get_size()})'
 
 	@staticmethod
 	def assign(value):

@@ -40,10 +40,14 @@ def generate_files(ast_models, output_directory: Path):
 			if any('ripemd_keccak_256' == transform for (_, transform) in ast_model.comparer):
 				requires_transform = True
 
-	with open(output_directory / 'models.js', 'w', encoding='utf8', newline='\n') as output_file:
+	with open(output_directory / 'models.php', 'w', encoding='utf8', newline='\n') as output_file:
 		output_file.write(
-			'''/* eslint-disable max-len, object-property-newline, no-underscore-dangle, no-use-before-define */
+			'''<?php
+$base_path = dirname(dirname(__FILE__));
+require_once $base_path . '/BaseValue.php';
+require_once $base_path . '/utils/converter.php';
 
+/*
 import BaseValue from '../BaseValue.js';
 import ByteArray from '../ByteArray.js';
 import BufferView from '../utils/BufferView.js';

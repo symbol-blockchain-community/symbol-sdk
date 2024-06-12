@@ -12,7 +12,7 @@ function generate_code() {
 	PYTHONPATH="${git_root}/catbuffer/parser" python3 -m catparser \
 		--schema "${git_root}/catbuffer/schemas/$1/all_generated.cats"  \
 		--include "${git_root}/catbuffer/schemas/$1" \
-		--output "${git_root}/sdk/javascript/src/$2" \
+		--output "${git_root}/sdk/php/src/$2" \
 		--quiet \
 		--generator generator.Generator
 }
@@ -21,7 +21,7 @@ if [[ $# -eq 0 ]]; then
 	echo "updating generated code in git"
 	for name in "nem" "symbol";
 	do
-		rm -rf "./src/${name}/models.js"
+		rm -rf "./src/${name}/models.php"
 		generate_code "${name}" "${name}"
 	done
 elif [[ "$1" = "dryrun" ]]; then
@@ -30,8 +30,8 @@ elif [[ "$1" = "dryrun" ]]; then
 	for name in "nem" "symbol";
 	do
 		generate_code "${name}" "${name}2"
-		diff --strip-trailing-cr "./src/${name}/models.js" "./src/${name}2/models.js"
-		rm -rf "./src/${name}2/models.js"
+		diff --strip-trailing-cr "./src/${name}/models.php" "./src/${name}2/models.php"
+		rm -rf "./src/${name}2/models.php"
 	done
 else
 	echo "unknown options"
