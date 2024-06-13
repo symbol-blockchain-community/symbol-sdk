@@ -2,11 +2,12 @@ from abc import ABC, abstractmethod
 
 
 class MethodDescriptor:
-	def __init__(self, method_name=None, arguments=None, body='pass'):
+	def __init__(self, method_name=None, arguments=None, result='', body='pass'):
 		self.method_name = method_name
 		self.arguments = arguments or []
 		self.body = body
 		self.annotations = []
+		self.result = result
 		self.disabled_warnings = []
 
 
