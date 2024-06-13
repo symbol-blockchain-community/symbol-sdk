@@ -17,9 +17,9 @@ class ClassFormatter(ABC):
 		if len(arguments) > 100:
 			arguments = '\n    ' + ',\n    '.join(method_descriptor.arguments) + '\n'
 
+		method_result = f': {method_descriptor.result} ' if method_descriptor.result else ''
 		body = indent(method_descriptor.body)
-
-		return f'{method_descriptor.method_name}({arguments}) {{\n{body}}}\n'
+		return f'{method_descriptor.method_name}({arguments}){method_result}{{\n{body}}}\n'
 
 	def generate_class_header(self):
 		base_class = self.provider.get_base_class()
@@ -125,8 +125,8 @@ class TypeFormatter(ClassFormatter):
 		method_descriptor = self.provider.get_str_descriptor()
 		if not method_descriptor:
 			return None
-
-		method_descriptor.method_name = 'toString'
+		
+		method_descriptor.method_name = 'public function __toString' if method_descriptor.method_name is None else method_descriptor.method_name
 		return self.generate_method(method_descriptor)
 
 	def generate_methods(self):
