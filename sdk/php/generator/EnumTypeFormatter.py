@@ -18,23 +18,18 @@ class EnumTypeFormatter(AbstractTypeFormatter):
 	def get_fields(self):
 		return list(
 			map(
-				lambda e: f'static {e.name} = new {self.typename}({e.value});\n',
+				lambda e: f'const {e.name} = {e.value};\n',
 				self.enum_type.values,
 			)
-		)
+		) + ['public $value;']
 
 	def get_ctor_descriptor(self):
-		arguments = ['value']
-		body = 'this.value = value;\n'
+		arguments = [f'int $value = {self.int_printer.get_default_value()}']
+		body = '$this->value = $value;'
 		return MethodDescriptor(body=body, arguments=arguments)
 
 	def _get_deserialize_descriptor(self, is_aligned):
-		body = 'const byteArray = payload;\n'
-		if self.enum_type.is_bitwise:
-			body += f'return new {self.typename}({self.int_printer.load("byteArray", is_aligned)});'
-		else:
-			body += f'return this.fromValue({self.int_printer.load("byteArray", is_aligned)});'
-		return MethodDescriptor(body=body)
+		return MethodDescriptor(body=f'return new {self.typename}({self.int_printer.load("$payload", is_aligned)});', result='self')
 
 	def get_deserialize_descriptor(self):
 		return self._get_deserialize_descriptor(is_aligned=False)
@@ -43,7 +38,7 @@ class EnumTypeFormatter(AbstractTypeFormatter):
 		return self._get_deserialize_descriptor(is_aligned=True)
 
 	def get_serialize_descriptor(self):
-		return MethodDescriptor(body=f'return {self.int_printer.store("this.value")};')
+		return MethodDescriptor(body=f'return {self.int_printer.store("$this->value")};', result='string')
 
 	def get_size_descriptor(self):
 		body = f'return {self.enum_type.size};\n'
@@ -53,49 +48,46 @@ class EnumTypeFormatter(AbstractTypeFormatter):
 		values = list(map(lambda e: str(e.value), self.enum_type.values))
 		keys = list(map(lambda e: f'\'{e.name}\'', self.enum_type.values))
 
-		result = wrap_lines(values, 'const values = [', '];\n', 4 * 3)
-		result += wrap_lines(keys, 'const keys = [', '];\n', 4 * 3)
+		result = wrap_lines(values, '$values = [', '];\n', 4 * 3)
+		result += wrap_lines(keys, '$keys = [', '];\n', 4 * 3)
 		return result
 
 	def get_value_to_key_descriptor(self):
 		body = self.generate_key_value_arrays()
 		body += '''
-const index = values.indexOf(value);
-if (-1 === index)
-	throw RangeError(`invalid enum value ${value}`);
+$index = array_search($value, $values);
+if ($index === false)
+	throw new Exception("Invalid enum value: {$value}");
 
-return keys[index];
+return $keys[$index];
 '''
-		return MethodDescriptor(method_name='static valueToKey', body=body, arguments=['value'])
-
-	def get_map_descriptor(self):
-		return MethodDescriptor(method_name='static fromValue', body=f'return {self.typename}[this.valueToKey(value)];', arguments=['value'])
+		return MethodDescriptor(method_name='static function valueToKey', body=body, arguments=['$value'])
 
 	def get_getter_setter_descriptors(self):
 		methods = []
 
 		if self.enum_type.is_bitwise:
-			body = 'return 0 !== (this.value & flag);\n'
-			methods.append(MethodDescriptor(method_name='has', arguments=['flag'], body=body))
+			body = 'return 0 !== ($this->value & $flag);\n'
+			methods.append(MethodDescriptor(method_name='public function has', arguments=['$flag'], body=body, result='bool'))
 		else:
 			methods.append(self.get_value_to_key_descriptor())
-			methods.append(self.get_map_descriptor())
 
 		return methods
 
 	def get_str_descriptor(self):
 		if not self.enum_type.is_bitwise:
-			body = f'return `{self.typename}.${{{self.typename}.valueToKey(this.value)}}`;'
-			return MethodDescriptor(body=body)
+			return MethodDescriptor(body=f'return "{self.typename}." . self::valueToKey($this->value);')
 
 		body = self.generate_key_value_arrays()
 		body += f'''
-if (0 === this.value) {{
-	const index = values.indexOf(this.value);
-	return `{self.typename}.${{keys[index]}}`;
+if ($this->value === 0) {{
+	$index = array_search($this->value, $values);
+	return "{self.typename}.{{$keys[$values[$index]]}}";
 }}
 
-const positions = values.map(flag => (this.value & flag)).filter(n => n).map(n => values.indexOf(n));
-return positions.map(n => `{self.typename}.${{keys[n]}}`).join('|');
+$positions = array_keys(array_filter($values, fn ($flag) => ($this->value & $flag) !== 0));
+$result = array_map(fn ($n) => "{self.typename}.{{$keys[$n]}}", $positions);
+
+return implode('|', $result);
 '''
 		return MethodDescriptor(body=body)
