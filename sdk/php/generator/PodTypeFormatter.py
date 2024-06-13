@@ -30,19 +30,21 @@ class PodTypeFormatter(AbstractTypeFormatter):
 
 	def get_ctor_descriptor(self):
 		variable_name = self.printer.name
-		body = f'{variable_name} = {variable_name} ?? str_repeat("0", self::SIZE * 2);\n'
+		body = ''
+		if self._is_array:
+			body += f'{variable_name} = {variable_name} ?? str_repeat("0", self::SIZE * 2);\n'
 		body += f'parent::__construct(self::SIZE, {variable_name});'
 		if self._is_array:
-			arguments = [f'{variable_name} = {self.printer.get_default_value()}']
+			arguments = [f'string {variable_name} = {self.printer.get_default_value()}']
 		else:
-			arguments = [f'{variable_name} = {self.printer.get_default_value()}']
+			arguments = [f'int {variable_name} = {self.printer.get_default_value()}']
 
 		return MethodDescriptor(body=body, arguments=arguments)
 
 	def get_deserialize_descriptor(self):
 		body = '$hexBinary = $payload;\n'
 		body += f'return new self({self.printer.load()});'
-		return MethodDescriptor(body=body)
+		return MethodDescriptor(body=body, result='self')
 
 	def get_deserialize_aligned_descriptor(self):
 		if self._is_array:
@@ -50,16 +52,16 @@ class PodTypeFormatter(AbstractTypeFormatter):
 
 		body = '$hexBinary = $payload;\n'
 		body += f'return new {self.typename}({self.printer.load("$hexBinary", True)});'
-		return MethodDescriptor(body=body)
+		return MethodDescriptor(body=body, result='self')
 
 	def get_serialize_descriptor(self):
 		if self._is_array:
-			return MethodDescriptor(body='return $this->hexBinary;')
-		return MethodDescriptor(body=f'return {self.printer.store("$this->value")};')
+			return MethodDescriptor(body='return $this->hexBinary;', result='string')
+		return MethodDescriptor(body=f'return {self.printer.store("$this->value")};', result='string')
 
 	def get_size_descriptor(self):
 		if not self._is_array:
 			return None
 
 		body = f'return {self.pod.size};\n'
-		return MethodDescriptor(body=body)
+		return MethodDescriptor(body=body, result='int')
