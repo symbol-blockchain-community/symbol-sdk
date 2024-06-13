@@ -35,6 +35,9 @@ class BaseValue
 	 */
 	public function __toString(): string
 	{
-		return "0x" . strtoupper(gmp_strval($this->value, 16));
+		$hexString = gmp_strval($this->value, 16);
+		$targetLength = $this->size * 2;
+		$paddedHexString = str_pad($hexString, $targetLength, '0', STR_PAD_LEFT);
+		return "0x" . strtoupper($paddedHexString);
 	}
 }
