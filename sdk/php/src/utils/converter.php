@@ -24,6 +24,8 @@ class Converter
 	private static function sizeToFormat($size)
 	{
 		switch ($size) {
+			case 1:
+				return "C";
 			case 2:
 				return "n";
 			case 4:
@@ -43,7 +45,15 @@ class Converter
 	 */
 	public static function hexToInt($binaryHex, $size)
 	{
-		return unpack(self::sizeToFormat($size), hex2bin($binaryHex))[1];
+		$binary = hex2bin($binaryHex);
+		if ($binary === false)
+			throw new Exception("invalid hex string");
+
+		$result = unpack(self::sizeToFormat($size), $binary);
+		if ($result === false)
+			throw new Exception("unpack failed");
+
+		return $result[1];
 	}
 
 	/**
@@ -54,7 +64,11 @@ class Converter
 	 */
 	public static function intToHex($int, $size)
 	{
-		return bin2hex(pack(self::sizeToFormat($size), $int));
+		$packed = pack(self::sizeToFormat($size), $int);
+		if ($packed === false) {
+			throw new Exception("pack failed");
+		}
+		return strtoupper(bin2hex($packed));
 	}
 
 	public static function isHexString($value)
