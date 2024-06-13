@@ -29,7 +29,7 @@ class ByteArray
 			$rowHex = Converter::addressToHexAddress($hexBinary);
 		}
 		if ($fixedSize !== strlen($rowHex) / 2)
-			throw new RangeException("Bytes was size " . strlen($rowHex) . " but must be $fixedSize");
+			throw new RangeException("Bytes was size " . strlen($rowHex) / 2 . " but must be $fixedSize");
 
 		$this->hexBinary = $rowHex;
 	}
@@ -38,7 +38,7 @@ class ByteArray
 	 * Returns string representation of this object.
 	 * @return string String representation of this object
 	 */
-	public function toString()
+	public function __toString()
 	{
 		try {
 			return Converter::hexAddressToAddress($this->hexBinary);
