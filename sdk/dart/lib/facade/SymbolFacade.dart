@@ -15,10 +15,16 @@ const TRANSACTION_HEADER_SIZE = 4 + 4 + Signature.SIZE + PublicKey.SIZE + 4;
 const AGGREGATE_HASHED_SIZE = 4 + 8 + 8 + Hash256.SIZE;
 
 bool isAggregateTransaction(Uint8List transactionBuffer) {
-  final transactionTypeOffset = TRANSACTION_HEADER_SIZE + 2; // skip version and network byte
-  final transactionType = (transactionBuffer[transactionTypeOffset + 1] << 8) + transactionBuffer[transactionTypeOffset];
-  final aggregateTypes = [sc.TransactionType.AGGREGATE_BONDED.value, sc.TransactionType.AGGREGATE_COMPLETE.value];
-  return aggregateTypes.any((aggregateType) => aggregateType == transactionType);
+  final transactionTypeOffset =
+      TRANSACTION_HEADER_SIZE + 2; // skip version and network byte
+  final transactionType = (transactionBuffer[transactionTypeOffset + 1] << 8) +
+      transactionBuffer[transactionTypeOffset];
+  final aggregateTypes = [
+    sc.TransactionType.AGGREGATE_BONDED.value,
+    sc.TransactionType.AGGREGATE_COMPLETE.value
+  ];
+  return aggregateTypes
+      .any((aggregateType) => aggregateType == transactionType);
 }
 
 Uint8List transactionDataBuffer(Uint8List transactionBuffer) {
@@ -32,14 +38,16 @@ Uint8List transactionDataBuffer(Uint8List transactionBuffer) {
 
 class SymbolFacade {
   Network network;
-  SymbolFacade(Network network):
-    network = network;
+  SymbolFacade(Network network) : network = network;
 
   Hash256 hashTransaction(ITransaction transaction) {
     final hasher = pc.SHA3Digest(256);
-    hasher.update(transaction.signature.bytes, 0, transaction.signature.bytes.length);
-    hasher.update(transaction.signerPublicKey.bytes, 0, transaction.signerPublicKey.bytes.length);
-    hasher.update(network.generationHashSeed.bytes, 0, network.generationHashSeed.bytes.length);
+    hasher.update(
+        transaction.signature.bytes, 0, transaction.signature.bytes.length);
+    hasher.update(transaction.signerPublicKey.bytes, 0,
+        transaction.signerPublicKey.bytes.length);
+    hasher.update(network.generationHashSeed.bytes, 0,
+        network.generationHashSeed.bytes.length);
     var txBytes = transactionDataBuffer(transaction.serialize());
     hasher.update(txBytes, 0, txBytes.length);
 
@@ -49,9 +57,12 @@ class SymbolFacade {
   }
 
   Signature signTransaction(KeyPair keyPair, ITransaction transaction) {
-    if(bytesToHex(transaction.signerPublicKey.bytes) != bytesToHex((PublicKey('0' * 64)).bytes)){
-      if(bytesToHex(transaction.signerPublicKey.bytes) != bytesToHex(keyPair.publicKey.bytes)){
-        throw Exception('Transaction signerPublicKey does not match keyPair public key');
+    if (bytesToHex(transaction.signerPublicKey.bytes) !=
+        bytesToHex((PublicKey('0' * 64)).bytes)) {
+      if (bytesToHex(transaction.signerPublicKey.bytes) !=
+          bytesToHex(keyPair.publicKey.bytes)) {
+        throw Exception(
+            'Transaction signerPublicKey does not match keyPair public key');
       }
     }
     transaction.signerPublicKey = sc.PublicKey(keyPair.publicKey.bytes);
@@ -67,16 +78,19 @@ class SymbolFacade {
       ...network.generationHashSeed.bytes,
       ...transactionDataBuffer(transaction.serialize())
     ]);
-    return Verifier(PublicKey(transaction.signerPublicKey.bytes)).verify(verifyBuffer, signature);
+    return Verifier(PublicKey(transaction.signerPublicKey.bytes))
+        .verify(verifyBuffer, signature);
   }
 
-  dynamic cosignTransaction(KeyPair keyPair, ITransaction transaction, {bool detached = false}) {
+  dynamic cosignTransaction(KeyPair keyPair, ITransaction transaction,
+      {bool detached = false}) {
     var transactionHash = hashTransaction(transaction);
 
     void initializeCosignature(cosignature) {
       cosignature.version = BigInt.zero;
       cosignature.signerPublicKey = sc.PublicKey(keyPair.publicKey.bytes);
-      cosignature.signature = sc.Signature(keyPair.sign(transactionHash.bytes).bytes);
+      cosignature.signature =
+          sc.Signature(keyPair.sign(transactionHash.bytes).bytes);
     }
 
     if (detached) {
@@ -91,11 +105,13 @@ class SymbolFacade {
     return cosignature;
   }
 
-  static Hash256 hashEmbeddedTransactions(List<IInnerTransaction> embeddedTransactions) {
+  static Hash256 hashEmbeddedTransactions(
+      List<IInnerTransaction> embeddedTransactions) {
     var hashBuilder = MerkleHashBuilder();
     embeddedTransactions.forEach((embeddedTransaction) {
       var hasher = pc.SHA3Digest(256);
-      hashBuilder.update(Hash256(hasher.process(embeddedTransaction.serialize())));
+      hashBuilder
+          .update(Hash256(hasher.process(embeddedTransaction.serialize())));
     });
 
     return hashBuilder.final_();
@@ -109,11 +125,11 @@ class SymbolFacade {
     return KeyPair(PrivateKey(bip32Node.privateKey.bytes));
   }
 
-  String attachSignature(ITransaction transaction, Signature signature) {
-		transaction.signature = sc.Signature(signature.bytes);
-		var transactionBuffer = transaction.serialize();
-		var hexPayload = bytesToHex(transactionBuffer);
-		var jsonPayload = '{"payload": "$hexPayload"}';
-		return jsonPayload;
-	}
+  String attachSignature(ITransaction transaction, Signature signature,
+      {bool isPlainPayload = false}) {
+    transaction.signature = sc.Signature(signature.bytes);
+    var transactionBuffer = transaction.serialize();
+    var hexPayload = bytesToHex(transactionBuffer);
+    return isPlainPayload ? hexPayload : '{"payload": "$hexPayload"}';
+  }
 }
