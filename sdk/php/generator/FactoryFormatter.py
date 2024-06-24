@@ -18,8 +18,8 @@ def skip_embedded(name):
 class FactoryClassFormatter(ClassFormatter):
 	def generate_deserializer(self):
 		method_descriptor = self.provider.get_deserialize_descriptor()
-		method_descriptor.method_name = 'static deserialize'
-		method_descriptor.arguments = ['payload']
+		method_descriptor.method_name = 'public static function deserialize'
+		method_descriptor.arguments = ['$binaryData']
 		return self.generate_method(method_descriptor)
 
 	def generate_create_by_name(self):
@@ -35,7 +35,7 @@ class FactoryClassFormatter(ClassFormatter):
 		getters_setters = self.generate_getters_setters()
 		methods.extend(getters_setters)
 		methods.append(self.generate_deserializer())
-		methods.append(self.generate_create_by_name())
+		# methods.append(self.generate_create_by_name())
 		return methods
 
 	def generate_getters_setters(self):
@@ -52,7 +52,7 @@ class FactoryFormatter(AbstractTypeFormatter):
 		self.factory_descriptor = factory_map.get(self.abstract.name)
 
 	def get_ctor_descriptor(self):
-		raise NotImplementedError('`get_ctor_descriptor` not supported by FactoryFormatter')
+		raise NotImplementedError("'get_ctor_descriptor' not supported by FactoryFormatter")
 
 	@property
 	def typename(self):
@@ -60,40 +60,46 @@ class FactoryFormatter(AbstractTypeFormatter):
 
 	@staticmethod
 	def map_to_value(name, value, field_type):
-		return f'{name}.{value}' if isinstance(field_type, FixedSizeInteger) else f'{name}.{value}.value'
+		return f'{name}->{value}' if isinstance(field_type, FixedSizeInteger) else f'{name}->{value}->value'
 
 	def create_discriminator(self, name):
 		field_values = self.factory_descriptor.discriminator_values
 		field_types = self.factory_descriptor.discriminator_types
 
-		values = ', '.join(map(lambda value_type: self.map_to_value(name, *value_type), zip(field_values, field_types)))
-		return f'mapping.set({self.typename}.toKey([{values}]), {name});'
+		values = ', '.join(f'{name}::{value}' for value, field_type in zip(field_values, field_types))
+		return f'self::toKey([{values}]) => {name}::class,'
 
 	def get_deserialize_descriptor(self):
-		body = 'const view = new BufferView(payload);\n'
-		body += f'const {self.printer.name} = {self.printer.load()};\n'
+		body = '$reader = new BinaryReader($binaryData);\n'
+		body += f'${self.printer.name} = new {self.printer.get_type()}();\n'
+		body += f'{self.printer.get_type()}::_deserialize($reader, $parent);\n'
 
-		body += 'const mapping = new Map();\n'
+		body += '$reader->setPosition(0);\n'
+
+		body += '$mapping = [\n'
 
 		if self.factory_descriptor:
 			names = [f'{concrete.name}' for concrete in self.factory_descriptor.children]
 			body += '\n'.join(map(self.create_discriminator, names))
 
-		body += '\n'
+		body += '];\n'
 
-		discriminators = [] if not self.factory_descriptor else map(fix_name, self.factory_descriptor.discriminator_names)
+		discriminators = [] if not self.factory_descriptor else self.factory_descriptor.discriminator_names
 		discriminator_types = self.factory_descriptor.discriminator_types
 
-		values = ', '.join(map(lambda value_type: self.map_to_value(self.printer.name, *value_type), zip(discriminators, discriminator_types)))
-		body += f'const discriminator = {self.typename}.toKey([{values}]);\n'
-		body += 'const factory_class = mapping.get(discriminator);\n'
-		body += 'return factory_class.deserialize(view.buffer);'
+		values = ', '.join(map(lambda value_type: self.map_to_value(f'${self.printer.name}', *value_type), zip(discriminators, discriminator_types)))
+		body += f'$discriminator = self::toKey([{values}]);\n'
+		body += 'if (!array_key_exists($discriminator, $mapping)) {\n'
+		body += f'\tthrow new Exception("Unknown {self.printer.get_type()} type");\n'
+		body += '}\n'
+		body += '$factoryClass = $mapping[$discriminator];\n'
+		body += "return call_user_func([$factoryClass, 'deserialize'], $reader);"
 
 		return MethodDescriptor(body=body)
 
 	def get_create_by_name_descriptor(self):
 		body = ''
-		body += 'const mapping = {\n'
+		body += '$mapping = {\n'
 		body += indent(
 			',\n'.join(
 				map(
@@ -106,7 +112,7 @@ class FactoryFormatter(AbstractTypeFormatter):
 
 		body += f'''
 if (!Object.prototype.hasOwnProperty.call(mapping, entityName))
-	throw RangeError(`unknown {self.printer.get_type()} type ${{entityName}}`);
+	throw new RangeError('unknown {self.printer.get_type()} type ${{entityName}}');
 
 return new mapping[entityName]();
 '''
@@ -121,11 +127,14 @@ return new mapping[entityName]();
 	def get_getter_setter_descriptors(self):
 		# toKey is a helper method that is used to create map keys, that are used inside factory's deserialize method
 		methods = []
-		body = '''if (1 === values.length)
-	return values[0];
+		body = '''if (count($values) === 1) {
+	return $values[0];
+}
 
 // assume each key is at most 32bits
-return values.map(n => BigInt(n)).reduce((accumulator, value) => (accumulator << 32n) + value);
+return array_reduce(array_map('intval', $values), function ($accumulator, $value) {
+	return ($accumulator << 32) + $value;
+}, 0);
 '''
-		methods.append(MethodDescriptor(method_name='static toKey', arguments=['values'], body=body))
+		methods.append(MethodDescriptor(method_name='public static function toKey', arguments=['$values'], body=body))
 		return methods

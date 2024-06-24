@@ -125,11 +125,8 @@ class TypeFormatter(ClassFormatter):
 		method_descriptor.annotations = ['@override']
 		return self.generate_method(method_descriptor)
 	
-	def generate_getters(self):
-		return list(map(self.generate_method, self.provider.get_getter_descriptors()))
-
-	def generate_setters(self):
-		return list(map(self.generate_method, self.provider.get_setter_descriptors()))
+	def generate_getters_setters(self):
+		return list(map(self.generate_method, self.provider.get_getter_setter_descriptors()))
 
 	def generate_representation(self):
 		method_descriptor = self.provider.get_str_descriptor()
@@ -148,10 +145,7 @@ class TypeFormatter(ClassFormatter):
 		_append_if_not_none(methods, self.generate_comparer())
 		_append_if_not_none(methods, self.generate_sort())
 
-		getters = self.generate_getters()
-		methods.extend(getters)
-		setters = self.generate_setters()
-		methods.extend(setters)
+		methods.extend(self.generate_getters_setters())
 
 		_append_if_not_none(methods, self.generate_size())
 

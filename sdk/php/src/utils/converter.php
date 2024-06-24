@@ -27,11 +27,11 @@ class Converter
 			case 1:
 				return "C";
 			case 2:
-				return "n";
+				return "v";
 			case 4:
-				return "N";
+				return "V";
 			case 8:
-				return "J";
+				return "Q";
 			default:
 				throw new Exception("invalid size");
 		}
@@ -56,6 +56,15 @@ class Converter
 		return $result[1];
 	}
 
+	public static function binaryToInt(string $binary, int $size): int
+	{
+		$result = unpack(self::sizeToFormat($size), $binary);
+		if ($result === false)
+			throw new Exception("unpack failed");
+
+		return $result[1];
+	}
+
 	/**
 	 * int to hex of binary
 	 * @param int int
@@ -71,18 +80,27 @@ class Converter
 		return strtoupper(bin2hex($packed));
 	}
 
+	public static function intToBinary(int $int, int $size): string
+	{
+		$packed = pack(self::sizeToFormat($size), $int);
+		if ($packed === false) {
+			throw new Exception("pack failed");
+		}
+		return $packed;
+	}
+
 	public static function isHexString($value)
 	{
 		$hexPattern = '/^[0-9a-fA-F]+$/i';
 		return preg_match($hexPattern, $value);
 	}
 
-	public static function addressToHexAddress($encoded)
+	public static function addressToBinary($encoded)
 	{
 		$base32 = new Base2n(5, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567', FALSE, TRUE, TRUE);
 		$constants = self::$constants;
 		if ($constants['sizes']['symbolAddressEncoded'] == strlen($encoded)) {
-			return strtoupper(substr(bin2hex($base32->decode($encoded . "A")), 0, -2));
+			return substr($base32->decode($encoded . "A"), 0, -1);
 		}
 		if ($constants['sizes']['nemAddressEncoded'] == strlen($encoded)) {
 			return mb_convert_encoding($encoded, 'UTF-8', 'ISO-8859-1');
@@ -90,18 +108,18 @@ class Converter
 		throw new Exception("$encoded does not represent a valid encoded address");
 	}
 
-	public static function hexAddressToAddress($decoded)
+	public static function binaryToAddress($decoded)
 	{
 		$base32 = new Base2n(5, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567', FALSE, TRUE, TRUE);
 		$constants = self::$constants;
-		if ($constants['sizes']['symbolAddressDecoded'] * 2 == strlen($decoded)) {
-			$padded = $decoded . "00";
-			$encoded = $base32->encode(hex2bin($padded));
+		if ($constants['sizes']['symbolAddressDecoded'] == strlen($decoded)) {
+			$padded = $decoded . "\x00";
+			$encoded = $base32->encode($padded);
 			return substr($encoded, 0, $constants['sizes']['symbolAddressEncoded']);
 		}
 		if ($constants['sizes']['nemAddressDecoded'] == strlen($decoded)) {
 			return $base32->encode($decoded);
 		}
-		throw new Exception("Bytes to Hex function is not implemented yet. It does not represent a valid decoded address");
+		throw new Exception("invalid address type");
 	}
 }

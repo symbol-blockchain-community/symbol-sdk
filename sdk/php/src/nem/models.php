@@ -1,6290 +1,3272 @@
 <?php
 $base_path = dirname(dirname(__FILE__));
 require_once $base_path . '/BaseValue.php';
-require_once $base_path . '/ByteArray.php';
+require_once $base_path . '/BinaryData.php';
+require_once $base_path . '/BinaryStream.php';
 require_once $base_path . '/utils/converter.php';
 
-/*
-import BufferView from '../utils/BufferView.js';
-import Writer from '../utils/Writer.js';
-import * as arrayHelpers from '../utils/arrayHelpers.js';
-import * as converter from '../utils/converter.js';
 import { ripemdKeccak256 } from '../utils/transforms.js';
 
 class Amount extends BaseValue {
-	const SIZE = 8;
-
-	public function __construct($amount = 0) {
-		$amount = $amount ?? str_repeat("0", self::SIZE * 2);
-		parent::__construct(self::SIZE, $amount);
+	public function __construct(int $amount = 0){
+		parent::__construct(8, $amount);
 	}
 
-	public static function deserialize($payload) {
-		$hexBinary = $payload;
-		return new self(Converter::hexToInt($hexBinary, 8));
+	public static function size(): int {
+		return 8;
 	}
 
-	public static function deserializeAligned($payload) {
-		$hexBinary = $payload;
-		return new Amount(Converter::hexToInt($hexBinary, 8));
+	public static function deserialize(BinaryReader $reader): self {
+		return new self(Converter::binaryToInt($reader->read(8), 8));
 	}
 
-	public function serialize() {
-		return Converter::intToHex($this->value, 8);
+	public static function deserializeAligned(BinaryReader $reader): self {
+		return new self(Converter::binaryToInt($reader->read(8), 8));
+	}
+
+	public function serialize(): string {
+		return Converter::intToBinary($this->value, 8);
 	}
 }
 
 class Height extends BaseValue {
-	const SIZE = 8;
-
-	public function __construct($height = 0) {
-		$height = $height ?? str_repeat("0", self::SIZE * 2);
-		parent::__construct(self::SIZE, $height);
+	public function __construct(int $height = 0){
+		parent::__construct(8, $height);
 	}
 
-	public static function deserialize($payload) {
-		$hexBinary = $payload;
-		return new self(Converter::hexToInt($hexBinary, 8));
+	public static function size(): int {
+		return 8;
 	}
 
-	public static function deserializeAligned($payload) {
-		$hexBinary = $payload;
-		return new Height(Converter::hexToInt($hexBinary, 8));
+	public static function deserialize(BinaryReader $reader): self {
+		return new self(Converter::binaryToInt($reader->read(8), 8));
 	}
 
-	public function serialize() {
-		return Converter::intToHex($this->value, 8);
+	public static function deserializeAligned(BinaryReader $reader): self {
+		return new self(Converter::binaryToInt($reader->read(8), 8));
+	}
+
+	public function serialize(): string {
+		return Converter::intToBinary($this->value, 8);
 	}
 }
 
 class Timestamp extends BaseValue {
-	const SIZE = 4;
-
-	public function __construct($timestamp = 0) {
-		$timestamp = $timestamp ?? str_repeat("0", self::SIZE * 2);
-		parent::__construct(self::SIZE, $timestamp);
+	public function __construct(int $timestamp = 0){
+		parent::__construct(4, $timestamp);
 	}
 
-	public static function deserialize($payload) {
-		$hexBinary = $payload;
-		return new self(Converter::hexToInt($hexBinary, 4));
+	public static function size(): int {
+		return 4;
 	}
 
-	public static function deserializeAligned($payload) {
-		$hexBinary = $payload;
-		return new Timestamp(Converter::hexToInt($hexBinary, 4));
+	public static function deserialize(BinaryReader $reader): self {
+		return new self(Converter::binaryToInt($reader->read(4), 4));
 	}
 
-	public function serialize() {
-		return Converter::intToHex($this->value, 4);
+	public static function deserializeAligned(BinaryReader $reader): self {
+		return new self(Converter::binaryToInt($reader->read(4), 4));
+	}
+
+	public function serialize(): string {
+		return Converter::intToBinary($this->value, 4);
 	}
 }
 
-class Address extends ByteArray {
-	const SIZE = 40;
-
-	public function __construct($address = null) {
-		$address = $address ?? str_repeat("0", self::SIZE * 2);
-		parent::__construct(self::SIZE, $address);
+class Address extends BinaryData {
+	public function __construct(string $address = null){
+		$address = $address ?? str_repeat("\x00", self::size());
+		parent::__construct(40, $address);
 	}
 
-	public function size() {
+	public static function size(): int {
 		return 40;
 	}
 
-	public static function deserialize($payload) {
-		$hexBinary = $payload;
-		return new self($hexBinary);
+	public static function deserialize(BinaryReader $reader): self {
+		return new self($reader->read(40));
 	}
 
-	public function serialize() {
-		return $this->hexBinary;
+	public function serialize(): string {
+		return $this->binaryData;
 	}
 }
 
-class Hash256 extends ByteArray {
-	const SIZE = 32;
-
-	public function __construct($hash256 = null) {
-		$hash256 = $hash256 ?? str_repeat("0", self::SIZE * 2);
-		parent::__construct(self::SIZE, $hash256);
+class Hash256 extends BinaryData {
+	public function __construct(string $hash256 = null){
+		$hash256 = $hash256 ?? str_repeat("\x00", self::size());
+		parent::__construct(32, $hash256);
 	}
 
-	public function size() {
+	public static function size(): int {
 		return 32;
 	}
 
-	public static function deserialize($payload) {
-		$hexBinary = $payload;
-		return new self($hexBinary);
+	public static function deserialize(BinaryReader $reader): self {
+		return new self($reader->read(32));
 	}
 
-	public function serialize() {
-		return $this->hexBinary;
+	public function serialize(): string {
+		return $this->binaryData;
 	}
 }
 
-class PublicKey extends ByteArray {
-	const SIZE = 32;
-
-	public function __construct($publicKey = null) {
-		$publicKey = $publicKey ?? str_repeat("0", self::SIZE * 2);
-		parent::__construct(self::SIZE, $publicKey);
+class PublicKey extends BinaryData {
+	public function __construct(string $publicKey = null){
+		$publicKey = $publicKey ?? str_repeat("\x00", self::size());
+		parent::__construct(32, $publicKey);
 	}
 
-	public function size() {
+	public static function size(): int {
 		return 32;
 	}
 
-	public static function deserialize($payload) {
-		$hexBinary = $payload;
-		return new self($hexBinary);
+	public static function deserialize(BinaryReader $reader): self {
+		return new self($reader->read(32));
 	}
 
-	public function serialize() {
-		return $this->hexBinary;
+	public function serialize(): string {
+		return $this->binaryData;
 	}
 }
 
-class Signature extends ByteArray {
-	const SIZE = 64;
-
-	public function __construct($signature = null) {
-		$signature = $signature ?? str_repeat("0", self::SIZE * 2);
-		parent::__construct(self::SIZE, $signature);
+class Signature extends BinaryData {
+	public function __construct(string $signature = null){
+		$signature = $signature ?? str_repeat("\x00", self::size());
+		parent::__construct(64, $signature);
 	}
 
-	public function size() {
+	public static function size(): int {
 		return 64;
 	}
 
-	public static function deserialize($payload) {
-		$hexBinary = $payload;
-		return new self($hexBinary);
+	public static function deserialize(BinaryReader $reader): self {
+		return new self($reader->read(64));
 	}
 
-	public function serialize() {
-		return $this->hexBinary;
+	public function serialize(): string {
+		return $this->binaryData;
 	}
 }
 
 class NetworkType {
-	static MAINNET = new NetworkType(104);
+	const MAINNET = 104;
 
-	static TESTNET = new NetworkType(152);
+	const TESTNET = 152;
 
-	public function __construct(value) {
-		this.value = value;
+	public $value;
+
+	public function __construct(int $value = 0){
+		$this->value = $value;
 	}
 
-	static valueToKey(value) {
-		const values = [
+	static function valueToKey($value){
+		$values = [
 			104, 152
 		];
-		const keys = [
+		$keys = [
 			'MAINNET', 'TESTNET'
 		];
 
-		const index = values.indexOf(value);
-		if (-1 === index)
-			throw RangeError(`invalid enum value ${value}`);
+		$index = array_search($value, $values);
+		if ($index === false)
+			throw new Exception("Invalid enum value: {$value}");
 
-		return keys[index];
+		return $keys[$index];
 	}
 
-	static fromValue(value) {
-		return NetworkType[this.valueToKey(value)];
-	}
-
-	public function size() {
+	public static function size(){
 		return 1;
 	}
 
-	public static function deserialize($payload) {
-		const byteArray = payload;
-		return this.fromValue(Converter::hexToInt(byteArray, 1));
+	public static function deserialize(BinaryReader $reader): self {
+		return new NetworkType(Converter::binaryToInt($reader->read(1), 1));
 	}
 
-	public static function deserializeAligned($payload) {
-		const byteArray = payload;
-		return this.fromValue(Converter::hexToInt(byteArray, 1));
+	public static function deserializeAligned(BinaryReader $reader): self {
+		return new NetworkType(Converter::binaryToInt($reader->read(1), 1));
 	}
 
-	public function serialize() {
-		return Converter::intToHex(this.value, 1);
+	public function serialize(): string {
+		return Converter::intToBinary($this->value, 1);
 	}
 
-	toString() {
-		return `NetworkType.${NetworkType.valueToKey(this.value)}`;
+	public function __toString(){
+		return "NetworkType." . self::valueToKey($this->value);
 	}
 }
 
 class TransactionType {
-	static TRANSFER = new TransactionType(257);
+	const TRANSFER = 257;
 
-	static ACCOUNT_KEY_LINK = new TransactionType(2049);
+	const ACCOUNT_KEY_LINK = 2049;
 
-	static MULTISIG_ACCOUNT_MODIFICATION = new TransactionType(4097);
+	const MULTISIG_ACCOUNT_MODIFICATION = 4097;
 
-	static MULTISIG_COSIGNATURE = new TransactionType(4098);
+	const MULTISIG_COSIGNATURE = 4098;
 
-	static MULTISIG = new TransactionType(4100);
+	const MULTISIG = 4100;
 
-	static NAMESPACE_REGISTRATION = new TransactionType(8193);
+	const NAMESPACE_REGISTRATION = 8193;
 
-	static MOSAIC_DEFINITION = new TransactionType(16385);
+	const MOSAIC_DEFINITION = 16385;
 
-	static MOSAIC_SUPPLY_CHANGE = new TransactionType(16386);
+	const MOSAIC_SUPPLY_CHANGE = 16386;
 
-	public function __construct(value) {
-		this.value = value;
+	public $value;
+
+	public function __construct(int $value = 0){
+		$this->value = $value;
 	}
 
-	static valueToKey(value) {
-		const values = [
+	static function valueToKey($value){
+		$values = [
 			257, 2049, 4097, 4098, 4100, 8193, 16385, 16386
 		];
-		const keys = [
+		$keys = [
 			'TRANSFER', 'ACCOUNT_KEY_LINK', 'MULTISIG_ACCOUNT_MODIFICATION', 'MULTISIG_COSIGNATURE', 'MULTISIG', 'NAMESPACE_REGISTRATION',
 			'MOSAIC_DEFINITION', 'MOSAIC_SUPPLY_CHANGE'
 		];
 
-		const index = values.indexOf(value);
-		if (-1 === index)
-			throw RangeError(`invalid enum value ${value}`);
+		$index = array_search($value, $values);
+		if ($index === false)
+			throw new Exception("Invalid enum value: {$value}");
 
-		return keys[index];
+		return $keys[$index];
 	}
 
-	static fromValue(value) {
-		return TransactionType[this.valueToKey(value)];
-	}
-
-	public function size() {
+	public static function size(){
 		return 4;
 	}
 
-	public static function deserialize($payload) {
-		const byteArray = payload;
-		return this.fromValue(Converter::hexToInt(byteArray, 4));
+	public static function deserialize(BinaryReader $reader): self {
+		return new TransactionType(Converter::binaryToInt($reader->read(4), 4));
 	}
 
-	public static function deserializeAligned($payload) {
-		const byteArray = payload;
-		return this.fromValue(Converter::hexToInt(byteArray, 4));
+	public static function deserializeAligned(BinaryReader $reader): self {
+		return new TransactionType(Converter::binaryToInt($reader->read(4), 4));
 	}
 
-	public function serialize() {
-		return Converter::intToHex(this.value, 4);
+	public function serialize(): string {
+		return Converter::intToBinary($this->value, 4);
 	}
 
-	toString() {
-		return `TransactionType.${TransactionType.valueToKey(this.value)}`;
+	public function __toString(){
+		return "TransactionType." . self::valueToKey($this->value);
 	}
 }
 
 class Transaction {
-	static TYPE_HINTS = {
-		$type: 'enum:TransactionType',
-		$network: 'enum:NetworkType',
-		$timestamp: 'pod:Timestamp',
-		$signerPublicKey: 'pod:PublicKey',
-		$signature: 'pod:Signature',
-		$fee: 'pod:Amount',
-		$deadline: 'pod:Timestamp'
-	};
+	public TransactionType $type;
 
-	public function __construct() {
-		this._$type = TransactionType.TRANSFER;
-		this._$version = 0;
-		this._$network = NetworkType.MAINNET;
-		this._$timestamp = new Timestamp();
-		this._$signerPublicKey = new PublicKey();
-		this._$signature = new Signature();
-		this._$fee = new Amount();
-		this._$deadline = new Timestamp();
-		this._$entityBodyReserved_1 = 0; // reserved field
-		this._$signerPublicKeySize = 32; // reserved field
-		this._$signatureSize = 64; // reserved field
+	public int $version;
+
+	public NetworkType $network;
+
+	public Timestamp $timestamp;
+
+	public PublicKey $signerPublicKey;
+
+	public Signature $signature;
+
+	public Amount $fee;
+
+	public Timestamp $deadline;
+
+	private int $entityBodyReserved_1 = 0; // reserved field
+
+	private int $signerPublicKeySize = 32; // reserved field
+
+	private int $signatureSize = 64; // reserved field
+
+	public function __construct(
+		?TransactionType $type = null,
+		?int $version = null,
+		?NetworkType $network = null,
+		?Timestamp $timestamp = null,
+		?PublicKey $signerPublicKey = null,
+		?Signature $signature = null,
+		?Amount $fee = null,
+		?Timestamp $deadline = null
+	){
+		$this->type = $type ?? new TransactionType();
+		$this->version = $version ?? 0;
+		$this->network = $network ?? new NetworkType();
+		$this->timestamp = $timestamp ?? new Timestamp();
+		$this->signerPublicKey = $signerPublicKey ?? new PublicKey();
+		$this->signature = $signature ?? new Signature();
+		$this->fee = $fee ?? new Amount();
+		$this->deadline = $deadline ?? new Timestamp();
+		$this->entityBodyReserved_1 = 0; // reserved field
+		$this->signerPublicKeySize = 32; // reserved field
+		$this->signatureSize = 64; // reserved field
 	}
 
-	sort() {
+	public function sort(){
 	}
 
-	get $type() {
-		return this._$type;
+	public function size(){
+		$size = 0;
+		$size += $this->type->size();
+		$size += 1;
+		$size += 2;
+		$size += $this->network->size();
+		$size += $this->timestamp->size();
+		$size += 4;
+		$size += $this->signerPublicKey->size();
+		$size += 4;
+		$size += $this->signature->size();
+		$size += $this->fee->size();
+		$size += $this->deadline->size();
+		return $size;
 	}
 
-	set $type(value) {
-		this._$type = value;
-	}
-
-	get $version() {
-		return this._$version;
-	}
-
-	set $version(value) {
-		this._$version = value;
-	}
-
-	get $network() {
-		return this._$network;
-	}
-
-	set $network(value) {
-		this._$network = value;
-	}
-
-	get $timestamp() {
-		return this._$timestamp;
-	}
-
-	set $timestamp(value) {
-		this._$timestamp = value;
-	}
-
-	get $signerPublicKey() {
-		return this._$signerPublicKey;
-	}
-
-	set $signerPublicKey(value) {
-		this._$signerPublicKey = value;
-	}
-
-	get $signature() {
-		return this._$signature;
-	}
-
-	set $signature(value) {
-		this._$signature = value;
-	}
-
-	get $fee() {
-		return this._$fee;
-	}
-
-	set $fee(value) {
-		this._$fee = value;
-	}
-
-	get $deadline() {
-		return this._$deadline;
-	}
-
-	set $deadline(value) {
-		this._$deadline = value;
-	}
-
-	public function size() {
-		let size = 0;
-		size += this.$type.size;
-		size += 1;
-		size += 2;
-		size += this.$network.size;
-		size += this.$timestamp.size;
-		size += 4;
-		size += this.$signerPublicKey.size;
-		size += 4;
-		size += this.$signature.size;
-		size += this.$fee.size;
-		size += this.$deadline.size;
-		return size;
-	}
-
-	public static function deserialize($payload) {
-		const view = new BufferView(payload);
-		const $type = TransactionType.deserialize(view.buffer);
-		view.shiftRight($type.size);
-		const $version = Converter::hexToInt(view.buffer, 1);
-		view.shiftRight(1);
-		const $entityBodyReserved_1 = Converter::hexToInt(view.buffer, 2);
-		view.shiftRight(2);
+	public static function _deserialize(BinaryReader &$reader, Transaction $instance): void {
+		$type = TransactionType::deserialize($reader);
+		$version = Converter::binaryToInt($reader->read(1), 1);
+		$entityBodyReserved_1 = Converter::binaryToInt($reader->read(2), 2);
 		if (0 !== $entityBodyReserved_1)
-			throw RangeError(`Invalid value of reserved field (${$entityBodyReserved_1})`);
-		const $network = NetworkType.deserialize(view.buffer);
-		view.shiftRight($network.size);
-		const $timestamp = Timestamp.deserialize(view.buffer);
-		view.shiftRight($timestamp.size);
-		const $signerPublicKeySize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
+			throw new OutOfRangeException('Invalid value of reserved field (' . $entityBodyReserved_1 . ')');
+		$network = NetworkType::deserialize($reader);
+		$timestamp = Timestamp::deserialize($reader);
+		$signerPublicKeySize = Converter::binaryToInt($reader->read(4), 4);
 		if (32 !== $signerPublicKeySize)
-			throw RangeError(`Invalid value of reserved field (${$signerPublicKeySize})`);
-		const $signerPublicKey = PublicKey.deserialize(view.buffer);
-		view.shiftRight($signerPublicKey.size);
-		const $signatureSize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
+			throw new OutOfRangeException('Invalid value of reserved field (' . $signerPublicKeySize . ')');
+		$signerPublicKey = PublicKey::deserialize($reader);
+		$signatureSize = Converter::binaryToInt($reader->read(4), 4);
 		if (64 !== $signatureSize)
-			throw RangeError(`Invalid value of reserved field (${$signatureSize})`);
-		const $signature = Signature.deserialize(view.buffer);
-		view.shiftRight($signature.size);
-		const $fee = Amount.deserialize(view.buffer);
-		view.shiftRight($fee.size);
-		const $deadline = Timestamp.deserialize(view.buffer);
-		view.shiftRight($deadline.size);
+			throw new OutOfRangeException('Invalid value of reserved field (' . $signatureSize . ')');
+		$signature = Signature::deserialize($reader);
+		$fee = Amount::deserialize($reader);
+		$deadline = Timestamp::deserialize($reader);
 
-		const instance = new Transaction();
-		instance._$type = $type;
-		instance._$version = $version;
-		instance._$network = $network;
-		instance._$timestamp = $timestamp;
-		instance._$signerPublicKey = $signerPublicKey;
-		instance._$signature = $signature;
-		instance._$fee = $fee;
-		instance._$deadline = $deadline;
-		return instance;
+		$instance->type = $type;
+		$instance->version = $version;
+		$instance->network = $network;
+		$instance->timestamp = $timestamp;
+		$instance->signerPublicKey = $signerPublicKey;
+		$instance->signature = $signature;
+		$instance->fee = $fee;
+		$instance->deadline = $deadline;
 	}
 
-	public function serialize() {
-		const buffer = new Writer(this.size);
-		buffer.write(this._$type.serialize());
-		buffer.write(Converter::intToHex(this._$version, 1));
-		buffer.write(Converter::intToHex(this._$entityBodyReserved_1, 2));
-		buffer.write(this._$network.serialize());
-		buffer.write(this._$timestamp.serialize());
-		buffer.write(Converter::intToHex(this._$signerPublicKeySize, 4));
-		buffer.write(this._$signerPublicKey.serialize());
-		buffer.write(Converter::intToHex(this._$signatureSize, 4));
-		buffer.write(this._$signature.serialize());
-		buffer.write(this._$fee.serialize());
-		buffer.write(this._$deadline.serialize());
-		return buffer.storage;
+	public function _serialize(BinaryWriter &$writer): void {
+		$writer->write($this->type->serialize());
+		$writer->write(Converter::intToBinary($this->version, 1));
+		$writer->write(Converter::intToBinary($this->entityBodyReserved_1, 2));
+		$writer->write($this->network->serialize());
+		$writer->write($this->timestamp->serialize());
+		$writer->write(Converter::intToBinary($this->signerPublicKeySize, 4));
+		$writer->write($this->signerPublicKey->serialize());
+		$writer->write(Converter::intToBinary($this->signatureSize, 4));
+		$writer->write($this->signature->serialize());
+		$writer->write($this->fee->serialize());
+		$writer->write($this->deadline->serialize());
 	}
 
-	toString() {
-		let result = '(';
-		result += `$type: ${this._$type.toString()}, `;
-		result += `$version: ${'0x'.concat(this._$version.toString(16))}, `;
-		result += `$network: ${this._$network.toString()}, `;
-		result += `$timestamp: ${this._$timestamp.toString()}, `;
-		result += `$signerPublicKey: ${this._$signerPublicKey.toString()}, `;
-		result += `$signature: ${this._$signature.toString()}, `;
-		result += `$fee: ${this._$fee.toString()}, `;
-		result += `$deadline: ${this._$deadline.toString()}, `;
-		result += ')';
-		return result;
+	public function __toString(){
+		$result = '';
+		$result .= 'type: ' . $this->type . ', ';
+		$result .= 'version: ' . '0x' . Converter::intToHex($this->version, 1) . ', ';
+		$result .= 'network: ' . $this->network . ', ';
+		$result .= 'timestamp: ' . $this->timestamp . ', ';
+		$result .= 'signerPublicKey: ' . $this->signerPublicKey . ', ';
+		$result .= 'signature: ' . $this->signature . ', ';
+		$result .= 'fee: ' . $this->fee . ', ';
+		$result .= 'deadline: ' . $this->deadline . ', ';
+		return $result;
 	}
 }
 
 class NonVerifiableTransaction {
-	static TYPE_HINTS = {
-		$type: 'enum:TransactionType',
-		$network: 'enum:NetworkType',
-		$timestamp: 'pod:Timestamp',
-		$signerPublicKey: 'pod:PublicKey',
-		$fee: 'pod:Amount',
-		$deadline: 'pod:Timestamp'
-	};
+	public TransactionType $type;
 
-	public function __construct() {
-		this._$type = TransactionType.TRANSFER;
-		this._$version = 0;
-		this._$network = NetworkType.MAINNET;
-		this._$timestamp = new Timestamp();
-		this._$signerPublicKey = new PublicKey();
-		this._$fee = new Amount();
-		this._$deadline = new Timestamp();
-		this._$entityBodyReserved_1 = 0; // reserved field
-		this._$signerPublicKeySize = 32; // reserved field
+	public int $version;
+
+	public NetworkType $network;
+
+	public Timestamp $timestamp;
+
+	public PublicKey $signerPublicKey;
+
+	public Amount $fee;
+
+	public Timestamp $deadline;
+
+	private int $entityBodyReserved_1 = 0; // reserved field
+
+	private int $signerPublicKeySize = 32; // reserved field
+
+	public function __construct(
+		?TransactionType $type = null,
+		?int $version = null,
+		?NetworkType $network = null,
+		?Timestamp $timestamp = null,
+		?PublicKey $signerPublicKey = null,
+		?Amount $fee = null,
+		?Timestamp $deadline = null
+	){
+		$this->type = $type ?? new TransactionType();
+		$this->version = $version ?? 0;
+		$this->network = $network ?? new NetworkType();
+		$this->timestamp = $timestamp ?? new Timestamp();
+		$this->signerPublicKey = $signerPublicKey ?? new PublicKey();
+		$this->fee = $fee ?? new Amount();
+		$this->deadline = $deadline ?? new Timestamp();
+		$this->entityBodyReserved_1 = 0; // reserved field
+		$this->signerPublicKeySize = 32; // reserved field
 	}
 
-	sort() {
+	public function sort(){
 	}
 
-	get $type() {
-		return this._$type;
+	public function size(){
+		$size = 0;
+		$size += $this->type->size();
+		$size += 1;
+		$size += 2;
+		$size += $this->network->size();
+		$size += $this->timestamp->size();
+		$size += 4;
+		$size += $this->signerPublicKey->size();
+		$size += $this->fee->size();
+		$size += $this->deadline->size();
+		return $size;
 	}
 
-	set $type(value) {
-		this._$type = value;
-	}
-
-	get $version() {
-		return this._$version;
-	}
-
-	set $version(value) {
-		this._$version = value;
-	}
-
-	get $network() {
-		return this._$network;
-	}
-
-	set $network(value) {
-		this._$network = value;
-	}
-
-	get $timestamp() {
-		return this._$timestamp;
-	}
-
-	set $timestamp(value) {
-		this._$timestamp = value;
-	}
-
-	get $signerPublicKey() {
-		return this._$signerPublicKey;
-	}
-
-	set $signerPublicKey(value) {
-		this._$signerPublicKey = value;
-	}
-
-	get $fee() {
-		return this._$fee;
-	}
-
-	set $fee(value) {
-		this._$fee = value;
-	}
-
-	get $deadline() {
-		return this._$deadline;
-	}
-
-	set $deadline(value) {
-		this._$deadline = value;
-	}
-
-	public function size() {
-		let size = 0;
-		size += this.$type.size;
-		size += 1;
-		size += 2;
-		size += this.$network.size;
-		size += this.$timestamp.size;
-		size += 4;
-		size += this.$signerPublicKey.size;
-		size += this.$fee.size;
-		size += this.$deadline.size;
-		return size;
-	}
-
-	public static function deserialize($payload) {
-		const view = new BufferView(payload);
-		const $type = TransactionType.deserialize(view.buffer);
-		view.shiftRight($type.size);
-		const $version = Converter::hexToInt(view.buffer, 1);
-		view.shiftRight(1);
-		const $entityBodyReserved_1 = Converter::hexToInt(view.buffer, 2);
-		view.shiftRight(2);
+	public static function _deserialize(BinaryReader &$reader, NonVerifiableTransaction $instance): void {
+		$type = TransactionType::deserialize($reader);
+		$version = Converter::binaryToInt($reader->read(1), 1);
+		$entityBodyReserved_1 = Converter::binaryToInt($reader->read(2), 2);
 		if (0 !== $entityBodyReserved_1)
-			throw RangeError(`Invalid value of reserved field (${$entityBodyReserved_1})`);
-		const $network = NetworkType.deserialize(view.buffer);
-		view.shiftRight($network.size);
-		const $timestamp = Timestamp.deserialize(view.buffer);
-		view.shiftRight($timestamp.size);
-		const $signerPublicKeySize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
+			throw new OutOfRangeException('Invalid value of reserved field (' . $entityBodyReserved_1 . ')');
+		$network = NetworkType::deserialize($reader);
+		$timestamp = Timestamp::deserialize($reader);
+		$signerPublicKeySize = Converter::binaryToInt($reader->read(4), 4);
 		if (32 !== $signerPublicKeySize)
-			throw RangeError(`Invalid value of reserved field (${$signerPublicKeySize})`);
-		const $signerPublicKey = PublicKey.deserialize(view.buffer);
-		view.shiftRight($signerPublicKey.size);
-		const $fee = Amount.deserialize(view.buffer);
-		view.shiftRight($fee.size);
-		const $deadline = Timestamp.deserialize(view.buffer);
-		view.shiftRight($deadline.size);
+			throw new OutOfRangeException('Invalid value of reserved field (' . $signerPublicKeySize . ')');
+		$signerPublicKey = PublicKey::deserialize($reader);
+		$fee = Amount::deserialize($reader);
+		$deadline = Timestamp::deserialize($reader);
 
-		const instance = new NonVerifiableTransaction();
-		instance._$type = $type;
-		instance._$version = $version;
-		instance._$network = $network;
-		instance._$timestamp = $timestamp;
-		instance._$signerPublicKey = $signerPublicKey;
-		instance._$fee = $fee;
-		instance._$deadline = $deadline;
-		return instance;
+		$instance->type = $type;
+		$instance->version = $version;
+		$instance->network = $network;
+		$instance->timestamp = $timestamp;
+		$instance->signerPublicKey = $signerPublicKey;
+		$instance->fee = $fee;
+		$instance->deadline = $deadline;
 	}
 
-	public function serialize() {
-		const buffer = new Writer(this.size);
-		buffer.write(this._$type.serialize());
-		buffer.write(Converter::intToHex(this._$version, 1));
-		buffer.write(Converter::intToHex(this._$entityBodyReserved_1, 2));
-		buffer.write(this._$network.serialize());
-		buffer.write(this._$timestamp.serialize());
-		buffer.write(Converter::intToHex(this._$signerPublicKeySize, 4));
-		buffer.write(this._$signerPublicKey.serialize());
-		buffer.write(this._$fee.serialize());
-		buffer.write(this._$deadline.serialize());
-		return buffer.storage;
+	public function _serialize(BinaryWriter &$writer): void {
+		$writer->write($this->type->serialize());
+		$writer->write(Converter::intToBinary($this->version, 1));
+		$writer->write(Converter::intToBinary($this->entityBodyReserved_1, 2));
+		$writer->write($this->network->serialize());
+		$writer->write($this->timestamp->serialize());
+		$writer->write(Converter::intToBinary($this->signerPublicKeySize, 4));
+		$writer->write($this->signerPublicKey->serialize());
+		$writer->write($this->fee->serialize());
+		$writer->write($this->deadline->serialize());
 	}
 
-	toString() {
-		let result = '(';
-		result += `$type: ${this._$type.toString()}, `;
-		result += `$version: ${'0x'.concat(this._$version.toString(16))}, `;
-		result += `$network: ${this._$network.toString()}, `;
-		result += `$timestamp: ${this._$timestamp.toString()}, `;
-		result += `$signerPublicKey: ${this._$signerPublicKey.toString()}, `;
-		result += `$fee: ${this._$fee.toString()}, `;
-		result += `$deadline: ${this._$deadline.toString()}, `;
-		result += ')';
-		return result;
+	public function __toString(){
+		$result = '';
+		$result .= 'type: ' . $this->type . ', ';
+		$result .= 'version: ' . '0x' . Converter::intToHex($this->version, 1) . ', ';
+		$result .= 'network: ' . $this->network . ', ';
+		$result .= 'timestamp: ' . $this->timestamp . ', ';
+		$result .= 'signerPublicKey: ' . $this->signerPublicKey . ', ';
+		$result .= 'fee: ' . $this->fee . ', ';
+		$result .= 'deadline: ' . $this->deadline . ', ';
+		return $result;
 	}
 }
 
 class LinkAction {
-	static LINK = new LinkAction(1);
+	const LINK = 1;
 
-	static UNLINK = new LinkAction(2);
+	const UNLINK = 2;
 
-	public function __construct(value) {
-		this.value = value;
+	public $value;
+
+	public function __construct(int $value = 0){
+		$this->value = $value;
 	}
 
-	static valueToKey(value) {
-		const values = [
+	static function valueToKey($value){
+		$values = [
 			1, 2
 		];
-		const keys = [
+		$keys = [
 			'LINK', 'UNLINK'
 		];
 
-		const index = values.indexOf(value);
-		if (-1 === index)
-			throw RangeError(`invalid enum value ${value}`);
+		$index = array_search($value, $values);
+		if ($index === false)
+			throw new Exception("Invalid enum value: {$value}");
 
-		return keys[index];
+		return $keys[$index];
 	}
 
-	static fromValue(value) {
-		return LinkAction[this.valueToKey(value)];
-	}
-
-	public function size() {
+	public static function size(){
 		return 4;
 	}
 
-	public static function deserialize($payload) {
-		const byteArray = payload;
-		return this.fromValue(Converter::hexToInt(byteArray, 4));
+	public static function deserialize(BinaryReader $reader): self {
+		return new LinkAction(Converter::binaryToInt($reader->read(4), 4));
 	}
 
-	public static function deserializeAligned($payload) {
-		const byteArray = payload;
-		return this.fromValue(Converter::hexToInt(byteArray, 4));
+	public static function deserializeAligned(BinaryReader $reader): self {
+		return new LinkAction(Converter::binaryToInt($reader->read(4), 4));
 	}
 
-	public function serialize() {
-		return Converter::intToHex(this.value, 4);
+	public function serialize(): string {
+		return Converter::intToBinary($this->value, 4);
 	}
 
-	toString() {
-		return `LinkAction.${LinkAction.valueToKey(this.value)}`;
+	public function __toString(){
+		return "LinkAction." . self::valueToKey($this->value);
 	}
 }
 
-class AccountKeyLinkTransactionV1 {
-	static TRANSACTION_VERSION = 1;
+class AccountKeyLinkTransactionV1 extends Transaction {
+	const TRANSACTION_VERSION = 1;
 
-	static TRANSACTION_TYPE = TransactionType.ACCOUNT_KEY_LINK;
+	const TRANSACTION_TYPE = TransactionType::ACCOUNT_KEY_LINK;
 
-	static TYPE_HINTS = {
-		$type: 'enum:TransactionType',
-		$network: 'enum:NetworkType',
-		$timestamp: 'pod:Timestamp',
-		$signerPublicKey: 'pod:PublicKey',
-		$signature: 'pod:Signature',
-		$fee: 'pod:Amount',
-		$deadline: 'pod:Timestamp',
-		$linkAction: 'enum:LinkAction',
-		$remotePublicKey: 'pod:PublicKey'
-	};
+	public LinkAction $linkAction;
 
-	public function __construct() {
-		this._$type = AccountKeyLinkTransactionV1.TRANSACTION_TYPE;
-		this._$version = AccountKeyLinkTransactionV1.TRANSACTION_VERSION;
-		this._$network = NetworkType.MAINNET;
-		this._$timestamp = new Timestamp();
-		this._$signerPublicKey = new PublicKey();
-		this._$signature = new Signature();
-		this._$fee = new Amount();
-		this._$deadline = new Timestamp();
-		this._$linkAction = LinkAction.LINK;
-		this._$remotePublicKey = new PublicKey();
-		this._$entityBodyReserved_1 = 0; // reserved field
-		this._$signerPublicKeySize = 32; // reserved field
-		this._$signatureSize = 64; // reserved field
-		this._$remotePublicKeySize = 32; // reserved field
+	public PublicKey $remotePublicKey;
+
+	private int $remotePublicKeySize = 32; // reserved field
+
+	public function __construct(
+		?NetworkType $network = null,
+		?Timestamp $timestamp = null,
+		?PublicKey $signerPublicKey = null,
+		?Signature $signature = null,
+		?Amount $fee = null,
+		?Timestamp $deadline = null,
+		?LinkAction $linkAction = null,
+		?PublicKey $remotePublicKey = null
+	){
+		parent::__construct(
+			new TransactionType(AccountKeyLinkTransactionV1::TRANSACTION_TYPE),
+			AccountKeyLinkTransactionV1::TRANSACTION_VERSION,
+			$network,
+			$timestamp,
+			$signerPublicKey,
+			$signature,
+			$fee,
+			$deadline,
+		);
+		$this->linkAction = $linkAction ?? new LinkAction();
+		$this->remotePublicKey = $remotePublicKey ?? new PublicKey();
+		$this->remotePublicKeySize = 32; // reserved field
 	}
 
-	sort() {
+	public function sort(){
 	}
 
-	get $type() {
-		return this._$type;
+	public function size(){
+		$size = 0;
+		$size += parent::size();
+		$size += $this->linkAction->size();
+		$size += 4;
+		$size += $this->remotePublicKey->size();
+		return $size;
 	}
 
-	set $type(value) {
-		this._$type = value;
-	}
+	public static function deserialize(BinaryReader $reader){
+		$instance = new AccountKeyLinkTransactionV1();
 
-	get $version() {
-		return this._$version;
-	}
-
-	set $version(value) {
-		this._$version = value;
-	}
-
-	get $network() {
-		return this._$network;
-	}
-
-	set $network(value) {
-		this._$network = value;
-	}
-
-	get $timestamp() {
-		return this._$timestamp;
-	}
-
-	set $timestamp(value) {
-		this._$timestamp = value;
-	}
-
-	get $signerPublicKey() {
-		return this._$signerPublicKey;
-	}
-
-	set $signerPublicKey(value) {
-		this._$signerPublicKey = value;
-	}
-
-	get $signature() {
-		return this._$signature;
-	}
-
-	set $signature(value) {
-		this._$signature = value;
-	}
-
-	get $fee() {
-		return this._$fee;
-	}
-
-	set $fee(value) {
-		this._$fee = value;
-	}
-
-	get $deadline() {
-		return this._$deadline;
-	}
-
-	set $deadline(value) {
-		this._$deadline = value;
-	}
-
-	get $linkAction() {
-		return this._$linkAction;
-	}
-
-	set $linkAction(value) {
-		this._$linkAction = value;
-	}
-
-	get $remotePublicKey() {
-		return this._$remotePublicKey;
-	}
-
-	set $remotePublicKey(value) {
-		this._$remotePublicKey = value;
-	}
-
-	public function size() {
-		let size = 0;
-		size += this.$type.size;
-		size += 1;
-		size += 2;
-		size += this.$network.size;
-		size += this.$timestamp.size;
-		size += 4;
-		size += this.$signerPublicKey.size;
-		size += 4;
-		size += this.$signature.size;
-		size += this.$fee.size;
-		size += this.$deadline.size;
-		size += this.$linkAction.size;
-		size += 4;
-		size += this.$remotePublicKey.size;
-		return size;
-	}
-
-	public static function deserialize($payload) {
-		const view = new BufferView(payload);
-		const $type = TransactionType.deserialize(view.buffer);
-		view.shiftRight($type.size);
-		const $version = Converter::hexToInt(view.buffer, 1);
-		view.shiftRight(1);
-		const $entityBodyReserved_1 = Converter::hexToInt(view.buffer, 2);
-		view.shiftRight(2);
-		if (0 !== $entityBodyReserved_1)
-			throw RangeError(`Invalid value of reserved field (${$entityBodyReserved_1})`);
-		const $network = NetworkType.deserialize(view.buffer);
-		view.shiftRight($network.size);
-		const $timestamp = Timestamp.deserialize(view.buffer);
-		view.shiftRight($timestamp.size);
-		const $signerPublicKeySize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
-		if (32 !== $signerPublicKeySize)
-			throw RangeError(`Invalid value of reserved field (${$signerPublicKeySize})`);
-		const $signerPublicKey = PublicKey.deserialize(view.buffer);
-		view.shiftRight($signerPublicKey.size);
-		const $signatureSize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
-		if (64 !== $signatureSize)
-			throw RangeError(`Invalid value of reserved field (${$signatureSize})`);
-		const $signature = Signature.deserialize(view.buffer);
-		view.shiftRight($signature.size);
-		const $fee = Amount.deserialize(view.buffer);
-		view.shiftRight($fee.size);
-		const $deadline = Timestamp.deserialize(view.buffer);
-		view.shiftRight($deadline.size);
-		const $linkAction = LinkAction.deserialize(view.buffer);
-		view.shiftRight($linkAction.size);
-		const $remotePublicKeySize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
+		Transaction::_deserialize($reader, $instance);
+		$linkAction = LinkAction::deserialize($reader);
+		$remotePublicKeySize = Converter::binaryToInt($reader->read(4), 4);
 		if (32 !== $remotePublicKeySize)
-			throw RangeError(`Invalid value of reserved field (${$remotePublicKeySize})`);
-		const $remotePublicKey = PublicKey.deserialize(view.buffer);
-		view.shiftRight($remotePublicKey.size);
+			throw new OutOfRangeException('Invalid value of reserved field (' . $remotePublicKeySize . ')');
+		$remotePublicKey = PublicKey::deserialize($reader);
 
-		const instance = new AccountKeyLinkTransactionV1();
-		instance._$type = $type;
-		instance._$version = $version;
-		instance._$network = $network;
-		instance._$timestamp = $timestamp;
-		instance._$signerPublicKey = $signerPublicKey;
-		instance._$signature = $signature;
-		instance._$fee = $fee;
-		instance._$deadline = $deadline;
-		instance._$linkAction = $linkAction;
-		instance._$remotePublicKey = $remotePublicKey;
-		return instance;
+		$instance->linkAction = $linkAction;
+		$instance->remotePublicKey = $remotePublicKey;
+		return $instance;
 	}
 
-	public function serialize() {
-		const buffer = new Writer(this.size);
-		buffer.write(this._$type.serialize());
-		buffer.write(Converter::intToHex(this._$version, 1));
-		buffer.write(Converter::intToHex(this._$entityBodyReserved_1, 2));
-		buffer.write(this._$network.serialize());
-		buffer.write(this._$timestamp.serialize());
-		buffer.write(Converter::intToHex(this._$signerPublicKeySize, 4));
-		buffer.write(this._$signerPublicKey.serialize());
-		buffer.write(Converter::intToHex(this._$signatureSize, 4));
-		buffer.write(this._$signature.serialize());
-		buffer.write(this._$fee.serialize());
-		buffer.write(this._$deadline.serialize());
-		buffer.write(this._$linkAction.serialize());
-		buffer.write(Converter::intToHex(this._$remotePublicKeySize, 4));
-		buffer.write(this._$remotePublicKey.serialize());
-		return buffer.storage;
+	public function serialize(): string {
+		$writer = new BinaryWriter($this->size());
+		$this->sort();
+		parent::_serialize($writer);
+		$writer->write($this->linkAction->serialize());
+		$writer->write(Converter::intToBinary($this->remotePublicKeySize, 4));
+		$writer->write($this->remotePublicKey->serialize());
+		return $writer->getBinaryData();
 	}
 
-	toString() {
-		let result = '(';
-		result += `$type: ${this._$type.toString()}, `;
-		result += `$version: ${'0x'.concat(this._$version.toString(16))}, `;
-		result += `$network: ${this._$network.toString()}, `;
-		result += `$timestamp: ${this._$timestamp.toString()}, `;
-		result += `$signerPublicKey: ${this._$signerPublicKey.toString()}, `;
-		result += `$signature: ${this._$signature.toString()}, `;
-		result += `$fee: ${this._$fee.toString()}, `;
-		result += `$deadline: ${this._$deadline.toString()}, `;
-		result += `$linkAction: ${this._$linkAction.toString()}, `;
-		result += `$remotePublicKey: ${this._$remotePublicKey.toString()}, `;
-		result += ')';
-		return result;
+	public function __toString(){
+		$result = '(';
+		$result .= parent::__toString();
+		$result .= 'linkAction: ' . $this->linkAction . ', ';
+		$result .= 'remotePublicKey: ' . $this->remotePublicKey . ', ';
+		$result .= ')';
+		return $result;
 	}
 }
 
-class NonVerifiableAccountKeyLinkTransactionV1 {
-	static TRANSACTION_VERSION = 1;
+class NonVerifiableAccountKeyLinkTransactionV1 extends NonVerifiableTransaction {
+	const TRANSACTION_VERSION = 1;
 
-	static TRANSACTION_TYPE = TransactionType.ACCOUNT_KEY_LINK;
+	const TRANSACTION_TYPE = TransactionType::ACCOUNT_KEY_LINK;
 
-	static TYPE_HINTS = {
-		$type: 'enum:TransactionType',
-		$network: 'enum:NetworkType',
-		$timestamp: 'pod:Timestamp',
-		$signerPublicKey: 'pod:PublicKey',
-		$fee: 'pod:Amount',
-		$deadline: 'pod:Timestamp',
-		$linkAction: 'enum:LinkAction',
-		$remotePublicKey: 'pod:PublicKey'
-	};
+	public LinkAction $linkAction;
 
-	public function __construct() {
-		this._$type = NonVerifiableAccountKeyLinkTransactionV1.TRANSACTION_TYPE;
-		this._$version = NonVerifiableAccountKeyLinkTransactionV1.TRANSACTION_VERSION;
-		this._$network = NetworkType.MAINNET;
-		this._$timestamp = new Timestamp();
-		this._$signerPublicKey = new PublicKey();
-		this._$fee = new Amount();
-		this._$deadline = new Timestamp();
-		this._$linkAction = LinkAction.LINK;
-		this._$remotePublicKey = new PublicKey();
-		this._$entityBodyReserved_1 = 0; // reserved field
-		this._$signerPublicKeySize = 32; // reserved field
-		this._$remotePublicKeySize = 32; // reserved field
+	public PublicKey $remotePublicKey;
+
+	private int $remotePublicKeySize = 32; // reserved field
+
+	public function __construct(
+		?NetworkType $network = null,
+		?Timestamp $timestamp = null,
+		?PublicKey $signerPublicKey = null,
+		?Amount $fee = null,
+		?Timestamp $deadline = null,
+		?LinkAction $linkAction = null,
+		?PublicKey $remotePublicKey = null
+	){
+		parent::__construct(
+			new TransactionType(NonVerifiableAccountKeyLinkTransactionV1::TRANSACTION_TYPE),
+			NonVerifiableAccountKeyLinkTransactionV1::TRANSACTION_VERSION,
+			$network,
+			$timestamp,
+			$signerPublicKey,
+			$fee,
+			$deadline,
+		);
+		$this->linkAction = $linkAction ?? new LinkAction();
+		$this->remotePublicKey = $remotePublicKey ?? new PublicKey();
+		$this->remotePublicKeySize = 32; // reserved field
 	}
 
-	sort() {
+	public function sort(){
 	}
 
-	get $type() {
-		return this._$type;
+	public function size(){
+		$size = 0;
+		$size += parent::size();
+		$size += $this->linkAction->size();
+		$size += 4;
+		$size += $this->remotePublicKey->size();
+		return $size;
 	}
 
-	set $type(value) {
-		this._$type = value;
-	}
+	public static function deserialize(BinaryReader $reader){
+		$instance = new NonVerifiableAccountKeyLinkTransactionV1();
 
-	get $version() {
-		return this._$version;
-	}
-
-	set $version(value) {
-		this._$version = value;
-	}
-
-	get $network() {
-		return this._$network;
-	}
-
-	set $network(value) {
-		this._$network = value;
-	}
-
-	get $timestamp() {
-		return this._$timestamp;
-	}
-
-	set $timestamp(value) {
-		this._$timestamp = value;
-	}
-
-	get $signerPublicKey() {
-		return this._$signerPublicKey;
-	}
-
-	set $signerPublicKey(value) {
-		this._$signerPublicKey = value;
-	}
-
-	get $fee() {
-		return this._$fee;
-	}
-
-	set $fee(value) {
-		this._$fee = value;
-	}
-
-	get $deadline() {
-		return this._$deadline;
-	}
-
-	set $deadline(value) {
-		this._$deadline = value;
-	}
-
-	get $linkAction() {
-		return this._$linkAction;
-	}
-
-	set $linkAction(value) {
-		this._$linkAction = value;
-	}
-
-	get $remotePublicKey() {
-		return this._$remotePublicKey;
-	}
-
-	set $remotePublicKey(value) {
-		this._$remotePublicKey = value;
-	}
-
-	public function size() {
-		let size = 0;
-		size += this.$type.size;
-		size += 1;
-		size += 2;
-		size += this.$network.size;
-		size += this.$timestamp.size;
-		size += 4;
-		size += this.$signerPublicKey.size;
-		size += this.$fee.size;
-		size += this.$deadline.size;
-		size += this.$linkAction.size;
-		size += 4;
-		size += this.$remotePublicKey.size;
-		return size;
-	}
-
-	public static function deserialize($payload) {
-		const view = new BufferView(payload);
-		const $type = TransactionType.deserialize(view.buffer);
-		view.shiftRight($type.size);
-		const $version = Converter::hexToInt(view.buffer, 1);
-		view.shiftRight(1);
-		const $entityBodyReserved_1 = Converter::hexToInt(view.buffer, 2);
-		view.shiftRight(2);
-		if (0 !== $entityBodyReserved_1)
-			throw RangeError(`Invalid value of reserved field (${$entityBodyReserved_1})`);
-		const $network = NetworkType.deserialize(view.buffer);
-		view.shiftRight($network.size);
-		const $timestamp = Timestamp.deserialize(view.buffer);
-		view.shiftRight($timestamp.size);
-		const $signerPublicKeySize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
-		if (32 !== $signerPublicKeySize)
-			throw RangeError(`Invalid value of reserved field (${$signerPublicKeySize})`);
-		const $signerPublicKey = PublicKey.deserialize(view.buffer);
-		view.shiftRight($signerPublicKey.size);
-		const $fee = Amount.deserialize(view.buffer);
-		view.shiftRight($fee.size);
-		const $deadline = Timestamp.deserialize(view.buffer);
-		view.shiftRight($deadline.size);
-		const $linkAction = LinkAction.deserialize(view.buffer);
-		view.shiftRight($linkAction.size);
-		const $remotePublicKeySize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
+		NonVerifiableTransaction::_deserialize($reader, $instance);
+		$linkAction = LinkAction::deserialize($reader);
+		$remotePublicKeySize = Converter::binaryToInt($reader->read(4), 4);
 		if (32 !== $remotePublicKeySize)
-			throw RangeError(`Invalid value of reserved field (${$remotePublicKeySize})`);
-		const $remotePublicKey = PublicKey.deserialize(view.buffer);
-		view.shiftRight($remotePublicKey.size);
+			throw new OutOfRangeException('Invalid value of reserved field (' . $remotePublicKeySize . ')');
+		$remotePublicKey = PublicKey::deserialize($reader);
 
-		const instance = new NonVerifiableAccountKeyLinkTransactionV1();
-		instance._$type = $type;
-		instance._$version = $version;
-		instance._$network = $network;
-		instance._$timestamp = $timestamp;
-		instance._$signerPublicKey = $signerPublicKey;
-		instance._$fee = $fee;
-		instance._$deadline = $deadline;
-		instance._$linkAction = $linkAction;
-		instance._$remotePublicKey = $remotePublicKey;
-		return instance;
+		$instance->linkAction = $linkAction;
+		$instance->remotePublicKey = $remotePublicKey;
+		return $instance;
 	}
 
-	public function serialize() {
-		const buffer = new Writer(this.size);
-		buffer.write(this._$type.serialize());
-		buffer.write(Converter::intToHex(this._$version, 1));
-		buffer.write(Converter::intToHex(this._$entityBodyReserved_1, 2));
-		buffer.write(this._$network.serialize());
-		buffer.write(this._$timestamp.serialize());
-		buffer.write(Converter::intToHex(this._$signerPublicKeySize, 4));
-		buffer.write(this._$signerPublicKey.serialize());
-		buffer.write(this._$fee.serialize());
-		buffer.write(this._$deadline.serialize());
-		buffer.write(this._$linkAction.serialize());
-		buffer.write(Converter::intToHex(this._$remotePublicKeySize, 4));
-		buffer.write(this._$remotePublicKey.serialize());
-		return buffer.storage;
+	public function serialize(): string {
+		$writer = new BinaryWriter($this->size());
+		$this->sort();
+		parent::_serialize($writer);
+		$writer->write($this->linkAction->serialize());
+		$writer->write(Converter::intToBinary($this->remotePublicKeySize, 4));
+		$writer->write($this->remotePublicKey->serialize());
+		return $writer->getBinaryData();
 	}
 
-	toString() {
-		let result = '(';
-		result += `$type: ${this._$type.toString()}, `;
-		result += `$version: ${'0x'.concat(this._$version.toString(16))}, `;
-		result += `$network: ${this._$network.toString()}, `;
-		result += `$timestamp: ${this._$timestamp.toString()}, `;
-		result += `$signerPublicKey: ${this._$signerPublicKey.toString()}, `;
-		result += `$fee: ${this._$fee.toString()}, `;
-		result += `$deadline: ${this._$deadline.toString()}, `;
-		result += `$linkAction: ${this._$linkAction.toString()}, `;
-		result += `$remotePublicKey: ${this._$remotePublicKey.toString()}, `;
-		result += ')';
-		return result;
+	public function __toString(){
+		$result = '(';
+		$result .= parent::__toString();
+		$result .= 'linkAction: ' . $this->linkAction . ', ';
+		$result .= 'remotePublicKey: ' . $this->remotePublicKey . ', ';
+		$result .= ')';
+		return $result;
 	}
 }
 
 class NamespaceId {
-	static TYPE_HINTS = {
-		$name: 'bytes_array'
-	};
+	public string $name;
 
-	public function __construct() {
-		this._$name = ;
+	public function __construct(?string $name = null){
+		$this->name = $name ?? '';
 	}
 
-	sort() {
+	public function sort(){
 	}
 
-	get $name() {
-		return this._$name;
+	public function size(){
+		$size = 0;
+		$size += 4;
+		$size += strlen($this->name);
+		return $size;
 	}
 
-	set $name(value) {
-		this._$name = value;
+	public static function deserialize(BinaryReader $reader){
+		$instance = new NamespaceId();
+
+		$nameSize = Converter::binaryToInt($reader->read(4), 4);
+		$name = $reader->read($nameSize);
+
+		$instance->name = $name;
+		return $instance;
 	}
 
-	public function size() {
-		let size = 0;
-		size += 4;
-		size += this._$name.length;
-		return size;
+	public function serialize(): string {
+		$writer = new BinaryWriter($this->size());
+		$writer->write(Converter::intToBinary(strlen($this->name), 4)); // bound: name_size
+		$writer->write($this->name);
+		return $writer->getBinaryData();
 	}
 
-	public static function deserialize($payload) {
-		const view = new BufferView(payload);
-		const $nameSize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
-		const $name = $hexBinary;
-		view.shiftRight(nameSize);
-
-		const instance = new NamespaceId();
-		instance._$name = $name;
-		return instance;
-	}
-
-	public function serialize() {
-		const buffer = new Writer(this.size);
-		buffer.write(Converter::intToHex(this._$name.length, 4)); // bound: name_size
-		buffer.write(this._$name);
-		return buffer.storage;
-	}
-
-	toString() {
-		let result = '(';
-		result += `$name: hex(${converter.uint8ToHex(this._$name)}), `;
-		result += ')';
-		return result;
+	public function __toString(){
+		$result = '';
+		$result .= 'name: ' . 'hex(0x' . strtoupper(bin2hex($this->name)) . ')' . ', ';
+		return $result;
 	}
 }
 
 class MosaicId {
-	static TYPE_HINTS = {
-		$namespaceId: 'struct:NamespaceId',
-		$name: 'bytes_array'
-	};
+	public NamespaceId $namespaceId;
 
-	public function __construct() {
-		this._$namespaceId = new NamespaceId();
-		this._$name = ;
+	public string $name;
+
+	public function __construct(?NamespaceId $namespaceId = null, ?string $name = null){
+		$this->namespaceId = $namespaceId ?? new NamespaceId();
+		$this->name = $name ?? '';
 	}
 
-	sort() {
-		this._$namespaceId.sort();
+	public function sort(){
+		$this->namespaceId->sort();
 	}
 
-	get $namespaceId() {
-		return this._$namespaceId;
+	public function size(){
+		$size = 0;
+		$size += $this->namespaceId->size();
+		$size += 4;
+		$size += strlen($this->name);
+		return $size;
 	}
 
-	set $namespaceId(value) {
-		this._$namespaceId = value;
+	public static function deserialize(BinaryReader $reader){
+		$instance = new MosaicId();
+
+		$namespaceId = NamespaceId::deserialize($reader);
+		$nameSize = Converter::binaryToInt($reader->read(4), 4);
+		$name = $reader->read($nameSize);
+
+		$instance->namespaceId = $namespaceId;
+		$instance->name = $name;
+		return $instance;
 	}
 
-	get $name() {
-		return this._$name;
+	public function serialize(): string {
+		$writer = new BinaryWriter($this->size());
+		$writer->write($this->namespaceId->serialize());
+		$writer->write(Converter::intToBinary(strlen($this->name), 4)); // bound: name_size
+		$writer->write($this->name);
+		return $writer->getBinaryData();
 	}
 
-	set $name(value) {
-		this._$name = value;
-	}
-
-	public function size() {
-		let size = 0;
-		size += this.$namespaceId.size;
-		size += 4;
-		size += this._$name.length;
-		return size;
-	}
-
-	public static function deserialize($payload) {
-		const view = new BufferView(payload);
-		const $namespaceId = NamespaceId.deserialize(view.buffer);
-		view.shiftRight($namespaceId.size);
-		const $nameSize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
-		const $name = $hexBinary;
-		view.shiftRight(nameSize);
-
-		const instance = new MosaicId();
-		instance._$namespaceId = $namespaceId;
-		instance._$name = $name;
-		return instance;
-	}
-
-	public function serialize() {
-		const buffer = new Writer(this.size);
-		buffer.write(this._$namespaceId.serialize());
-		buffer.write(Converter::intToHex(this._$name.length, 4)); // bound: name_size
-		buffer.write(this._$name);
-		return buffer.storage;
-	}
-
-	toString() {
-		let result = '(';
-		result += `$namespaceId: ${this._$namespaceId.toString()}, `;
-		result += `$name: hex(${converter.uint8ToHex(this._$name)}), `;
-		result += ')';
-		return result;
+	public function __toString(){
+		$result = '';
+		$result .= 'namespaceId: ' . $this->namespaceId . ', ';
+		$result .= 'name: ' . 'hex(0x' . strtoupper(bin2hex($this->name)) . ')' . ', ';
+		return $result;
 	}
 }
 
 class Mosaic {
-	static TYPE_HINTS = {
-		$mosaicId: 'struct:MosaicId',
-		$amount: 'pod:Amount'
-	};
+	public MosaicId $mosaicId;
 
-	public function __construct() {
-		this._$mosaicId = new MosaicId();
-		this._$amount = new Amount();
+	public Amount $amount;
+
+	public function __construct(?MosaicId $mosaicId = null, ?Amount $amount = null){
+		$this->mosaicId = $mosaicId ?? new MosaicId();
+		$this->amount = $amount ?? new Amount();
 	}
 
-	sort() {
-		this._$mosaicId.sort();
+	public function sort(){
+		$this->mosaicId->sort();
 	}
 
-	get $mosaicId() {
-		return this._$mosaicId;
+	public function size(){
+		$size = 0;
+		$size += 4;
+		$size += $this->mosaicId->size();
+		$size += $this->amount->size();
+		return $size;
 	}
 
-	set $mosaicId(value) {
-		this._$mosaicId = value;
-	}
+	public static function deserialize(BinaryReader $reader){
+		$instance = new Mosaic();
 
-	get $amount() {
-		return this._$amount;
-	}
-
-	set $amount(value) {
-		this._$amount = value;
-	}
-
-	public function size() {
-		let size = 0;
-		size += 4;
-		size += this.$mosaicId.size;
-		size += this.$amount.size;
-		return size;
-	}
-
-	public static function deserialize($payload) {
-		const view = new BufferView(payload);
-		const $mosaicIdSize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
+		$mosaicIdSize = Converter::binaryToInt($reader->read(4), 4);
 		// marking sizeof field
-		const $mosaicId = MosaicId.deserialize(view.window(mosaicIdSize));
-		view.shiftRight($mosaicId.size);
-		const $amount = Amount.deserialize(view.buffer);
-		view.shiftRight($amount.size);
+		$mosaicId = MosaicId::deserialize(view.window(mosaicIdSize));
+		$amount = Amount::deserialize($reader);
 
-		const instance = new Mosaic();
-		instance._$mosaicId = $mosaicId;
-		instance._$amount = $amount;
-		return instance;
+		$instance->mosaicId = $mosaicId;
+		$instance->amount = $amount;
+		return $instance;
 	}
 
-	public function serialize() {
-		const buffer = new Writer(this.size);
-		buffer.write(Converter::intToHex(this.$mosaicId.size, 4)); // bound: mosaic_id_size
-		buffer.write(this._$mosaicId.serialize());
-		buffer.write(this._$amount.serialize());
-		return buffer.storage;
+	public function serialize(): string {
+		$writer = new BinaryWriter($this->size());
+		$writer->write(Converter::intToBinary($this->mosaicId->size(), 4)); // bound: mosaic_id_size
+		$writer->write($this->mosaicId->serialize());
+		$writer->write($this->amount->serialize());
+		return $writer->getBinaryData();
 	}
 
-	toString() {
-		let result = '(';
-		result += `$mosaicId: ${this._$mosaicId.toString()}, `;
-		result += `$amount: ${this._$amount.toString()}, `;
-		result += ')';
-		return result;
+	public function __toString(){
+		$result = '';
+		$result .= 'mosaicId: ' . $this->mosaicId . ', ';
+		$result .= 'amount: ' . $this->amount . ', ';
+		return $result;
 	}
 }
 
 class SizePrefixedMosaic {
-	static TYPE_HINTS = {
-		$mosaic: 'struct:Mosaic'
-	};
+	public Mosaic $mosaic;
 
-	public function __construct() {
-		this._$mosaic = new Mosaic();
+	public function __construct(?Mosaic $mosaic = null){
+		$this->mosaic = $mosaic ?? new Mosaic();
 	}
 
-	sort() {
-		this._$mosaic.sort();
+	public function sort(){
+		$this->mosaic->sort();
 	}
 
-	get $mosaic() {
-		return this._$mosaic;
+	public function size(){
+		$size = 0;
+		$size += 4;
+		$size += $this->mosaic->size();
+		return $size;
 	}
 
-	set $mosaic(value) {
-		this._$mosaic = value;
-	}
+	public static function deserialize(BinaryReader $reader){
+		$instance = new SizePrefixedMosaic();
 
-	public function size() {
-		let size = 0;
-		size += 4;
-		size += this.$mosaic.size;
-		return size;
-	}
-
-	public static function deserialize($payload) {
-		const view = new BufferView(payload);
-		const $mosaicSize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
+		$mosaicSize = Converter::binaryToInt($reader->read(4), 4);
 		// marking sizeof field
-		const $mosaic = Mosaic.deserialize(view.window(mosaicSize));
-		view.shiftRight($mosaic.size);
+		$mosaic = Mosaic::deserialize(view.window(mosaicSize));
 
-		const instance = new SizePrefixedMosaic();
-		instance._$mosaic = $mosaic;
-		return instance;
+		$instance->mosaic = $mosaic;
+		return $instance;
 	}
 
-	public function serialize() {
-		const buffer = new Writer(this.size);
-		buffer.write(Converter::intToHex(this.$mosaic.size, 4)); // bound: mosaic_size
-		buffer.write(this._$mosaic.serialize());
-		return buffer.storage;
+	public function serialize(): string {
+		$writer = new BinaryWriter($this->size());
+		$writer->write(Converter::intToBinary($this->mosaic->size(), 4)); // bound: mosaic_size
+		$writer->write($this->mosaic->serialize());
+		return $writer->getBinaryData();
 	}
 
-	toString() {
-		let result = '(';
-		result += `$mosaic: ${this._$mosaic.toString()}, `;
-		result += ')';
-		return result;
+	public function __toString(){
+		$result = '';
+		$result .= 'mosaic: ' . $this->mosaic . ', ';
+		return $result;
 	}
 }
 
 class MosaicTransferFeeType {
-	static ABSOLUTE = new MosaicTransferFeeType(1);
+	const ABSOLUTE = 1;
 
-	static PERCENTILE = new MosaicTransferFeeType(2);
+	const PERCENTILE = 2;
 
-	public function __construct(value) {
-		this.value = value;
+	public $value;
+
+	public function __construct(int $value = 0){
+		$this->value = $value;
 	}
 
-	static valueToKey(value) {
-		const values = [
+	static function valueToKey($value){
+		$values = [
 			1, 2
 		];
-		const keys = [
+		$keys = [
 			'ABSOLUTE', 'PERCENTILE'
 		];
 
-		const index = values.indexOf(value);
-		if (-1 === index)
-			throw RangeError(`invalid enum value ${value}`);
+		$index = array_search($value, $values);
+		if ($index === false)
+			throw new Exception("Invalid enum value: {$value}");
 
-		return keys[index];
+		return $keys[$index];
 	}
 
-	static fromValue(value) {
-		return MosaicTransferFeeType[this.valueToKey(value)];
-	}
-
-	public function size() {
+	public static function size(){
 		return 4;
 	}
 
-	public static function deserialize($payload) {
-		const byteArray = payload;
-		return this.fromValue(Converter::hexToInt(byteArray, 4));
+	public static function deserialize(BinaryReader $reader): self {
+		return new MosaicTransferFeeType(Converter::binaryToInt($reader->read(4), 4));
 	}
 
-	public static function deserializeAligned($payload) {
-		const byteArray = payload;
-		return this.fromValue(Converter::hexToInt(byteArray, 4));
+	public static function deserializeAligned(BinaryReader $reader): self {
+		return new MosaicTransferFeeType(Converter::binaryToInt($reader->read(4), 4));
 	}
 
-	public function serialize() {
-		return Converter::intToHex(this.value, 4);
+	public function serialize(): string {
+		return Converter::intToBinary($this->value, 4);
 	}
 
-	toString() {
-		return `MosaicTransferFeeType.${MosaicTransferFeeType.valueToKey(this.value)}`;
+	public function __toString(){
+		return "MosaicTransferFeeType." . self::valueToKey($this->value);
 	}
 }
 
 class MosaicLevy {
-	static TYPE_HINTS = {
-		$transferFeeType: 'enum:MosaicTransferFeeType',
-		$recipientAddress: 'pod:Address',
-		$mosaicId: 'struct:MosaicId',
-		$fee: 'pod:Amount'
-	};
+	public MosaicTransferFeeType $transferFeeType;
 
-	public function __construct() {
-		this._$transferFeeType = MosaicTransferFeeType.ABSOLUTE;
-		this._$recipientAddress = new Address();
-		this._$mosaicId = new MosaicId();
-		this._$fee = new Amount();
-		this._$recipientAddressSize = 40; // reserved field
+	public Address $recipientAddress;
+
+	public MosaicId $mosaicId;
+
+	public Amount $fee;
+
+	private int $recipientAddressSize = 40; // reserved field
+
+	public function __construct(
+		?MosaicTransferFeeType $transferFeeType = null,
+		?Address $recipientAddress = null,
+		?MosaicId $mosaicId = null,
+		?Amount $fee = null
+	){
+		$this->transferFeeType = $transferFeeType ?? new MosaicTransferFeeType();
+		$this->recipientAddress = $recipientAddress ?? new Address();
+		$this->mosaicId = $mosaicId ?? new MosaicId();
+		$this->fee = $fee ?? new Amount();
+		$this->recipientAddressSize = 40; // reserved field
 	}
 
-	sort() {
-		this._$mosaicId.sort();
+	public function sort(){
+		$this->mosaicId->sort();
 	}
 
-	get $transferFeeType() {
-		return this._$transferFeeType;
+	public function size(){
+		$size = 0;
+		$size += $this->transferFeeType->size();
+		$size += 4;
+		$size += $this->recipientAddress->size();
+		$size += 4;
+		$size += $this->mosaicId->size();
+		$size += $this->fee->size();
+		return $size;
 	}
 
-	set $transferFeeType(value) {
-		this._$transferFeeType = value;
-	}
+	public static function deserialize(BinaryReader $reader){
+		$instance = new MosaicLevy();
 
-	get $recipientAddress() {
-		return this._$recipientAddress;
-	}
-
-	set $recipientAddress(value) {
-		this._$recipientAddress = value;
-	}
-
-	get $mosaicId() {
-		return this._$mosaicId;
-	}
-
-	set $mosaicId(value) {
-		this._$mosaicId = value;
-	}
-
-	get $fee() {
-		return this._$fee;
-	}
-
-	set $fee(value) {
-		this._$fee = value;
-	}
-
-	public function size() {
-		let size = 0;
-		size += this.$transferFeeType.size;
-		size += 4;
-		size += this.$recipientAddress.size;
-		size += 4;
-		size += this.$mosaicId.size;
-		size += this.$fee.size;
-		return size;
-	}
-
-	public static function deserialize($payload) {
-		const view = new BufferView(payload);
-		const $transferFeeType = MosaicTransferFeeType.deserialize(view.buffer);
-		view.shiftRight($transferFeeType.size);
-		const $recipientAddressSize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
+		$transferFeeType = MosaicTransferFeeType::deserialize($reader);
+		$recipientAddressSize = Converter::binaryToInt($reader->read(4), 4);
 		if (40 !== $recipientAddressSize)
-			throw RangeError(`Invalid value of reserved field (${$recipientAddressSize})`);
-		const $recipientAddress = Address.deserialize(view.buffer);
-		view.shiftRight($recipientAddress.size);
-		const $mosaicIdSize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
+			throw new OutOfRangeException('Invalid value of reserved field (' . $recipientAddressSize . ')');
+		$recipientAddress = Address::deserialize($reader);
+		$mosaicIdSize = Converter::binaryToInt($reader->read(4), 4);
 		// marking sizeof field
-		const $mosaicId = MosaicId.deserialize(view.window(mosaicIdSize));
-		view.shiftRight($mosaicId.size);
-		const $fee = Amount.deserialize(view.buffer);
-		view.shiftRight($fee.size);
+		$mosaicId = MosaicId::deserialize(view.window(mosaicIdSize));
+		$fee = Amount::deserialize($reader);
 
-		const instance = new MosaicLevy();
-		instance._$transferFeeType = $transferFeeType;
-		instance._$recipientAddress = $recipientAddress;
-		instance._$mosaicId = $mosaicId;
-		instance._$fee = $fee;
-		return instance;
+		$instance->transferFeeType = $transferFeeType;
+		$instance->recipientAddress = $recipientAddress;
+		$instance->mosaicId = $mosaicId;
+		$instance->fee = $fee;
+		return $instance;
 	}
 
-	public function serialize() {
-		const buffer = new Writer(this.size);
-		buffer.write(this._$transferFeeType.serialize());
-		buffer.write(Converter::intToHex(this._$recipientAddressSize, 4));
-		buffer.write(this._$recipientAddress.serialize());
-		buffer.write(Converter::intToHex(this.$mosaicId.size, 4)); // bound: mosaic_id_size
-		buffer.write(this._$mosaicId.serialize());
-		buffer.write(this._$fee.serialize());
-		return buffer.storage;
+	public function serialize(): string {
+		$writer = new BinaryWriter($this->size());
+		$writer->write($this->transferFeeType->serialize());
+		$writer->write(Converter::intToBinary($this->recipientAddressSize, 4));
+		$writer->write($this->recipientAddress->serialize());
+		$writer->write(Converter::intToBinary($this->mosaicId->size(), 4)); // bound: mosaic_id_size
+		$writer->write($this->mosaicId->serialize());
+		$writer->write($this->fee->serialize());
+		return $writer->getBinaryData();
 	}
 
-	toString() {
-		let result = '(';
-		result += `$transferFeeType: ${this._$transferFeeType.toString()}, `;
-		result += `$recipientAddress: ${this._$recipientAddress.toString()}, `;
-		result += `$mosaicId: ${this._$mosaicId.toString()}, `;
-		result += `$fee: ${this._$fee.toString()}, `;
-		result += ')';
-		return result;
+	public function __toString(){
+		$result = '';
+		$result .= 'transferFeeType: ' . $this->transferFeeType . ', ';
+		$result .= 'recipientAddress: ' . $this->recipientAddress . ', ';
+		$result .= 'mosaicId: ' . $this->mosaicId . ', ';
+		$result .= 'fee: ' . $this->fee . ', ';
+		return $result;
 	}
 }
 
 class MosaicProperty {
-	static TYPE_HINTS = {
-		$name: 'bytes_array',
-		$value: 'bytes_array'
-	};
+	public string $name;
 
-	public function __construct() {
-		this._$name = ;
-		this._$value = ;
+	public string $value;
+
+	public function __construct(?string $name = null, ?string $value = null){
+		$this->name = $name ?? '';
+		$this->value = $value ?? '';
 	}
 
-	sort() {
+	public function sort(){
 	}
 
-	get $name() {
-		return this._$name;
+	public function size(){
+		$size = 0;
+		$size += 4;
+		$size += strlen($this->name);
+		$size += 4;
+		$size += strlen($this->value);
+		return $size;
 	}
 
-	set $name(value) {
-		this._$name = value;
+	public static function deserialize(BinaryReader $reader){
+		$instance = new MosaicProperty();
+
+		$nameSize = Converter::binaryToInt($reader->read(4), 4);
+		$name = $reader->read($nameSize);
+		$valueSize = Converter::binaryToInt($reader->read(4), 4);
+		$value = $reader->read($valueSize);
+
+		$instance->name = $name;
+		$instance->value = $value;
+		return $instance;
 	}
 
-	get $value() {
-		return this._$value;
+	public function serialize(): string {
+		$writer = new BinaryWriter($this->size());
+		$writer->write(Converter::intToBinary(strlen($this->name), 4)); // bound: name_size
+		$writer->write($this->name);
+		$writer->write(Converter::intToBinary(strlen($this->value), 4)); // bound: value_size
+		$writer->write($this->value);
+		return $writer->getBinaryData();
 	}
 
-	set $value(value) {
-		this._$value = value;
-	}
-
-	public function size() {
-		let size = 0;
-		size += 4;
-		size += this._$name.length;
-		size += 4;
-		size += this._$value.length;
-		return size;
-	}
-
-	public static function deserialize($payload) {
-		const view = new BufferView(payload);
-		const $nameSize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
-		const $name = $hexBinary;
-		view.shiftRight(nameSize);
-		const $valueSize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
-		const $value = $hexBinary;
-		view.shiftRight(valueSize);
-
-		const instance = new MosaicProperty();
-		instance._$name = $name;
-		instance._$value = $value;
-		return instance;
-	}
-
-	public function serialize() {
-		const buffer = new Writer(this.size);
-		buffer.write(Converter::intToHex(this._$name.length, 4)); // bound: name_size
-		buffer.write(this._$name);
-		buffer.write(Converter::intToHex(this._$value.length, 4)); // bound: value_size
-		buffer.write(this._$value);
-		return buffer.storage;
-	}
-
-	toString() {
-		let result = '(';
-		result += `$name: hex(${converter.uint8ToHex(this._$name)}), `;
-		result += `$value: hex(${converter.uint8ToHex(this._$value)}), `;
-		result += ')';
-		return result;
+	public function __toString(){
+		$result = '';
+		$result .= 'name: ' . 'hex(0x' . strtoupper(bin2hex($this->name)) . ')' . ', ';
+		$result .= 'value: ' . 'hex(0x' . strtoupper(bin2hex($this->value)) . ')' . ', ';
+		return $result;
 	}
 }
 
 class SizePrefixedMosaicProperty {
-	static TYPE_HINTS = {
-		$property: 'struct:MosaicProperty'
-	};
+	public MosaicProperty $property;
 
-	public function __construct() {
-		this._$property = new MosaicProperty();
+	public function __construct(?MosaicProperty $property = null){
+		$this->property = $property ?? new MosaicProperty();
 	}
 
-	sort() {
-		this._$property.sort();
+	public function sort(){
+		$this->property->sort();
 	}
 
-	get $property() {
-		return this._$property;
+	public function size(){
+		$size = 0;
+		$size += 4;
+		$size += $this->property->size();
+		return $size;
 	}
 
-	set $property(value) {
-		this._$property = value;
-	}
+	public static function deserialize(BinaryReader $reader){
+		$instance = new SizePrefixedMosaicProperty();
 
-	public function size() {
-		let size = 0;
-		size += 4;
-		size += this.$property.size;
-		return size;
-	}
-
-	public static function deserialize($payload) {
-		const view = new BufferView(payload);
-		const $propertySize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
+		$propertySize = Converter::binaryToInt($reader->read(4), 4);
 		// marking sizeof field
-		const $property = MosaicProperty.deserialize(view.window(propertySize));
-		view.shiftRight($property.size);
+		$property = MosaicProperty::deserialize(view.window(propertySize));
 
-		const instance = new SizePrefixedMosaicProperty();
-		instance._$property = $property;
-		return instance;
+		$instance->property = $property;
+		return $instance;
 	}
 
-	public function serialize() {
-		const buffer = new Writer(this.size);
-		buffer.write(Converter::intToHex(this.$property.size, 4)); // bound: property_size
-		buffer.write(this._$property.serialize());
-		return buffer.storage;
+	public function serialize(): string {
+		$writer = new BinaryWriter($this->size());
+		$writer->write(Converter::intToBinary($this->property->size(), 4)); // bound: property_size
+		$writer->write($this->property->serialize());
+		return $writer->getBinaryData();
 	}
 
-	toString() {
-		let result = '(';
-		result += `$property: ${this._$property.toString()}, `;
-		result += ')';
-		return result;
+	public function __toString(){
+		$result = '';
+		$result .= 'property: ' . $this->property . ', ';
+		return $result;
 	}
 }
 
 class MosaicDefinition {
-	static TYPE_HINTS = {
-		$ownerPublicKey: 'pod:PublicKey',
-		$id: 'struct:MosaicId',
-		$description: 'bytes_array',
-		$properties: 'array[SizePrefixedMosaicProperty]',
-		$levy: 'struct:MosaicLevy'
-	};
+	public PublicKey $ownerPublicKey;
 
-	public function __construct() {
-		this._$ownerPublicKey = new PublicKey();
-		this._$id = new MosaicId();
-		this._$description = ;
-		this._$properties = [];
-		this._$levy = null;
-		this._$ownerPublicKeySize = 32; // reserved field
+	public MosaicId $id;
+
+	public string $description;
+
+	public array $properties;
+
+	public MosaicLevy $levy;
+
+	private int $ownerPublicKeySize = 32; // reserved field
+
+	public function __construct(
+		?PublicKey $ownerPublicKey = null,
+		?MosaicId $id = null,
+		?string $description = null,
+		?array $properties = null,
+		?MosaicLevy $levy = null
+	){
+		$this->ownerPublicKey = $ownerPublicKey ?? new PublicKey();
+		$this->id = $id ?? new MosaicId();
+		$this->description = $description ?? '';
+		$this->properties = $properties ?? [];
+		$this->levy = null;
+		$this->ownerPublicKeySize = 32; // reserved field
 	}
 
-	sort() {
-		this._$id.sort();
-		if (0 !== this.levySizeComputed)
-			this._$levy.sort();
+	public function sort(){
+		$this->id->sort();
+		if (0 !== $this->levySizeComputed)
+			$this->levy->sort();
 	}
 
-	get $ownerPublicKey() {
-		return this._$ownerPublicKey;
-	}
-
-	set $ownerPublicKey(value) {
-		this._$ownerPublicKey = value;
-	}
-
-	get $id() {
-		return this._$id;
-	}
-
-	set $id(value) {
-		this._$id = value;
-	}
-
-	get $description() {
-		return this._$description;
-	}
-
-	set $description(value) {
-		this._$description = value;
-	}
-
-	get $properties() {
-		return this._$properties;
-	}
-
-	set $properties(value) {
-		this._$properties = value;
-	}
-
-	get $levy() {
-		return this._$levy;
-	}
-
-	set $levy(value) {
-		this._$levy = value;
-	}
-
-	get $levySizeComputed() {
+	get levySizeComputed(){
 		return this.levy ? this.levy.size + 0 : 0;
 	}
 
-	public function size() {
-		let size = 0;
-		size += 4;
-		size += this.$ownerPublicKey.size;
-		size += 4;
-		size += this.$id.size;
-		size += 4;
-		size += this._$description.length;
-		size += 4;
-		size += arrayHelpers.size(this.$properties);
-		size += 4;
-		if (0 !== this.levySizeComputed)
-			size += this.$levy.size;
+	public function size(){
+		$size = 0;
+		$size += 4;
+		$size += $this->ownerPublicKey->size();
+		$size += 4;
+		$size += $this->id->size();
+		$size += 4;
+		$size += strlen($this->description);
+		$size += 4;
+		$size += ArrayHelpers::size($this->properties);
+		$size += 4;
+		if (0 !== $this->levySizeComputed)
+			$size += $this->levy->size();
 
-		return size;
+		return $size;
 	}
 
-	public static function deserialize($payload) {
-		const view = new BufferView(payload);
-		const $ownerPublicKeySize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
+	public static function deserialize(BinaryReader $reader){
+		$instance = new MosaicDefinition();
+
+		$ownerPublicKeySize = Converter::binaryToInt($reader->read(4), 4);
 		if (32 !== $ownerPublicKeySize)
-			throw RangeError(`Invalid value of reserved field (${$ownerPublicKeySize})`);
-		const $ownerPublicKey = PublicKey.deserialize(view.buffer);
-		view.shiftRight($ownerPublicKey.size);
-		const $idSize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
+			throw new OutOfRangeException('Invalid value of reserved field (' . $ownerPublicKeySize . ')');
+		$ownerPublicKey = PublicKey::deserialize($reader);
+		$idSize = Converter::binaryToInt($reader->read(4), 4);
 		// marking sizeof field
-		const $id = MosaicId.deserialize(view.window(idSize));
-		view.shiftRight($id.size);
-		const $descriptionSize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
-		const $description = $hexBinary;
-		view.shiftRight(descriptionSize);
-		const $propertiesCount = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
-		const $properties = arrayHelpers.readArrayCount(view.buffer, SizePrefixedMosaicProperty, propertiesCount);
-		view.shiftRight(arrayHelpers.size($properties));
-		const $levySize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
-		let $levy = null;
-		if (0 !== levySize) {
-			$levy = MosaicLevy.deserialize(view.buffer);
-			view.shiftRight($levy.size);
-		}
+		$id = MosaicId::deserialize(view.window(idSize));
+		$descriptionSize = Converter::binaryToInt($reader->read(4), 4);
+		$description = $reader->read($descriptionSize);
+		$propertiesCount = Converter::binaryToInt($reader->read(4), 4);
+		$properties = ArrayHelpers::readArrayCount($reader, [SizePrefixedMosaicProperty::class, 'deserialize'], $propertiesCount);
+		$levySize = Converter::binaryToInt($reader->read(4), 4);
+		$levy = null;
+		if (0 !== $levySize->value)
+			$levy = MosaicLevy::deserialize($reader);
 
-		const instance = new MosaicDefinition();
-		instance._$ownerPublicKey = $ownerPublicKey;
-		instance._$id = $id;
-		instance._$description = $description;
-		instance._$properties = $properties;
-		instance._$levy = $levy;
-		return instance;
+
+		$instance->ownerPublicKey = $ownerPublicKey;
+		$instance->id = $id;
+		$instance->description = $description;
+		$instance->properties = $properties;
+		$instance->levy = $levy;
+		return $instance;
 	}
 
-	public function serialize() {
-		const buffer = new Writer(this.size);
-		buffer.write(Converter::intToHex(this._$ownerPublicKeySize, 4));
-		buffer.write(this._$ownerPublicKey.serialize());
-		buffer.write(Converter::intToHex(this.$id.size, 4)); // bound: id_size
-		buffer.write(this._$id.serialize());
-		buffer.write(Converter::intToHex(this._$description.length, 4)); // bound: description_size
-		buffer.write(this._$description);
-		buffer.write(Converter::intToHex(this._$properties.length, 4)); // bound: properties_count
-		arrayHelpers.writeArray(buffer, this._$properties);
-		buffer.write(Converter::intToHex(this.$levySizeComputed, 4));
-		if (0 !== this.levySizeComputed)
-			buffer.write(this._$levy.serialize());
+	public function serialize(): string {
+		$writer = new BinaryWriter($this->size());
+		$writer->write(Converter::intToBinary($this->ownerPublicKeySize, 4));
+		$writer->write($this->ownerPublicKey->serialize());
+		$writer->write(Converter::intToBinary($this->id->size(), 4)); // bound: id_size
+		$writer->write($this->id->serialize());
+		$writer->write(Converter::intToBinary(strlen($this->description), 4)); // bound: description_size
+		$writer->write($this->description);
+		$writer->write(Converter::intToBinary(count($this->properties), 4)); // bound: properties_count
+		ArrayHelpers::writeArray($writer, $this->properties);
+		$writer->write(Converter::intToBinary($this->levySizeComputed, 4));
+		if (0 !== $this->levySizeComputed)
+			$writer->write($this->levy->serialize());
 
-		return buffer.storage;
+		return $writer->getBinaryData();
 	}
 
-	toString() {
-		let result = '(';
-		result += `$ownerPublicKey: ${this._$ownerPublicKey.toString()}, `;
-		result += `$id: ${this._$id.toString()}, `;
-		result += `$description: hex(${converter.uint8ToHex(this._$description)}), `;
-		result += `$properties: [${this._$properties.map(e => e.toString()).join(',')}], `;
-		if (0 !== this.levySizeComputed)
-			result += `$levy: ${this._$levy.toString()}, `;
+	public function __toString(){
+		$result = '';
+		$result .= 'ownerPublicKey: ' . $this->ownerPublicKey . ', ';
+		$result .= 'id: ' . $this->id . ', ';
+		$result .= 'description: ' . 'hex(0x' . strtoupper(bin2hex($this->description)) . ')' . ', ';
+		$result .= 'properties: ' . '[' . implode(',', array_map(fn ($e) => $e, $this->properties)) . ']' . ', ';
+		if (0 !== $this->levySizeComputed)
+			$result .= 'levy: ' . $this->levy . ', ';
 
-		result += ')';
-		return result;
+		return $result;
 	}
 }
 
-class MosaicDefinitionTransactionV1 {
-	static TRANSACTION_VERSION = 1;
+class MosaicDefinitionTransactionV1 extends Transaction {
+	const TRANSACTION_VERSION = 1;
 
-	static TRANSACTION_TYPE = TransactionType.MOSAIC_DEFINITION;
+	const TRANSACTION_TYPE = TransactionType::MOSAIC_DEFINITION;
 
-	static TYPE_HINTS = {
-		$type: 'enum:TransactionType',
-		$network: 'enum:NetworkType',
-		$timestamp: 'pod:Timestamp',
-		$signerPublicKey: 'pod:PublicKey',
-		$signature: 'pod:Signature',
-		$fee: 'pod:Amount',
-		$deadline: 'pod:Timestamp',
-		$mosaicDefinition: 'struct:MosaicDefinition',
-		$rentalFeeSink: 'pod:Address',
-		$rentalFee: 'pod:Amount'
-	};
+	public MosaicDefinition $mosaicDefinition;
 
-	public function __construct() {
-		this._$type = MosaicDefinitionTransactionV1.TRANSACTION_TYPE;
-		this._$version = MosaicDefinitionTransactionV1.TRANSACTION_VERSION;
-		this._$network = NetworkType.MAINNET;
-		this._$timestamp = new Timestamp();
-		this._$signerPublicKey = new PublicKey();
-		this._$signature = new Signature();
-		this._$fee = new Amount();
-		this._$deadline = new Timestamp();
-		this._$mosaicDefinition = new MosaicDefinition();
-		this._$rentalFeeSink = new Address();
-		this._$rentalFee = new Amount();
-		this._$entityBodyReserved_1 = 0; // reserved field
-		this._$signerPublicKeySize = 32; // reserved field
-		this._$signatureSize = 64; // reserved field
-		this._$rentalFeeSinkSize = 40; // reserved field
+	public Address $rentalFeeSink;
+
+	public Amount $rentalFee;
+
+	private int $rentalFeeSinkSize = 40; // reserved field
+
+	public function __construct(
+		?NetworkType $network = null,
+		?Timestamp $timestamp = null,
+		?PublicKey $signerPublicKey = null,
+		?Signature $signature = null,
+		?Amount $fee = null,
+		?Timestamp $deadline = null,
+		?MosaicDefinition $mosaicDefinition = null,
+		?Address $rentalFeeSink = null,
+		?Amount $rentalFee = null
+	){
+		parent::__construct(
+			new TransactionType(MosaicDefinitionTransactionV1::TRANSACTION_TYPE),
+			MosaicDefinitionTransactionV1::TRANSACTION_VERSION,
+			$network,
+			$timestamp,
+			$signerPublicKey,
+			$signature,
+			$fee,
+			$deadline,
+		);
+		$this->mosaicDefinition = $mosaicDefinition ?? new MosaicDefinition();
+		$this->rentalFeeSink = $rentalFeeSink ?? new Address();
+		$this->rentalFee = $rentalFee ?? new Amount();
+		$this->rentalFeeSinkSize = 40; // reserved field
 	}
 
-	sort() {
-		this._$mosaicDefinition.sort();
+	public function sort(){
+		$this->mosaicDefinition->sort();
 	}
 
-	get $type() {
-		return this._$type;
+	public function size(){
+		$size = 0;
+		$size += parent::size();
+		$size += 4;
+		$size += $this->mosaicDefinition->size();
+		$size += 4;
+		$size += $this->rentalFeeSink->size();
+		$size += $this->rentalFee->size();
+		return $size;
 	}
 
-	set $type(value) {
-		this._$type = value;
-	}
+	public static function deserialize(BinaryReader $reader){
+		$instance = new MosaicDefinitionTransactionV1();
 
-	get $version() {
-		return this._$version;
-	}
-
-	set $version(value) {
-		this._$version = value;
-	}
-
-	get $network() {
-		return this._$network;
-	}
-
-	set $network(value) {
-		this._$network = value;
-	}
-
-	get $timestamp() {
-		return this._$timestamp;
-	}
-
-	set $timestamp(value) {
-		this._$timestamp = value;
-	}
-
-	get $signerPublicKey() {
-		return this._$signerPublicKey;
-	}
-
-	set $signerPublicKey(value) {
-		this._$signerPublicKey = value;
-	}
-
-	get $signature() {
-		return this._$signature;
-	}
-
-	set $signature(value) {
-		this._$signature = value;
-	}
-
-	get $fee() {
-		return this._$fee;
-	}
-
-	set $fee(value) {
-		this._$fee = value;
-	}
-
-	get $deadline() {
-		return this._$deadline;
-	}
-
-	set $deadline(value) {
-		this._$deadline = value;
-	}
-
-	get $mosaicDefinition() {
-		return this._$mosaicDefinition;
-	}
-
-	set $mosaicDefinition(value) {
-		this._$mosaicDefinition = value;
-	}
-
-	get $rentalFeeSink() {
-		return this._$rentalFeeSink;
-	}
-
-	set $rentalFeeSink(value) {
-		this._$rentalFeeSink = value;
-	}
-
-	get $rentalFee() {
-		return this._$rentalFee;
-	}
-
-	set $rentalFee(value) {
-		this._$rentalFee = value;
-	}
-
-	public function size() {
-		let size = 0;
-		size += this.$type.size;
-		size += 1;
-		size += 2;
-		size += this.$network.size;
-		size += this.$timestamp.size;
-		size += 4;
-		size += this.$signerPublicKey.size;
-		size += 4;
-		size += this.$signature.size;
-		size += this.$fee.size;
-		size += this.$deadline.size;
-		size += 4;
-		size += this.$mosaicDefinition.size;
-		size += 4;
-		size += this.$rentalFeeSink.size;
-		size += this.$rentalFee.size;
-		return size;
-	}
-
-	public static function deserialize($payload) {
-		const view = new BufferView(payload);
-		const $type = TransactionType.deserialize(view.buffer);
-		view.shiftRight($type.size);
-		const $version = Converter::hexToInt(view.buffer, 1);
-		view.shiftRight(1);
-		const $entityBodyReserved_1 = Converter::hexToInt(view.buffer, 2);
-		view.shiftRight(2);
-		if (0 !== $entityBodyReserved_1)
-			throw RangeError(`Invalid value of reserved field (${$entityBodyReserved_1})`);
-		const $network = NetworkType.deserialize(view.buffer);
-		view.shiftRight($network.size);
-		const $timestamp = Timestamp.deserialize(view.buffer);
-		view.shiftRight($timestamp.size);
-		const $signerPublicKeySize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
-		if (32 !== $signerPublicKeySize)
-			throw RangeError(`Invalid value of reserved field (${$signerPublicKeySize})`);
-		const $signerPublicKey = PublicKey.deserialize(view.buffer);
-		view.shiftRight($signerPublicKey.size);
-		const $signatureSize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
-		if (64 !== $signatureSize)
-			throw RangeError(`Invalid value of reserved field (${$signatureSize})`);
-		const $signature = Signature.deserialize(view.buffer);
-		view.shiftRight($signature.size);
-		const $fee = Amount.deserialize(view.buffer);
-		view.shiftRight($fee.size);
-		const $deadline = Timestamp.deserialize(view.buffer);
-		view.shiftRight($deadline.size);
-		const $mosaicDefinitionSize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
+		Transaction::_deserialize($reader, $instance);
+		$mosaicDefinitionSize = Converter::binaryToInt($reader->read(4), 4);
 		// marking sizeof field
-		const $mosaicDefinition = MosaicDefinition.deserialize(view.window(mosaicDefinitionSize));
-		view.shiftRight($mosaicDefinition.size);
-		const $rentalFeeSinkSize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
+		$mosaicDefinition = MosaicDefinition::deserialize(view.window(mosaicDefinitionSize));
+		$rentalFeeSinkSize = Converter::binaryToInt($reader->read(4), 4);
 		if (40 !== $rentalFeeSinkSize)
-			throw RangeError(`Invalid value of reserved field (${$rentalFeeSinkSize})`);
-		const $rentalFeeSink = Address.deserialize(view.buffer);
-		view.shiftRight($rentalFeeSink.size);
-		const $rentalFee = Amount.deserialize(view.buffer);
-		view.shiftRight($rentalFee.size);
+			throw new OutOfRangeException('Invalid value of reserved field (' . $rentalFeeSinkSize . ')');
+		$rentalFeeSink = Address::deserialize($reader);
+		$rentalFee = Amount::deserialize($reader);
 
-		const instance = new MosaicDefinitionTransactionV1();
-		instance._$type = $type;
-		instance._$version = $version;
-		instance._$network = $network;
-		instance._$timestamp = $timestamp;
-		instance._$signerPublicKey = $signerPublicKey;
-		instance._$signature = $signature;
-		instance._$fee = $fee;
-		instance._$deadline = $deadline;
-		instance._$mosaicDefinition = $mosaicDefinition;
-		instance._$rentalFeeSink = $rentalFeeSink;
-		instance._$rentalFee = $rentalFee;
-		return instance;
+		$instance->mosaicDefinition = $mosaicDefinition;
+		$instance->rentalFeeSink = $rentalFeeSink;
+		$instance->rentalFee = $rentalFee;
+		return $instance;
 	}
 
-	public function serialize() {
-		const buffer = new Writer(this.size);
-		buffer.write(this._$type.serialize());
-		buffer.write(Converter::intToHex(this._$version, 1));
-		buffer.write(Converter::intToHex(this._$entityBodyReserved_1, 2));
-		buffer.write(this._$network.serialize());
-		buffer.write(this._$timestamp.serialize());
-		buffer.write(Converter::intToHex(this._$signerPublicKeySize, 4));
-		buffer.write(this._$signerPublicKey.serialize());
-		buffer.write(Converter::intToHex(this._$signatureSize, 4));
-		buffer.write(this._$signature.serialize());
-		buffer.write(this._$fee.serialize());
-		buffer.write(this._$deadline.serialize());
-		buffer.write(Converter::intToHex(this.$mosaicDefinition.size, 4)); // bound: mosaic_definition_size
-		buffer.write(this._$mosaicDefinition.serialize());
-		buffer.write(Converter::intToHex(this._$rentalFeeSinkSize, 4));
-		buffer.write(this._$rentalFeeSink.serialize());
-		buffer.write(this._$rentalFee.serialize());
-		return buffer.storage;
+	public function serialize(): string {
+		$writer = new BinaryWriter($this->size());
+		$this->sort();
+		parent::_serialize($writer);
+		$writer->write(Converter::intToBinary($this->mosaicDefinition->size(), 4)); // bound: mosaic_definition_size
+		$writer->write($this->mosaicDefinition->serialize());
+		$writer->write(Converter::intToBinary($this->rentalFeeSinkSize, 4));
+		$writer->write($this->rentalFeeSink->serialize());
+		$writer->write($this->rentalFee->serialize());
+		return $writer->getBinaryData();
 	}
 
-	toString() {
-		let result = '(';
-		result += `$type: ${this._$type.toString()}, `;
-		result += `$version: ${'0x'.concat(this._$version.toString(16))}, `;
-		result += `$network: ${this._$network.toString()}, `;
-		result += `$timestamp: ${this._$timestamp.toString()}, `;
-		result += `$signerPublicKey: ${this._$signerPublicKey.toString()}, `;
-		result += `$signature: ${this._$signature.toString()}, `;
-		result += `$fee: ${this._$fee.toString()}, `;
-		result += `$deadline: ${this._$deadline.toString()}, `;
-		result += `$mosaicDefinition: ${this._$mosaicDefinition.toString()}, `;
-		result += `$rentalFeeSink: ${this._$rentalFeeSink.toString()}, `;
-		result += `$rentalFee: ${this._$rentalFee.toString()}, `;
-		result += ')';
-		return result;
+	public function __toString(){
+		$result = '(';
+		$result .= parent::__toString();
+		$result .= 'mosaicDefinition: ' . $this->mosaicDefinition . ', ';
+		$result .= 'rentalFeeSink: ' . $this->rentalFeeSink . ', ';
+		$result .= 'rentalFee: ' . $this->rentalFee . ', ';
+		$result .= ')';
+		return $result;
 	}
 }
 
-class NonVerifiableMosaicDefinitionTransactionV1 {
-	static TRANSACTION_VERSION = 1;
+class NonVerifiableMosaicDefinitionTransactionV1 extends NonVerifiableTransaction {
+	const TRANSACTION_VERSION = 1;
 
-	static TRANSACTION_TYPE = TransactionType.MOSAIC_DEFINITION;
+	const TRANSACTION_TYPE = TransactionType::MOSAIC_DEFINITION;
 
-	static TYPE_HINTS = {
-		$type: 'enum:TransactionType',
-		$network: 'enum:NetworkType',
-		$timestamp: 'pod:Timestamp',
-		$signerPublicKey: 'pod:PublicKey',
-		$fee: 'pod:Amount',
-		$deadline: 'pod:Timestamp',
-		$mosaicDefinition: 'struct:MosaicDefinition',
-		$rentalFeeSink: 'pod:Address',
-		$rentalFee: 'pod:Amount'
-	};
+	public MosaicDefinition $mosaicDefinition;
 
-	public function __construct() {
-		this._$type = NonVerifiableMosaicDefinitionTransactionV1.TRANSACTION_TYPE;
-		this._$version = NonVerifiableMosaicDefinitionTransactionV1.TRANSACTION_VERSION;
-		this._$network = NetworkType.MAINNET;
-		this._$timestamp = new Timestamp();
-		this._$signerPublicKey = new PublicKey();
-		this._$fee = new Amount();
-		this._$deadline = new Timestamp();
-		this._$mosaicDefinition = new MosaicDefinition();
-		this._$rentalFeeSink = new Address();
-		this._$rentalFee = new Amount();
-		this._$entityBodyReserved_1 = 0; // reserved field
-		this._$signerPublicKeySize = 32; // reserved field
-		this._$rentalFeeSinkSize = 40; // reserved field
+	public Address $rentalFeeSink;
+
+	public Amount $rentalFee;
+
+	private int $rentalFeeSinkSize = 40; // reserved field
+
+	public function __construct(
+		?NetworkType $network = null,
+		?Timestamp $timestamp = null,
+		?PublicKey $signerPublicKey = null,
+		?Amount $fee = null,
+		?Timestamp $deadline = null,
+		?MosaicDefinition $mosaicDefinition = null,
+		?Address $rentalFeeSink = null,
+		?Amount $rentalFee = null
+	){
+		parent::__construct(
+			new TransactionType(NonVerifiableMosaicDefinitionTransactionV1::TRANSACTION_TYPE),
+			NonVerifiableMosaicDefinitionTransactionV1::TRANSACTION_VERSION,
+			$network,
+			$timestamp,
+			$signerPublicKey,
+			$fee,
+			$deadline,
+		);
+		$this->mosaicDefinition = $mosaicDefinition ?? new MosaicDefinition();
+		$this->rentalFeeSink = $rentalFeeSink ?? new Address();
+		$this->rentalFee = $rentalFee ?? new Amount();
+		$this->rentalFeeSinkSize = 40; // reserved field
 	}
 
-	sort() {
-		this._$mosaicDefinition.sort();
+	public function sort(){
+		$this->mosaicDefinition->sort();
 	}
 
-	get $type() {
-		return this._$type;
+	public function size(){
+		$size = 0;
+		$size += parent::size();
+		$size += 4;
+		$size += $this->mosaicDefinition->size();
+		$size += 4;
+		$size += $this->rentalFeeSink->size();
+		$size += $this->rentalFee->size();
+		return $size;
 	}
 
-	set $type(value) {
-		this._$type = value;
-	}
+	public static function deserialize(BinaryReader $reader){
+		$instance = new NonVerifiableMosaicDefinitionTransactionV1();
 
-	get $version() {
-		return this._$version;
-	}
-
-	set $version(value) {
-		this._$version = value;
-	}
-
-	get $network() {
-		return this._$network;
-	}
-
-	set $network(value) {
-		this._$network = value;
-	}
-
-	get $timestamp() {
-		return this._$timestamp;
-	}
-
-	set $timestamp(value) {
-		this._$timestamp = value;
-	}
-
-	get $signerPublicKey() {
-		return this._$signerPublicKey;
-	}
-
-	set $signerPublicKey(value) {
-		this._$signerPublicKey = value;
-	}
-
-	get $fee() {
-		return this._$fee;
-	}
-
-	set $fee(value) {
-		this._$fee = value;
-	}
-
-	get $deadline() {
-		return this._$deadline;
-	}
-
-	set $deadline(value) {
-		this._$deadline = value;
-	}
-
-	get $mosaicDefinition() {
-		return this._$mosaicDefinition;
-	}
-
-	set $mosaicDefinition(value) {
-		this._$mosaicDefinition = value;
-	}
-
-	get $rentalFeeSink() {
-		return this._$rentalFeeSink;
-	}
-
-	set $rentalFeeSink(value) {
-		this._$rentalFeeSink = value;
-	}
-
-	get $rentalFee() {
-		return this._$rentalFee;
-	}
-
-	set $rentalFee(value) {
-		this._$rentalFee = value;
-	}
-
-	public function size() {
-		let size = 0;
-		size += this.$type.size;
-		size += 1;
-		size += 2;
-		size += this.$network.size;
-		size += this.$timestamp.size;
-		size += 4;
-		size += this.$signerPublicKey.size;
-		size += this.$fee.size;
-		size += this.$deadline.size;
-		size += 4;
-		size += this.$mosaicDefinition.size;
-		size += 4;
-		size += this.$rentalFeeSink.size;
-		size += this.$rentalFee.size;
-		return size;
-	}
-
-	public static function deserialize($payload) {
-		const view = new BufferView(payload);
-		const $type = TransactionType.deserialize(view.buffer);
-		view.shiftRight($type.size);
-		const $version = Converter::hexToInt(view.buffer, 1);
-		view.shiftRight(1);
-		const $entityBodyReserved_1 = Converter::hexToInt(view.buffer, 2);
-		view.shiftRight(2);
-		if (0 !== $entityBodyReserved_1)
-			throw RangeError(`Invalid value of reserved field (${$entityBodyReserved_1})`);
-		const $network = NetworkType.deserialize(view.buffer);
-		view.shiftRight($network.size);
-		const $timestamp = Timestamp.deserialize(view.buffer);
-		view.shiftRight($timestamp.size);
-		const $signerPublicKeySize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
-		if (32 !== $signerPublicKeySize)
-			throw RangeError(`Invalid value of reserved field (${$signerPublicKeySize})`);
-		const $signerPublicKey = PublicKey.deserialize(view.buffer);
-		view.shiftRight($signerPublicKey.size);
-		const $fee = Amount.deserialize(view.buffer);
-		view.shiftRight($fee.size);
-		const $deadline = Timestamp.deserialize(view.buffer);
-		view.shiftRight($deadline.size);
-		const $mosaicDefinitionSize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
+		NonVerifiableTransaction::_deserialize($reader, $instance);
+		$mosaicDefinitionSize = Converter::binaryToInt($reader->read(4), 4);
 		// marking sizeof field
-		const $mosaicDefinition = MosaicDefinition.deserialize(view.window(mosaicDefinitionSize));
-		view.shiftRight($mosaicDefinition.size);
-		const $rentalFeeSinkSize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
+		$mosaicDefinition = MosaicDefinition::deserialize(view.window(mosaicDefinitionSize));
+		$rentalFeeSinkSize = Converter::binaryToInt($reader->read(4), 4);
 		if (40 !== $rentalFeeSinkSize)
-			throw RangeError(`Invalid value of reserved field (${$rentalFeeSinkSize})`);
-		const $rentalFeeSink = Address.deserialize(view.buffer);
-		view.shiftRight($rentalFeeSink.size);
-		const $rentalFee = Amount.deserialize(view.buffer);
-		view.shiftRight($rentalFee.size);
+			throw new OutOfRangeException('Invalid value of reserved field (' . $rentalFeeSinkSize . ')');
+		$rentalFeeSink = Address::deserialize($reader);
+		$rentalFee = Amount::deserialize($reader);
 
-		const instance = new NonVerifiableMosaicDefinitionTransactionV1();
-		instance._$type = $type;
-		instance._$version = $version;
-		instance._$network = $network;
-		instance._$timestamp = $timestamp;
-		instance._$signerPublicKey = $signerPublicKey;
-		instance._$fee = $fee;
-		instance._$deadline = $deadline;
-		instance._$mosaicDefinition = $mosaicDefinition;
-		instance._$rentalFeeSink = $rentalFeeSink;
-		instance._$rentalFee = $rentalFee;
-		return instance;
+		$instance->mosaicDefinition = $mosaicDefinition;
+		$instance->rentalFeeSink = $rentalFeeSink;
+		$instance->rentalFee = $rentalFee;
+		return $instance;
 	}
 
-	public function serialize() {
-		const buffer = new Writer(this.size);
-		buffer.write(this._$type.serialize());
-		buffer.write(Converter::intToHex(this._$version, 1));
-		buffer.write(Converter::intToHex(this._$entityBodyReserved_1, 2));
-		buffer.write(this._$network.serialize());
-		buffer.write(this._$timestamp.serialize());
-		buffer.write(Converter::intToHex(this._$signerPublicKeySize, 4));
-		buffer.write(this._$signerPublicKey.serialize());
-		buffer.write(this._$fee.serialize());
-		buffer.write(this._$deadline.serialize());
-		buffer.write(Converter::intToHex(this.$mosaicDefinition.size, 4)); // bound: mosaic_definition_size
-		buffer.write(this._$mosaicDefinition.serialize());
-		buffer.write(Converter::intToHex(this._$rentalFeeSinkSize, 4));
-		buffer.write(this._$rentalFeeSink.serialize());
-		buffer.write(this._$rentalFee.serialize());
-		return buffer.storage;
+	public function serialize(): string {
+		$writer = new BinaryWriter($this->size());
+		$this->sort();
+		parent::_serialize($writer);
+		$writer->write(Converter::intToBinary($this->mosaicDefinition->size(), 4)); // bound: mosaic_definition_size
+		$writer->write($this->mosaicDefinition->serialize());
+		$writer->write(Converter::intToBinary($this->rentalFeeSinkSize, 4));
+		$writer->write($this->rentalFeeSink->serialize());
+		$writer->write($this->rentalFee->serialize());
+		return $writer->getBinaryData();
 	}
 
-	toString() {
-		let result = '(';
-		result += `$type: ${this._$type.toString()}, `;
-		result += `$version: ${'0x'.concat(this._$version.toString(16))}, `;
-		result += `$network: ${this._$network.toString()}, `;
-		result += `$timestamp: ${this._$timestamp.toString()}, `;
-		result += `$signerPublicKey: ${this._$signerPublicKey.toString()}, `;
-		result += `$fee: ${this._$fee.toString()}, `;
-		result += `$deadline: ${this._$deadline.toString()}, `;
-		result += `$mosaicDefinition: ${this._$mosaicDefinition.toString()}, `;
-		result += `$rentalFeeSink: ${this._$rentalFeeSink.toString()}, `;
-		result += `$rentalFee: ${this._$rentalFee.toString()}, `;
-		result += ')';
-		return result;
+	public function __toString(){
+		$result = '(';
+		$result .= parent::__toString();
+		$result .= 'mosaicDefinition: ' . $this->mosaicDefinition . ', ';
+		$result .= 'rentalFeeSink: ' . $this->rentalFeeSink . ', ';
+		$result .= 'rentalFee: ' . $this->rentalFee . ', ';
+		$result .= ')';
+		return $result;
 	}
 }
 
 class MosaicSupplyChangeAction {
-	static INCREASE = new MosaicSupplyChangeAction(1);
+	const INCREASE = 1;
 
-	static DECREASE = new MosaicSupplyChangeAction(2);
+	const DECREASE = 2;
 
-	public function __construct(value) {
-		this.value = value;
+	public $value;
+
+	public function __construct(int $value = 0){
+		$this->value = $value;
 	}
 
-	static valueToKey(value) {
-		const values = [
+	static function valueToKey($value){
+		$values = [
 			1, 2
 		];
-		const keys = [
+		$keys = [
 			'INCREASE', 'DECREASE'
 		];
 
-		const index = values.indexOf(value);
-		if (-1 === index)
-			throw RangeError(`invalid enum value ${value}`);
+		$index = array_search($value, $values);
+		if ($index === false)
+			throw new Exception("Invalid enum value: {$value}");
 
-		return keys[index];
+		return $keys[$index];
 	}
 
-	static fromValue(value) {
-		return MosaicSupplyChangeAction[this.valueToKey(value)];
-	}
-
-	public function size() {
+	public static function size(){
 		return 4;
 	}
 
-	public static function deserialize($payload) {
-		const byteArray = payload;
-		return this.fromValue(Converter::hexToInt(byteArray, 4));
+	public static function deserialize(BinaryReader $reader): self {
+		return new MosaicSupplyChangeAction(Converter::binaryToInt($reader->read(4), 4));
 	}
 
-	public static function deserializeAligned($payload) {
-		const byteArray = payload;
-		return this.fromValue(Converter::hexToInt(byteArray, 4));
+	public static function deserializeAligned(BinaryReader $reader): self {
+		return new MosaicSupplyChangeAction(Converter::binaryToInt($reader->read(4), 4));
 	}
 
-	public function serialize() {
-		return Converter::intToHex(this.value, 4);
+	public function serialize(): string {
+		return Converter::intToBinary($this->value, 4);
 	}
 
-	toString() {
-		return `MosaicSupplyChangeAction.${MosaicSupplyChangeAction.valueToKey(this.value)}`;
+	public function __toString(){
+		return "MosaicSupplyChangeAction." . self::valueToKey($this->value);
 	}
 }
 
-class MosaicSupplyChangeTransactionV1 {
-	static TRANSACTION_VERSION = 1;
+class MosaicSupplyChangeTransactionV1 extends Transaction {
+	const TRANSACTION_VERSION = 1;
 
-	static TRANSACTION_TYPE = TransactionType.MOSAIC_SUPPLY_CHANGE;
+	const TRANSACTION_TYPE = TransactionType::MOSAIC_SUPPLY_CHANGE;
 
-	static TYPE_HINTS = {
-		$type: 'enum:TransactionType',
-		$network: 'enum:NetworkType',
-		$timestamp: 'pod:Timestamp',
-		$signerPublicKey: 'pod:PublicKey',
-		$signature: 'pod:Signature',
-		$fee: 'pod:Amount',
-		$deadline: 'pod:Timestamp',
-		$mosaicId: 'struct:MosaicId',
-		$action: 'enum:MosaicSupplyChangeAction',
-		$delta: 'pod:Amount'
-	};
+	public MosaicId $mosaicId;
 
-	public function __construct() {
-		this._$type = MosaicSupplyChangeTransactionV1.TRANSACTION_TYPE;
-		this._$version = MosaicSupplyChangeTransactionV1.TRANSACTION_VERSION;
-		this._$network = NetworkType.MAINNET;
-		this._$timestamp = new Timestamp();
-		this._$signerPublicKey = new PublicKey();
-		this._$signature = new Signature();
-		this._$fee = new Amount();
-		this._$deadline = new Timestamp();
-		this._$mosaicId = new MosaicId();
-		this._$action = MosaicSupplyChangeAction.INCREASE;
-		this._$delta = new Amount();
-		this._$entityBodyReserved_1 = 0; // reserved field
-		this._$signerPublicKeySize = 32; // reserved field
-		this._$signatureSize = 64; // reserved field
+	public MosaicSupplyChangeAction $action;
+
+	public Amount $delta;
+
+	public function __construct(
+		?NetworkType $network = null,
+		?Timestamp $timestamp = null,
+		?PublicKey $signerPublicKey = null,
+		?Signature $signature = null,
+		?Amount $fee = null,
+		?Timestamp $deadline = null,
+		?MosaicId $mosaicId = null,
+		?MosaicSupplyChangeAction $action = null,
+		?Amount $delta = null
+	){
+		parent::__construct(
+			new TransactionType(MosaicSupplyChangeTransactionV1::TRANSACTION_TYPE),
+			MosaicSupplyChangeTransactionV1::TRANSACTION_VERSION,
+			$network,
+			$timestamp,
+			$signerPublicKey,
+			$signature,
+			$fee,
+			$deadline,
+		);
+		$this->mosaicId = $mosaicId ?? new MosaicId();
+		$this->action = $action ?? new MosaicSupplyChangeAction();
+		$this->delta = $delta ?? new Amount();
 	}
 
-	sort() {
-		this._$mosaicId.sort();
+	public function sort(){
+		$this->mosaicId->sort();
 	}
 
-	get $type() {
-		return this._$type;
+	public function size(){
+		$size = 0;
+		$size += parent::size();
+		$size += 4;
+		$size += $this->mosaicId->size();
+		$size += $this->action->size();
+		$size += $this->delta->size();
+		return $size;
 	}
 
-	set $type(value) {
-		this._$type = value;
-	}
+	public static function deserialize(BinaryReader $reader){
+		$instance = new MosaicSupplyChangeTransactionV1();
 
-	get $version() {
-		return this._$version;
-	}
-
-	set $version(value) {
-		this._$version = value;
-	}
-
-	get $network() {
-		return this._$network;
-	}
-
-	set $network(value) {
-		this._$network = value;
-	}
-
-	get $timestamp() {
-		return this._$timestamp;
-	}
-
-	set $timestamp(value) {
-		this._$timestamp = value;
-	}
-
-	get $signerPublicKey() {
-		return this._$signerPublicKey;
-	}
-
-	set $signerPublicKey(value) {
-		this._$signerPublicKey = value;
-	}
-
-	get $signature() {
-		return this._$signature;
-	}
-
-	set $signature(value) {
-		this._$signature = value;
-	}
-
-	get $fee() {
-		return this._$fee;
-	}
-
-	set $fee(value) {
-		this._$fee = value;
-	}
-
-	get $deadline() {
-		return this._$deadline;
-	}
-
-	set $deadline(value) {
-		this._$deadline = value;
-	}
-
-	get $mosaicId() {
-		return this._$mosaicId;
-	}
-
-	set $mosaicId(value) {
-		this._$mosaicId = value;
-	}
-
-	get $action() {
-		return this._$action;
-	}
-
-	set $action(value) {
-		this._$action = value;
-	}
-
-	get $delta() {
-		return this._$delta;
-	}
-
-	set $delta(value) {
-		this._$delta = value;
-	}
-
-	public function size() {
-		let size = 0;
-		size += this.$type.size;
-		size += 1;
-		size += 2;
-		size += this.$network.size;
-		size += this.$timestamp.size;
-		size += 4;
-		size += this.$signerPublicKey.size;
-		size += 4;
-		size += this.$signature.size;
-		size += this.$fee.size;
-		size += this.$deadline.size;
-		size += 4;
-		size += this.$mosaicId.size;
-		size += this.$action.size;
-		size += this.$delta.size;
-		return size;
-	}
-
-	public static function deserialize($payload) {
-		const view = new BufferView(payload);
-		const $type = TransactionType.deserialize(view.buffer);
-		view.shiftRight($type.size);
-		const $version = Converter::hexToInt(view.buffer, 1);
-		view.shiftRight(1);
-		const $entityBodyReserved_1 = Converter::hexToInt(view.buffer, 2);
-		view.shiftRight(2);
-		if (0 !== $entityBodyReserved_1)
-			throw RangeError(`Invalid value of reserved field (${$entityBodyReserved_1})`);
-		const $network = NetworkType.deserialize(view.buffer);
-		view.shiftRight($network.size);
-		const $timestamp = Timestamp.deserialize(view.buffer);
-		view.shiftRight($timestamp.size);
-		const $signerPublicKeySize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
-		if (32 !== $signerPublicKeySize)
-			throw RangeError(`Invalid value of reserved field (${$signerPublicKeySize})`);
-		const $signerPublicKey = PublicKey.deserialize(view.buffer);
-		view.shiftRight($signerPublicKey.size);
-		const $signatureSize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
-		if (64 !== $signatureSize)
-			throw RangeError(`Invalid value of reserved field (${$signatureSize})`);
-		const $signature = Signature.deserialize(view.buffer);
-		view.shiftRight($signature.size);
-		const $fee = Amount.deserialize(view.buffer);
-		view.shiftRight($fee.size);
-		const $deadline = Timestamp.deserialize(view.buffer);
-		view.shiftRight($deadline.size);
-		const $mosaicIdSize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
+		Transaction::_deserialize($reader, $instance);
+		$mosaicIdSize = Converter::binaryToInt($reader->read(4), 4);
 		// marking sizeof field
-		const $mosaicId = MosaicId.deserialize(view.window(mosaicIdSize));
-		view.shiftRight($mosaicId.size);
-		const $action = MosaicSupplyChangeAction.deserialize(view.buffer);
-		view.shiftRight($action.size);
-		const $delta = Amount.deserialize(view.buffer);
-		view.shiftRight($delta.size);
+		$mosaicId = MosaicId::deserialize(view.window(mosaicIdSize));
+		$action = MosaicSupplyChangeAction::deserialize($reader);
+		$delta = Amount::deserialize($reader);
 
-		const instance = new MosaicSupplyChangeTransactionV1();
-		instance._$type = $type;
-		instance._$version = $version;
-		instance._$network = $network;
-		instance._$timestamp = $timestamp;
-		instance._$signerPublicKey = $signerPublicKey;
-		instance._$signature = $signature;
-		instance._$fee = $fee;
-		instance._$deadline = $deadline;
-		instance._$mosaicId = $mosaicId;
-		instance._$action = $action;
-		instance._$delta = $delta;
-		return instance;
+		$instance->mosaicId = $mosaicId;
+		$instance->action = $action;
+		$instance->delta = $delta;
+		return $instance;
 	}
 
-	public function serialize() {
-		const buffer = new Writer(this.size);
-		buffer.write(this._$type.serialize());
-		buffer.write(Converter::intToHex(this._$version, 1));
-		buffer.write(Converter::intToHex(this._$entityBodyReserved_1, 2));
-		buffer.write(this._$network.serialize());
-		buffer.write(this._$timestamp.serialize());
-		buffer.write(Converter::intToHex(this._$signerPublicKeySize, 4));
-		buffer.write(this._$signerPublicKey.serialize());
-		buffer.write(Converter::intToHex(this._$signatureSize, 4));
-		buffer.write(this._$signature.serialize());
-		buffer.write(this._$fee.serialize());
-		buffer.write(this._$deadline.serialize());
-		buffer.write(Converter::intToHex(this.$mosaicId.size, 4)); // bound: mosaic_id_size
-		buffer.write(this._$mosaicId.serialize());
-		buffer.write(this._$action.serialize());
-		buffer.write(this._$delta.serialize());
-		return buffer.storage;
+	public function serialize(): string {
+		$writer = new BinaryWriter($this->size());
+		$this->sort();
+		parent::_serialize($writer);
+		$writer->write(Converter::intToBinary($this->mosaicId->size(), 4)); // bound: mosaic_id_size
+		$writer->write($this->mosaicId->serialize());
+		$writer->write($this->action->serialize());
+		$writer->write($this->delta->serialize());
+		return $writer->getBinaryData();
 	}
 
-	toString() {
-		let result = '(';
-		result += `$type: ${this._$type.toString()}, `;
-		result += `$version: ${'0x'.concat(this._$version.toString(16))}, `;
-		result += `$network: ${this._$network.toString()}, `;
-		result += `$timestamp: ${this._$timestamp.toString()}, `;
-		result += `$signerPublicKey: ${this._$signerPublicKey.toString()}, `;
-		result += `$signature: ${this._$signature.toString()}, `;
-		result += `$fee: ${this._$fee.toString()}, `;
-		result += `$deadline: ${this._$deadline.toString()}, `;
-		result += `$mosaicId: ${this._$mosaicId.toString()}, `;
-		result += `$action: ${this._$action.toString()}, `;
-		result += `$delta: ${this._$delta.toString()}, `;
-		result += ')';
-		return result;
+	public function __toString(){
+		$result = '(';
+		$result .= parent::__toString();
+		$result .= 'mosaicId: ' . $this->mosaicId . ', ';
+		$result .= 'action: ' . $this->action . ', ';
+		$result .= 'delta: ' . $this->delta . ', ';
+		$result .= ')';
+		return $result;
 	}
 }
 
-class NonVerifiableMosaicSupplyChangeTransactionV1 {
-	static TRANSACTION_VERSION = 1;
+class NonVerifiableMosaicSupplyChangeTransactionV1 extends NonVerifiableTransaction {
+	const TRANSACTION_VERSION = 1;
 
-	static TRANSACTION_TYPE = TransactionType.MOSAIC_SUPPLY_CHANGE;
+	const TRANSACTION_TYPE = TransactionType::MOSAIC_SUPPLY_CHANGE;
 
-	static TYPE_HINTS = {
-		$type: 'enum:TransactionType',
-		$network: 'enum:NetworkType',
-		$timestamp: 'pod:Timestamp',
-		$signerPublicKey: 'pod:PublicKey',
-		$fee: 'pod:Amount',
-		$deadline: 'pod:Timestamp',
-		$mosaicId: 'struct:MosaicId',
-		$action: 'enum:MosaicSupplyChangeAction',
-		$delta: 'pod:Amount'
-	};
+	public MosaicId $mosaicId;
 
-	public function __construct() {
-		this._$type = NonVerifiableMosaicSupplyChangeTransactionV1.TRANSACTION_TYPE;
-		this._$version = NonVerifiableMosaicSupplyChangeTransactionV1.TRANSACTION_VERSION;
-		this._$network = NetworkType.MAINNET;
-		this._$timestamp = new Timestamp();
-		this._$signerPublicKey = new PublicKey();
-		this._$fee = new Amount();
-		this._$deadline = new Timestamp();
-		this._$mosaicId = new MosaicId();
-		this._$action = MosaicSupplyChangeAction.INCREASE;
-		this._$delta = new Amount();
-		this._$entityBodyReserved_1 = 0; // reserved field
-		this._$signerPublicKeySize = 32; // reserved field
+	public MosaicSupplyChangeAction $action;
+
+	public Amount $delta;
+
+	public function __construct(
+		?NetworkType $network = null,
+		?Timestamp $timestamp = null,
+		?PublicKey $signerPublicKey = null,
+		?Amount $fee = null,
+		?Timestamp $deadline = null,
+		?MosaicId $mosaicId = null,
+		?MosaicSupplyChangeAction $action = null,
+		?Amount $delta = null
+	){
+		parent::__construct(
+			new TransactionType(NonVerifiableMosaicSupplyChangeTransactionV1::TRANSACTION_TYPE),
+			NonVerifiableMosaicSupplyChangeTransactionV1::TRANSACTION_VERSION,
+			$network,
+			$timestamp,
+			$signerPublicKey,
+			$fee,
+			$deadline,
+		);
+		$this->mosaicId = $mosaicId ?? new MosaicId();
+		$this->action = $action ?? new MosaicSupplyChangeAction();
+		$this->delta = $delta ?? new Amount();
 	}
 
-	sort() {
-		this._$mosaicId.sort();
+	public function sort(){
+		$this->mosaicId->sort();
 	}
 
-	get $type() {
-		return this._$type;
+	public function size(){
+		$size = 0;
+		$size += parent::size();
+		$size += 4;
+		$size += $this->mosaicId->size();
+		$size += $this->action->size();
+		$size += $this->delta->size();
+		return $size;
 	}
 
-	set $type(value) {
-		this._$type = value;
-	}
+	public static function deserialize(BinaryReader $reader){
+		$instance = new NonVerifiableMosaicSupplyChangeTransactionV1();
 
-	get $version() {
-		return this._$version;
-	}
-
-	set $version(value) {
-		this._$version = value;
-	}
-
-	get $network() {
-		return this._$network;
-	}
-
-	set $network(value) {
-		this._$network = value;
-	}
-
-	get $timestamp() {
-		return this._$timestamp;
-	}
-
-	set $timestamp(value) {
-		this._$timestamp = value;
-	}
-
-	get $signerPublicKey() {
-		return this._$signerPublicKey;
-	}
-
-	set $signerPublicKey(value) {
-		this._$signerPublicKey = value;
-	}
-
-	get $fee() {
-		return this._$fee;
-	}
-
-	set $fee(value) {
-		this._$fee = value;
-	}
-
-	get $deadline() {
-		return this._$deadline;
-	}
-
-	set $deadline(value) {
-		this._$deadline = value;
-	}
-
-	get $mosaicId() {
-		return this._$mosaicId;
-	}
-
-	set $mosaicId(value) {
-		this._$mosaicId = value;
-	}
-
-	get $action() {
-		return this._$action;
-	}
-
-	set $action(value) {
-		this._$action = value;
-	}
-
-	get $delta() {
-		return this._$delta;
-	}
-
-	set $delta(value) {
-		this._$delta = value;
-	}
-
-	public function size() {
-		let size = 0;
-		size += this.$type.size;
-		size += 1;
-		size += 2;
-		size += this.$network.size;
-		size += this.$timestamp.size;
-		size += 4;
-		size += this.$signerPublicKey.size;
-		size += this.$fee.size;
-		size += this.$deadline.size;
-		size += 4;
-		size += this.$mosaicId.size;
-		size += this.$action.size;
-		size += this.$delta.size;
-		return size;
-	}
-
-	public static function deserialize($payload) {
-		const view = new BufferView(payload);
-		const $type = TransactionType.deserialize(view.buffer);
-		view.shiftRight($type.size);
-		const $version = Converter::hexToInt(view.buffer, 1);
-		view.shiftRight(1);
-		const $entityBodyReserved_1 = Converter::hexToInt(view.buffer, 2);
-		view.shiftRight(2);
-		if (0 !== $entityBodyReserved_1)
-			throw RangeError(`Invalid value of reserved field (${$entityBodyReserved_1})`);
-		const $network = NetworkType.deserialize(view.buffer);
-		view.shiftRight($network.size);
-		const $timestamp = Timestamp.deserialize(view.buffer);
-		view.shiftRight($timestamp.size);
-		const $signerPublicKeySize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
-		if (32 !== $signerPublicKeySize)
-			throw RangeError(`Invalid value of reserved field (${$signerPublicKeySize})`);
-		const $signerPublicKey = PublicKey.deserialize(view.buffer);
-		view.shiftRight($signerPublicKey.size);
-		const $fee = Amount.deserialize(view.buffer);
-		view.shiftRight($fee.size);
-		const $deadline = Timestamp.deserialize(view.buffer);
-		view.shiftRight($deadline.size);
-		const $mosaicIdSize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
+		NonVerifiableTransaction::_deserialize($reader, $instance);
+		$mosaicIdSize = Converter::binaryToInt($reader->read(4), 4);
 		// marking sizeof field
-		const $mosaicId = MosaicId.deserialize(view.window(mosaicIdSize));
-		view.shiftRight($mosaicId.size);
-		const $action = MosaicSupplyChangeAction.deserialize(view.buffer);
-		view.shiftRight($action.size);
-		const $delta = Amount.deserialize(view.buffer);
-		view.shiftRight($delta.size);
+		$mosaicId = MosaicId::deserialize(view.window(mosaicIdSize));
+		$action = MosaicSupplyChangeAction::deserialize($reader);
+		$delta = Amount::deserialize($reader);
 
-		const instance = new NonVerifiableMosaicSupplyChangeTransactionV1();
-		instance._$type = $type;
-		instance._$version = $version;
-		instance._$network = $network;
-		instance._$timestamp = $timestamp;
-		instance._$signerPublicKey = $signerPublicKey;
-		instance._$fee = $fee;
-		instance._$deadline = $deadline;
-		instance._$mosaicId = $mosaicId;
-		instance._$action = $action;
-		instance._$delta = $delta;
-		return instance;
+		$instance->mosaicId = $mosaicId;
+		$instance->action = $action;
+		$instance->delta = $delta;
+		return $instance;
 	}
 
-	public function serialize() {
-		const buffer = new Writer(this.size);
-		buffer.write(this._$type.serialize());
-		buffer.write(Converter::intToHex(this._$version, 1));
-		buffer.write(Converter::intToHex(this._$entityBodyReserved_1, 2));
-		buffer.write(this._$network.serialize());
-		buffer.write(this._$timestamp.serialize());
-		buffer.write(Converter::intToHex(this._$signerPublicKeySize, 4));
-		buffer.write(this._$signerPublicKey.serialize());
-		buffer.write(this._$fee.serialize());
-		buffer.write(this._$deadline.serialize());
-		buffer.write(Converter::intToHex(this.$mosaicId.size, 4)); // bound: mosaic_id_size
-		buffer.write(this._$mosaicId.serialize());
-		buffer.write(this._$action.serialize());
-		buffer.write(this._$delta.serialize());
-		return buffer.storage;
+	public function serialize(): string {
+		$writer = new BinaryWriter($this->size());
+		$this->sort();
+		parent::_serialize($writer);
+		$writer->write(Converter::intToBinary($this->mosaicId->size(), 4)); // bound: mosaic_id_size
+		$writer->write($this->mosaicId->serialize());
+		$writer->write($this->action->serialize());
+		$writer->write($this->delta->serialize());
+		return $writer->getBinaryData();
 	}
 
-	toString() {
-		let result = '(';
-		result += `$type: ${this._$type.toString()}, `;
-		result += `$version: ${'0x'.concat(this._$version.toString(16))}, `;
-		result += `$network: ${this._$network.toString()}, `;
-		result += `$timestamp: ${this._$timestamp.toString()}, `;
-		result += `$signerPublicKey: ${this._$signerPublicKey.toString()}, `;
-		result += `$fee: ${this._$fee.toString()}, `;
-		result += `$deadline: ${this._$deadline.toString()}, `;
-		result += `$mosaicId: ${this._$mosaicId.toString()}, `;
-		result += `$action: ${this._$action.toString()}, `;
-		result += `$delta: ${this._$delta.toString()}, `;
-		result += ')';
-		return result;
+	public function __toString(){
+		$result = '(';
+		$result .= parent::__toString();
+		$result .= 'mosaicId: ' . $this->mosaicId . ', ';
+		$result .= 'action: ' . $this->action . ', ';
+		$result .= 'delta: ' . $this->delta . ', ';
+		$result .= ')';
+		return $result;
 	}
 }
 
 class MultisigAccountModificationType {
-	static ADD_COSIGNATORY = new MultisigAccountModificationType(1);
+	const ADD_COSIGNATORY = 1;
 
-	static DELETE_COSIGNATORY = new MultisigAccountModificationType(2);
+	const DELETE_COSIGNATORY = 2;
 
-	public function __construct(value) {
-		this.value = value;
+	public $value;
+
+	public function __construct(int $value = 0){
+		$this->value = $value;
 	}
 
-	static valueToKey(value) {
-		const values = [
+	static function valueToKey($value){
+		$values = [
 			1, 2
 		];
-		const keys = [
+		$keys = [
 			'ADD_COSIGNATORY', 'DELETE_COSIGNATORY'
 		];
 
-		const index = values.indexOf(value);
-		if (-1 === index)
-			throw RangeError(`invalid enum value ${value}`);
+		$index = array_search($value, $values);
+		if ($index === false)
+			throw new Exception("Invalid enum value: {$value}");
 
-		return keys[index];
+		return $keys[$index];
 	}
 
-	static fromValue(value) {
-		return MultisigAccountModificationType[this.valueToKey(value)];
-	}
-
-	public function size() {
+	public static function size(){
 		return 4;
 	}
 
-	public static function deserialize($payload) {
-		const byteArray = payload;
-		return this.fromValue(Converter::hexToInt(byteArray, 4));
+	public static function deserialize(BinaryReader $reader): self {
+		return new MultisigAccountModificationType(Converter::binaryToInt($reader->read(4), 4));
 	}
 
-	public static function deserializeAligned($payload) {
-		const byteArray = payload;
-		return this.fromValue(Converter::hexToInt(byteArray, 4));
+	public static function deserializeAligned(BinaryReader $reader): self {
+		return new MultisigAccountModificationType(Converter::binaryToInt($reader->read(4), 4));
 	}
 
-	public function serialize() {
-		return Converter::intToHex(this.value, 4);
+	public function serialize(): string {
+		return Converter::intToBinary($this->value, 4);
 	}
 
-	toString() {
-		return `MultisigAccountModificationType.${MultisigAccountModificationType.valueToKey(this.value)}`;
+	public function __toString(){
+		return "MultisigAccountModificationType." . self::valueToKey($this->value);
 	}
 }
 
 class MultisigAccountModification {
-	static TYPE_HINTS = {
-		$modificationType: 'enum:MultisigAccountModificationType',
-		$cosignatoryPublicKey: 'pod:PublicKey'
-	};
+	public MultisigAccountModificationType $modificationType;
 
-	public function __construct() {
-		this._$modificationType = MultisigAccountModificationType.ADD_COSIGNATORY;
-		this._$cosignatoryPublicKey = new PublicKey();
-		this._$cosignatoryPublicKeySize = 32; // reserved field
+	public PublicKey $cosignatoryPublicKey;
+
+	private int $cosignatoryPublicKeySize = 32; // reserved field
+
+	public function __construct(?MultisigAccountModificationType $modificationType = null, ?PublicKey $cosignatoryPublicKey = null){
+		$this->modificationType = $modificationType ?? new MultisigAccountModificationType();
+		$this->cosignatoryPublicKey = $cosignatoryPublicKey ?? new PublicKey();
+		$this->cosignatoryPublicKeySize = 32; // reserved field
 	}
 
-	comparer() {
+	comparer(){
 		return [
 			this.modificationType,
 			ripemdKeccak256(this.cosignatoryPublicKey.bytes)
 		];
 	}
 
-	sort() {
+	public function sort(){
 	}
 
-	get $modificationType() {
-		return this._$modificationType;
+	public function size(){
+		$size = 0;
+		$size += $this->modificationType->size();
+		$size += 4;
+		$size += $this->cosignatoryPublicKey->size();
+		return $size;
 	}
 
-	set $modificationType(value) {
-		this._$modificationType = value;
-	}
+	public static function deserialize(BinaryReader $reader){
+		$instance = new MultisigAccountModification();
 
-	get $cosignatoryPublicKey() {
-		return this._$cosignatoryPublicKey;
-	}
-
-	set $cosignatoryPublicKey(value) {
-		this._$cosignatoryPublicKey = value;
-	}
-
-	public function size() {
-		let size = 0;
-		size += this.$modificationType.size;
-		size += 4;
-		size += this.$cosignatoryPublicKey.size;
-		return size;
-	}
-
-	public static function deserialize($payload) {
-		const view = new BufferView(payload);
-		const $modificationType = MultisigAccountModificationType.deserialize(view.buffer);
-		view.shiftRight($modificationType.size);
-		const $cosignatoryPublicKeySize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
+		$modificationType = MultisigAccountModificationType::deserialize($reader);
+		$cosignatoryPublicKeySize = Converter::binaryToInt($reader->read(4), 4);
 		if (32 !== $cosignatoryPublicKeySize)
-			throw RangeError(`Invalid value of reserved field (${$cosignatoryPublicKeySize})`);
-		const $cosignatoryPublicKey = PublicKey.deserialize(view.buffer);
-		view.shiftRight($cosignatoryPublicKey.size);
+			throw new OutOfRangeException('Invalid value of reserved field (' . $cosignatoryPublicKeySize . ')');
+		$cosignatoryPublicKey = PublicKey::deserialize($reader);
 
-		const instance = new MultisigAccountModification();
-		instance._$modificationType = $modificationType;
-		instance._$cosignatoryPublicKey = $cosignatoryPublicKey;
-		return instance;
+		$instance->modificationType = $modificationType;
+		$instance->cosignatoryPublicKey = $cosignatoryPublicKey;
+		return $instance;
 	}
 
-	public function serialize() {
-		const buffer = new Writer(this.size);
-		buffer.write(this._$modificationType.serialize());
-		buffer.write(Converter::intToHex(this._$cosignatoryPublicKeySize, 4));
-		buffer.write(this._$cosignatoryPublicKey.serialize());
-		return buffer.storage;
+	public function serialize(): string {
+		$writer = new BinaryWriter($this->size());
+		$writer->write($this->modificationType->serialize());
+		$writer->write(Converter::intToBinary($this->cosignatoryPublicKeySize, 4));
+		$writer->write($this->cosignatoryPublicKey->serialize());
+		return $writer->getBinaryData();
 	}
 
-	toString() {
-		let result = '(';
-		result += `$modificationType: ${this._$modificationType.toString()}, `;
-		result += `$cosignatoryPublicKey: ${this._$cosignatoryPublicKey.toString()}, `;
-		result += ')';
-		return result;
+	public function __toString(){
+		$result = '';
+		$result .= 'modificationType: ' . $this->modificationType . ', ';
+		$result .= 'cosignatoryPublicKey: ' . $this->cosignatoryPublicKey . ', ';
+		return $result;
 	}
 }
 
 class SizePrefixedMultisigAccountModification {
-	static TYPE_HINTS = {
-		$modification: 'struct:MultisigAccountModification'
-	};
+	public MultisigAccountModification $modification;
 
-	public function __construct() {
-		this._$modification = new MultisigAccountModification();
+	public function __construct(?MultisigAccountModification $modification = null){
+		$this->modification = $modification ?? new MultisigAccountModification();
 	}
 
-	sort() {
-		this._$modification.sort();
+	public function sort(){
+		$this->modification->sort();
 	}
 
-	get $modification() {
-		return this._$modification;
+	public function size(){
+		$size = 0;
+		$size += 4;
+		$size += $this->modification->size();
+		return $size;
 	}
 
-	set $modification(value) {
-		this._$modification = value;
-	}
+	public static function deserialize(BinaryReader $reader){
+		$instance = new SizePrefixedMultisigAccountModification();
 
-	public function size() {
-		let size = 0;
-		size += 4;
-		size += this.$modification.size;
-		return size;
-	}
-
-	public static function deserialize($payload) {
-		const view = new BufferView(payload);
-		const $modificationSize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
+		$modificationSize = Converter::binaryToInt($reader->read(4), 4);
 		// marking sizeof field
-		const $modification = MultisigAccountModification.deserialize(view.window(modificationSize));
-		view.shiftRight($modification.size);
+		$modification = MultisigAccountModification::deserialize(view.window(modificationSize));
 
-		const instance = new SizePrefixedMultisigAccountModification();
-		instance._$modification = $modification;
-		return instance;
+		$instance->modification = $modification;
+		return $instance;
 	}
 
-	public function serialize() {
-		const buffer = new Writer(this.size);
-		buffer.write(Converter::intToHex(this.$modification.size, 4)); // bound: modification_size
-		buffer.write(this._$modification.serialize());
-		return buffer.storage;
+	public function serialize(): string {
+		$writer = new BinaryWriter($this->size());
+		$writer->write(Converter::intToBinary($this->modification->size(), 4)); // bound: modification_size
+		$writer->write($this->modification->serialize());
+		return $writer->getBinaryData();
 	}
 
-	toString() {
-		let result = '(';
-		result += `$modification: ${this._$modification.toString()}, `;
-		result += ')';
-		return result;
+	public function __toString(){
+		$result = '';
+		$result .= 'modification: ' . $this->modification . ', ';
+		return $result;
 	}
 }
 
-class MultisigAccountModificationTransactionV1 {
-	static TRANSACTION_VERSION = 1;
+class MultisigAccountModificationTransactionV1 extends Transaction {
+	const TRANSACTION_VERSION = 1;
 
-	static TRANSACTION_TYPE = TransactionType.MULTISIG_ACCOUNT_MODIFICATION;
+	const TRANSACTION_TYPE = TransactionType::MULTISIG_ACCOUNT_MODIFICATION;
 
-	static TYPE_HINTS = {
-		$type: 'enum:TransactionType',
-		$network: 'enum:NetworkType',
-		$timestamp: 'pod:Timestamp',
-		$signerPublicKey: 'pod:PublicKey',
-		$signature: 'pod:Signature',
-		$fee: 'pod:Amount',
-		$deadline: 'pod:Timestamp',
-		$modifications: 'array[SizePrefixedMultisigAccountModification]'
-	};
+	public array $modifications;
 
-	public function __construct() {
-		this._$type = MultisigAccountModificationTransactionV1.TRANSACTION_TYPE;
-		this._$version = MultisigAccountModificationTransactionV1.TRANSACTION_VERSION;
-		this._$network = NetworkType.MAINNET;
-		this._$timestamp = new Timestamp();
-		this._$signerPublicKey = new PublicKey();
-		this._$signature = new Signature();
-		this._$fee = new Amount();
-		this._$deadline = new Timestamp();
-		this._$modifications = [];
-		this._$entityBodyReserved_1 = 0; // reserved field
-		this._$signerPublicKeySize = 32; // reserved field
-		this._$signatureSize = 64; // reserved field
+	public function __construct(
+		?NetworkType $network = null,
+		?Timestamp $timestamp = null,
+		?PublicKey $signerPublicKey = null,
+		?Signature $signature = null,
+		?Amount $fee = null,
+		?Timestamp $deadline = null,
+		?array $modifications = null
+	){
+		parent::__construct(
+			new TransactionType(MultisigAccountModificationTransactionV1::TRANSACTION_TYPE),
+			MultisigAccountModificationTransactionV1::TRANSACTION_VERSION,
+			$network,
+			$timestamp,
+			$signerPublicKey,
+			$signature,
+			$fee,
+			$deadline,
+		);
+		$this->modifications = $modifications ?? [];
 	}
 
-	sort() {
-		this._$modifications = this._$modifications.sort((lhs, rhs) => arrayHelpers.deepCompare(
-			(lhs.modification.comparer ? lhs.modification.comparer() : lhs.modification.value),
-			(rhs.modification.comparer ? rhs.modification.comparer() : rhs.modification.value)
-		));
+	public function sort(){
+		usort(
+			$this->modifications,
+			fn ($lhs, $rhs) =>
+			ArrayHelpers::deepCompare(
+				isset($lhs->modification->comparer) ? $lhs->modification->comparer() : $lhs->modification->value,
+				isset($rhs->modification->comparer) ? $rhs->modification->comparer() : $rhs->modification->value
+			)
+		);
 	}
 
-	get $type() {
-		return this._$type;
+	public function size(){
+		$size = 0;
+		$size += parent::size();
+		$size += 4;
+		$size += ArrayHelpers::size($this->modifications);
+		return $size;
 	}
 
-	set $type(value) {
-		this._$type = value;
+	public static function deserialize(BinaryReader $reader){
+		$instance = new MultisigAccountModificationTransactionV1();
+
+		Transaction::_deserialize($reader, $instance);
+		$modificationsCount = Converter::binaryToInt($reader->read(4), 4);
+		$modifications = ArrayHelpers::readArrayCount($reader, [SizePrefixedMultisigAccountModification::class, 'deserialize'], $modificationsCount, fn ($e) => isset($e->modification->comparer) ? $e->modification->comparer() : $e->modification->value);
+
+		$instance->modifications = $modifications;
+		return $instance;
 	}
 
-	get $version() {
-		return this._$version;
+	public function serialize(): string {
+		$writer = new BinaryWriter($this->size());
+		$this->sort();
+		parent::_serialize($writer);
+		$writer->write(Converter::intToBinary(count($this->modifications), 4)); // bound: modifications_count
+		ArrayHelpers::writeArray($writer, $this->modifications, fn ($e) => isset($e->modification->comparer) ? $e->modification->comparer() : $e->modification->value);
+		return $writer->getBinaryData();
 	}
 
-	set $version(value) {
-		this._$version = value;
-	}
-
-	get $network() {
-		return this._$network;
-	}
-
-	set $network(value) {
-		this._$network = value;
-	}
-
-	get $timestamp() {
-		return this._$timestamp;
-	}
-
-	set $timestamp(value) {
-		this._$timestamp = value;
-	}
-
-	get $signerPublicKey() {
-		return this._$signerPublicKey;
-	}
-
-	set $signerPublicKey(value) {
-		this._$signerPublicKey = value;
-	}
-
-	get $signature() {
-		return this._$signature;
-	}
-
-	set $signature(value) {
-		this._$signature = value;
-	}
-
-	get $fee() {
-		return this._$fee;
-	}
-
-	set $fee(value) {
-		this._$fee = value;
-	}
-
-	get $deadline() {
-		return this._$deadline;
-	}
-
-	set $deadline(value) {
-		this._$deadline = value;
-	}
-
-	get $modifications() {
-		return this._$modifications;
-	}
-
-	set $modifications(value) {
-		this._$modifications = value;
-	}
-
-	public function size() {
-		let size = 0;
-		size += this.$type.size;
-		size += 1;
-		size += 2;
-		size += this.$network.size;
-		size += this.$timestamp.size;
-		size += 4;
-		size += this.$signerPublicKey.size;
-		size += 4;
-		size += this.$signature.size;
-		size += this.$fee.size;
-		size += this.$deadline.size;
-		size += 4;
-		size += arrayHelpers.size(this.$modifications);
-		return size;
-	}
-
-	public static function deserialize($payload) {
-		const view = new BufferView(payload);
-		const $type = TransactionType.deserialize(view.buffer);
-		view.shiftRight($type.size);
-		const $version = Converter::hexToInt(view.buffer, 1);
-		view.shiftRight(1);
-		const $entityBodyReserved_1 = Converter::hexToInt(view.buffer, 2);
-		view.shiftRight(2);
-		if (0 !== $entityBodyReserved_1)
-			throw RangeError(`Invalid value of reserved field (${$entityBodyReserved_1})`);
-		const $network = NetworkType.deserialize(view.buffer);
-		view.shiftRight($network.size);
-		const $timestamp = Timestamp.deserialize(view.buffer);
-		view.shiftRight($timestamp.size);
-		const $signerPublicKeySize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
-		if (32 !== $signerPublicKeySize)
-			throw RangeError(`Invalid value of reserved field (${$signerPublicKeySize})`);
-		const $signerPublicKey = PublicKey.deserialize(view.buffer);
-		view.shiftRight($signerPublicKey.size);
-		const $signatureSize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
-		if (64 !== $signatureSize)
-			throw RangeError(`Invalid value of reserved field (${$signatureSize})`);
-		const $signature = Signature.deserialize(view.buffer);
-		view.shiftRight($signature.size);
-		const $fee = Amount.deserialize(view.buffer);
-		view.shiftRight($fee.size);
-		const $deadline = Timestamp.deserialize(view.buffer);
-		view.shiftRight($deadline.size);
-		const $modificationsCount = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
-		const $modifications = arrayHelpers.readArrayCount(view.buffer, SizePrefixedMultisigAccountModification, modificationsCount, e => ((e.modification.comparer ? e.modification.comparer() : e.modification.value)));
-		view.shiftRight(arrayHelpers.size($modifications));
-
-		const instance = new MultisigAccountModificationTransactionV1();
-		instance._$type = $type;
-		instance._$version = $version;
-		instance._$network = $network;
-		instance._$timestamp = $timestamp;
-		instance._$signerPublicKey = $signerPublicKey;
-		instance._$signature = $signature;
-		instance._$fee = $fee;
-		instance._$deadline = $deadline;
-		instance._$modifications = $modifications;
-		return instance;
-	}
-
-	public function serialize() {
-		const buffer = new Writer(this.size);
-		buffer.write(this._$type.serialize());
-		buffer.write(Converter::intToHex(this._$version, 1));
-		buffer.write(Converter::intToHex(this._$entityBodyReserved_1, 2));
-		buffer.write(this._$network.serialize());
-		buffer.write(this._$timestamp.serialize());
-		buffer.write(Converter::intToHex(this._$signerPublicKeySize, 4));
-		buffer.write(this._$signerPublicKey.serialize());
-		buffer.write(Converter::intToHex(this._$signatureSize, 4));
-		buffer.write(this._$signature.serialize());
-		buffer.write(this._$fee.serialize());
-		buffer.write(this._$deadline.serialize());
-		buffer.write(Converter::intToHex(this._$modifications.length, 4)); // bound: modifications_count
-		arrayHelpers.writeArray(buffer, this._$modifications, e => ((e.modification.comparer ? e.modification.comparer() : e.modification.value)));
-		return buffer.storage;
-	}
-
-	toString() {
-		let result = '(';
-		result += `$type: ${this._$type.toString()}, `;
-		result += `$version: ${'0x'.concat(this._$version.toString(16))}, `;
-		result += `$network: ${this._$network.toString()}, `;
-		result += `$timestamp: ${this._$timestamp.toString()}, `;
-		result += `$signerPublicKey: ${this._$signerPublicKey.toString()}, `;
-		result += `$signature: ${this._$signature.toString()}, `;
-		result += `$fee: ${this._$fee.toString()}, `;
-		result += `$deadline: ${this._$deadline.toString()}, `;
-		result += `$modifications: [${this._$modifications.map(e => e.toString()).join(',')}], `;
-		result += ')';
-		return result;
+	public function __toString(){
+		$result = '(';
+		$result .= parent::__toString();
+		$result .= 'modifications: ' . '[' . implode(',', array_map(fn ($e) => $e, $this->modifications)) . ']' . ', ';
+		$result .= ')';
+		return $result;
 	}
 }
 
-class NonVerifiableMultisigAccountModificationTransactionV1 {
-	static TRANSACTION_VERSION = 1;
+class NonVerifiableMultisigAccountModificationTransactionV1 extends NonVerifiableTransaction {
+	const TRANSACTION_VERSION = 1;
 
-	static TRANSACTION_TYPE = TransactionType.MULTISIG_ACCOUNT_MODIFICATION;
+	const TRANSACTION_TYPE = TransactionType::MULTISIG_ACCOUNT_MODIFICATION;
 
-	static TYPE_HINTS = {
-		$type: 'enum:TransactionType',
-		$network: 'enum:NetworkType',
-		$timestamp: 'pod:Timestamp',
-		$signerPublicKey: 'pod:PublicKey',
-		$fee: 'pod:Amount',
-		$deadline: 'pod:Timestamp',
-		$modifications: 'array[SizePrefixedMultisigAccountModification]'
-	};
+	public array $modifications;
 
-	public function __construct() {
-		this._$type = NonVerifiableMultisigAccountModificationTransactionV1.TRANSACTION_TYPE;
-		this._$version = NonVerifiableMultisigAccountModificationTransactionV1.TRANSACTION_VERSION;
-		this._$network = NetworkType.MAINNET;
-		this._$timestamp = new Timestamp();
-		this._$signerPublicKey = new PublicKey();
-		this._$fee = new Amount();
-		this._$deadline = new Timestamp();
-		this._$modifications = [];
-		this._$entityBodyReserved_1 = 0; // reserved field
-		this._$signerPublicKeySize = 32; // reserved field
+	public function __construct(
+		?NetworkType $network = null,
+		?Timestamp $timestamp = null,
+		?PublicKey $signerPublicKey = null,
+		?Amount $fee = null,
+		?Timestamp $deadline = null,
+		?array $modifications = null
+	){
+		parent::__construct(
+			new TransactionType(NonVerifiableMultisigAccountModificationTransactionV1::TRANSACTION_TYPE),
+			NonVerifiableMultisigAccountModificationTransactionV1::TRANSACTION_VERSION,
+			$network,
+			$timestamp,
+			$signerPublicKey,
+			$fee,
+			$deadline,
+		);
+		$this->modifications = $modifications ?? [];
 	}
 
-	sort() {
-		this._$modifications = this._$modifications.sort((lhs, rhs) => arrayHelpers.deepCompare(
-			(lhs.modification.comparer ? lhs.modification.comparer() : lhs.modification.value),
-			(rhs.modification.comparer ? rhs.modification.comparer() : rhs.modification.value)
-		));
+	public function sort(){
+		usort(
+			$this->modifications,
+			fn ($lhs, $rhs) =>
+			ArrayHelpers::deepCompare(
+				isset($lhs->modification->comparer) ? $lhs->modification->comparer() : $lhs->modification->value,
+				isset($rhs->modification->comparer) ? $rhs->modification->comparer() : $rhs->modification->value
+			)
+		);
 	}
 
-	get $type() {
-		return this._$type;
+	public function size(){
+		$size = 0;
+		$size += parent::size();
+		$size += 4;
+		$size += ArrayHelpers::size($this->modifications);
+		return $size;
 	}
 
-	set $type(value) {
-		this._$type = value;
+	public static function deserialize(BinaryReader $reader){
+		$instance = new NonVerifiableMultisigAccountModificationTransactionV1();
+
+		NonVerifiableTransaction::_deserialize($reader, $instance);
+		$modificationsCount = Converter::binaryToInt($reader->read(4), 4);
+		$modifications = ArrayHelpers::readArrayCount($reader, [SizePrefixedMultisigAccountModification::class, 'deserialize'], $modificationsCount, fn ($e) => isset($e->modification->comparer) ? $e->modification->comparer() : $e->modification->value);
+
+		$instance->modifications = $modifications;
+		return $instance;
 	}
 
-	get $version() {
-		return this._$version;
+	public function serialize(): string {
+		$writer = new BinaryWriter($this->size());
+		$this->sort();
+		parent::_serialize($writer);
+		$writer->write(Converter::intToBinary(count($this->modifications), 4)); // bound: modifications_count
+		ArrayHelpers::writeArray($writer, $this->modifications, fn ($e) => isset($e->modification->comparer) ? $e->modification->comparer() : $e->modification->value);
+		return $writer->getBinaryData();
 	}
 
-	set $version(value) {
-		this._$version = value;
-	}
-
-	get $network() {
-		return this._$network;
-	}
-
-	set $network(value) {
-		this._$network = value;
-	}
-
-	get $timestamp() {
-		return this._$timestamp;
-	}
-
-	set $timestamp(value) {
-		this._$timestamp = value;
-	}
-
-	get $signerPublicKey() {
-		return this._$signerPublicKey;
-	}
-
-	set $signerPublicKey(value) {
-		this._$signerPublicKey = value;
-	}
-
-	get $fee() {
-		return this._$fee;
-	}
-
-	set $fee(value) {
-		this._$fee = value;
-	}
-
-	get $deadline() {
-		return this._$deadline;
-	}
-
-	set $deadline(value) {
-		this._$deadline = value;
-	}
-
-	get $modifications() {
-		return this._$modifications;
-	}
-
-	set $modifications(value) {
-		this._$modifications = value;
-	}
-
-	public function size() {
-		let size = 0;
-		size += this.$type.size;
-		size += 1;
-		size += 2;
-		size += this.$network.size;
-		size += this.$timestamp.size;
-		size += 4;
-		size += this.$signerPublicKey.size;
-		size += this.$fee.size;
-		size += this.$deadline.size;
-		size += 4;
-		size += arrayHelpers.size(this.$modifications);
-		return size;
-	}
-
-	public static function deserialize($payload) {
-		const view = new BufferView(payload);
-		const $type = TransactionType.deserialize(view.buffer);
-		view.shiftRight($type.size);
-		const $version = Converter::hexToInt(view.buffer, 1);
-		view.shiftRight(1);
-		const $entityBodyReserved_1 = Converter::hexToInt(view.buffer, 2);
-		view.shiftRight(2);
-		if (0 !== $entityBodyReserved_1)
-			throw RangeError(`Invalid value of reserved field (${$entityBodyReserved_1})`);
-		const $network = NetworkType.deserialize(view.buffer);
-		view.shiftRight($network.size);
-		const $timestamp = Timestamp.deserialize(view.buffer);
-		view.shiftRight($timestamp.size);
-		const $signerPublicKeySize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
-		if (32 !== $signerPublicKeySize)
-			throw RangeError(`Invalid value of reserved field (${$signerPublicKeySize})`);
-		const $signerPublicKey = PublicKey.deserialize(view.buffer);
-		view.shiftRight($signerPublicKey.size);
-		const $fee = Amount.deserialize(view.buffer);
-		view.shiftRight($fee.size);
-		const $deadline = Timestamp.deserialize(view.buffer);
-		view.shiftRight($deadline.size);
-		const $modificationsCount = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
-		const $modifications = arrayHelpers.readArrayCount(view.buffer, SizePrefixedMultisigAccountModification, modificationsCount, e => ((e.modification.comparer ? e.modification.comparer() : e.modification.value)));
-		view.shiftRight(arrayHelpers.size($modifications));
-
-		const instance = new NonVerifiableMultisigAccountModificationTransactionV1();
-		instance._$type = $type;
-		instance._$version = $version;
-		instance._$network = $network;
-		instance._$timestamp = $timestamp;
-		instance._$signerPublicKey = $signerPublicKey;
-		instance._$fee = $fee;
-		instance._$deadline = $deadline;
-		instance._$modifications = $modifications;
-		return instance;
-	}
-
-	public function serialize() {
-		const buffer = new Writer(this.size);
-		buffer.write(this._$type.serialize());
-		buffer.write(Converter::intToHex(this._$version, 1));
-		buffer.write(Converter::intToHex(this._$entityBodyReserved_1, 2));
-		buffer.write(this._$network.serialize());
-		buffer.write(this._$timestamp.serialize());
-		buffer.write(Converter::intToHex(this._$signerPublicKeySize, 4));
-		buffer.write(this._$signerPublicKey.serialize());
-		buffer.write(this._$fee.serialize());
-		buffer.write(this._$deadline.serialize());
-		buffer.write(Converter::intToHex(this._$modifications.length, 4)); // bound: modifications_count
-		arrayHelpers.writeArray(buffer, this._$modifications, e => ((e.modification.comparer ? e.modification.comparer() : e.modification.value)));
-		return buffer.storage;
-	}
-
-	toString() {
-		let result = '(';
-		result += `$type: ${this._$type.toString()}, `;
-		result += `$version: ${'0x'.concat(this._$version.toString(16))}, `;
-		result += `$network: ${this._$network.toString()}, `;
-		result += `$timestamp: ${this._$timestamp.toString()}, `;
-		result += `$signerPublicKey: ${this._$signerPublicKey.toString()}, `;
-		result += `$fee: ${this._$fee.toString()}, `;
-		result += `$deadline: ${this._$deadline.toString()}, `;
-		result += `$modifications: [${this._$modifications.map(e => e.toString()).join(',')}], `;
-		result += ')';
-		return result;
+	public function __toString(){
+		$result = '(';
+		$result .= parent::__toString();
+		$result .= 'modifications: ' . '[' . implode(',', array_map(fn ($e) => $e, $this->modifications)) . ']' . ', ';
+		$result .= ')';
+		return $result;
 	}
 }
 
-class MultisigAccountModificationTransactionV2 {
-	static TRANSACTION_VERSION = 2;
+class MultisigAccountModificationTransactionV2 extends Transaction {
+	const TRANSACTION_VERSION = 2;
 
-	static TRANSACTION_TYPE = TransactionType.MULTISIG_ACCOUNT_MODIFICATION;
+	const TRANSACTION_TYPE = TransactionType::MULTISIG_ACCOUNT_MODIFICATION;
 
-	static TYPE_HINTS = {
-		$type: 'enum:TransactionType',
-		$network: 'enum:NetworkType',
-		$timestamp: 'pod:Timestamp',
-		$signerPublicKey: 'pod:PublicKey',
-		$signature: 'pod:Signature',
-		$fee: 'pod:Amount',
-		$deadline: 'pod:Timestamp',
-		$modifications: 'array[SizePrefixedMultisigAccountModification]'
-	};
+	public array $modifications;
 
-	public function __construct() {
-		this._$type = MultisigAccountModificationTransactionV2.TRANSACTION_TYPE;
-		this._$version = MultisigAccountModificationTransactionV2.TRANSACTION_VERSION;
-		this._$network = NetworkType.MAINNET;
-		this._$timestamp = new Timestamp();
-		this._$signerPublicKey = new PublicKey();
-		this._$signature = new Signature();
-		this._$fee = new Amount();
-		this._$deadline = new Timestamp();
-		this._$modifications = [];
-		this._$minApprovalDelta = 0;
-		this._$entityBodyReserved_1 = 0; // reserved field
-		this._$signerPublicKeySize = 32; // reserved field
-		this._$signatureSize = 64; // reserved field
-		this._$minApprovalDeltaSize = 4; // reserved field
+	public int $minApprovalDelta;
+
+	private int $minApprovalDeltaSize = 4; // reserved field
+
+	public function __construct(
+		?NetworkType $network = null,
+		?Timestamp $timestamp = null,
+		?PublicKey $signerPublicKey = null,
+		?Signature $signature = null,
+		?Amount $fee = null,
+		?Timestamp $deadline = null,
+		?array $modifications = null,
+		?int $minApprovalDelta = null
+	){
+		parent::__construct(
+			new TransactionType(MultisigAccountModificationTransactionV2::TRANSACTION_TYPE),
+			MultisigAccountModificationTransactionV2::TRANSACTION_VERSION,
+			$network,
+			$timestamp,
+			$signerPublicKey,
+			$signature,
+			$fee,
+			$deadline,
+		);
+		$this->modifications = $modifications ?? [];
+		$this->minApprovalDelta = $minApprovalDelta ?? 0;
+		$this->minApprovalDeltaSize = 4; // reserved field
 	}
 
-	sort() {
-		this._$modifications = this._$modifications.sort((lhs, rhs) => arrayHelpers.deepCompare(
-			(lhs.modification.comparer ? lhs.modification.comparer() : lhs.modification.value),
-			(rhs.modification.comparer ? rhs.modification.comparer() : rhs.modification.value)
-		));
+	public function sort(){
+		usort(
+			$this->modifications,
+			fn ($lhs, $rhs) =>
+			ArrayHelpers::deepCompare(
+				isset($lhs->modification->comparer) ? $lhs->modification->comparer() : $lhs->modification->value,
+				isset($rhs->modification->comparer) ? $rhs->modification->comparer() : $rhs->modification->value
+			)
+		);
 	}
 
-	get $type() {
-		return this._$type;
+	public function size(){
+		$size = 0;
+		$size += parent::size();
+		$size += 4;
+		$size += ArrayHelpers::size($this->modifications);
+		$size += 4;
+		$size += 4;
+		return $size;
 	}
 
-	set $type(value) {
-		this._$type = value;
-	}
+	public static function deserialize(BinaryReader $reader){
+		$instance = new MultisigAccountModificationTransactionV2();
 
-	get $version() {
-		return this._$version;
-	}
-
-	set $version(value) {
-		this._$version = value;
-	}
-
-	get $network() {
-		return this._$network;
-	}
-
-	set $network(value) {
-		this._$network = value;
-	}
-
-	get $timestamp() {
-		return this._$timestamp;
-	}
-
-	set $timestamp(value) {
-		this._$timestamp = value;
-	}
-
-	get $signerPublicKey() {
-		return this._$signerPublicKey;
-	}
-
-	set $signerPublicKey(value) {
-		this._$signerPublicKey = value;
-	}
-
-	get $signature() {
-		return this._$signature;
-	}
-
-	set $signature(value) {
-		this._$signature = value;
-	}
-
-	get $fee() {
-		return this._$fee;
-	}
-
-	set $fee(value) {
-		this._$fee = value;
-	}
-
-	get $deadline() {
-		return this._$deadline;
-	}
-
-	set $deadline(value) {
-		this._$deadline = value;
-	}
-
-	get $modifications() {
-		return this._$modifications;
-	}
-
-	set $modifications(value) {
-		this._$modifications = value;
-	}
-
-	get $minApprovalDelta() {
-		return this._$minApprovalDelta;
-	}
-
-	set $minApprovalDelta(value) {
-		this._$minApprovalDelta = value;
-	}
-
-	public function size() {
-		let size = 0;
-		size += this.$type.size;
-		size += 1;
-		size += 2;
-		size += this.$network.size;
-		size += this.$timestamp.size;
-		size += 4;
-		size += this.$signerPublicKey.size;
-		size += 4;
-		size += this.$signature.size;
-		size += this.$fee.size;
-		size += this.$deadline.size;
-		size += 4;
-		size += arrayHelpers.size(this.$modifications);
-		size += 4;
-		size += 4;
-		return size;
-	}
-
-	public static function deserialize($payload) {
-		const view = new BufferView(payload);
-		const $type = TransactionType.deserialize(view.buffer);
-		view.shiftRight($type.size);
-		const $version = Converter::hexToInt(view.buffer, 1);
-		view.shiftRight(1);
-		const $entityBodyReserved_1 = Converter::hexToInt(view.buffer, 2);
-		view.shiftRight(2);
-		if (0 !== $entityBodyReserved_1)
-			throw RangeError(`Invalid value of reserved field (${$entityBodyReserved_1})`);
-		const $network = NetworkType.deserialize(view.buffer);
-		view.shiftRight($network.size);
-		const $timestamp = Timestamp.deserialize(view.buffer);
-		view.shiftRight($timestamp.size);
-		const $signerPublicKeySize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
-		if (32 !== $signerPublicKeySize)
-			throw RangeError(`Invalid value of reserved field (${$signerPublicKeySize})`);
-		const $signerPublicKey = PublicKey.deserialize(view.buffer);
-		view.shiftRight($signerPublicKey.size);
-		const $signatureSize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
-		if (64 !== $signatureSize)
-			throw RangeError(`Invalid value of reserved field (${$signatureSize})`);
-		const $signature = Signature.deserialize(view.buffer);
-		view.shiftRight($signature.size);
-		const $fee = Amount.deserialize(view.buffer);
-		view.shiftRight($fee.size);
-		const $deadline = Timestamp.deserialize(view.buffer);
-		view.shiftRight($deadline.size);
-		const $modificationsCount = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
-		const $modifications = arrayHelpers.readArrayCount(view.buffer, SizePrefixedMultisigAccountModification, modificationsCount, e => ((e.modification.comparer ? e.modification.comparer() : e.modification.value)));
-		view.shiftRight(arrayHelpers.size($modifications));
-		const $minApprovalDeltaSize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
+		Transaction::_deserialize($reader, $instance);
+		$modificationsCount = Converter::binaryToInt($reader->read(4), 4);
+		$modifications = ArrayHelpers::readArrayCount($reader, [SizePrefixedMultisigAccountModification::class, 'deserialize'], $modificationsCount, fn ($e) => isset($e->modification->comparer) ? $e->modification->comparer() : $e->modification->value);
+		$minApprovalDeltaSize = Converter::binaryToInt($reader->read(4), 4);
 		if (4 !== $minApprovalDeltaSize)
-			throw RangeError(`Invalid value of reserved field (${$minApprovalDeltaSize})`);
-		const $minApprovalDelta = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
+			throw new OutOfRangeException('Invalid value of reserved field (' . $minApprovalDeltaSize . ')');
+		$minApprovalDelta = Converter::binaryToInt($reader->read(4), 4);
 
-		const instance = new MultisigAccountModificationTransactionV2();
-		instance._$type = $type;
-		instance._$version = $version;
-		instance._$network = $network;
-		instance._$timestamp = $timestamp;
-		instance._$signerPublicKey = $signerPublicKey;
-		instance._$signature = $signature;
-		instance._$fee = $fee;
-		instance._$deadline = $deadline;
-		instance._$modifications = $modifications;
-		instance._$minApprovalDelta = $minApprovalDelta;
-		return instance;
+		$instance->modifications = $modifications;
+		$instance->minApprovalDelta = $minApprovalDelta;
+		return $instance;
 	}
 
-	public function serialize() {
-		const buffer = new Writer(this.size);
-		buffer.write(this._$type.serialize());
-		buffer.write(Converter::intToHex(this._$version, 1));
-		buffer.write(Converter::intToHex(this._$entityBodyReserved_1, 2));
-		buffer.write(this._$network.serialize());
-		buffer.write(this._$timestamp.serialize());
-		buffer.write(Converter::intToHex(this._$signerPublicKeySize, 4));
-		buffer.write(this._$signerPublicKey.serialize());
-		buffer.write(Converter::intToHex(this._$signatureSize, 4));
-		buffer.write(this._$signature.serialize());
-		buffer.write(this._$fee.serialize());
-		buffer.write(this._$deadline.serialize());
-		buffer.write(Converter::intToHex(this._$modifications.length, 4)); // bound: modifications_count
-		arrayHelpers.writeArray(buffer, this._$modifications, e => ((e.modification.comparer ? e.modification.comparer() : e.modification.value)));
-		buffer.write(Converter::intToHex(this._$minApprovalDeltaSize, 4));
-		buffer.write(Converter::intToHex(this._$minApprovalDelta, 4));
-		return buffer.storage;
+	public function serialize(): string {
+		$writer = new BinaryWriter($this->size());
+		$this->sort();
+		parent::_serialize($writer);
+		$writer->write(Converter::intToBinary(count($this->modifications), 4)); // bound: modifications_count
+		ArrayHelpers::writeArray($writer, $this->modifications, fn ($e) => isset($e->modification->comparer) ? $e->modification->comparer() : $e->modification->value);
+		$writer->write(Converter::intToBinary($this->minApprovalDeltaSize, 4));
+		$writer->write(Converter::intToBinary($this->minApprovalDelta, 4));
+		return $writer->getBinaryData();
 	}
 
-	toString() {
-		let result = '(';
-		result += `$type: ${this._$type.toString()}, `;
-		result += `$version: ${'0x'.concat(this._$version.toString(16))}, `;
-		result += `$network: ${this._$network.toString()}, `;
-		result += `$timestamp: ${this._$timestamp.toString()}, `;
-		result += `$signerPublicKey: ${this._$signerPublicKey.toString()}, `;
-		result += `$signature: ${this._$signature.toString()}, `;
-		result += `$fee: ${this._$fee.toString()}, `;
-		result += `$deadline: ${this._$deadline.toString()}, `;
-		result += `$modifications: [${this._$modifications.map(e => e.toString()).join(',')}], `;
-		result += `$minApprovalDelta: ${'0x'.concat(this._$minApprovalDelta.toString(16))}, `;
-		result += ')';
-		return result;
+	public function __toString(){
+		$result = '(';
+		$result .= parent::__toString();
+		$result .= 'modifications: ' . '[' . implode(',', array_map(fn ($e) => $e, $this->modifications)) . ']' . ', ';
+		$result .= 'minApprovalDelta: ' . '0x' . Converter::intToHex($this->minApprovalDelta, 4) . ', ';
+		$result .= ')';
+		return $result;
 	}
 }
 
-class NonVerifiableMultisigAccountModificationTransactionV2 {
-	static TRANSACTION_VERSION = 2;
+class NonVerifiableMultisigAccountModificationTransactionV2 extends NonVerifiableTransaction {
+	const TRANSACTION_VERSION = 2;
 
-	static TRANSACTION_TYPE = TransactionType.MULTISIG_ACCOUNT_MODIFICATION;
+	const TRANSACTION_TYPE = TransactionType::MULTISIG_ACCOUNT_MODIFICATION;
 
-	static TYPE_HINTS = {
-		$type: 'enum:TransactionType',
-		$network: 'enum:NetworkType',
-		$timestamp: 'pod:Timestamp',
-		$signerPublicKey: 'pod:PublicKey',
-		$fee: 'pod:Amount',
-		$deadline: 'pod:Timestamp',
-		$modifications: 'array[SizePrefixedMultisigAccountModification]'
-	};
+	public array $modifications;
 
-	public function __construct() {
-		this._$type = NonVerifiableMultisigAccountModificationTransactionV2.TRANSACTION_TYPE;
-		this._$version = NonVerifiableMultisigAccountModificationTransactionV2.TRANSACTION_VERSION;
-		this._$network = NetworkType.MAINNET;
-		this._$timestamp = new Timestamp();
-		this._$signerPublicKey = new PublicKey();
-		this._$fee = new Amount();
-		this._$deadline = new Timestamp();
-		this._$modifications = [];
-		this._$minApprovalDelta = 0;
-		this._$entityBodyReserved_1 = 0; // reserved field
-		this._$signerPublicKeySize = 32; // reserved field
-		this._$minApprovalDeltaSize = 4; // reserved field
+	public int $minApprovalDelta;
+
+	private int $minApprovalDeltaSize = 4; // reserved field
+
+	public function __construct(
+		?NetworkType $network = null,
+		?Timestamp $timestamp = null,
+		?PublicKey $signerPublicKey = null,
+		?Amount $fee = null,
+		?Timestamp $deadline = null,
+		?array $modifications = null,
+		?int $minApprovalDelta = null
+	){
+		parent::__construct(
+			new TransactionType(NonVerifiableMultisigAccountModificationTransactionV2::TRANSACTION_TYPE),
+			NonVerifiableMultisigAccountModificationTransactionV2::TRANSACTION_VERSION,
+			$network,
+			$timestamp,
+			$signerPublicKey,
+			$fee,
+			$deadline,
+		);
+		$this->modifications = $modifications ?? [];
+		$this->minApprovalDelta = $minApprovalDelta ?? 0;
+		$this->minApprovalDeltaSize = 4; // reserved field
 	}
 
-	sort() {
-		this._$modifications = this._$modifications.sort((lhs, rhs) => arrayHelpers.deepCompare(
-			(lhs.modification.comparer ? lhs.modification.comparer() : lhs.modification.value),
-			(rhs.modification.comparer ? rhs.modification.comparer() : rhs.modification.value)
-		));
+	public function sort(){
+		usort(
+			$this->modifications,
+			fn ($lhs, $rhs) =>
+			ArrayHelpers::deepCompare(
+				isset($lhs->modification->comparer) ? $lhs->modification->comparer() : $lhs->modification->value,
+				isset($rhs->modification->comparer) ? $rhs->modification->comparer() : $rhs->modification->value
+			)
+		);
 	}
 
-	get $type() {
-		return this._$type;
+	public function size(){
+		$size = 0;
+		$size += parent::size();
+		$size += 4;
+		$size += ArrayHelpers::size($this->modifications);
+		$size += 4;
+		$size += 4;
+		return $size;
 	}
 
-	set $type(value) {
-		this._$type = value;
-	}
+	public static function deserialize(BinaryReader $reader){
+		$instance = new NonVerifiableMultisigAccountModificationTransactionV2();
 
-	get $version() {
-		return this._$version;
-	}
-
-	set $version(value) {
-		this._$version = value;
-	}
-
-	get $network() {
-		return this._$network;
-	}
-
-	set $network(value) {
-		this._$network = value;
-	}
-
-	get $timestamp() {
-		return this._$timestamp;
-	}
-
-	set $timestamp(value) {
-		this._$timestamp = value;
-	}
-
-	get $signerPublicKey() {
-		return this._$signerPublicKey;
-	}
-
-	set $signerPublicKey(value) {
-		this._$signerPublicKey = value;
-	}
-
-	get $fee() {
-		return this._$fee;
-	}
-
-	set $fee(value) {
-		this._$fee = value;
-	}
-
-	get $deadline() {
-		return this._$deadline;
-	}
-
-	set $deadline(value) {
-		this._$deadline = value;
-	}
-
-	get $modifications() {
-		return this._$modifications;
-	}
-
-	set $modifications(value) {
-		this._$modifications = value;
-	}
-
-	get $minApprovalDelta() {
-		return this._$minApprovalDelta;
-	}
-
-	set $minApprovalDelta(value) {
-		this._$minApprovalDelta = value;
-	}
-
-	public function size() {
-		let size = 0;
-		size += this.$type.size;
-		size += 1;
-		size += 2;
-		size += this.$network.size;
-		size += this.$timestamp.size;
-		size += 4;
-		size += this.$signerPublicKey.size;
-		size += this.$fee.size;
-		size += this.$deadline.size;
-		size += 4;
-		size += arrayHelpers.size(this.$modifications);
-		size += 4;
-		size += 4;
-		return size;
-	}
-
-	public static function deserialize($payload) {
-		const view = new BufferView(payload);
-		const $type = TransactionType.deserialize(view.buffer);
-		view.shiftRight($type.size);
-		const $version = Converter::hexToInt(view.buffer, 1);
-		view.shiftRight(1);
-		const $entityBodyReserved_1 = Converter::hexToInt(view.buffer, 2);
-		view.shiftRight(2);
-		if (0 !== $entityBodyReserved_1)
-			throw RangeError(`Invalid value of reserved field (${$entityBodyReserved_1})`);
-		const $network = NetworkType.deserialize(view.buffer);
-		view.shiftRight($network.size);
-		const $timestamp = Timestamp.deserialize(view.buffer);
-		view.shiftRight($timestamp.size);
-		const $signerPublicKeySize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
-		if (32 !== $signerPublicKeySize)
-			throw RangeError(`Invalid value of reserved field (${$signerPublicKeySize})`);
-		const $signerPublicKey = PublicKey.deserialize(view.buffer);
-		view.shiftRight($signerPublicKey.size);
-		const $fee = Amount.deserialize(view.buffer);
-		view.shiftRight($fee.size);
-		const $deadline = Timestamp.deserialize(view.buffer);
-		view.shiftRight($deadline.size);
-		const $modificationsCount = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
-		const $modifications = arrayHelpers.readArrayCount(view.buffer, SizePrefixedMultisigAccountModification, modificationsCount, e => ((e.modification.comparer ? e.modification.comparer() : e.modification.value)));
-		view.shiftRight(arrayHelpers.size($modifications));
-		const $minApprovalDeltaSize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
+		NonVerifiableTransaction::_deserialize($reader, $instance);
+		$modificationsCount = Converter::binaryToInt($reader->read(4), 4);
+		$modifications = ArrayHelpers::readArrayCount($reader, [SizePrefixedMultisigAccountModification::class, 'deserialize'], $modificationsCount, fn ($e) => isset($e->modification->comparer) ? $e->modification->comparer() : $e->modification->value);
+		$minApprovalDeltaSize = Converter::binaryToInt($reader->read(4), 4);
 		if (4 !== $minApprovalDeltaSize)
-			throw RangeError(`Invalid value of reserved field (${$minApprovalDeltaSize})`);
-		const $minApprovalDelta = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
+			throw new OutOfRangeException('Invalid value of reserved field (' . $minApprovalDeltaSize . ')');
+		$minApprovalDelta = Converter::binaryToInt($reader->read(4), 4);
 
-		const instance = new NonVerifiableMultisigAccountModificationTransactionV2();
-		instance._$type = $type;
-		instance._$version = $version;
-		instance._$network = $network;
-		instance._$timestamp = $timestamp;
-		instance._$signerPublicKey = $signerPublicKey;
-		instance._$fee = $fee;
-		instance._$deadline = $deadline;
-		instance._$modifications = $modifications;
-		instance._$minApprovalDelta = $minApprovalDelta;
-		return instance;
+		$instance->modifications = $modifications;
+		$instance->minApprovalDelta = $minApprovalDelta;
+		return $instance;
 	}
 
-	public function serialize() {
-		const buffer = new Writer(this.size);
-		buffer.write(this._$type.serialize());
-		buffer.write(Converter::intToHex(this._$version, 1));
-		buffer.write(Converter::intToHex(this._$entityBodyReserved_1, 2));
-		buffer.write(this._$network.serialize());
-		buffer.write(this._$timestamp.serialize());
-		buffer.write(Converter::intToHex(this._$signerPublicKeySize, 4));
-		buffer.write(this._$signerPublicKey.serialize());
-		buffer.write(this._$fee.serialize());
-		buffer.write(this._$deadline.serialize());
-		buffer.write(Converter::intToHex(this._$modifications.length, 4)); // bound: modifications_count
-		arrayHelpers.writeArray(buffer, this._$modifications, e => ((e.modification.comparer ? e.modification.comparer() : e.modification.value)));
-		buffer.write(Converter::intToHex(this._$minApprovalDeltaSize, 4));
-		buffer.write(Converter::intToHex(this._$minApprovalDelta, 4));
-		return buffer.storage;
+	public function serialize(): string {
+		$writer = new BinaryWriter($this->size());
+		$this->sort();
+		parent::_serialize($writer);
+		$writer->write(Converter::intToBinary(count($this->modifications), 4)); // bound: modifications_count
+		ArrayHelpers::writeArray($writer, $this->modifications, fn ($e) => isset($e->modification->comparer) ? $e->modification->comparer() : $e->modification->value);
+		$writer->write(Converter::intToBinary($this->minApprovalDeltaSize, 4));
+		$writer->write(Converter::intToBinary($this->minApprovalDelta, 4));
+		return $writer->getBinaryData();
 	}
 
-	toString() {
-		let result = '(';
-		result += `$type: ${this._$type.toString()}, `;
-		result += `$version: ${'0x'.concat(this._$version.toString(16))}, `;
-		result += `$network: ${this._$network.toString()}, `;
-		result += `$timestamp: ${this._$timestamp.toString()}, `;
-		result += `$signerPublicKey: ${this._$signerPublicKey.toString()}, `;
-		result += `$fee: ${this._$fee.toString()}, `;
-		result += `$deadline: ${this._$deadline.toString()}, `;
-		result += `$modifications: [${this._$modifications.map(e => e.toString()).join(',')}], `;
-		result += `$minApprovalDelta: ${'0x'.concat(this._$minApprovalDelta.toString(16))}, `;
-		result += ')';
-		return result;
+	public function __toString(){
+		$result = '(';
+		$result .= parent::__toString();
+		$result .= 'modifications: ' . '[' . implode(',', array_map(fn ($e) => $e, $this->modifications)) . ']' . ', ';
+		$result .= 'minApprovalDelta: ' . '0x' . Converter::intToHex($this->minApprovalDelta, 4) . ', ';
+		$result .= ')';
+		return $result;
 	}
 }
 
-class CosignatureV1 {
-	static TRANSACTION_VERSION = 1;
+class CosignatureV1 extends Transaction {
+	const TRANSACTION_VERSION = 1;
 
-	static TRANSACTION_TYPE = TransactionType.MULTISIG_COSIGNATURE;
+	const TRANSACTION_TYPE = TransactionType::MULTISIG_COSIGNATURE;
 
-	static TYPE_HINTS = {
-		$type: 'enum:TransactionType',
-		$network: 'enum:NetworkType',
-		$timestamp: 'pod:Timestamp',
-		$signerPublicKey: 'pod:PublicKey',
-		$signature: 'pod:Signature',
-		$fee: 'pod:Amount',
-		$deadline: 'pod:Timestamp',
-		$multisigTransactionHash: 'pod:Hash256',
-		$multisigAccountAddress: 'pod:Address'
-	};
+	public Hash256 $multisigTransactionHash;
 
-	public function __construct() {
-		this._$type = CosignatureV1.TRANSACTION_TYPE;
-		this._$version = CosignatureV1.TRANSACTION_VERSION;
-		this._$network = NetworkType.MAINNET;
-		this._$timestamp = new Timestamp();
-		this._$signerPublicKey = new PublicKey();
-		this._$signature = new Signature();
-		this._$fee = new Amount();
-		this._$deadline = new Timestamp();
-		this._$multisigTransactionHash = new Hash256();
-		this._$multisigAccountAddress = new Address();
-		this._$entityBodyReserved_1 = 0; // reserved field
-		this._$signerPublicKeySize = 32; // reserved field
-		this._$signatureSize = 64; // reserved field
-		this._$multisigTransactionHashOuterSize = 36; // reserved field
-		this._$multisigTransactionHashSize = 32; // reserved field
-		this._$multisigAccountAddressSize = 40; // reserved field
+	public Address $multisigAccountAddress;
+
+	private int $multisigTransactionHashOuterSize = 36; // reserved field
+
+	private int $multisigTransactionHashSize = 32; // reserved field
+
+	private int $multisigAccountAddressSize = 40; // reserved field
+
+	public function __construct(
+		?NetworkType $network = null,
+		?Timestamp $timestamp = null,
+		?PublicKey $signerPublicKey = null,
+		?Signature $signature = null,
+		?Amount $fee = null,
+		?Timestamp $deadline = null,
+		?Hash256 $multisigTransactionHash = null,
+		?Address $multisigAccountAddress = null
+	){
+		parent::__construct(
+			new TransactionType(CosignatureV1::TRANSACTION_TYPE),
+			CosignatureV1::TRANSACTION_VERSION,
+			$network,
+			$timestamp,
+			$signerPublicKey,
+			$signature,
+			$fee,
+			$deadline,
+		);
+		$this->multisigTransactionHash = $multisigTransactionHash ?? new Hash256();
+		$this->multisigAccountAddress = $multisigAccountAddress ?? new Address();
+		$this->multisigTransactionHashOuterSize = 36; // reserved field
+		$this->multisigTransactionHashSize = 32; // reserved field
+		$this->multisigAccountAddressSize = 40; // reserved field
 	}
 
-	sort() {
+	public function sort(){
 	}
 
-	get $type() {
-		return this._$type;
+	public function size(){
+		$size = 0;
+		$size += parent::size();
+		$size += 4;
+		$size += 4;
+		$size += $this->multisigTransactionHash->size();
+		$size += 4;
+		$size += $this->multisigAccountAddress->size();
+		return $size;
 	}
 
-	set $type(value) {
-		this._$type = value;
-	}
+	public static function deserialize(BinaryReader $reader){
+		$instance = new CosignatureV1();
 
-	get $version() {
-		return this._$version;
-	}
-
-	set $version(value) {
-		this._$version = value;
-	}
-
-	get $network() {
-		return this._$network;
-	}
-
-	set $network(value) {
-		this._$network = value;
-	}
-
-	get $timestamp() {
-		return this._$timestamp;
-	}
-
-	set $timestamp(value) {
-		this._$timestamp = value;
-	}
-
-	get $signerPublicKey() {
-		return this._$signerPublicKey;
-	}
-
-	set $signerPublicKey(value) {
-		this._$signerPublicKey = value;
-	}
-
-	get $signature() {
-		return this._$signature;
-	}
-
-	set $signature(value) {
-		this._$signature = value;
-	}
-
-	get $fee() {
-		return this._$fee;
-	}
-
-	set $fee(value) {
-		this._$fee = value;
-	}
-
-	get $deadline() {
-		return this._$deadline;
-	}
-
-	set $deadline(value) {
-		this._$deadline = value;
-	}
-
-	get $multisigTransactionHash() {
-		return this._$multisigTransactionHash;
-	}
-
-	set $multisigTransactionHash(value) {
-		this._$multisigTransactionHash = value;
-	}
-
-	get $multisigAccountAddress() {
-		return this._$multisigAccountAddress;
-	}
-
-	set $multisigAccountAddress(value) {
-		this._$multisigAccountAddress = value;
-	}
-
-	public function size() {
-		let size = 0;
-		size += this.$type.size;
-		size += 1;
-		size += 2;
-		size += this.$network.size;
-		size += this.$timestamp.size;
-		size += 4;
-		size += this.$signerPublicKey.size;
-		size += 4;
-		size += this.$signature.size;
-		size += this.$fee.size;
-		size += this.$deadline.size;
-		size += 4;
-		size += 4;
-		size += this.$multisigTransactionHash.size;
-		size += 4;
-		size += this.$multisigAccountAddress.size;
-		return size;
-	}
-
-	public static function deserialize($payload) {
-		const view = new BufferView(payload);
-		const $type = TransactionType.deserialize(view.buffer);
-		view.shiftRight($type.size);
-		const $version = Converter::hexToInt(view.buffer, 1);
-		view.shiftRight(1);
-		const $entityBodyReserved_1 = Converter::hexToInt(view.buffer, 2);
-		view.shiftRight(2);
-		if (0 !== $entityBodyReserved_1)
-			throw RangeError(`Invalid value of reserved field (${$entityBodyReserved_1})`);
-		const $network = NetworkType.deserialize(view.buffer);
-		view.shiftRight($network.size);
-		const $timestamp = Timestamp.deserialize(view.buffer);
-		view.shiftRight($timestamp.size);
-		const $signerPublicKeySize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
-		if (32 !== $signerPublicKeySize)
-			throw RangeError(`Invalid value of reserved field (${$signerPublicKeySize})`);
-		const $signerPublicKey = PublicKey.deserialize(view.buffer);
-		view.shiftRight($signerPublicKey.size);
-		const $signatureSize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
-		if (64 !== $signatureSize)
-			throw RangeError(`Invalid value of reserved field (${$signatureSize})`);
-		const $signature = Signature.deserialize(view.buffer);
-		view.shiftRight($signature.size);
-		const $fee = Amount.deserialize(view.buffer);
-		view.shiftRight($fee.size);
-		const $deadline = Timestamp.deserialize(view.buffer);
-		view.shiftRight($deadline.size);
-		const $multisigTransactionHashOuterSize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
+		Transaction::_deserialize($reader, $instance);
+		$multisigTransactionHashOuterSize = Converter::binaryToInt($reader->read(4), 4);
 		if (36 !== $multisigTransactionHashOuterSize)
-			throw RangeError(`Invalid value of reserved field (${$multisigTransactionHashOuterSize})`);
-		const $multisigTransactionHashSize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
+			throw new OutOfRangeException('Invalid value of reserved field (' . $multisigTransactionHashOuterSize . ')');
+		$multisigTransactionHashSize = Converter::binaryToInt($reader->read(4), 4);
 		if (32 !== $multisigTransactionHashSize)
-			throw RangeError(`Invalid value of reserved field (${$multisigTransactionHashSize})`);
-		const $multisigTransactionHash = Hash256.deserialize(view.buffer);
-		view.shiftRight($multisigTransactionHash.size);
-		const $multisigAccountAddressSize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
+			throw new OutOfRangeException('Invalid value of reserved field (' . $multisigTransactionHashSize . ')');
+		$multisigTransactionHash = Hash256::deserialize($reader);
+		$multisigAccountAddressSize = Converter::binaryToInt($reader->read(4), 4);
 		if (40 !== $multisigAccountAddressSize)
-			throw RangeError(`Invalid value of reserved field (${$multisigAccountAddressSize})`);
-		const $multisigAccountAddress = Address.deserialize(view.buffer);
-		view.shiftRight($multisigAccountAddress.size);
+			throw new OutOfRangeException('Invalid value of reserved field (' . $multisigAccountAddressSize . ')');
+		$multisigAccountAddress = Address::deserialize($reader);
 
-		const instance = new CosignatureV1();
-		instance._$type = $type;
-		instance._$version = $version;
-		instance._$network = $network;
-		instance._$timestamp = $timestamp;
-		instance._$signerPublicKey = $signerPublicKey;
-		instance._$signature = $signature;
-		instance._$fee = $fee;
-		instance._$deadline = $deadline;
-		instance._$multisigTransactionHash = $multisigTransactionHash;
-		instance._$multisigAccountAddress = $multisigAccountAddress;
-		return instance;
+		$instance->multisigTransactionHash = $multisigTransactionHash;
+		$instance->multisigAccountAddress = $multisigAccountAddress;
+		return $instance;
 	}
 
-	public function serialize() {
-		const buffer = new Writer(this.size);
-		buffer.write(this._$type.serialize());
-		buffer.write(Converter::intToHex(this._$version, 1));
-		buffer.write(Converter::intToHex(this._$entityBodyReserved_1, 2));
-		buffer.write(this._$network.serialize());
-		buffer.write(this._$timestamp.serialize());
-		buffer.write(Converter::intToHex(this._$signerPublicKeySize, 4));
-		buffer.write(this._$signerPublicKey.serialize());
-		buffer.write(Converter::intToHex(this._$signatureSize, 4));
-		buffer.write(this._$signature.serialize());
-		buffer.write(this._$fee.serialize());
-		buffer.write(this._$deadline.serialize());
-		buffer.write(Converter::intToHex(this._$multisigTransactionHashOuterSize, 4));
-		buffer.write(Converter::intToHex(this._$multisigTransactionHashSize, 4));
-		buffer.write(this._$multisigTransactionHash.serialize());
-		buffer.write(Converter::intToHex(this._$multisigAccountAddressSize, 4));
-		buffer.write(this._$multisigAccountAddress.serialize());
-		return buffer.storage;
+	public function serialize(): string {
+		$writer = new BinaryWriter($this->size());
+		$this->sort();
+		parent::_serialize($writer);
+		$writer->write(Converter::intToBinary($this->multisigTransactionHashOuterSize, 4));
+		$writer->write(Converter::intToBinary($this->multisigTransactionHashSize, 4));
+		$writer->write($this->multisigTransactionHash->serialize());
+		$writer->write(Converter::intToBinary($this->multisigAccountAddressSize, 4));
+		$writer->write($this->multisigAccountAddress->serialize());
+		return $writer->getBinaryData();
 	}
 
-	toString() {
-		let result = '(';
-		result += `$type: ${this._$type.toString()}, `;
-		result += `$version: ${'0x'.concat(this._$version.toString(16))}, `;
-		result += `$network: ${this._$network.toString()}, `;
-		result += `$timestamp: ${this._$timestamp.toString()}, `;
-		result += `$signerPublicKey: ${this._$signerPublicKey.toString()}, `;
-		result += `$signature: ${this._$signature.toString()}, `;
-		result += `$fee: ${this._$fee.toString()}, `;
-		result += `$deadline: ${this._$deadline.toString()}, `;
-		result += `$multisigTransactionHash: ${this._$multisigTransactionHash.toString()}, `;
-		result += `$multisigAccountAddress: ${this._$multisigAccountAddress.toString()}, `;
-		result += ')';
-		return result;
+	public function __toString(){
+		$result = '(';
+		$result .= parent::__toString();
+		$result .= 'multisigTransactionHash: ' . $this->multisigTransactionHash . ', ';
+		$result .= 'multisigAccountAddress: ' . $this->multisigAccountAddress . ', ';
+		$result .= ')';
+		return $result;
 	}
 }
 
 class SizePrefixedCosignatureV1 {
-	static TYPE_HINTS = {
-		$cosignature: 'struct:CosignatureV1'
-	};
+	public CosignatureV1 $cosignature;
 
-	public function __construct() {
-		this._$cosignature = new CosignatureV1();
+	public function __construct(?CosignatureV1 $cosignature = null){
+		$this->cosignature = $cosignature ?? new CosignatureV1();
 	}
 
-	sort() {
-		this._$cosignature.sort();
+	public function sort(){
+		$this->cosignature->sort();
 	}
 
-	get $cosignature() {
-		return this._$cosignature;
+	public function size(){
+		$size = 0;
+		$size += 4;
+		$size += $this->cosignature->size();
+		return $size;
 	}
 
-	set $cosignature(value) {
-		this._$cosignature = value;
-	}
+	public static function deserialize(BinaryReader $reader){
+		$instance = new SizePrefixedCosignatureV1();
 
-	public function size() {
-		let size = 0;
-		size += 4;
-		size += this.$cosignature.size;
-		return size;
-	}
-
-	public static function deserialize($payload) {
-		const view = new BufferView(payload);
-		const $cosignatureSize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
+		$cosignatureSize = Converter::binaryToInt($reader->read(4), 4);
 		// marking sizeof field
-		const $cosignature = CosignatureV1.deserialize(view.window(cosignatureSize));
-		view.shiftRight($cosignature.size);
+		$cosignature = CosignatureV1::deserialize(view.window(cosignatureSize));
 
-		const instance = new SizePrefixedCosignatureV1();
-		instance._$cosignature = $cosignature;
-		return instance;
+		$instance->cosignature = $cosignature;
+		return $instance;
 	}
 
-	public function serialize() {
-		const buffer = new Writer(this.size);
-		buffer.write(Converter::intToHex(this.$cosignature.size, 4)); // bound: cosignature_size
-		buffer.write(this._$cosignature.serialize());
-		return buffer.storage;
+	public function serialize(): string {
+		$writer = new BinaryWriter($this->size());
+		$writer->write(Converter::intToBinary($this->cosignature->size(), 4)); // bound: cosignature_size
+		$writer->write($this->cosignature->serialize());
+		return $writer->getBinaryData();
 	}
 
-	toString() {
-		let result = '(';
-		result += `$cosignature: ${this._$cosignature.toString()}, `;
-		result += ')';
-		return result;
+	public function __toString(){
+		$result = '';
+		$result .= 'cosignature: ' . $this->cosignature . ', ';
+		return $result;
 	}
 }
 
-class MultisigTransactionV1 {
-	static TRANSACTION_VERSION = 1;
+class MultisigTransactionV1 extends Transaction {
+	const TRANSACTION_VERSION = 1;
 
-	static TRANSACTION_TYPE = TransactionType.MULTISIG;
+	const TRANSACTION_TYPE = TransactionType::MULTISIG;
 
-	static TYPE_HINTS = {
-		$type: 'enum:TransactionType',
-		$network: 'enum:NetworkType',
-		$timestamp: 'pod:Timestamp',
-		$signerPublicKey: 'pod:PublicKey',
-		$signature: 'pod:Signature',
-		$fee: 'pod:Amount',
-		$deadline: 'pod:Timestamp',
-		$innerTransaction: 'struct:NonVerifiableTransaction',
-		$cosignatures: 'array[SizePrefixedCosignatureV1]'
-	};
+	public NonVerifiableTransaction $innerTransaction;
 
-	public function __construct() {
-		this._$type = MultisigTransactionV1.TRANSACTION_TYPE;
-		this._$version = MultisigTransactionV1.TRANSACTION_VERSION;
-		this._$network = NetworkType.MAINNET;
-		this._$timestamp = new Timestamp();
-		this._$signerPublicKey = new PublicKey();
-		this._$signature = new Signature();
-		this._$fee = new Amount();
-		this._$deadline = new Timestamp();
-		this._$innerTransaction = new NonVerifiableTransaction();
-		this._$cosignatures = [];
-		this._$entityBodyReserved_1 = 0; // reserved field
-		this._$signerPublicKeySize = 32; // reserved field
-		this._$signatureSize = 64; // reserved field
+	public array $cosignatures;
+
+	public function __construct(
+		?NetworkType $network = null,
+		?Timestamp $timestamp = null,
+		?PublicKey $signerPublicKey = null,
+		?Signature $signature = null,
+		?Amount $fee = null,
+		?Timestamp $deadline = null,
+		?NonVerifiableTransaction $innerTransaction = null,
+		?array $cosignatures = null
+	){
+		parent::__construct(
+			new TransactionType(MultisigTransactionV1::TRANSACTION_TYPE),
+			MultisigTransactionV1::TRANSACTION_VERSION,
+			$network,
+			$timestamp,
+			$signerPublicKey,
+			$signature,
+			$fee,
+			$deadline,
+		);
+		$this->innerTransaction = $innerTransaction ?? new NonVerifiableTransaction();
+		$this->cosignatures = $cosignatures ?? [];
 	}
 
-	sort() {
-		this._$innerTransaction.sort();
+	public function sort(){
+		$this->innerTransaction->sort();
 	}
 
-	get $type() {
-		return this._$type;
+	public function size(){
+		$size = 0;
+		$size += parent::size();
+		$size += 4;
+		$size += $this->innerTransaction->size();
+		$size += 4;
+		$size += ArrayHelpers::size($this->cosignatures);
+		return $size;
 	}
 
-	set $type(value) {
-		this._$type = value;
-	}
+	public static function deserialize(BinaryReader $reader){
+		$instance = new MultisigTransactionV1();
 
-	get $version() {
-		return this._$version;
-	}
-
-	set $version(value) {
-		this._$version = value;
-	}
-
-	get $network() {
-		return this._$network;
-	}
-
-	set $network(value) {
-		this._$network = value;
-	}
-
-	get $timestamp() {
-		return this._$timestamp;
-	}
-
-	set $timestamp(value) {
-		this._$timestamp = value;
-	}
-
-	get $signerPublicKey() {
-		return this._$signerPublicKey;
-	}
-
-	set $signerPublicKey(value) {
-		this._$signerPublicKey = value;
-	}
-
-	get $signature() {
-		return this._$signature;
-	}
-
-	set $signature(value) {
-		this._$signature = value;
-	}
-
-	get $fee() {
-		return this._$fee;
-	}
-
-	set $fee(value) {
-		this._$fee = value;
-	}
-
-	get $deadline() {
-		return this._$deadline;
-	}
-
-	set $deadline(value) {
-		this._$deadline = value;
-	}
-
-	get $innerTransaction() {
-		return this._$innerTransaction;
-	}
-
-	set $innerTransaction(value) {
-		this._$innerTransaction = value;
-	}
-
-	get $cosignatures() {
-		return this._$cosignatures;
-	}
-
-	set $cosignatures(value) {
-		this._$cosignatures = value;
-	}
-
-	public function size() {
-		let size = 0;
-		size += this.$type.size;
-		size += 1;
-		size += 2;
-		size += this.$network.size;
-		size += this.$timestamp.size;
-		size += 4;
-		size += this.$signerPublicKey.size;
-		size += 4;
-		size += this.$signature.size;
-		size += this.$fee.size;
-		size += this.$deadline.size;
-		size += 4;
-		size += this.$innerTransaction.size;
-		size += 4;
-		size += arrayHelpers.size(this.$cosignatures);
-		return size;
-	}
-
-	public static function deserialize($payload) {
-		const view = new BufferView(payload);
-		const $type = TransactionType.deserialize(view.buffer);
-		view.shiftRight($type.size);
-		const $version = Converter::hexToInt(view.buffer, 1);
-		view.shiftRight(1);
-		const $entityBodyReserved_1 = Converter::hexToInt(view.buffer, 2);
-		view.shiftRight(2);
-		if (0 !== $entityBodyReserved_1)
-			throw RangeError(`Invalid value of reserved field (${$entityBodyReserved_1})`);
-		const $network = NetworkType.deserialize(view.buffer);
-		view.shiftRight($network.size);
-		const $timestamp = Timestamp.deserialize(view.buffer);
-		view.shiftRight($timestamp.size);
-		const $signerPublicKeySize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
-		if (32 !== $signerPublicKeySize)
-			throw RangeError(`Invalid value of reserved field (${$signerPublicKeySize})`);
-		const $signerPublicKey = PublicKey.deserialize(view.buffer);
-		view.shiftRight($signerPublicKey.size);
-		const $signatureSize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
-		if (64 !== $signatureSize)
-			throw RangeError(`Invalid value of reserved field (${$signatureSize})`);
-		const $signature = Signature.deserialize(view.buffer);
-		view.shiftRight($signature.size);
-		const $fee = Amount.deserialize(view.buffer);
-		view.shiftRight($fee.size);
-		const $deadline = Timestamp.deserialize(view.buffer);
-		view.shiftRight($deadline.size);
-		const $innerTransactionSize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
+		Transaction::_deserialize($reader, $instance);
+		$innerTransactionSize = Converter::binaryToInt($reader->read(4), 4);
 		// marking sizeof field
-		const $innerTransaction = NonVerifiableTransactionFactory.deserialize(view.window(innerTransactionSize));
-		view.shiftRight($innerTransaction.size);
-		const $cosignaturesCount = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
-		const $cosignatures = arrayHelpers.readArrayCount(view.buffer, SizePrefixedCosignatureV1, cosignaturesCount);
-		view.shiftRight(arrayHelpers.size($cosignatures));
+		$innerTransaction = NonVerifiableTransactionFactory::deserialize(view.window(innerTransactionSize));
+		$cosignaturesCount = Converter::binaryToInt($reader->read(4), 4);
+		$cosignatures = ArrayHelpers::readArrayCount($reader, [SizePrefixedCosignatureV1::class, 'deserialize'], $cosignaturesCount);
 
-		const instance = new MultisigTransactionV1();
-		instance._$type = $type;
-		instance._$version = $version;
-		instance._$network = $network;
-		instance._$timestamp = $timestamp;
-		instance._$signerPublicKey = $signerPublicKey;
-		instance._$signature = $signature;
-		instance._$fee = $fee;
-		instance._$deadline = $deadline;
-		instance._$innerTransaction = $innerTransaction;
-		instance._$cosignatures = $cosignatures;
-		return instance;
+		$instance->innerTransaction = $innerTransaction;
+		$instance->cosignatures = $cosignatures;
+		return $instance;
 	}
 
-	public function serialize() {
-		const buffer = new Writer(this.size);
-		buffer.write(this._$type.serialize());
-		buffer.write(Converter::intToHex(this._$version, 1));
-		buffer.write(Converter::intToHex(this._$entityBodyReserved_1, 2));
-		buffer.write(this._$network.serialize());
-		buffer.write(this._$timestamp.serialize());
-		buffer.write(Converter::intToHex(this._$signerPublicKeySize, 4));
-		buffer.write(this._$signerPublicKey.serialize());
-		buffer.write(Converter::intToHex(this._$signatureSize, 4));
-		buffer.write(this._$signature.serialize());
-		buffer.write(this._$fee.serialize());
-		buffer.write(this._$deadline.serialize());
-		buffer.write(Converter::intToHex(this.$innerTransaction.size, 4)); // bound: inner_transaction_size
-		buffer.write(this._$innerTransaction.serialize());
-		buffer.write(Converter::intToHex(this._$cosignatures.length, 4)); // bound: cosignatures_count
-		arrayHelpers.writeArray(buffer, this._$cosignatures);
-		return buffer.storage;
+	public function serialize(): string {
+		$writer = new BinaryWriter($this->size());
+		$this->sort();
+		parent::_serialize($writer);
+		$writer->write(Converter::intToBinary($this->innerTransaction->size(), 4)); // bound: inner_transaction_size
+		$writer->write($this->innerTransaction->serialize());
+		$writer->write(Converter::intToBinary(count($this->cosignatures), 4)); // bound: cosignatures_count
+		ArrayHelpers::writeArray($writer, $this->cosignatures);
+		return $writer->getBinaryData();
 	}
 
-	toString() {
-		let result = '(';
-		result += `$type: ${this._$type.toString()}, `;
-		result += `$version: ${'0x'.concat(this._$version.toString(16))}, `;
-		result += `$network: ${this._$network.toString()}, `;
-		result += `$timestamp: ${this._$timestamp.toString()}, `;
-		result += `$signerPublicKey: ${this._$signerPublicKey.toString()}, `;
-		result += `$signature: ${this._$signature.toString()}, `;
-		result += `$fee: ${this._$fee.toString()}, `;
-		result += `$deadline: ${this._$deadline.toString()}, `;
-		result += `$innerTransaction: ${this._$innerTransaction.toString()}, `;
-		result += `$cosignatures: [${this._$cosignatures.map(e => e.toString()).join(',')}], `;
-		result += ')';
-		return result;
+	public function __toString(){
+		$result = '(';
+		$result .= parent::__toString();
+		$result .= 'innerTransaction: ' . $this->innerTransaction . ', ';
+		$result .= 'cosignatures: ' . '[' . implode(',', array_map(fn ($e) => $e, $this->cosignatures)) . ']' . ', ';
+		$result .= ')';
+		return $result;
 	}
 }
 
-class NonVerifiableMultisigTransactionV1 {
-	static TRANSACTION_VERSION = 1;
+class NonVerifiableMultisigTransactionV1 extends NonVerifiableTransaction {
+	const TRANSACTION_VERSION = 1;
 
-	static TRANSACTION_TYPE = TransactionType.MULTISIG;
+	const TRANSACTION_TYPE = TransactionType::MULTISIG;
 
-	static TYPE_HINTS = {
-		$type: 'enum:TransactionType',
-		$network: 'enum:NetworkType',
-		$timestamp: 'pod:Timestamp',
-		$signerPublicKey: 'pod:PublicKey',
-		$fee: 'pod:Amount',
-		$deadline: 'pod:Timestamp',
-		$innerTransaction: 'struct:NonVerifiableTransaction'
-	};
+	public NonVerifiableTransaction $innerTransaction;
 
-	public function __construct() {
-		this._$type = NonVerifiableMultisigTransactionV1.TRANSACTION_TYPE;
-		this._$version = NonVerifiableMultisigTransactionV1.TRANSACTION_VERSION;
-		this._$network = NetworkType.MAINNET;
-		this._$timestamp = new Timestamp();
-		this._$signerPublicKey = new PublicKey();
-		this._$fee = new Amount();
-		this._$deadline = new Timestamp();
-		this._$innerTransaction = new NonVerifiableTransaction();
-		this._$entityBodyReserved_1 = 0; // reserved field
-		this._$signerPublicKeySize = 32; // reserved field
+	public function __construct(
+		?NetworkType $network = null,
+		?Timestamp $timestamp = null,
+		?PublicKey $signerPublicKey = null,
+		?Amount $fee = null,
+		?Timestamp $deadline = null,
+		?NonVerifiableTransaction $innerTransaction = null
+	){
+		parent::__construct(
+			new TransactionType(NonVerifiableMultisigTransactionV1::TRANSACTION_TYPE),
+			NonVerifiableMultisigTransactionV1::TRANSACTION_VERSION,
+			$network,
+			$timestamp,
+			$signerPublicKey,
+			$fee,
+			$deadline,
+		);
+		$this->innerTransaction = $innerTransaction ?? new NonVerifiableTransaction();
 	}
 
-	sort() {
-		this._$innerTransaction.sort();
+	public function sort(){
+		$this->innerTransaction->sort();
 	}
 
-	get $type() {
-		return this._$type;
+	public function size(){
+		$size = 0;
+		$size += parent::size();
+		$size += 4;
+		$size += $this->innerTransaction->size();
+		return $size;
 	}
 
-	set $type(value) {
-		this._$type = value;
-	}
+	public static function deserialize(BinaryReader $reader){
+		$instance = new NonVerifiableMultisigTransactionV1();
 
-	get $version() {
-		return this._$version;
-	}
-
-	set $version(value) {
-		this._$version = value;
-	}
-
-	get $network() {
-		return this._$network;
-	}
-
-	set $network(value) {
-		this._$network = value;
-	}
-
-	get $timestamp() {
-		return this._$timestamp;
-	}
-
-	set $timestamp(value) {
-		this._$timestamp = value;
-	}
-
-	get $signerPublicKey() {
-		return this._$signerPublicKey;
-	}
-
-	set $signerPublicKey(value) {
-		this._$signerPublicKey = value;
-	}
-
-	get $fee() {
-		return this._$fee;
-	}
-
-	set $fee(value) {
-		this._$fee = value;
-	}
-
-	get $deadline() {
-		return this._$deadline;
-	}
-
-	set $deadline(value) {
-		this._$deadline = value;
-	}
-
-	get $innerTransaction() {
-		return this._$innerTransaction;
-	}
-
-	set $innerTransaction(value) {
-		this._$innerTransaction = value;
-	}
-
-	public function size() {
-		let size = 0;
-		size += this.$type.size;
-		size += 1;
-		size += 2;
-		size += this.$network.size;
-		size += this.$timestamp.size;
-		size += 4;
-		size += this.$signerPublicKey.size;
-		size += this.$fee.size;
-		size += this.$deadline.size;
-		size += 4;
-		size += this.$innerTransaction.size;
-		return size;
-	}
-
-	public static function deserialize($payload) {
-		const view = new BufferView(payload);
-		const $type = TransactionType.deserialize(view.buffer);
-		view.shiftRight($type.size);
-		const $version = Converter::hexToInt(view.buffer, 1);
-		view.shiftRight(1);
-		const $entityBodyReserved_1 = Converter::hexToInt(view.buffer, 2);
-		view.shiftRight(2);
-		if (0 !== $entityBodyReserved_1)
-			throw RangeError(`Invalid value of reserved field (${$entityBodyReserved_1})`);
-		const $network = NetworkType.deserialize(view.buffer);
-		view.shiftRight($network.size);
-		const $timestamp = Timestamp.deserialize(view.buffer);
-		view.shiftRight($timestamp.size);
-		const $signerPublicKeySize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
-		if (32 !== $signerPublicKeySize)
-			throw RangeError(`Invalid value of reserved field (${$signerPublicKeySize})`);
-		const $signerPublicKey = PublicKey.deserialize(view.buffer);
-		view.shiftRight($signerPublicKey.size);
-		const $fee = Amount.deserialize(view.buffer);
-		view.shiftRight($fee.size);
-		const $deadline = Timestamp.deserialize(view.buffer);
-		view.shiftRight($deadline.size);
-		const $innerTransactionSize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
+		NonVerifiableTransaction::_deserialize($reader, $instance);
+		$innerTransactionSize = Converter::binaryToInt($reader->read(4), 4);
 		// marking sizeof field
-		const $innerTransaction = NonVerifiableTransactionFactory.deserialize(view.window(innerTransactionSize));
-		view.shiftRight($innerTransaction.size);
+		$innerTransaction = NonVerifiableTransactionFactory::deserialize(view.window(innerTransactionSize));
 
-		const instance = new NonVerifiableMultisigTransactionV1();
-		instance._$type = $type;
-		instance._$version = $version;
-		instance._$network = $network;
-		instance._$timestamp = $timestamp;
-		instance._$signerPublicKey = $signerPublicKey;
-		instance._$fee = $fee;
-		instance._$deadline = $deadline;
-		instance._$innerTransaction = $innerTransaction;
-		return instance;
+		$instance->innerTransaction = $innerTransaction;
+		return $instance;
 	}
 
-	public function serialize() {
-		const buffer = new Writer(this.size);
-		buffer.write(this._$type.serialize());
-		buffer.write(Converter::intToHex(this._$version, 1));
-		buffer.write(Converter::intToHex(this._$entityBodyReserved_1, 2));
-		buffer.write(this._$network.serialize());
-		buffer.write(this._$timestamp.serialize());
-		buffer.write(Converter::intToHex(this._$signerPublicKeySize, 4));
-		buffer.write(this._$signerPublicKey.serialize());
-		buffer.write(this._$fee.serialize());
-		buffer.write(this._$deadline.serialize());
-		buffer.write(Converter::intToHex(this.$innerTransaction.size, 4)); // bound: inner_transaction_size
-		buffer.write(this._$innerTransaction.serialize());
-		return buffer.storage;
+	public function serialize(): string {
+		$writer = new BinaryWriter($this->size());
+		$this->sort();
+		parent::_serialize($writer);
+		$writer->write(Converter::intToBinary($this->innerTransaction->size(), 4)); // bound: inner_transaction_size
+		$writer->write($this->innerTransaction->serialize());
+		return $writer->getBinaryData();
 	}
 
-	toString() {
-		let result = '(';
-		result += `$type: ${this._$type.toString()}, `;
-		result += `$version: ${'0x'.concat(this._$version.toString(16))}, `;
-		result += `$network: ${this._$network.toString()}, `;
-		result += `$timestamp: ${this._$timestamp.toString()}, `;
-		result += `$signerPublicKey: ${this._$signerPublicKey.toString()}, `;
-		result += `$fee: ${this._$fee.toString()}, `;
-		result += `$deadline: ${this._$deadline.toString()}, `;
-		result += `$innerTransaction: ${this._$innerTransaction.toString()}, `;
-		result += ')';
-		return result;
+	public function __toString(){
+		$result = '(';
+		$result .= parent::__toString();
+		$result .= 'innerTransaction: ' . $this->innerTransaction . ', ';
+		$result .= ')';
+		return $result;
 	}
 }
 
-class NamespaceRegistrationTransactionV1 {
-	static TRANSACTION_VERSION = 1;
+class NamespaceRegistrationTransactionV1 extends Transaction {
+	const TRANSACTION_VERSION = 1;
 
-	static TRANSACTION_TYPE = TransactionType.NAMESPACE_REGISTRATION;
+	const TRANSACTION_TYPE = TransactionType::NAMESPACE_REGISTRATION;
 
-	static TYPE_HINTS = {
-		$type: 'enum:TransactionType',
-		$network: 'enum:NetworkType',
-		$timestamp: 'pod:Timestamp',
-		$signerPublicKey: 'pod:PublicKey',
-		$signature: 'pod:Signature',
-		$fee: 'pod:Amount',
-		$deadline: 'pod:Timestamp',
-		$rentalFeeSink: 'pod:Address',
-		$rentalFee: 'pod:Amount',
-		$name: 'bytes_array',
-		$parentName: 'bytes_array'
-	};
+	public Address $rentalFeeSink;
 
-	public function __construct() {
-		this._$type = NamespaceRegistrationTransactionV1.TRANSACTION_TYPE;
-		this._$version = NamespaceRegistrationTransactionV1.TRANSACTION_VERSION;
-		this._$network = NetworkType.MAINNET;
-		this._$timestamp = new Timestamp();
-		this._$signerPublicKey = new PublicKey();
-		this._$signature = new Signature();
-		this._$fee = new Amount();
-		this._$deadline = new Timestamp();
-		this._$rentalFeeSink = new Address();
-		this._$rentalFee = new Amount();
-		this._$name = ;
-		this._$parentName = null;
-		this._$entityBodyReserved_1 = 0; // reserved field
-		this._$signerPublicKeySize = 32; // reserved field
-		this._$signatureSize = 64; // reserved field
-		this._$rentalFeeSinkSize = 40; // reserved field
+	public Amount $rentalFee;
+
+	public string $name;
+
+	public string $parentName;
+
+	private int $rentalFeeSinkSize = 40; // reserved field
+
+	public function __construct(
+		?NetworkType $network = null,
+		?Timestamp $timestamp = null,
+		?PublicKey $signerPublicKey = null,
+		?Signature $signature = null,
+		?Amount $fee = null,
+		?Timestamp $deadline = null,
+		?Address $rentalFeeSink = null,
+		?Amount $rentalFee = null,
+		?string $name = null,
+		?string $parentName = null
+	){
+		parent::__construct(
+			new TransactionType(NamespaceRegistrationTransactionV1::TRANSACTION_TYPE),
+			NamespaceRegistrationTransactionV1::TRANSACTION_VERSION,
+			$network,
+			$timestamp,
+			$signerPublicKey,
+			$signature,
+			$fee,
+			$deadline,
+		);
+		$this->rentalFeeSink = $rentalFeeSink ?? new Address();
+		$this->rentalFee = $rentalFee ?? new Amount();
+		$this->name = $name ?? '';
+		$this->parentName = null;
+		$this->rentalFeeSinkSize = 40; // reserved field
 	}
 
-	sort() {
+	public function sort(){
 	}
 
-	get $type() {
-		return this._$type;
+	public function size(){
+		$size = 0;
+		$size += parent::size();
+		$size += 4;
+		$size += $this->rentalFeeSink->size();
+		$size += $this->rentalFee->size();
+		$size += 4;
+		$size += strlen($this->name);
+		$size += 4;
+		if ($this->parentName)
+			$size += strlen($this->parentName);
+
+		return $size;
 	}
 
-	set $type(value) {
-		this._$type = value;
-	}
+	public static function deserialize(BinaryReader $reader){
+		$instance = new NamespaceRegistrationTransactionV1();
 
-	get $version() {
-		return this._$version;
-	}
-
-	set $version(value) {
-		this._$version = value;
-	}
-
-	get $network() {
-		return this._$network;
-	}
-
-	set $network(value) {
-		this._$network = value;
-	}
-
-	get $timestamp() {
-		return this._$timestamp;
-	}
-
-	set $timestamp(value) {
-		this._$timestamp = value;
-	}
-
-	get $signerPublicKey() {
-		return this._$signerPublicKey;
-	}
-
-	set $signerPublicKey(value) {
-		this._$signerPublicKey = value;
-	}
-
-	get $signature() {
-		return this._$signature;
-	}
-
-	set $signature(value) {
-		this._$signature = value;
-	}
-
-	get $fee() {
-		return this._$fee;
-	}
-
-	set $fee(value) {
-		this._$fee = value;
-	}
-
-	get $deadline() {
-		return this._$deadline;
-	}
-
-	set $deadline(value) {
-		this._$deadline = value;
-	}
-
-	get $rentalFeeSink() {
-		return this._$rentalFeeSink;
-	}
-
-	set $rentalFeeSink(value) {
-		this._$rentalFeeSink = value;
-	}
-
-	get $rentalFee() {
-		return this._$rentalFee;
-	}
-
-	set $rentalFee(value) {
-		this._$rentalFee = value;
-	}
-
-	get $name() {
-		return this._$name;
-	}
-
-	set $name(value) {
-		this._$name = value;
-	}
-
-	get $parentName() {
-		return this._$parentName;
-	}
-
-	set $parentName(value) {
-		this._$parentName = value;
-	}
-
-	public function size() {
-		let size = 0;
-		size += this.$type.size;
-		size += 1;
-		size += 2;
-		size += this.$network.size;
-		size += this.$timestamp.size;
-		size += 4;
-		size += this.$signerPublicKey.size;
-		size += 4;
-		size += this.$signature.size;
-		size += this.$fee.size;
-		size += this.$deadline.size;
-		size += 4;
-		size += this.$rentalFeeSink.size;
-		size += this.$rentalFee.size;
-		size += 4;
-		size += this._$name.length;
-		size += 4;
-		if (this.$parentName)
-			size += this._$parentName.length;
-
-		return size;
-	}
-
-	public static function deserialize($payload) {
-		const view = new BufferView(payload);
-		const $type = TransactionType.deserialize(view.buffer);
-		view.shiftRight($type.size);
-		const $version = Converter::hexToInt(view.buffer, 1);
-		view.shiftRight(1);
-		const $entityBodyReserved_1 = Converter::hexToInt(view.buffer, 2);
-		view.shiftRight(2);
-		if (0 !== $entityBodyReserved_1)
-			throw RangeError(`Invalid value of reserved field (${$entityBodyReserved_1})`);
-		const $network = NetworkType.deserialize(view.buffer);
-		view.shiftRight($network.size);
-		const $timestamp = Timestamp.deserialize(view.buffer);
-		view.shiftRight($timestamp.size);
-		const $signerPublicKeySize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
-		if (32 !== $signerPublicKeySize)
-			throw RangeError(`Invalid value of reserved field (${$signerPublicKeySize})`);
-		const $signerPublicKey = PublicKey.deserialize(view.buffer);
-		view.shiftRight($signerPublicKey.size);
-		const $signatureSize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
-		if (64 !== $signatureSize)
-			throw RangeError(`Invalid value of reserved field (${$signatureSize})`);
-		const $signature = Signature.deserialize(view.buffer);
-		view.shiftRight($signature.size);
-		const $fee = Amount.deserialize(view.buffer);
-		view.shiftRight($fee.size);
-		const $deadline = Timestamp.deserialize(view.buffer);
-		view.shiftRight($deadline.size);
-		const $rentalFeeSinkSize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
+		Transaction::_deserialize($reader, $instance);
+		$rentalFeeSinkSize = Converter::binaryToInt($reader->read(4), 4);
 		if (40 !== $rentalFeeSinkSize)
-			throw RangeError(`Invalid value of reserved field (${$rentalFeeSinkSize})`);
-		const $rentalFeeSink = Address.deserialize(view.buffer);
-		view.shiftRight($rentalFeeSink.size);
-		const $rentalFee = Amount.deserialize(view.buffer);
-		view.shiftRight($rentalFee.size);
-		const $nameSize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
-		const $name = $hexBinary;
-		view.shiftRight(nameSize);
-		const $parentNameSize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
-		let $parentName = null;
-		if (4294967295 !== parentNameSize) {
-			$parentName = $hexBinary;
-			view.shiftRight(parentNameSize);
-		}
+			throw new OutOfRangeException('Invalid value of reserved field (' . $rentalFeeSinkSize . ')');
+		$rentalFeeSink = Address::deserialize($reader);
+		$rentalFee = Amount::deserialize($reader);
+		$nameSize = Converter::binaryToInt($reader->read(4), 4);
+		$name = $reader->read($nameSize);
+		$parentNameSize = Converter::binaryToInt($reader->read(4), 4);
+		$parentName = null;
+		if (4294967295 !== $parentNameSize->value)
+			$parentName = $reader->read($parentNameSize);
 
-		const instance = new NamespaceRegistrationTransactionV1();
-		instance._$type = $type;
-		instance._$version = $version;
-		instance._$network = $network;
-		instance._$timestamp = $timestamp;
-		instance._$signerPublicKey = $signerPublicKey;
-		instance._$signature = $signature;
-		instance._$fee = $fee;
-		instance._$deadline = $deadline;
-		instance._$rentalFeeSink = $rentalFeeSink;
-		instance._$rentalFee = $rentalFee;
-		instance._$name = $name;
-		instance._$parentName = $parentName;
-		return instance;
+
+		$instance->rentalFeeSink = $rentalFeeSink;
+		$instance->rentalFee = $rentalFee;
+		$instance->name = $name;
+		$instance->parentName = $parentName;
+		return $instance;
 	}
 
-	public function serialize() {
-		const buffer = new Writer(this.size);
-		buffer.write(this._$type.serialize());
-		buffer.write(Converter::intToHex(this._$version, 1));
-		buffer.write(Converter::intToHex(this._$entityBodyReserved_1, 2));
-		buffer.write(this._$network.serialize());
-		buffer.write(this._$timestamp.serialize());
-		buffer.write(Converter::intToHex(this._$signerPublicKeySize, 4));
-		buffer.write(this._$signerPublicKey.serialize());
-		buffer.write(Converter::intToHex(this._$signatureSize, 4));
-		buffer.write(this._$signature.serialize());
-		buffer.write(this._$fee.serialize());
-		buffer.write(this._$deadline.serialize());
-		buffer.write(Converter::intToHex(this._$rentalFeeSinkSize, 4));
-		buffer.write(this._$rentalFeeSink.serialize());
-		buffer.write(this._$rentalFee.serialize());
-		buffer.write(Converter::intToHex(this._$name.length, 4)); // bound: name_size
-		buffer.write(this._$name);
-		buffer.write(Converter::intToHex((this._$parentName ? this._$parentName.length : 4294967295), 4)); // bound: parent_name_size
-		if (this.$parentName)
-			buffer.write(this._$parentName);
+	public function serialize(): string {
+		$writer = new BinaryWriter($this->size());
+		$this->sort();
+		parent::_serialize($writer);
+		$writer->write(Converter::intToBinary($this->rentalFeeSinkSize, 4));
+		$writer->write($this->rentalFeeSink->serialize());
+		$writer->write($this->rentalFee->serialize());
+		$writer->write(Converter::intToBinary(strlen($this->name), 4)); // bound: name_size
+		$writer->write($this->name);
+		$writer->write(Converter::intToBinary(($this->parentName ? strlen($this->parentName) : 4294967295), 4)); // bound: parent_name_size
+		if ($this->parentName)
+			$writer->write($this->parentName);
 
-		return buffer.storage;
+		return $writer->getBinaryData();
 	}
 
-	toString() {
-		let result = '(';
-		result += `$type: ${this._$type.toString()}, `;
-		result += `$version: ${'0x'.concat(this._$version.toString(16))}, `;
-		result += `$network: ${this._$network.toString()}, `;
-		result += `$timestamp: ${this._$timestamp.toString()}, `;
-		result += `$signerPublicKey: ${this._$signerPublicKey.toString()}, `;
-		result += `$signature: ${this._$signature.toString()}, `;
-		result += `$fee: ${this._$fee.toString()}, `;
-		result += `$deadline: ${this._$deadline.toString()}, `;
-		result += `$rentalFeeSink: ${this._$rentalFeeSink.toString()}, `;
-		result += `$rentalFee: ${this._$rentalFee.toString()}, `;
-		result += `$name: hex(${converter.uint8ToHex(this._$name)}), `;
-		if (this.$parentName)
-			result += `$parentName: hex(${converter.uint8ToHex(this._$parentName)}), `;
+	public function __toString(){
+		$result = '(';
+		$result .= parent::__toString();
+		$result .= 'rentalFeeSink: ' . $this->rentalFeeSink . ', ';
+		$result .= 'rentalFee: ' . $this->rentalFee . ', ';
+		$result .= 'name: ' . 'hex(0x' . strtoupper(bin2hex($this->name)) . ')' . ', ';
+		if ($this->parentName)
+			$result .= 'parentName: ' . 'hex(0x' . strtoupper(bin2hex($this->parentName)) . ')' . ', ';
 
-		result += ')';
-		return result;
+		$result .= ')';
+		return $result;
 	}
 }
 
-class NonVerifiableNamespaceRegistrationTransactionV1 {
-	static TRANSACTION_VERSION = 1;
+class NonVerifiableNamespaceRegistrationTransactionV1 extends NonVerifiableTransaction {
+	const TRANSACTION_VERSION = 1;
 
-	static TRANSACTION_TYPE = TransactionType.NAMESPACE_REGISTRATION;
+	const TRANSACTION_TYPE = TransactionType::NAMESPACE_REGISTRATION;
 
-	static TYPE_HINTS = {
-		$type: 'enum:TransactionType',
-		$network: 'enum:NetworkType',
-		$timestamp: 'pod:Timestamp',
-		$signerPublicKey: 'pod:PublicKey',
-		$fee: 'pod:Amount',
-		$deadline: 'pod:Timestamp',
-		$rentalFeeSink: 'pod:Address',
-		$rentalFee: 'pod:Amount',
-		$name: 'bytes_array',
-		$parentName: 'bytes_array'
-	};
+	public Address $rentalFeeSink;
 
-	public function __construct() {
-		this._$type = NonVerifiableNamespaceRegistrationTransactionV1.TRANSACTION_TYPE;
-		this._$version = NonVerifiableNamespaceRegistrationTransactionV1.TRANSACTION_VERSION;
-		this._$network = NetworkType.MAINNET;
-		this._$timestamp = new Timestamp();
-		this._$signerPublicKey = new PublicKey();
-		this._$fee = new Amount();
-		this._$deadline = new Timestamp();
-		this._$rentalFeeSink = new Address();
-		this._$rentalFee = new Amount();
-		this._$name = ;
-		this._$parentName = null;
-		this._$entityBodyReserved_1 = 0; // reserved field
-		this._$signerPublicKeySize = 32; // reserved field
-		this._$rentalFeeSinkSize = 40; // reserved field
+	public Amount $rentalFee;
+
+	public string $name;
+
+	public string $parentName;
+
+	private int $rentalFeeSinkSize = 40; // reserved field
+
+	public function __construct(
+		?NetworkType $network = null,
+		?Timestamp $timestamp = null,
+		?PublicKey $signerPublicKey = null,
+		?Amount $fee = null,
+		?Timestamp $deadline = null,
+		?Address $rentalFeeSink = null,
+		?Amount $rentalFee = null,
+		?string $name = null,
+		?string $parentName = null
+	){
+		parent::__construct(
+			new TransactionType(NonVerifiableNamespaceRegistrationTransactionV1::TRANSACTION_TYPE),
+			NonVerifiableNamespaceRegistrationTransactionV1::TRANSACTION_VERSION,
+			$network,
+			$timestamp,
+			$signerPublicKey,
+			$fee,
+			$deadline,
+		);
+		$this->rentalFeeSink = $rentalFeeSink ?? new Address();
+		$this->rentalFee = $rentalFee ?? new Amount();
+		$this->name = $name ?? '';
+		$this->parentName = null;
+		$this->rentalFeeSinkSize = 40; // reserved field
 	}
 
-	sort() {
+	public function sort(){
 	}
 
-	get $type() {
-		return this._$type;
+	public function size(){
+		$size = 0;
+		$size += parent::size();
+		$size += 4;
+		$size += $this->rentalFeeSink->size();
+		$size += $this->rentalFee->size();
+		$size += 4;
+		$size += strlen($this->name);
+		$size += 4;
+		if ($this->parentName)
+			$size += strlen($this->parentName);
+
+		return $size;
 	}
 
-	set $type(value) {
-		this._$type = value;
-	}
+	public static function deserialize(BinaryReader $reader){
+		$instance = new NonVerifiableNamespaceRegistrationTransactionV1();
 
-	get $version() {
-		return this._$version;
-	}
-
-	set $version(value) {
-		this._$version = value;
-	}
-
-	get $network() {
-		return this._$network;
-	}
-
-	set $network(value) {
-		this._$network = value;
-	}
-
-	get $timestamp() {
-		return this._$timestamp;
-	}
-
-	set $timestamp(value) {
-		this._$timestamp = value;
-	}
-
-	get $signerPublicKey() {
-		return this._$signerPublicKey;
-	}
-
-	set $signerPublicKey(value) {
-		this._$signerPublicKey = value;
-	}
-
-	get $fee() {
-		return this._$fee;
-	}
-
-	set $fee(value) {
-		this._$fee = value;
-	}
-
-	get $deadline() {
-		return this._$deadline;
-	}
-
-	set $deadline(value) {
-		this._$deadline = value;
-	}
-
-	get $rentalFeeSink() {
-		return this._$rentalFeeSink;
-	}
-
-	set $rentalFeeSink(value) {
-		this._$rentalFeeSink = value;
-	}
-
-	get $rentalFee() {
-		return this._$rentalFee;
-	}
-
-	set $rentalFee(value) {
-		this._$rentalFee = value;
-	}
-
-	get $name() {
-		return this._$name;
-	}
-
-	set $name(value) {
-		this._$name = value;
-	}
-
-	get $parentName() {
-		return this._$parentName;
-	}
-
-	set $parentName(value) {
-		this._$parentName = value;
-	}
-
-	public function size() {
-		let size = 0;
-		size += this.$type.size;
-		size += 1;
-		size += 2;
-		size += this.$network.size;
-		size += this.$timestamp.size;
-		size += 4;
-		size += this.$signerPublicKey.size;
-		size += this.$fee.size;
-		size += this.$deadline.size;
-		size += 4;
-		size += this.$rentalFeeSink.size;
-		size += this.$rentalFee.size;
-		size += 4;
-		size += this._$name.length;
-		size += 4;
-		if (this.$parentName)
-			size += this._$parentName.length;
-
-		return size;
-	}
-
-	public static function deserialize($payload) {
-		const view = new BufferView(payload);
-		const $type = TransactionType.deserialize(view.buffer);
-		view.shiftRight($type.size);
-		const $version = Converter::hexToInt(view.buffer, 1);
-		view.shiftRight(1);
-		const $entityBodyReserved_1 = Converter::hexToInt(view.buffer, 2);
-		view.shiftRight(2);
-		if (0 !== $entityBodyReserved_1)
-			throw RangeError(`Invalid value of reserved field (${$entityBodyReserved_1})`);
-		const $network = NetworkType.deserialize(view.buffer);
-		view.shiftRight($network.size);
-		const $timestamp = Timestamp.deserialize(view.buffer);
-		view.shiftRight($timestamp.size);
-		const $signerPublicKeySize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
-		if (32 !== $signerPublicKeySize)
-			throw RangeError(`Invalid value of reserved field (${$signerPublicKeySize})`);
-		const $signerPublicKey = PublicKey.deserialize(view.buffer);
-		view.shiftRight($signerPublicKey.size);
-		const $fee = Amount.deserialize(view.buffer);
-		view.shiftRight($fee.size);
-		const $deadline = Timestamp.deserialize(view.buffer);
-		view.shiftRight($deadline.size);
-		const $rentalFeeSinkSize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
+		NonVerifiableTransaction::_deserialize($reader, $instance);
+		$rentalFeeSinkSize = Converter::binaryToInt($reader->read(4), 4);
 		if (40 !== $rentalFeeSinkSize)
-			throw RangeError(`Invalid value of reserved field (${$rentalFeeSinkSize})`);
-		const $rentalFeeSink = Address.deserialize(view.buffer);
-		view.shiftRight($rentalFeeSink.size);
-		const $rentalFee = Amount.deserialize(view.buffer);
-		view.shiftRight($rentalFee.size);
-		const $nameSize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
-		const $name = $hexBinary;
-		view.shiftRight(nameSize);
-		const $parentNameSize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
-		let $parentName = null;
-		if (4294967295 !== parentNameSize) {
-			$parentName = $hexBinary;
-			view.shiftRight(parentNameSize);
-		}
+			throw new OutOfRangeException('Invalid value of reserved field (' . $rentalFeeSinkSize . ')');
+		$rentalFeeSink = Address::deserialize($reader);
+		$rentalFee = Amount::deserialize($reader);
+		$nameSize = Converter::binaryToInt($reader->read(4), 4);
+		$name = $reader->read($nameSize);
+		$parentNameSize = Converter::binaryToInt($reader->read(4), 4);
+		$parentName = null;
+		if (4294967295 !== $parentNameSize->value)
+			$parentName = $reader->read($parentNameSize);
 
-		const instance = new NonVerifiableNamespaceRegistrationTransactionV1();
-		instance._$type = $type;
-		instance._$version = $version;
-		instance._$network = $network;
-		instance._$timestamp = $timestamp;
-		instance._$signerPublicKey = $signerPublicKey;
-		instance._$fee = $fee;
-		instance._$deadline = $deadline;
-		instance._$rentalFeeSink = $rentalFeeSink;
-		instance._$rentalFee = $rentalFee;
-		instance._$name = $name;
-		instance._$parentName = $parentName;
-		return instance;
+
+		$instance->rentalFeeSink = $rentalFeeSink;
+		$instance->rentalFee = $rentalFee;
+		$instance->name = $name;
+		$instance->parentName = $parentName;
+		return $instance;
 	}
 
-	public function serialize() {
-		const buffer = new Writer(this.size);
-		buffer.write(this._$type.serialize());
-		buffer.write(Converter::intToHex(this._$version, 1));
-		buffer.write(Converter::intToHex(this._$entityBodyReserved_1, 2));
-		buffer.write(this._$network.serialize());
-		buffer.write(this._$timestamp.serialize());
-		buffer.write(Converter::intToHex(this._$signerPublicKeySize, 4));
-		buffer.write(this._$signerPublicKey.serialize());
-		buffer.write(this._$fee.serialize());
-		buffer.write(this._$deadline.serialize());
-		buffer.write(Converter::intToHex(this._$rentalFeeSinkSize, 4));
-		buffer.write(this._$rentalFeeSink.serialize());
-		buffer.write(this._$rentalFee.serialize());
-		buffer.write(Converter::intToHex(this._$name.length, 4)); // bound: name_size
-		buffer.write(this._$name);
-		buffer.write(Converter::intToHex((this._$parentName ? this._$parentName.length : 4294967295), 4)); // bound: parent_name_size
-		if (this.$parentName)
-			buffer.write(this._$parentName);
+	public function serialize(): string {
+		$writer = new BinaryWriter($this->size());
+		$this->sort();
+		parent::_serialize($writer);
+		$writer->write(Converter::intToBinary($this->rentalFeeSinkSize, 4));
+		$writer->write($this->rentalFeeSink->serialize());
+		$writer->write($this->rentalFee->serialize());
+		$writer->write(Converter::intToBinary(strlen($this->name), 4)); // bound: name_size
+		$writer->write($this->name);
+		$writer->write(Converter::intToBinary(($this->parentName ? strlen($this->parentName) : 4294967295), 4)); // bound: parent_name_size
+		if ($this->parentName)
+			$writer->write($this->parentName);
 
-		return buffer.storage;
+		return $writer->getBinaryData();
 	}
 
-	toString() {
-		let result = '(';
-		result += `$type: ${this._$type.toString()}, `;
-		result += `$version: ${'0x'.concat(this._$version.toString(16))}, `;
-		result += `$network: ${this._$network.toString()}, `;
-		result += `$timestamp: ${this._$timestamp.toString()}, `;
-		result += `$signerPublicKey: ${this._$signerPublicKey.toString()}, `;
-		result += `$fee: ${this._$fee.toString()}, `;
-		result += `$deadline: ${this._$deadline.toString()}, `;
-		result += `$rentalFeeSink: ${this._$rentalFeeSink.toString()}, `;
-		result += `$rentalFee: ${this._$rentalFee.toString()}, `;
-		result += `$name: hex(${converter.uint8ToHex(this._$name)}), `;
-		if (this.$parentName)
-			result += `$parentName: hex(${converter.uint8ToHex(this._$parentName)}), `;
+	public function __toString(){
+		$result = '(';
+		$result .= parent::__toString();
+		$result .= 'rentalFeeSink: ' . $this->rentalFeeSink . ', ';
+		$result .= 'rentalFee: ' . $this->rentalFee . ', ';
+		$result .= 'name: ' . 'hex(0x' . strtoupper(bin2hex($this->name)) . ')' . ', ';
+		if ($this->parentName)
+			$result .= 'parentName: ' . 'hex(0x' . strtoupper(bin2hex($this->parentName)) . ')' . ', ';
 
-		result += ')';
-		return result;
+		$result .= ')';
+		return $result;
 	}
 }
 
 class MessageType {
-	static PLAIN = new MessageType(1);
+	const PLAIN = 1;
 
-	static ENCRYPTED = new MessageType(2);
+	const ENCRYPTED = 2;
 
-	public function __construct(value) {
-		this.value = value;
+	public $value;
+
+	public function __construct(int $value = 0){
+		$this->value = $value;
 	}
 
-	static valueToKey(value) {
-		const values = [
+	static function valueToKey($value){
+		$values = [
 			1, 2
 		];
-		const keys = [
+		$keys = [
 			'PLAIN', 'ENCRYPTED'
 		];
 
-		const index = values.indexOf(value);
-		if (-1 === index)
-			throw RangeError(`invalid enum value ${value}`);
+		$index = array_search($value, $values);
+		if ($index === false)
+			throw new Exception("Invalid enum value: {$value}");
 
-		return keys[index];
+		return $keys[$index];
 	}
 
-	static fromValue(value) {
-		return MessageType[this.valueToKey(value)];
-	}
-
-	public function size() {
+	public static function size(){
 		return 4;
 	}
 
-	public static function deserialize($payload) {
-		const byteArray = payload;
-		return this.fromValue(Converter::hexToInt(byteArray, 4));
+	public static function deserialize(BinaryReader $reader): self {
+		return new MessageType(Converter::binaryToInt($reader->read(4), 4));
 	}
 
-	public static function deserializeAligned($payload) {
-		const byteArray = payload;
-		return this.fromValue(Converter::hexToInt(byteArray, 4));
+	public static function deserializeAligned(BinaryReader $reader): self {
+		return new MessageType(Converter::binaryToInt($reader->read(4), 4));
 	}
 
-	public function serialize() {
-		return Converter::intToHex(this.value, 4);
+	public function serialize(): string {
+		return Converter::intToBinary($this->value, 4);
 	}
 
-	toString() {
-		return `MessageType.${MessageType.valueToKey(this.value)}`;
+	public function __toString(){
+		return "MessageType." . self::valueToKey($this->value);
 	}
 }
 
 class Message {
-	static TYPE_HINTS = {
-		$messageType: 'enum:MessageType',
-		$message: 'bytes_array'
-	};
+	public MessageType $messageType;
 
-	public function __construct() {
-		this._$messageType = MessageType.PLAIN;
-		this._$message = ;
+	public string $message;
+
+	public function __construct(?MessageType $messageType = null, ?string $message = null){
+		$this->messageType = $messageType ?? new MessageType();
+		$this->message = $message ?? '';
 	}
 
-	sort() {
+	public function sort(){
 	}
 
-	get $messageType() {
-		return this._$messageType;
+	public function size(){
+		$size = 0;
+		$size += $this->messageType->size();
+		$size += 4;
+		$size += strlen($this->message);
+		return $size;
 	}
 
-	set $messageType(value) {
-		this._$messageType = value;
+	public static function deserialize(BinaryReader $reader){
+		$instance = new Message();
+
+		$messageType = MessageType::deserialize($reader);
+		$messageSize = Converter::binaryToInt($reader->read(4), 4);
+		$message = $reader->read($messageSize);
+
+		$instance->messageType = $messageType;
+		$instance->message = $message;
+		return $instance;
 	}
 
-	get $message() {
-		return this._$message;
+	public function serialize(): string {
+		$writer = new BinaryWriter($this->size());
+		$writer->write($this->messageType->serialize());
+		$writer->write(Converter::intToBinary(strlen($this->message), 4)); // bound: message_size
+		$writer->write($this->message);
+		return $writer->getBinaryData();
 	}
 
-	set $message(value) {
-		this._$message = value;
-	}
-
-	public function size() {
-		let size = 0;
-		size += this.$messageType.size;
-		size += 4;
-		size += this._$message.length;
-		return size;
-	}
-
-	public static function deserialize($payload) {
-		const view = new BufferView(payload);
-		const $messageType = MessageType.deserialize(view.buffer);
-		view.shiftRight($messageType.size);
-		const $messageSize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
-		const $message = $hexBinary;
-		view.shiftRight(messageSize);
-
-		const instance = new Message();
-		instance._$messageType = $messageType;
-		instance._$message = $message;
-		return instance;
-	}
-
-	public function serialize() {
-		const buffer = new Writer(this.size);
-		buffer.write(this._$messageType.serialize());
-		buffer.write(Converter::intToHex(this._$message.length, 4)); // bound: message_size
-		buffer.write(this._$message);
-		return buffer.storage;
-	}
-
-	toString() {
-		let result = '(';
-		result += `$messageType: ${this._$messageType.toString()}, `;
-		result += `$message: hex(${converter.uint8ToHex(this._$message)}), `;
-		result += ')';
-		return result;
+	public function __toString(){
+		$result = '';
+		$result .= 'messageType: ' . $this->messageType . ', ';
+		$result .= 'message: ' . 'hex(0x' . strtoupper(bin2hex($this->message)) . ')' . ', ';
+		return $result;
 	}
 }
 
-class TransferTransactionV1 {
-	static TRANSACTION_VERSION = 1;
+class TransferTransactionV1 extends Transaction {
+	const TRANSACTION_VERSION = 1;
 
-	static TRANSACTION_TYPE = TransactionType.TRANSFER;
+	const TRANSACTION_TYPE = TransactionType::TRANSFER;
 
-	static TYPE_HINTS = {
-		$type: 'enum:TransactionType',
-		$network: 'enum:NetworkType',
-		$timestamp: 'pod:Timestamp',
-		$signerPublicKey: 'pod:PublicKey',
-		$signature: 'pod:Signature',
-		$fee: 'pod:Amount',
-		$deadline: 'pod:Timestamp',
-		$recipientAddress: 'pod:Address',
-		$amount: 'pod:Amount',
-		$message: 'struct:Message'
-	};
+	public Address $recipientAddress;
 
-	public function __construct() {
-		this._$type = TransferTransactionV1.TRANSACTION_TYPE;
-		this._$version = TransferTransactionV1.TRANSACTION_VERSION;
-		this._$network = NetworkType.MAINNET;
-		this._$timestamp = new Timestamp();
-		this._$signerPublicKey = new PublicKey();
-		this._$signature = new Signature();
-		this._$fee = new Amount();
-		this._$deadline = new Timestamp();
-		this._$recipientAddress = new Address();
-		this._$amount = new Amount();
-		this._$message = null;
-		this._$entityBodyReserved_1 = 0; // reserved field
-		this._$signerPublicKeySize = 32; // reserved field
-		this._$signatureSize = 64; // reserved field
-		this._$recipientAddressSize = 40; // reserved field
+	public Amount $amount;
+
+	public Message $message;
+
+	private int $recipientAddressSize = 40; // reserved field
+
+	public function __construct(
+		?NetworkType $network = null,
+		?Timestamp $timestamp = null,
+		?PublicKey $signerPublicKey = null,
+		?Signature $signature = null,
+		?Amount $fee = null,
+		?Timestamp $deadline = null,
+		?Address $recipientAddress = null,
+		?Amount $amount = null,
+		?Message $message = null
+	){
+		parent::__construct(
+			new TransactionType(TransferTransactionV1::TRANSACTION_TYPE),
+			TransferTransactionV1::TRANSACTION_VERSION,
+			$network,
+			$timestamp,
+			$signerPublicKey,
+			$signature,
+			$fee,
+			$deadline,
+		);
+		$this->recipientAddress = $recipientAddress ?? new Address();
+		$this->amount = $amount ?? new Amount();
+		$this->message = null;
+		$this->recipientAddressSize = 40; // reserved field
 	}
 
-	sort() {
-		if (0 !== this.messageEnvelopeSizeComputed)
-			this._$message.sort();
+	public function sort(){
+		if (0 !== $this->messageEnvelopeSizeComputed)
+			$this->message->sort();
 	}
 
-	get $type() {
-		return this._$type;
-	}
-
-	set $type(value) {
-		this._$type = value;
-	}
-
-	get $version() {
-		return this._$version;
-	}
-
-	set $version(value) {
-		this._$version = value;
-	}
-
-	get $network() {
-		return this._$network;
-	}
-
-	set $network(value) {
-		this._$network = value;
-	}
-
-	get $timestamp() {
-		return this._$timestamp;
-	}
-
-	set $timestamp(value) {
-		this._$timestamp = value;
-	}
-
-	get $signerPublicKey() {
-		return this._$signerPublicKey;
-	}
-
-	set $signerPublicKey(value) {
-		this._$signerPublicKey = value;
-	}
-
-	get $signature() {
-		return this._$signature;
-	}
-
-	set $signature(value) {
-		this._$signature = value;
-	}
-
-	get $fee() {
-		return this._$fee;
-	}
-
-	set $fee(value) {
-		this._$fee = value;
-	}
-
-	get $deadline() {
-		return this._$deadline;
-	}
-
-	set $deadline(value) {
-		this._$deadline = value;
-	}
-
-	get $recipientAddress() {
-		return this._$recipientAddress;
-	}
-
-	set $recipientAddress(value) {
-		this._$recipientAddress = value;
-	}
-
-	get $amount() {
-		return this._$amount;
-	}
-
-	set $amount(value) {
-		this._$amount = value;
-	}
-
-	get $message() {
-		return this._$message;
-	}
-
-	set $message(value) {
-		this._$message = value;
-	}
-
-	get $messageEnvelopeSizeComputed() {
+	get messageEnvelopeSizeComputed(){
 		return this.message ? this.message.size + 0 : 0;
 	}
 
-	public function size() {
-		let size = 0;
-		size += this.$type.size;
-		size += 1;
-		size += 2;
-		size += this.$network.size;
-		size += this.$timestamp.size;
-		size += 4;
-		size += this.$signerPublicKey.size;
-		size += 4;
-		size += this.$signature.size;
-		size += this.$fee.size;
-		size += this.$deadline.size;
-		size += 4;
-		size += this.$recipientAddress.size;
-		size += this.$amount.size;
-		size += 4;
-		if (0 !== this.messageEnvelopeSizeComputed)
-			size += this.$message.size;
+	public function size(){
+		$size = 0;
+		$size += parent::size();
+		$size += 4;
+		$size += $this->recipientAddress->size();
+		$size += $this->amount->size();
+		$size += 4;
+		if (0 !== $this->messageEnvelopeSizeComputed)
+			$size += $this->message->size();
 
-		return size;
+		return $size;
 	}
 
-	public static function deserialize($payload) {
-		const view = new BufferView(payload);
-		const $type = TransactionType.deserialize(view.buffer);
-		view.shiftRight($type.size);
-		const $version = Converter::hexToInt(view.buffer, 1);
-		view.shiftRight(1);
-		const $entityBodyReserved_1 = Converter::hexToInt(view.buffer, 2);
-		view.shiftRight(2);
-		if (0 !== $entityBodyReserved_1)
-			throw RangeError(`Invalid value of reserved field (${$entityBodyReserved_1})`);
-		const $network = NetworkType.deserialize(view.buffer);
-		view.shiftRight($network.size);
-		const $timestamp = Timestamp.deserialize(view.buffer);
-		view.shiftRight($timestamp.size);
-		const $signerPublicKeySize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
-		if (32 !== $signerPublicKeySize)
-			throw RangeError(`Invalid value of reserved field (${$signerPublicKeySize})`);
-		const $signerPublicKey = PublicKey.deserialize(view.buffer);
-		view.shiftRight($signerPublicKey.size);
-		const $signatureSize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
-		if (64 !== $signatureSize)
-			throw RangeError(`Invalid value of reserved field (${$signatureSize})`);
-		const $signature = Signature.deserialize(view.buffer);
-		view.shiftRight($signature.size);
-		const $fee = Amount.deserialize(view.buffer);
-		view.shiftRight($fee.size);
-		const $deadline = Timestamp.deserialize(view.buffer);
-		view.shiftRight($deadline.size);
-		const $recipientAddressSize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
+	public static function deserialize(BinaryReader $reader){
+		$instance = new TransferTransactionV1();
+
+		Transaction::_deserialize($reader, $instance);
+		$recipientAddressSize = Converter::binaryToInt($reader->read(4), 4);
 		if (40 !== $recipientAddressSize)
-			throw RangeError(`Invalid value of reserved field (${$recipientAddressSize})`);
-		const $recipientAddress = Address.deserialize(view.buffer);
-		view.shiftRight($recipientAddress.size);
-		const $amount = Amount.deserialize(view.buffer);
-		view.shiftRight($amount.size);
-		const $messageEnvelopeSize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
-		let $message = null;
-		if (0 !== messageEnvelopeSize) {
-			$message = Message.deserialize(view.buffer);
-			view.shiftRight($message.size);
-		}
+			throw new OutOfRangeException('Invalid value of reserved field (' . $recipientAddressSize . ')');
+		$recipientAddress = Address::deserialize($reader);
+		$amount = Amount::deserialize($reader);
+		$messageEnvelopeSize = Converter::binaryToInt($reader->read(4), 4);
+		$message = null;
+		if (0 !== $messageEnvelopeSize->value)
+			$message = Message::deserialize($reader);
 
-		const instance = new TransferTransactionV1();
-		instance._$type = $type;
-		instance._$version = $version;
-		instance._$network = $network;
-		instance._$timestamp = $timestamp;
-		instance._$signerPublicKey = $signerPublicKey;
-		instance._$signature = $signature;
-		instance._$fee = $fee;
-		instance._$deadline = $deadline;
-		instance._$recipientAddress = $recipientAddress;
-		instance._$amount = $amount;
-		instance._$message = $message;
-		return instance;
+
+		$instance->recipientAddress = $recipientAddress;
+		$instance->amount = $amount;
+		$instance->message = $message;
+		return $instance;
 	}
 
-	public function serialize() {
-		const buffer = new Writer(this.size);
-		buffer.write(this._$type.serialize());
-		buffer.write(Converter::intToHex(this._$version, 1));
-		buffer.write(Converter::intToHex(this._$entityBodyReserved_1, 2));
-		buffer.write(this._$network.serialize());
-		buffer.write(this._$timestamp.serialize());
-		buffer.write(Converter::intToHex(this._$signerPublicKeySize, 4));
-		buffer.write(this._$signerPublicKey.serialize());
-		buffer.write(Converter::intToHex(this._$signatureSize, 4));
-		buffer.write(this._$signature.serialize());
-		buffer.write(this._$fee.serialize());
-		buffer.write(this._$deadline.serialize());
-		buffer.write(Converter::intToHex(this._$recipientAddressSize, 4));
-		buffer.write(this._$recipientAddress.serialize());
-		buffer.write(this._$amount.serialize());
-		buffer.write(Converter::intToHex(this.$messageEnvelopeSizeComputed, 4));
-		if (0 !== this.messageEnvelopeSizeComputed)
-			buffer.write(this._$message.serialize());
+	public function serialize(): string {
+		$writer = new BinaryWriter($this->size());
+		$this->sort();
+		parent::_serialize($writer);
+		$writer->write(Converter::intToBinary($this->recipientAddressSize, 4));
+		$writer->write($this->recipientAddress->serialize());
+		$writer->write($this->amount->serialize());
+		$writer->write(Converter::intToBinary($this->messageEnvelopeSizeComputed, 4));
+		if (0 !== $this->messageEnvelopeSizeComputed)
+			$writer->write($this->message->serialize());
 
-		return buffer.storage;
+		return $writer->getBinaryData();
 	}
 
-	toString() {
-		let result = '(';
-		result += `$type: ${this._$type.toString()}, `;
-		result += `$version: ${'0x'.concat(this._$version.toString(16))}, `;
-		result += `$network: ${this._$network.toString()}, `;
-		result += `$timestamp: ${this._$timestamp.toString()}, `;
-		result += `$signerPublicKey: ${this._$signerPublicKey.toString()}, `;
-		result += `$signature: ${this._$signature.toString()}, `;
-		result += `$fee: ${this._$fee.toString()}, `;
-		result += `$deadline: ${this._$deadline.toString()}, `;
-		result += `$recipientAddress: ${this._$recipientAddress.toString()}, `;
-		result += `$amount: ${this._$amount.toString()}, `;
-		if (0 !== this.messageEnvelopeSizeComputed)
-			result += `$message: ${this._$message.toString()}, `;
+	public function __toString(){
+		$result = '(';
+		$result .= parent::__toString();
+		$result .= 'recipientAddress: ' . $this->recipientAddress . ', ';
+		$result .= 'amount: ' . $this->amount . ', ';
+		if (0 !== $this->messageEnvelopeSizeComputed)
+			$result .= 'message: ' . $this->message . ', ';
 
-		result += ')';
-		return result;
+		$result .= ')';
+		return $result;
 	}
 }
 
-class NonVerifiableTransferTransactionV1 {
-	static TRANSACTION_VERSION = 1;
+class NonVerifiableTransferTransactionV1 extends NonVerifiableTransaction {
+	const TRANSACTION_VERSION = 1;
 
-	static TRANSACTION_TYPE = TransactionType.TRANSFER;
+	const TRANSACTION_TYPE = TransactionType::TRANSFER;
 
-	static TYPE_HINTS = {
-		$type: 'enum:TransactionType',
-		$network: 'enum:NetworkType',
-		$timestamp: 'pod:Timestamp',
-		$signerPublicKey: 'pod:PublicKey',
-		$fee: 'pod:Amount',
-		$deadline: 'pod:Timestamp',
-		$recipientAddress: 'pod:Address',
-		$amount: 'pod:Amount',
-		$message: 'struct:Message'
-	};
+	public Address $recipientAddress;
 
-	public function __construct() {
-		this._$type = NonVerifiableTransferTransactionV1.TRANSACTION_TYPE;
-		this._$version = NonVerifiableTransferTransactionV1.TRANSACTION_VERSION;
-		this._$network = NetworkType.MAINNET;
-		this._$timestamp = new Timestamp();
-		this._$signerPublicKey = new PublicKey();
-		this._$fee = new Amount();
-		this._$deadline = new Timestamp();
-		this._$recipientAddress = new Address();
-		this._$amount = new Amount();
-		this._$message = null;
-		this._$entityBodyReserved_1 = 0; // reserved field
-		this._$signerPublicKeySize = 32; // reserved field
-		this._$recipientAddressSize = 40; // reserved field
+	public Amount $amount;
+
+	public Message $message;
+
+	private int $recipientAddressSize = 40; // reserved field
+
+	public function __construct(
+		?NetworkType $network = null,
+		?Timestamp $timestamp = null,
+		?PublicKey $signerPublicKey = null,
+		?Amount $fee = null,
+		?Timestamp $deadline = null,
+		?Address $recipientAddress = null,
+		?Amount $amount = null,
+		?Message $message = null
+	){
+		parent::__construct(
+			new TransactionType(NonVerifiableTransferTransactionV1::TRANSACTION_TYPE),
+			NonVerifiableTransferTransactionV1::TRANSACTION_VERSION,
+			$network,
+			$timestamp,
+			$signerPublicKey,
+			$fee,
+			$deadline,
+		);
+		$this->recipientAddress = $recipientAddress ?? new Address();
+		$this->amount = $amount ?? new Amount();
+		$this->message = null;
+		$this->recipientAddressSize = 40; // reserved field
 	}
 
-	sort() {
-		if (0 !== this.messageEnvelopeSizeComputed)
-			this._$message.sort();
+	public function sort(){
+		if (0 !== $this->messageEnvelopeSizeComputed)
+			$this->message->sort();
 	}
 
-	get $type() {
-		return this._$type;
-	}
-
-	set $type(value) {
-		this._$type = value;
-	}
-
-	get $version() {
-		return this._$version;
-	}
-
-	set $version(value) {
-		this._$version = value;
-	}
-
-	get $network() {
-		return this._$network;
-	}
-
-	set $network(value) {
-		this._$network = value;
-	}
-
-	get $timestamp() {
-		return this._$timestamp;
-	}
-
-	set $timestamp(value) {
-		this._$timestamp = value;
-	}
-
-	get $signerPublicKey() {
-		return this._$signerPublicKey;
-	}
-
-	set $signerPublicKey(value) {
-		this._$signerPublicKey = value;
-	}
-
-	get $fee() {
-		return this._$fee;
-	}
-
-	set $fee(value) {
-		this._$fee = value;
-	}
-
-	get $deadline() {
-		return this._$deadline;
-	}
-
-	set $deadline(value) {
-		this._$deadline = value;
-	}
-
-	get $recipientAddress() {
-		return this._$recipientAddress;
-	}
-
-	set $recipientAddress(value) {
-		this._$recipientAddress = value;
-	}
-
-	get $amount() {
-		return this._$amount;
-	}
-
-	set $amount(value) {
-		this._$amount = value;
-	}
-
-	get $message() {
-		return this._$message;
-	}
-
-	set $message(value) {
-		this._$message = value;
-	}
-
-	get $messageEnvelopeSizeComputed() {
+	get messageEnvelopeSizeComputed(){
 		return this.message ? this.message.size + 0 : 0;
 	}
 
-	public function size() {
-		let size = 0;
-		size += this.$type.size;
-		size += 1;
-		size += 2;
-		size += this.$network.size;
-		size += this.$timestamp.size;
-		size += 4;
-		size += this.$signerPublicKey.size;
-		size += this.$fee.size;
-		size += this.$deadline.size;
-		size += 4;
-		size += this.$recipientAddress.size;
-		size += this.$amount.size;
-		size += 4;
-		if (0 !== this.messageEnvelopeSizeComputed)
-			size += this.$message.size;
+	public function size(){
+		$size = 0;
+		$size += parent::size();
+		$size += 4;
+		$size += $this->recipientAddress->size();
+		$size += $this->amount->size();
+		$size += 4;
+		if (0 !== $this->messageEnvelopeSizeComputed)
+			$size += $this->message->size();
 
-		return size;
+		return $size;
 	}
 
-	public static function deserialize($payload) {
-		const view = new BufferView(payload);
-		const $type = TransactionType.deserialize(view.buffer);
-		view.shiftRight($type.size);
-		const $version = Converter::hexToInt(view.buffer, 1);
-		view.shiftRight(1);
-		const $entityBodyReserved_1 = Converter::hexToInt(view.buffer, 2);
-		view.shiftRight(2);
-		if (0 !== $entityBodyReserved_1)
-			throw RangeError(`Invalid value of reserved field (${$entityBodyReserved_1})`);
-		const $network = NetworkType.deserialize(view.buffer);
-		view.shiftRight($network.size);
-		const $timestamp = Timestamp.deserialize(view.buffer);
-		view.shiftRight($timestamp.size);
-		const $signerPublicKeySize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
-		if (32 !== $signerPublicKeySize)
-			throw RangeError(`Invalid value of reserved field (${$signerPublicKeySize})`);
-		const $signerPublicKey = PublicKey.deserialize(view.buffer);
-		view.shiftRight($signerPublicKey.size);
-		const $fee = Amount.deserialize(view.buffer);
-		view.shiftRight($fee.size);
-		const $deadline = Timestamp.deserialize(view.buffer);
-		view.shiftRight($deadline.size);
-		const $recipientAddressSize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
+	public static function deserialize(BinaryReader $reader){
+		$instance = new NonVerifiableTransferTransactionV1();
+
+		NonVerifiableTransaction::_deserialize($reader, $instance);
+		$recipientAddressSize = Converter::binaryToInt($reader->read(4), 4);
 		if (40 !== $recipientAddressSize)
-			throw RangeError(`Invalid value of reserved field (${$recipientAddressSize})`);
-		const $recipientAddress = Address.deserialize(view.buffer);
-		view.shiftRight($recipientAddress.size);
-		const $amount = Amount.deserialize(view.buffer);
-		view.shiftRight($amount.size);
-		const $messageEnvelopeSize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
-		let $message = null;
-		if (0 !== messageEnvelopeSize) {
-			$message = Message.deserialize(view.buffer);
-			view.shiftRight($message.size);
-		}
+			throw new OutOfRangeException('Invalid value of reserved field (' . $recipientAddressSize . ')');
+		$recipientAddress = Address::deserialize($reader);
+		$amount = Amount::deserialize($reader);
+		$messageEnvelopeSize = Converter::binaryToInt($reader->read(4), 4);
+		$message = null;
+		if (0 !== $messageEnvelopeSize->value)
+			$message = Message::deserialize($reader);
 
-		const instance = new NonVerifiableTransferTransactionV1();
-		instance._$type = $type;
-		instance._$version = $version;
-		instance._$network = $network;
-		instance._$timestamp = $timestamp;
-		instance._$signerPublicKey = $signerPublicKey;
-		instance._$fee = $fee;
-		instance._$deadline = $deadline;
-		instance._$recipientAddress = $recipientAddress;
-		instance._$amount = $amount;
-		instance._$message = $message;
-		return instance;
+
+		$instance->recipientAddress = $recipientAddress;
+		$instance->amount = $amount;
+		$instance->message = $message;
+		return $instance;
 	}
 
-	public function serialize() {
-		const buffer = new Writer(this.size);
-		buffer.write(this._$type.serialize());
-		buffer.write(Converter::intToHex(this._$version, 1));
-		buffer.write(Converter::intToHex(this._$entityBodyReserved_1, 2));
-		buffer.write(this._$network.serialize());
-		buffer.write(this._$timestamp.serialize());
-		buffer.write(Converter::intToHex(this._$signerPublicKeySize, 4));
-		buffer.write(this._$signerPublicKey.serialize());
-		buffer.write(this._$fee.serialize());
-		buffer.write(this._$deadline.serialize());
-		buffer.write(Converter::intToHex(this._$recipientAddressSize, 4));
-		buffer.write(this._$recipientAddress.serialize());
-		buffer.write(this._$amount.serialize());
-		buffer.write(Converter::intToHex(this.$messageEnvelopeSizeComputed, 4));
-		if (0 !== this.messageEnvelopeSizeComputed)
-			buffer.write(this._$message.serialize());
+	public function serialize(): string {
+		$writer = new BinaryWriter($this->size());
+		$this->sort();
+		parent::_serialize($writer);
+		$writer->write(Converter::intToBinary($this->recipientAddressSize, 4));
+		$writer->write($this->recipientAddress->serialize());
+		$writer->write($this->amount->serialize());
+		$writer->write(Converter::intToBinary($this->messageEnvelopeSizeComputed, 4));
+		if (0 !== $this->messageEnvelopeSizeComputed)
+			$writer->write($this->message->serialize());
 
-		return buffer.storage;
+		return $writer->getBinaryData();
 	}
 
-	toString() {
-		let result = '(';
-		result += `$type: ${this._$type.toString()}, `;
-		result += `$version: ${'0x'.concat(this._$version.toString(16))}, `;
-		result += `$network: ${this._$network.toString()}, `;
-		result += `$timestamp: ${this._$timestamp.toString()}, `;
-		result += `$signerPublicKey: ${this._$signerPublicKey.toString()}, `;
-		result += `$fee: ${this._$fee.toString()}, `;
-		result += `$deadline: ${this._$deadline.toString()}, `;
-		result += `$recipientAddress: ${this._$recipientAddress.toString()}, `;
-		result += `$amount: ${this._$amount.toString()}, `;
-		if (0 !== this.messageEnvelopeSizeComputed)
-			result += `$message: ${this._$message.toString()}, `;
+	public function __toString(){
+		$result = '(';
+		$result .= parent::__toString();
+		$result .= 'recipientAddress: ' . $this->recipientAddress . ', ';
+		$result .= 'amount: ' . $this->amount . ', ';
+		if (0 !== $this->messageEnvelopeSizeComputed)
+			$result .= 'message: ' . $this->message . ', ';
 
-		result += ')';
-		return result;
+		$result .= ')';
+		return $result;
 	}
 }
 
-class TransferTransactionV2 {
-	static TRANSACTION_VERSION = 2;
+class TransferTransactionV2 extends Transaction {
+	const TRANSACTION_VERSION = 2;
 
-	static TRANSACTION_TYPE = TransactionType.TRANSFER;
+	const TRANSACTION_TYPE = TransactionType::TRANSFER;
 
-	static TYPE_HINTS = {
-		$type: 'enum:TransactionType',
-		$network: 'enum:NetworkType',
-		$timestamp: 'pod:Timestamp',
-		$signerPublicKey: 'pod:PublicKey',
-		$signature: 'pod:Signature',
-		$fee: 'pod:Amount',
-		$deadline: 'pod:Timestamp',
-		$recipientAddress: 'pod:Address',
-		$amount: 'pod:Amount',
-		$message: 'struct:Message',
-		$mosaics: 'array[SizePrefixedMosaic]'
-	};
+	public Address $recipientAddress;
 
-	public function __construct() {
-		this._$type = TransferTransactionV2.TRANSACTION_TYPE;
-		this._$version = TransferTransactionV2.TRANSACTION_VERSION;
-		this._$network = NetworkType.MAINNET;
-		this._$timestamp = new Timestamp();
-		this._$signerPublicKey = new PublicKey();
-		this._$signature = new Signature();
-		this._$fee = new Amount();
-		this._$deadline = new Timestamp();
-		this._$recipientAddress = new Address();
-		this._$amount = new Amount();
-		this._$message = null;
-		this._$mosaics = [];
-		this._$entityBodyReserved_1 = 0; // reserved field
-		this._$signerPublicKeySize = 32; // reserved field
-		this._$signatureSize = 64; // reserved field
-		this._$recipientAddressSize = 40; // reserved field
+	public Amount $amount;
+
+	public Message $message;
+
+	public array $mosaics;
+
+	private int $recipientAddressSize = 40; // reserved field
+
+	public function __construct(
+		?NetworkType $network = null,
+		?Timestamp $timestamp = null,
+		?PublicKey $signerPublicKey = null,
+		?Signature $signature = null,
+		?Amount $fee = null,
+		?Timestamp $deadline = null,
+		?Address $recipientAddress = null,
+		?Amount $amount = null,
+		?Message $message = null,
+		?array $mosaics = null
+	){
+		parent::__construct(
+			new TransactionType(TransferTransactionV2::TRANSACTION_TYPE),
+			TransferTransactionV2::TRANSACTION_VERSION,
+			$network,
+			$timestamp,
+			$signerPublicKey,
+			$signature,
+			$fee,
+			$deadline,
+		);
+		$this->recipientAddress = $recipientAddress ?? new Address();
+		$this->amount = $amount ?? new Amount();
+		$this->message = null;
+		$this->mosaics = $mosaics ?? [];
+		$this->recipientAddressSize = 40; // reserved field
 	}
 
-	sort() {
-		if (0 !== this.messageEnvelopeSizeComputed)
-			this._$message.sort();
+	public function sort(){
+		if (0 !== $this->messageEnvelopeSizeComputed)
+			$this->message->sort();
 	}
 
-	get $type() {
-		return this._$type;
-	}
-
-	set $type(value) {
-		this._$type = value;
-	}
-
-	get $version() {
-		return this._$version;
-	}
-
-	set $version(value) {
-		this._$version = value;
-	}
-
-	get $network() {
-		return this._$network;
-	}
-
-	set $network(value) {
-		this._$network = value;
-	}
-
-	get $timestamp() {
-		return this._$timestamp;
-	}
-
-	set $timestamp(value) {
-		this._$timestamp = value;
-	}
-
-	get $signerPublicKey() {
-		return this._$signerPublicKey;
-	}
-
-	set $signerPublicKey(value) {
-		this._$signerPublicKey = value;
-	}
-
-	get $signature() {
-		return this._$signature;
-	}
-
-	set $signature(value) {
-		this._$signature = value;
-	}
-
-	get $fee() {
-		return this._$fee;
-	}
-
-	set $fee(value) {
-		this._$fee = value;
-	}
-
-	get $deadline() {
-		return this._$deadline;
-	}
-
-	set $deadline(value) {
-		this._$deadline = value;
-	}
-
-	get $recipientAddress() {
-		return this._$recipientAddress;
-	}
-
-	set $recipientAddress(value) {
-		this._$recipientAddress = value;
-	}
-
-	get $amount() {
-		return this._$amount;
-	}
-
-	set $amount(value) {
-		this._$amount = value;
-	}
-
-	get $message() {
-		return this._$message;
-	}
-
-	set $message(value) {
-		this._$message = value;
-	}
-
-	get $mosaics() {
-		return this._$mosaics;
-	}
-
-	set $mosaics(value) {
-		this._$mosaics = value;
-	}
-
-	get $messageEnvelopeSizeComputed() {
+	get messageEnvelopeSizeComputed(){
 		return this.message ? this.message.size + 0 : 0;
 	}
 
-	public function size() {
-		let size = 0;
-		size += this.$type.size;
-		size += 1;
-		size += 2;
-		size += this.$network.size;
-		size += this.$timestamp.size;
-		size += 4;
-		size += this.$signerPublicKey.size;
-		size += 4;
-		size += this.$signature.size;
-		size += this.$fee.size;
-		size += this.$deadline.size;
-		size += 4;
-		size += this.$recipientAddress.size;
-		size += this.$amount.size;
-		size += 4;
-		if (0 !== this.messageEnvelopeSizeComputed)
-			size += this.$message.size;
+	public function size(){
+		$size = 0;
+		$size += parent::size();
+		$size += 4;
+		$size += $this->recipientAddress->size();
+		$size += $this->amount->size();
+		$size += 4;
+		if (0 !== $this->messageEnvelopeSizeComputed)
+			$size += $this->message->size();
 
-		size += 4;
-		size += arrayHelpers.size(this.$mosaics);
-		return size;
+		$size += 4;
+		$size += ArrayHelpers::size($this->mosaics);
+		return $size;
 	}
 
-	public static function deserialize($payload) {
-		const view = new BufferView(payload);
-		const $type = TransactionType.deserialize(view.buffer);
-		view.shiftRight($type.size);
-		const $version = Converter::hexToInt(view.buffer, 1);
-		view.shiftRight(1);
-		const $entityBodyReserved_1 = Converter::hexToInt(view.buffer, 2);
-		view.shiftRight(2);
-		if (0 !== $entityBodyReserved_1)
-			throw RangeError(`Invalid value of reserved field (${$entityBodyReserved_1})`);
-		const $network = NetworkType.deserialize(view.buffer);
-		view.shiftRight($network.size);
-		const $timestamp = Timestamp.deserialize(view.buffer);
-		view.shiftRight($timestamp.size);
-		const $signerPublicKeySize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
-		if (32 !== $signerPublicKeySize)
-			throw RangeError(`Invalid value of reserved field (${$signerPublicKeySize})`);
-		const $signerPublicKey = PublicKey.deserialize(view.buffer);
-		view.shiftRight($signerPublicKey.size);
-		const $signatureSize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
-		if (64 !== $signatureSize)
-			throw RangeError(`Invalid value of reserved field (${$signatureSize})`);
-		const $signature = Signature.deserialize(view.buffer);
-		view.shiftRight($signature.size);
-		const $fee = Amount.deserialize(view.buffer);
-		view.shiftRight($fee.size);
-		const $deadline = Timestamp.deserialize(view.buffer);
-		view.shiftRight($deadline.size);
-		const $recipientAddressSize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
+	public static function deserialize(BinaryReader $reader){
+		$instance = new TransferTransactionV2();
+
+		Transaction::_deserialize($reader, $instance);
+		$recipientAddressSize = Converter::binaryToInt($reader->read(4), 4);
 		if (40 !== $recipientAddressSize)
-			throw RangeError(`Invalid value of reserved field (${$recipientAddressSize})`);
-		const $recipientAddress = Address.deserialize(view.buffer);
-		view.shiftRight($recipientAddress.size);
-		const $amount = Amount.deserialize(view.buffer);
-		view.shiftRight($amount.size);
-		const $messageEnvelopeSize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
-		let $message = null;
-		if (0 !== messageEnvelopeSize) {
-			$message = Message.deserialize(view.buffer);
-			view.shiftRight($message.size);
-		}
-		const $mosaicsCount = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
-		const $mosaics = arrayHelpers.readArrayCount(view.buffer, SizePrefixedMosaic, mosaicsCount);
-		view.shiftRight(arrayHelpers.size($mosaics));
+			throw new OutOfRangeException('Invalid value of reserved field (' . $recipientAddressSize . ')');
+		$recipientAddress = Address::deserialize($reader);
+		$amount = Amount::deserialize($reader);
+		$messageEnvelopeSize = Converter::binaryToInt($reader->read(4), 4);
+		$message = null;
+		if (0 !== $messageEnvelopeSize->value)
+			$message = Message::deserialize($reader);
 
-		const instance = new TransferTransactionV2();
-		instance._$type = $type;
-		instance._$version = $version;
-		instance._$network = $network;
-		instance._$timestamp = $timestamp;
-		instance._$signerPublicKey = $signerPublicKey;
-		instance._$signature = $signature;
-		instance._$fee = $fee;
-		instance._$deadline = $deadline;
-		instance._$recipientAddress = $recipientAddress;
-		instance._$amount = $amount;
-		instance._$message = $message;
-		instance._$mosaics = $mosaics;
-		return instance;
+		$mosaicsCount = Converter::binaryToInt($reader->read(4), 4);
+		$mosaics = ArrayHelpers::readArrayCount($reader, [SizePrefixedMosaic::class, 'deserialize'], $mosaicsCount);
+
+		$instance->recipientAddress = $recipientAddress;
+		$instance->amount = $amount;
+		$instance->message = $message;
+		$instance->mosaics = $mosaics;
+		return $instance;
 	}
 
-	public function serialize() {
-		const buffer = new Writer(this.size);
-		buffer.write(this._$type.serialize());
-		buffer.write(Converter::intToHex(this._$version, 1));
-		buffer.write(Converter::intToHex(this._$entityBodyReserved_1, 2));
-		buffer.write(this._$network.serialize());
-		buffer.write(this._$timestamp.serialize());
-		buffer.write(Converter::intToHex(this._$signerPublicKeySize, 4));
-		buffer.write(this._$signerPublicKey.serialize());
-		buffer.write(Converter::intToHex(this._$signatureSize, 4));
-		buffer.write(this._$signature.serialize());
-		buffer.write(this._$fee.serialize());
-		buffer.write(this._$deadline.serialize());
-		buffer.write(Converter::intToHex(this._$recipientAddressSize, 4));
-		buffer.write(this._$recipientAddress.serialize());
-		buffer.write(this._$amount.serialize());
-		buffer.write(Converter::intToHex(this.$messageEnvelopeSizeComputed, 4));
-		if (0 !== this.messageEnvelopeSizeComputed)
-			buffer.write(this._$message.serialize());
+	public function serialize(): string {
+		$writer = new BinaryWriter($this->size());
+		$this->sort();
+		parent::_serialize($writer);
+		$writer->write(Converter::intToBinary($this->recipientAddressSize, 4));
+		$writer->write($this->recipientAddress->serialize());
+		$writer->write($this->amount->serialize());
+		$writer->write(Converter::intToBinary($this->messageEnvelopeSizeComputed, 4));
+		if (0 !== $this->messageEnvelopeSizeComputed)
+			$writer->write($this->message->serialize());
 
-		buffer.write(Converter::intToHex(this._$mosaics.length, 4)); // bound: mosaics_count
-		arrayHelpers.writeArray(buffer, this._$mosaics);
-		return buffer.storage;
+		$writer->write(Converter::intToBinary(count($this->mosaics), 4)); // bound: mosaics_count
+		ArrayHelpers::writeArray($writer, $this->mosaics);
+		return $writer->getBinaryData();
 	}
 
-	toString() {
-		let result = '(';
-		result += `$type: ${this._$type.toString()}, `;
-		result += `$version: ${'0x'.concat(this._$version.toString(16))}, `;
-		result += `$network: ${this._$network.toString()}, `;
-		result += `$timestamp: ${this._$timestamp.toString()}, `;
-		result += `$signerPublicKey: ${this._$signerPublicKey.toString()}, `;
-		result += `$signature: ${this._$signature.toString()}, `;
-		result += `$fee: ${this._$fee.toString()}, `;
-		result += `$deadline: ${this._$deadline.toString()}, `;
-		result += `$recipientAddress: ${this._$recipientAddress.toString()}, `;
-		result += `$amount: ${this._$amount.toString()}, `;
-		if (0 !== this.messageEnvelopeSizeComputed)
-			result += `$message: ${this._$message.toString()}, `;
+	public function __toString(){
+		$result = '(';
+		$result .= parent::__toString();
+		$result .= 'recipientAddress: ' . $this->recipientAddress . ', ';
+		$result .= 'amount: ' . $this->amount . ', ';
+		if (0 !== $this->messageEnvelopeSizeComputed)
+			$result .= 'message: ' . $this->message . ', ';
 
-		result += `$mosaics: [${this._$mosaics.map(e => e.toString()).join(',')}], `;
-		result += ')';
-		return result;
+		$result .= 'mosaics: ' . '[' . implode(',', array_map(fn ($e) => $e, $this->mosaics)) . ']' . ', ';
+		$result .= ')';
+		return $result;
 	}
 }
 
-class NonVerifiableTransferTransactionV2 {
-	static TRANSACTION_VERSION = 2;
+class NonVerifiableTransferTransactionV2 extends NonVerifiableTransaction {
+	const TRANSACTION_VERSION = 2;
 
-	static TRANSACTION_TYPE = TransactionType.TRANSFER;
+	const TRANSACTION_TYPE = TransactionType::TRANSFER;
 
-	static TYPE_HINTS = {
-		$type: 'enum:TransactionType',
-		$network: 'enum:NetworkType',
-		$timestamp: 'pod:Timestamp',
-		$signerPublicKey: 'pod:PublicKey',
-		$fee: 'pod:Amount',
-		$deadline: 'pod:Timestamp',
-		$recipientAddress: 'pod:Address',
-		$amount: 'pod:Amount',
-		$message: 'struct:Message',
-		$mosaics: 'array[SizePrefixedMosaic]'
-	};
+	public Address $recipientAddress;
 
-	public function __construct() {
-		this._$type = NonVerifiableTransferTransactionV2.TRANSACTION_TYPE;
-		this._$version = NonVerifiableTransferTransactionV2.TRANSACTION_VERSION;
-		this._$network = NetworkType.MAINNET;
-		this._$timestamp = new Timestamp();
-		this._$signerPublicKey = new PublicKey();
-		this._$fee = new Amount();
-		this._$deadline = new Timestamp();
-		this._$recipientAddress = new Address();
-		this._$amount = new Amount();
-		this._$message = null;
-		this._$mosaics = [];
-		this._$entityBodyReserved_1 = 0; // reserved field
-		this._$signerPublicKeySize = 32; // reserved field
-		this._$recipientAddressSize = 40; // reserved field
+	public Amount $amount;
+
+	public Message $message;
+
+	public array $mosaics;
+
+	private int $recipientAddressSize = 40; // reserved field
+
+	public function __construct(
+		?NetworkType $network = null,
+		?Timestamp $timestamp = null,
+		?PublicKey $signerPublicKey = null,
+		?Amount $fee = null,
+		?Timestamp $deadline = null,
+		?Address $recipientAddress = null,
+		?Amount $amount = null,
+		?Message $message = null,
+		?array $mosaics = null
+	){
+		parent::__construct(
+			new TransactionType(NonVerifiableTransferTransactionV2::TRANSACTION_TYPE),
+			NonVerifiableTransferTransactionV2::TRANSACTION_VERSION,
+			$network,
+			$timestamp,
+			$signerPublicKey,
+			$fee,
+			$deadline,
+		);
+		$this->recipientAddress = $recipientAddress ?? new Address();
+		$this->amount = $amount ?? new Amount();
+		$this->message = null;
+		$this->mosaics = $mosaics ?? [];
+		$this->recipientAddressSize = 40; // reserved field
 	}
 
-	sort() {
-		if (0 !== this.messageEnvelopeSizeComputed)
-			this._$message.sort();
+	public function sort(){
+		if (0 !== $this->messageEnvelopeSizeComputed)
+			$this->message->sort();
 	}
 
-	get $type() {
-		return this._$type;
-	}
-
-	set $type(value) {
-		this._$type = value;
-	}
-
-	get $version() {
-		return this._$version;
-	}
-
-	set $version(value) {
-		this._$version = value;
-	}
-
-	get $network() {
-		return this._$network;
-	}
-
-	set $network(value) {
-		this._$network = value;
-	}
-
-	get $timestamp() {
-		return this._$timestamp;
-	}
-
-	set $timestamp(value) {
-		this._$timestamp = value;
-	}
-
-	get $signerPublicKey() {
-		return this._$signerPublicKey;
-	}
-
-	set $signerPublicKey(value) {
-		this._$signerPublicKey = value;
-	}
-
-	get $fee() {
-		return this._$fee;
-	}
-
-	set $fee(value) {
-		this._$fee = value;
-	}
-
-	get $deadline() {
-		return this._$deadline;
-	}
-
-	set $deadline(value) {
-		this._$deadline = value;
-	}
-
-	get $recipientAddress() {
-		return this._$recipientAddress;
-	}
-
-	set $recipientAddress(value) {
-		this._$recipientAddress = value;
-	}
-
-	get $amount() {
-		return this._$amount;
-	}
-
-	set $amount(value) {
-		this._$amount = value;
-	}
-
-	get $message() {
-		return this._$message;
-	}
-
-	set $message(value) {
-		this._$message = value;
-	}
-
-	get $mosaics() {
-		return this._$mosaics;
-	}
-
-	set $mosaics(value) {
-		this._$mosaics = value;
-	}
-
-	get $messageEnvelopeSizeComputed() {
+	get messageEnvelopeSizeComputed(){
 		return this.message ? this.message.size + 0 : 0;
 	}
 
-	public function size() {
-		let size = 0;
-		size += this.$type.size;
-		size += 1;
-		size += 2;
-		size += this.$network.size;
-		size += this.$timestamp.size;
-		size += 4;
-		size += this.$signerPublicKey.size;
-		size += this.$fee.size;
-		size += this.$deadline.size;
-		size += 4;
-		size += this.$recipientAddress.size;
-		size += this.$amount.size;
-		size += 4;
-		if (0 !== this.messageEnvelopeSizeComputed)
-			size += this.$message.size;
+	public function size(){
+		$size = 0;
+		$size += parent::size();
+		$size += 4;
+		$size += $this->recipientAddress->size();
+		$size += $this->amount->size();
+		$size += 4;
+		if (0 !== $this->messageEnvelopeSizeComputed)
+			$size += $this->message->size();
 
-		size += 4;
-		size += arrayHelpers.size(this.$mosaics);
-		return size;
+		$size += 4;
+		$size += ArrayHelpers::size($this->mosaics);
+		return $size;
 	}
 
-	public static function deserialize($payload) {
-		const view = new BufferView(payload);
-		const $type = TransactionType.deserialize(view.buffer);
-		view.shiftRight($type.size);
-		const $version = Converter::hexToInt(view.buffer, 1);
-		view.shiftRight(1);
-		const $entityBodyReserved_1 = Converter::hexToInt(view.buffer, 2);
-		view.shiftRight(2);
-		if (0 !== $entityBodyReserved_1)
-			throw RangeError(`Invalid value of reserved field (${$entityBodyReserved_1})`);
-		const $network = NetworkType.deserialize(view.buffer);
-		view.shiftRight($network.size);
-		const $timestamp = Timestamp.deserialize(view.buffer);
-		view.shiftRight($timestamp.size);
-		const $signerPublicKeySize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
-		if (32 !== $signerPublicKeySize)
-			throw RangeError(`Invalid value of reserved field (${$signerPublicKeySize})`);
-		const $signerPublicKey = PublicKey.deserialize(view.buffer);
-		view.shiftRight($signerPublicKey.size);
-		const $fee = Amount.deserialize(view.buffer);
-		view.shiftRight($fee.size);
-		const $deadline = Timestamp.deserialize(view.buffer);
-		view.shiftRight($deadline.size);
-		const $recipientAddressSize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
+	public static function deserialize(BinaryReader $reader){
+		$instance = new NonVerifiableTransferTransactionV2();
+
+		NonVerifiableTransaction::_deserialize($reader, $instance);
+		$recipientAddressSize = Converter::binaryToInt($reader->read(4), 4);
 		if (40 !== $recipientAddressSize)
-			throw RangeError(`Invalid value of reserved field (${$recipientAddressSize})`);
-		const $recipientAddress = Address.deserialize(view.buffer);
-		view.shiftRight($recipientAddress.size);
-		const $amount = Amount.deserialize(view.buffer);
-		view.shiftRight($amount.size);
-		const $messageEnvelopeSize = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
-		let $message = null;
-		if (0 !== messageEnvelopeSize) {
-			$message = Message.deserialize(view.buffer);
-			view.shiftRight($message.size);
-		}
-		const $mosaicsCount = Converter::hexToInt(view.buffer, 4);
-		view.shiftRight(4);
-		const $mosaics = arrayHelpers.readArrayCount(view.buffer, SizePrefixedMosaic, mosaicsCount);
-		view.shiftRight(arrayHelpers.size($mosaics));
+			throw new OutOfRangeException('Invalid value of reserved field (' . $recipientAddressSize . ')');
+		$recipientAddress = Address::deserialize($reader);
+		$amount = Amount::deserialize($reader);
+		$messageEnvelopeSize = Converter::binaryToInt($reader->read(4), 4);
+		$message = null;
+		if (0 !== $messageEnvelopeSize->value)
+			$message = Message::deserialize($reader);
 
-		const instance = new NonVerifiableTransferTransactionV2();
-		instance._$type = $type;
-		instance._$version = $version;
-		instance._$network = $network;
-		instance._$timestamp = $timestamp;
-		instance._$signerPublicKey = $signerPublicKey;
-		instance._$fee = $fee;
-		instance._$deadline = $deadline;
-		instance._$recipientAddress = $recipientAddress;
-		instance._$amount = $amount;
-		instance._$message = $message;
-		instance._$mosaics = $mosaics;
-		return instance;
+		$mosaicsCount = Converter::binaryToInt($reader->read(4), 4);
+		$mosaics = ArrayHelpers::readArrayCount($reader, [SizePrefixedMosaic::class, 'deserialize'], $mosaicsCount);
+
+		$instance->recipientAddress = $recipientAddress;
+		$instance->amount = $amount;
+		$instance->message = $message;
+		$instance->mosaics = $mosaics;
+		return $instance;
 	}
 
-	public function serialize() {
-		const buffer = new Writer(this.size);
-		buffer.write(this._$type.serialize());
-		buffer.write(Converter::intToHex(this._$version, 1));
-		buffer.write(Converter::intToHex(this._$entityBodyReserved_1, 2));
-		buffer.write(this._$network.serialize());
-		buffer.write(this._$timestamp.serialize());
-		buffer.write(Converter::intToHex(this._$signerPublicKeySize, 4));
-		buffer.write(this._$signerPublicKey.serialize());
-		buffer.write(this._$fee.serialize());
-		buffer.write(this._$deadline.serialize());
-		buffer.write(Converter::intToHex(this._$recipientAddressSize, 4));
-		buffer.write(this._$recipientAddress.serialize());
-		buffer.write(this._$amount.serialize());
-		buffer.write(Converter::intToHex(this.$messageEnvelopeSizeComputed, 4));
-		if (0 !== this.messageEnvelopeSizeComputed)
-			buffer.write(this._$message.serialize());
+	public function serialize(): string {
+		$writer = new BinaryWriter($this->size());
+		$this->sort();
+		parent::_serialize($writer);
+		$writer->write(Converter::intToBinary($this->recipientAddressSize, 4));
+		$writer->write($this->recipientAddress->serialize());
+		$writer->write($this->amount->serialize());
+		$writer->write(Converter::intToBinary($this->messageEnvelopeSizeComputed, 4));
+		if (0 !== $this->messageEnvelopeSizeComputed)
+			$writer->write($this->message->serialize());
 
-		buffer.write(Converter::intToHex(this._$mosaics.length, 4)); // bound: mosaics_count
-		arrayHelpers.writeArray(buffer, this._$mosaics);
-		return buffer.storage;
+		$writer->write(Converter::intToBinary(count($this->mosaics), 4)); // bound: mosaics_count
+		ArrayHelpers::writeArray($writer, $this->mosaics);
+		return $writer->getBinaryData();
 	}
 
-	toString() {
-		let result = '(';
-		result += `$type: ${this._$type.toString()}, `;
-		result += `$version: ${'0x'.concat(this._$version.toString(16))}, `;
-		result += `$network: ${this._$network.toString()}, `;
-		result += `$timestamp: ${this._$timestamp.toString()}, `;
-		result += `$signerPublicKey: ${this._$signerPublicKey.toString()}, `;
-		result += `$fee: ${this._$fee.toString()}, `;
-		result += `$deadline: ${this._$deadline.toString()}, `;
-		result += `$recipientAddress: ${this._$recipientAddress.toString()}, `;
-		result += `$amount: ${this._$amount.toString()}, `;
-		if (0 !== this.messageEnvelopeSizeComputed)
-			result += `$message: ${this._$message.toString()}, `;
+	public function __toString(){
+		$result = '(';
+		$result .= parent::__toString();
+		$result .= 'recipientAddress: ' . $this->recipientAddress . ', ';
+		$result .= 'amount: ' . $this->amount . ', ';
+		if (0 !== $this->messageEnvelopeSizeComputed)
+			$result .= 'message: ' . $this->message . ', ';
 
-		result += `$mosaics: [${this._$mosaics.map(e => e.toString()).join(',')}], `;
-		result += ')';
-		return result;
+		$result .= 'mosaics: ' . '[' . implode(',', array_map(fn ($e) => $e, $this->mosaics)) . ']' . ', ';
+		$result .= ')';
+		return $result;
 	}
 }
 
 class TransactionFactory {
-	static toKey(values) {
-		if (1 === values.length)
-			return values[0];
+	public static function toKey($values){
+		if (count($values) === 1) {
+			return $values[0];
+		}
 
 		// assume each key is at most 32bits
-		return values.map(n => BigInt(n)).reduce((accumulator, value) => (accumulator << 32n) + value);
+		return array_reduce(array_map('intval', $values), function ($accumulator, $value) {
+			return ($accumulator << 32) + $value;
+		}, 0);
 	}
 
-	static deserialize(payload) {
-		const view = new BufferView(payload);
-		const $parent = TransactionFactory.deserialize(view.buffer);
-		const mapping = new Map();
-		mapping.set(TransactionFactory.toKey([AccountKeyLinkTransactionV1.TRANSACTION_TYPE.value, AccountKeyLinkTransactionV1.TRANSACTION_VERSION]), AccountKeyLinkTransactionV1);
-		mapping.set(TransactionFactory.toKey([MosaicDefinitionTransactionV1.TRANSACTION_TYPE.value, MosaicDefinitionTransactionV1.TRANSACTION_VERSION]), MosaicDefinitionTransactionV1);
-		mapping.set(TransactionFactory.toKey([MosaicSupplyChangeTransactionV1.TRANSACTION_TYPE.value, MosaicSupplyChangeTransactionV1.TRANSACTION_VERSION]), MosaicSupplyChangeTransactionV1);
-		mapping.set(TransactionFactory.toKey([MultisigAccountModificationTransactionV1.TRANSACTION_TYPE.value, MultisigAccountModificationTransactionV1.TRANSACTION_VERSION]), MultisigAccountModificationTransactionV1);
-		mapping.set(TransactionFactory.toKey([MultisigAccountModificationTransactionV2.TRANSACTION_TYPE.value, MultisigAccountModificationTransactionV2.TRANSACTION_VERSION]), MultisigAccountModificationTransactionV2);
-		mapping.set(TransactionFactory.toKey([CosignatureV1.TRANSACTION_TYPE.value, CosignatureV1.TRANSACTION_VERSION]), CosignatureV1);
-		mapping.set(TransactionFactory.toKey([MultisigTransactionV1.TRANSACTION_TYPE.value, MultisigTransactionV1.TRANSACTION_VERSION]), MultisigTransactionV1);
-		mapping.set(TransactionFactory.toKey([NamespaceRegistrationTransactionV1.TRANSACTION_TYPE.value, NamespaceRegistrationTransactionV1.TRANSACTION_VERSION]), NamespaceRegistrationTransactionV1);
-		mapping.set(TransactionFactory.toKey([TransferTransactionV1.TRANSACTION_TYPE.value, TransferTransactionV1.TRANSACTION_VERSION]), TransferTransactionV1);
-		mapping.set(TransactionFactory.toKey([TransferTransactionV2.TRANSACTION_TYPE.value, TransferTransactionV2.TRANSACTION_VERSION]), TransferTransactionV2);
-		const discriminator = TransactionFactory.toKey([$parent.$type.value, $parent.$version]);
-		const factory_class = mapping.get(discriminator);
-		return factory_class.deserialize(view.buffer);
-	}
-
-	static createByName(entityName) {
-		const mapping = {
-			account_key_link_transaction_v1: AccountKeyLinkTransactionV1,
-			mosaic_definition_transaction_v1: MosaicDefinitionTransactionV1,
-			mosaic_supply_change_transaction_v1: MosaicSupplyChangeTransactionV1,
-			multisig_account_modification_transaction_v1: MultisigAccountModificationTransactionV1,
-			multisig_account_modification_transaction_v2: MultisigAccountModificationTransactionV2,
-			cosignature_v1: CosignatureV1,
-			multisig_transaction_v1: MultisigTransactionV1,
-			namespace_registration_transaction_v1: NamespaceRegistrationTransactionV1,
-			transfer_transaction_v1: TransferTransactionV1,
-			transfer_transaction_v2: TransferTransactionV2
-		};
-
-		if (!Object.prototype.hasOwnProperty.call(mapping, entityName))
-			throw RangeError(`unknown Transaction type ${entityName}`);
-
-		return new mapping[entityName]();
+	public static function deserialize($binaryData){
+		$reader = new BinaryReader($binaryData);
+		$parent = new Transaction();
+		Transaction::_deserialize($reader, $parent);
+		$reader->setPosition(0);
+		$mapping = [
+		self::toKey([AccountKeyLinkTransactionV1::TRANSACTION_TYPE, AccountKeyLinkTransactionV1::TRANSACTION_VERSION]) => AccountKeyLinkTransactionV1::class,
+		self::toKey([MosaicDefinitionTransactionV1::TRANSACTION_TYPE, MosaicDefinitionTransactionV1::TRANSACTION_VERSION]) => MosaicDefinitionTransactionV1::class,
+		self::toKey([MosaicSupplyChangeTransactionV1::TRANSACTION_TYPE, MosaicSupplyChangeTransactionV1::TRANSACTION_VERSION]) => MosaicSupplyChangeTransactionV1::class,
+		self::toKey([MultisigAccountModificationTransactionV1::TRANSACTION_TYPE, MultisigAccountModificationTransactionV1::TRANSACTION_VERSION]) => MultisigAccountModificationTransactionV1::class,
+		self::toKey([MultisigAccountModificationTransactionV2::TRANSACTION_TYPE, MultisigAccountModificationTransactionV2::TRANSACTION_VERSION]) => MultisigAccountModificationTransactionV2::class,
+		self::toKey([CosignatureV1::TRANSACTION_TYPE, CosignatureV1::TRANSACTION_VERSION]) => CosignatureV1::class,
+		self::toKey([MultisigTransactionV1::TRANSACTION_TYPE, MultisigTransactionV1::TRANSACTION_VERSION]) => MultisigTransactionV1::class,
+		self::toKey([NamespaceRegistrationTransactionV1::TRANSACTION_TYPE, NamespaceRegistrationTransactionV1::TRANSACTION_VERSION]) => NamespaceRegistrationTransactionV1::class,
+		self::toKey([TransferTransactionV1::TRANSACTION_TYPE, TransferTransactionV1::TRANSACTION_VERSION]) => TransferTransactionV1::class,
+		self::toKey([TransferTransactionV2::TRANSACTION_TYPE, TransferTransactionV2::TRANSACTION_VERSION]) => TransferTransactionV2::class,];
+		$discriminator = self::toKey([$parent->type->value, $parent->version]);
+		if (!array_key_exists($discriminator, $mapping)) {
+			throw new Exception("Unknown Transaction type");
+		}
+		$factoryClass = $mapping[$discriminator];
+		return call_user_func([$factoryClass, 'deserialize'], $reader);
 	}
 }
 
 class NonVerifiableTransactionFactory {
-	static toKey(values) {
-		if (1 === values.length)
-			return values[0];
+	public static function toKey($values){
+		if (count($values) === 1) {
+			return $values[0];
+		}
 
 		// assume each key is at most 32bits
-		return values.map(n => BigInt(n)).reduce((accumulator, value) => (accumulator << 32n) + value);
+		return array_reduce(array_map('intval', $values), function ($accumulator, $value) {
+			return ($accumulator << 32) + $value;
+		}, 0);
 	}
 
-	static deserialize(payload) {
-		const view = new BufferView(payload);
-		const $parent = NonVerifiableTransactionFactory.deserialize(view.buffer);
-		const mapping = new Map();
-		mapping.set(NonVerifiableTransactionFactory.toKey([NonVerifiableAccountKeyLinkTransactionV1.TRANSACTION_TYPE.value, NonVerifiableAccountKeyLinkTransactionV1.TRANSACTION_VERSION]), NonVerifiableAccountKeyLinkTransactionV1);
-		mapping.set(NonVerifiableTransactionFactory.toKey([NonVerifiableMosaicDefinitionTransactionV1.TRANSACTION_TYPE.value, NonVerifiableMosaicDefinitionTransactionV1.TRANSACTION_VERSION]), NonVerifiableMosaicDefinitionTransactionV1);
-		mapping.set(NonVerifiableTransactionFactory.toKey([NonVerifiableMosaicSupplyChangeTransactionV1.TRANSACTION_TYPE.value, NonVerifiableMosaicSupplyChangeTransactionV1.TRANSACTION_VERSION]), NonVerifiableMosaicSupplyChangeTransactionV1);
-		mapping.set(NonVerifiableTransactionFactory.toKey([NonVerifiableMultisigAccountModificationTransactionV1.TRANSACTION_TYPE.value, NonVerifiableMultisigAccountModificationTransactionV1.TRANSACTION_VERSION]), NonVerifiableMultisigAccountModificationTransactionV1);
-		mapping.set(NonVerifiableTransactionFactory.toKey([NonVerifiableMultisigAccountModificationTransactionV2.TRANSACTION_TYPE.value, NonVerifiableMultisigAccountModificationTransactionV2.TRANSACTION_VERSION]), NonVerifiableMultisigAccountModificationTransactionV2);
-		mapping.set(NonVerifiableTransactionFactory.toKey([NonVerifiableMultisigTransactionV1.TRANSACTION_TYPE.value, NonVerifiableMultisigTransactionV1.TRANSACTION_VERSION]), NonVerifiableMultisigTransactionV1);
-		mapping.set(NonVerifiableTransactionFactory.toKey([NonVerifiableNamespaceRegistrationTransactionV1.TRANSACTION_TYPE.value, NonVerifiableNamespaceRegistrationTransactionV1.TRANSACTION_VERSION]), NonVerifiableNamespaceRegistrationTransactionV1);
-		mapping.set(NonVerifiableTransactionFactory.toKey([NonVerifiableTransferTransactionV1.TRANSACTION_TYPE.value, NonVerifiableTransferTransactionV1.TRANSACTION_VERSION]), NonVerifiableTransferTransactionV1);
-		mapping.set(NonVerifiableTransactionFactory.toKey([NonVerifiableTransferTransactionV2.TRANSACTION_TYPE.value, NonVerifiableTransferTransactionV2.TRANSACTION_VERSION]), NonVerifiableTransferTransactionV2);
-		const discriminator = NonVerifiableTransactionFactory.toKey([$parent.$type.value, $parent.$version]);
-		const factory_class = mapping.get(discriminator);
-		return factory_class.deserialize(view.buffer);
-	}
-
-	static createByName(entityName) {
-		const mapping = {
-			non_verifiable_account_key_link_transaction_v1: NonVerifiableAccountKeyLinkTransactionV1,
-			non_verifiable_mosaic_definition_transaction_v1: NonVerifiableMosaicDefinitionTransactionV1,
-			non_verifiable_mosaic_supply_change_transaction_v1: NonVerifiableMosaicSupplyChangeTransactionV1,
-			non_verifiable_multisig_account_modification_transaction_v1: NonVerifiableMultisigAccountModificationTransactionV1,
-			non_verifiable_multisig_account_modification_transaction_v2: NonVerifiableMultisigAccountModificationTransactionV2,
-			non_verifiable_multisig_transaction_v1: NonVerifiableMultisigTransactionV1,
-			non_verifiable_namespace_registration_transaction_v1: NonVerifiableNamespaceRegistrationTransactionV1,
-			non_verifiable_transfer_transaction_v1: NonVerifiableTransferTransactionV1,
-			non_verifiable_transfer_transaction_v2: NonVerifiableTransferTransactionV2
-		};
-
-		if (!Object.prototype.hasOwnProperty.call(mapping, entityName))
-			throw RangeError(`unknown NonVerifiableTransaction type ${entityName}`);
-
-		return new mapping[entityName]();
+	public static function deserialize($binaryData){
+		$reader = new BinaryReader($binaryData);
+		$parent = new NonVerifiableTransaction();
+		NonVerifiableTransaction::_deserialize($reader, $parent);
+		$reader->setPosition(0);
+		$mapping = [
+		self::toKey([NonVerifiableAccountKeyLinkTransactionV1::TRANSACTION_TYPE, NonVerifiableAccountKeyLinkTransactionV1::TRANSACTION_VERSION]) => NonVerifiableAccountKeyLinkTransactionV1::class,
+		self::toKey([NonVerifiableMosaicDefinitionTransactionV1::TRANSACTION_TYPE, NonVerifiableMosaicDefinitionTransactionV1::TRANSACTION_VERSION]) => NonVerifiableMosaicDefinitionTransactionV1::class,
+		self::toKey([NonVerifiableMosaicSupplyChangeTransactionV1::TRANSACTION_TYPE, NonVerifiableMosaicSupplyChangeTransactionV1::TRANSACTION_VERSION]) => NonVerifiableMosaicSupplyChangeTransactionV1::class,
+		self::toKey([NonVerifiableMultisigAccountModificationTransactionV1::TRANSACTION_TYPE, NonVerifiableMultisigAccountModificationTransactionV1::TRANSACTION_VERSION]) => NonVerifiableMultisigAccountModificationTransactionV1::class,
+		self::toKey([NonVerifiableMultisigAccountModificationTransactionV2::TRANSACTION_TYPE, NonVerifiableMultisigAccountModificationTransactionV2::TRANSACTION_VERSION]) => NonVerifiableMultisigAccountModificationTransactionV2::class,
+		self::toKey([NonVerifiableMultisigTransactionV1::TRANSACTION_TYPE, NonVerifiableMultisigTransactionV1::TRANSACTION_VERSION]) => NonVerifiableMultisigTransactionV1::class,
+		self::toKey([NonVerifiableNamespaceRegistrationTransactionV1::TRANSACTION_TYPE, NonVerifiableNamespaceRegistrationTransactionV1::TRANSACTION_VERSION]) => NonVerifiableNamespaceRegistrationTransactionV1::class,
+		self::toKey([NonVerifiableTransferTransactionV1::TRANSACTION_TYPE, NonVerifiableTransferTransactionV1::TRANSACTION_VERSION]) => NonVerifiableTransferTransactionV1::class,
+		self::toKey([NonVerifiableTransferTransactionV2::TRANSACTION_TYPE, NonVerifiableTransferTransactionV2::TRANSACTION_VERSION]) => NonVerifiableTransferTransactionV2::class,];
+		$discriminator = self::toKey([$parent->type->value, $parent->version]);
+		if (!array_key_exists($discriminator, $mapping)) {
+			throw new Exception("Unknown NonVerifiableTransaction type");
+		}
+		$factoryClass = $mapping[$discriminator];
+		return call_user_func([$factoryClass, 'deserialize'], $reader);
 	}
 }

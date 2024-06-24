@@ -38,6 +38,6 @@ class BaseValue
 		$hexString = gmp_strval($this->value, 16);
 		$targetLength = $this->size * 2;
 		$paddedHexString = str_pad($hexString, $targetLength, '0', STR_PAD_LEFT);
-		return "0x" . strtoupper($paddedHexString);
+		return '0x' . strtoupper($paddedHexString);
 	}
 }

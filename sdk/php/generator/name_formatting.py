@@ -18,7 +18,7 @@ def underline_name(name):
 
 
 def fix_size_name(name):
-	return name
+	return f'${name}'
 
 
 def fix_name(name):

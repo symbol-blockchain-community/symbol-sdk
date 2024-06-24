@@ -29,7 +29,7 @@ class EnumTypeFormatter(AbstractTypeFormatter):
 		return MethodDescriptor(body=body, arguments=arguments)
 
 	def _get_deserialize_descriptor(self, is_aligned):
-		return MethodDescriptor(body=f'return new {self.typename}({self.int_printer.load("$payload", is_aligned)});', result='self')
+		return MethodDescriptor(body=f'return new {self.typename}({self.int_printer.load()});', result='self')
 
 	def get_deserialize_descriptor(self):
 		return self._get_deserialize_descriptor(is_aligned=False)

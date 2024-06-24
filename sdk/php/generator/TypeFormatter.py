@@ -15,7 +15,7 @@ class ClassFormatter(ABC):
 	def generate_method(method_descriptor):
 		arguments = ', '.join(method_descriptor.arguments)
 		if len(arguments) > 100:
-			arguments = '\n    ' + ',\n    '.join(method_descriptor.arguments) + '\n'
+			arguments = '\n\t' + ',\n\t'.join(method_descriptor.arguments) + '\n'
 
 		method_result = f': {method_descriptor.result} ' if method_descriptor.result else ''
 		body = indent(method_descriptor.body)
@@ -82,7 +82,7 @@ class TypeFormatter(ClassFormatter):
 		if not method_descriptor:
 			return None
 
-		method_descriptor.method_name = 'sort'
+		method_descriptor.method_name = 'public function sort'
 		method_descriptor.arguments = []
 		if not method_descriptor.body:
 			method_descriptor.disabled_warnings = ['class-methods-use-this']
@@ -99,14 +99,16 @@ class TypeFormatter(ClassFormatter):
 			return None
 
 		generated_name = generated_name or name
-		method_descriptor.method_name = f'public static function {generated_name}'
-		method_descriptor.arguments = ['$payload']
+		method_descriptor.method_name = f'public static function {generated_name}' if not method_descriptor.method_name else method_descriptor.method_name
+		method_descriptor.arguments = ['BinaryReader $reader'] if not method_descriptor.arguments else method_descriptor.arguments
+		method_descriptor.result = '' if not method_descriptor.result else method_descriptor.result
 
 		return self.generate_method(method_descriptor)
 
 	def generate_serializer(self):
 		method_descriptor = self.provider.get_serialize_descriptor()
-		method_descriptor.method_name = 'public function serialize'
+		method_descriptor.method_name = 'public function serialize' if not method_descriptor.method_name else method_descriptor.method_name
+		method_descriptor.result = '' if not method_descriptor.result else method_descriptor.result
 		return self.generate_method(method_descriptor)
 
 	def generate_size(self):
@@ -114,7 +116,7 @@ class TypeFormatter(ClassFormatter):
 		if not method_descriptor:
 			return None
 
-		method_descriptor.method_name = 'public function size'
+		method_descriptor.method_name = 'public static function size' if not method_descriptor.method_name else method_descriptor.method_name
 		method_descriptor.arguments = []
 		return self.generate_method(method_descriptor)
 
