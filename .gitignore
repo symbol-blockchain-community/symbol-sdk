@@ -27,6 +27,7 @@ __pycache__/
 build/
 dist/
 
+#dart
 sdk/dart/.dart_tool/
 sdk/dart/.packages
 sdk/dart/pubspec.lock
@@ -35,6 +36,7 @@ sdk/dart/doc/api/
 sdk/dart/.gitignore
 sdk/dart/test/test.dart
 
+# csharp
 sdk/csharp/SymbolSdk/.idea
 sdk/csharp/SymbolSdk/bin
 sdk/csharp/SymbolSdk/obj
@@ -46,6 +48,10 @@ sdk/csharp/Test/obj
 sdk/csharp/TestByNuget
 test.ts
 
+# php
 sdk/php/test.php
+sdk/php/vendor
+sdk/php/.phpunit.result.cache
 
 .mono
+testGenarate.py
