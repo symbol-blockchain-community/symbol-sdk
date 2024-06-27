@@ -13,7 +13,7 @@ class AddressTest extends TestCase
 {
   public function testAddress()
   {
-    $jsonFilePath = '/Users/matsukawatoshiya/programs/symbol-sdk/symbol/tests/vectors/symbol/crypto/1.test-address.json';
+    $jsonFilePath = dirname(__DIR__, 5) . '/tests/vectors/symbol/crypto/1.test-address.json';
     $jsonData = file_get_contents($jsonFilePath);
     $decodedData = json_decode($jsonData, true);
 

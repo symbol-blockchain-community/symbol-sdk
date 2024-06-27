@@ -22,7 +22,7 @@ class MosaicIdTest extends TestCase
 
   public function testGenerateMosaicId()
   {
-    $jsonFilePath = '/Users/matsukawatoshiya/programs/symbol-sdk/symbol/tests/vectors/symbol/crypto/5.test-mosaic-id.json';
+    $jsonFilePath = dirname(__DIR__, 5) . '/tests/vectors/symbol/crypto/5.test-mosaic-id.json';
     $jsonData = file_get_contents($jsonFilePath);
     $decodedData = json_decode($jsonData, true);
 
