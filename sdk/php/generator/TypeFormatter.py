@@ -143,7 +143,6 @@ class TypeFormatter(ClassFormatter):
 		_append_if_not_none(methods, self.generate_size())
 
 		methods.append(self.generate_deserializer('deserialize'))
-		_append_if_not_none(methods, self.generate_deserializer('deserialize_aligned', 'deserializeAligned'))
 
 		methods.append(self.generate_serializer())
 

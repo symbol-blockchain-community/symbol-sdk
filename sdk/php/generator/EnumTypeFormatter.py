@@ -24,7 +24,7 @@ class EnumTypeFormatter(AbstractTypeFormatter):
 		) + ['public $value;']
 
 	def get_ctor_descriptor(self):
-		arguments = [f'int $value = {self.int_printer.get_default_value()}']
+		arguments = [f'$value = {self.int_printer.get_default_value()}']
 		body = '$this->value = $value;'
 		return MethodDescriptor(body=body, arguments=arguments)
 

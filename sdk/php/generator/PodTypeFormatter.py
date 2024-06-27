@@ -37,7 +37,7 @@ class PodTypeFormatter(AbstractTypeFormatter):
 		if self._is_array:
 			arguments = [f'string {variable_name} = {self.printer.get_default_value()}']
 		else:
-			arguments = [f'int {variable_name} = {self.printer.get_default_value()}']
+			arguments = [f'{variable_name} = {self.printer.get_default_value()}']
 
 		return MethodDescriptor(body=body, arguments=arguments)
 
@@ -48,7 +48,6 @@ class PodTypeFormatter(AbstractTypeFormatter):
 		if self._is_array:
 			return None
 		return MethodDescriptor(body=f'return new self({self.printer.load()});', result='self')
-		#return MethodDescriptor(body=f'return new {self.typename}({self.printer.load("$binaryData", True)});', result='self')
 
 	def get_serialize_descriptor(self):
 		if self._is_array:

@@ -47,13 +47,22 @@ def generate_files(ast_models, output_directory: Path):
 
 	with open(output_directory / 'models.php', 'w', encoding='utf8', newline='\n') as output_file:
 		output_file.write(
-			'''<?php
-$base_path = dirname(dirname(__FILE__));
-require_once $base_path . '/BaseValue.php';
-require_once $base_path . '/BinaryData.php';
-require_once $base_path . '/BinaryStream.php';
-require_once $base_path . '/utils/converter.php';
+			r'''<?php
+namespace SymbolSdk\Symbol\Models;
 
+require_once __DIR__ . '/../BaseValue.php';
+require_once __DIR__ . '/../BinaryData.php';
+require_once __DIR__ . '/../utils/BinaryStream.php';
+require_once __DIR__ . '/../utils/arrayHelpers.php';
+require_once __DIR__ . '/../utils/converter.php';
+
+use SymbolSdk\BaseValue;
+use SymbolSdk\BinaryData;
+use SymbolSdk\Utils\BinaryReader;
+use SymbolSdk\Utils\BinaryWriter;
+use SymbolSdk\Utils;
+use Exception;
+use OutOfRangeException;
 '''
 		)
 

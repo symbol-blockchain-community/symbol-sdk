@@ -1,541 +1,390 @@
 <?php
-$base_path = dirname(dirname(__FILE__));
-require_once $base_path . '/BaseValue.php';
-require_once $base_path . '/BinaryData.php';
-require_once $base_path . '/BinaryStream.php';
-require_once $base_path . '/utils/converter.php';
+namespace SymbolSdk\Symbol\Models;
 
+require_once __DIR__ . '/../BaseValue.php';
+require_once __DIR__ . '/../BinaryData.php';
+require_once __DIR__ . '/../utils/BinaryStream.php';
+require_once __DIR__ . '/../utils/arrayHelpers.php';
+require_once __DIR__ . '/../utils/converter.php';
 
-class Amount extends BaseValue
-{
-	public function __construct(int $amount = 0)
-	{
+use SymbolSdk\BaseValue;
+use SymbolSdk\BinaryData;
+use SymbolSdk\Utils\BinaryReader;
+use SymbolSdk\Utils\BinaryWriter;
+use SymbolSdk\Utils;
+use Exception;
+use OutOfRangeException;
+
+class Amount extends BaseValue {
+	public function __construct($amount = 0){
 		parent::__construct(8, $amount);
 	}
 
-	public static function size(): int
-	{
+	public static function size(): int {
 		return 8;
 	}
 
-	public static function deserialize(BinaryReader $reader): self
-	{
-		return new self(Converter::binaryToInt($reader->read(8), 8));
+	public static function deserialize(BinaryReader $reader): self {
+		return new self(Utils\binaryToInt($reader->read(8), 8));
 	}
 
-	public static function deserializeAligned(BinaryReader $reader): self
-	{
-		return new self(Converter::binaryToInt($reader->read(8), 8));
-	}
-
-	public function serialize(): string
-	{
-		return Converter::intToBinary($this->value, 8);
+	public function serialize(): string {
+		return Utils\intToBinary($this->value, 8);
 	}
 }
 
-class BlockDuration extends BaseValue
-{
-	public function __construct(int $blockDuration = 0)
-	{
+class BlockDuration extends BaseValue {
+	public function __construct($blockDuration = 0){
 		parent::__construct(8, $blockDuration);
 	}
 
-	public static function size(): int
-	{
+	public static function size(): int {
 		return 8;
 	}
 
-	public static function deserialize(BinaryReader $reader): self
-	{
-		return new self(Converter::binaryToInt($reader->read(8), 8));
+	public static function deserialize(BinaryReader $reader): self {
+		return new self(Utils\binaryToInt($reader->read(8), 8));
 	}
 
-	public static function deserializeAligned(BinaryReader $reader): self
-	{
-		return new self(Converter::binaryToInt($reader->read(8), 8));
-	}
-
-	public function serialize(): string
-	{
-		return Converter::intToBinary($this->value, 8);
+	public function serialize(): string {
+		return Utils\intToBinary($this->value, 8);
 	}
 }
 
-class BlockFeeMultiplier extends BaseValue
-{
-	public function __construct(int $blockFeeMultiplier = 0)
-	{
+class BlockFeeMultiplier extends BaseValue {
+	public function __construct($blockFeeMultiplier = 0){
 		parent::__construct(4, $blockFeeMultiplier);
 	}
 
-	public static function size(): int
-	{
+	public static function size(): int {
 		return 4;
 	}
 
-	public static function deserialize(BinaryReader $reader): self
-	{
-		return new self(Converter::binaryToInt($reader->read(4), 4));
+	public static function deserialize(BinaryReader $reader): self {
+		return new self(Utils\binaryToInt($reader->read(4), 4));
 	}
 
-	public static function deserializeAligned(BinaryReader $reader): self
-	{
-		return new self(Converter::binaryToInt($reader->read(4), 4));
-	}
-
-	public function serialize(): string
-	{
-		return Converter::intToBinary($this->value, 4);
+	public function serialize(): string {
+		return Utils\intToBinary($this->value, 4);
 	}
 }
 
-class Difficulty extends BaseValue
-{
-	public function __construct(int $difficulty = 0)
-	{
+class Difficulty extends BaseValue {
+	public function __construct($difficulty = 0){
 		parent::__construct(8, $difficulty);
 	}
 
-	public static function size(): int
-	{
+	public static function size(): int {
 		return 8;
 	}
 
-	public static function deserialize(BinaryReader $reader): self
-	{
-		return new self(Converter::binaryToInt($reader->read(8), 8));
+	public static function deserialize(BinaryReader $reader): self {
+		return new self(Utils\binaryToInt($reader->read(8), 8));
 	}
 
-	public static function deserializeAligned(BinaryReader $reader): self
-	{
-		return new self(Converter::binaryToInt($reader->read(8), 8));
-	}
-
-	public function serialize(): string
-	{
-		return Converter::intToBinary($this->value, 8);
+	public function serialize(): string {
+		return Utils\intToBinary($this->value, 8);
 	}
 }
 
-class FinalizationEpoch extends BaseValue
-{
-	public function __construct(int $finalizationEpoch = 0)
-	{
+class FinalizationEpoch extends BaseValue {
+	public function __construct($finalizationEpoch = 0){
 		parent::__construct(4, $finalizationEpoch);
 	}
 
-	public static function size(): int
-	{
+	public static function size(): int {
 		return 4;
 	}
 
-	public static function deserialize(BinaryReader $reader): self
-	{
-		return new self(Converter::binaryToInt($reader->read(4), 4));
+	public static function deserialize(BinaryReader $reader): self {
+		return new self(Utils\binaryToInt($reader->read(4), 4));
 	}
 
-	public static function deserializeAligned(BinaryReader $reader): self
-	{
-		return new self(Converter::binaryToInt($reader->read(4), 4));
-	}
-
-	public function serialize(): string
-	{
-		return Converter::intToBinary($this->value, 4);
+	public function serialize(): string {
+		return Utils\intToBinary($this->value, 4);
 	}
 }
 
-class FinalizationPoint extends BaseValue
-{
-	public function __construct(int $finalizationPoint = 0)
-	{
+class FinalizationPoint extends BaseValue {
+	public function __construct($finalizationPoint = 0){
 		parent::__construct(4, $finalizationPoint);
 	}
 
-	public static function size(): int
-	{
+	public static function size(): int {
 		return 4;
 	}
 
-	public static function deserialize(BinaryReader $reader): self
-	{
-		return new self(Converter::binaryToInt($reader->read(4), 4));
+	public static function deserialize(BinaryReader $reader): self {
+		return new self(Utils\binaryToInt($reader->read(4), 4));
 	}
 
-	public static function deserializeAligned(BinaryReader $reader): self
-	{
-		return new self(Converter::binaryToInt($reader->read(4), 4));
-	}
-
-	public function serialize(): string
-	{
-		return Converter::intToBinary($this->value, 4);
+	public function serialize(): string {
+		return Utils\intToBinary($this->value, 4);
 	}
 }
 
-class Height extends BaseValue
-{
-	public function __construct(int $height = 0)
-	{
+class Height extends BaseValue {
+	public function __construct($height = 0){
 		parent::__construct(8, $height);
 	}
 
-	public static function size(): int
-	{
+	public static function size(): int {
 		return 8;
 	}
 
-	public static function deserialize(BinaryReader $reader): self
-	{
-		return new self(Converter::binaryToInt($reader->read(8), 8));
+	public static function deserialize(BinaryReader $reader): self {
+		return new self(Utils\binaryToInt($reader->read(8), 8));
 	}
 
-	public static function deserializeAligned(BinaryReader $reader): self
-	{
-		return new self(Converter::binaryToInt($reader->read(8), 8));
-	}
-
-	public function serialize(): string
-	{
-		return Converter::intToBinary($this->value, 8);
+	public function serialize(): string {
+		return Utils\intToBinary($this->value, 8);
 	}
 }
 
-class Importance extends BaseValue
-{
-	public function __construct(int $importance = 0)
-	{
+class Importance extends BaseValue {
+	public function __construct($importance = 0){
 		parent::__construct(8, $importance);
 	}
 
-	public static function size(): int
-	{
+	public static function size(): int {
 		return 8;
 	}
 
-	public static function deserialize(BinaryReader $reader): self
-	{
-		return new self(Converter::binaryToInt($reader->read(8), 8));
+	public static function deserialize(BinaryReader $reader): self {
+		return new self(Utils\binaryToInt($reader->read(8), 8));
 	}
 
-	public static function deserializeAligned(BinaryReader $reader): self
-	{
-		return new self(Converter::binaryToInt($reader->read(8), 8));
-	}
-
-	public function serialize(): string
-	{
-		return Converter::intToBinary($this->value, 8);
+	public function serialize(): string {
+		return Utils\intToBinary($this->value, 8);
 	}
 }
 
-class ImportanceHeight extends BaseValue
-{
-	public function __construct(int $importanceHeight = 0)
-	{
+class ImportanceHeight extends BaseValue {
+	public function __construct($importanceHeight = 0){
 		parent::__construct(8, $importanceHeight);
 	}
 
-	public static function size(): int
-	{
+	public static function size(): int {
 		return 8;
 	}
 
-	public static function deserialize(BinaryReader $reader): self
-	{
-		return new self(Converter::binaryToInt($reader->read(8), 8));
+	public static function deserialize(BinaryReader $reader): self {
+		return new self(Utils\binaryToInt($reader->read(8), 8));
 	}
 
-	public static function deserializeAligned(BinaryReader $reader): self
-	{
-		return new self(Converter::binaryToInt($reader->read(8), 8));
-	}
-
-	public function serialize(): string
-	{
-		return Converter::intToBinary($this->value, 8);
+	public function serialize(): string {
+		return Utils\intToBinary($this->value, 8);
 	}
 }
 
-class UnresolvedMosaicId extends BaseValue
-{
-	public function __construct(int $unresolvedMosaicId = 0)
-	{
+class UnresolvedMosaicId extends BaseValue {
+	public function __construct($unresolvedMosaicId = 0){
 		parent::__construct(8, $unresolvedMosaicId);
 	}
 
-	public static function size(): int
-	{
+	public static function size(): int {
 		return 8;
 	}
 
-	public static function deserialize(BinaryReader $reader): self
-	{
-		return new self(Converter::binaryToInt($reader->read(8), 8));
+	public static function deserialize(BinaryReader $reader): self {
+		return new self(Utils\binaryToInt($reader->read(8), 8));
 	}
 
-	public static function deserializeAligned(BinaryReader $reader): self
-	{
-		return new self(Converter::binaryToInt($reader->read(8), 8));
-	}
-
-	public function serialize(): string
-	{
-		return Converter::intToBinary($this->value, 8);
+	public function serialize(): string {
+		return Utils\intToBinary($this->value, 8);
 	}
 }
 
-class MosaicId extends BaseValue
-{
-	public function __construct(int $mosaicId = 0)
-	{
+class MosaicId extends BaseValue {
+	public function __construct($mosaicId = 0){
 		parent::__construct(8, $mosaicId);
 	}
 
-	public static function size(): int
-	{
+	public static function size(): int {
 		return 8;
 	}
 
-	public static function deserialize(BinaryReader $reader): self
-	{
-		return new self(Converter::binaryToInt($reader->read(8), 8));
+	public static function deserialize(BinaryReader $reader): self {
+		return new self(Utils\binaryToInt($reader->read(8), 8));
 	}
 
-	public static function deserializeAligned(BinaryReader $reader): self
-	{
-		return new self(Converter::binaryToInt($reader->read(8), 8));
-	}
-
-	public function serialize(): string
-	{
-		return Converter::intToBinary($this->value, 8);
+	public function serialize(): string {
+		return Utils\intToBinary($this->value, 8);
 	}
 }
 
-class Timestamp extends BaseValue
-{
-	public function __construct(int $timestamp = 0)
-	{
+class Timestamp extends BaseValue {
+	public function __construct($timestamp = 0){
 		parent::__construct(8, $timestamp);
 	}
 
-	public static function size(): int
-	{
+	public static function size(): int {
 		return 8;
 	}
 
-	public static function deserialize(BinaryReader $reader): self
-	{
-		return new self(Converter::binaryToInt($reader->read(8), 8));
+	public static function deserialize(BinaryReader $reader): self {
+		return new self(Utils\binaryToInt($reader->read(8), 8));
 	}
 
-	public static function deserializeAligned(BinaryReader $reader): self
-	{
-		return new self(Converter::binaryToInt($reader->read(8), 8));
-	}
-
-	public function serialize(): string
-	{
-		return Converter::intToBinary($this->value, 8);
+	public function serialize(): string {
+		return Utils\intToBinary($this->value, 8);
 	}
 }
 
-class UnresolvedAddress extends BinaryData
-{
-	public function __construct(string $unresolvedAddress = null)
-	{
+class UnresolvedAddress extends BinaryData {
+	public function __construct(string $unresolvedAddress = null){
 		$unresolvedAddress = $unresolvedAddress ?? str_repeat("\x00", self::size());
 		parent::__construct(24, $unresolvedAddress);
 	}
 
-	public static function size(): int
-	{
+	public static function size(): int {
 		return 24;
 	}
 
-	public static function deserialize(BinaryReader $reader): self
-	{
+	public static function deserialize(BinaryReader $reader): self {
 		return new self($reader->read(24));
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		return $this->binaryData;
 	}
 }
 
-class Address extends BinaryData
-{
-	public function __construct(string $address = null)
-	{
+class Address extends BinaryData {
+	public function __construct(string $address = null){
 		$address = $address ?? str_repeat("\x00", self::size());
 		parent::__construct(24, $address);
 	}
 
-	public static function size(): int
-	{
+	public static function size(): int {
 		return 24;
 	}
 
-	public static function deserialize(BinaryReader $reader): self
-	{
+	public static function deserialize(BinaryReader $reader): self {
 		return new self($reader->read(24));
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		return $this->binaryData;
 	}
 }
 
-class Hash256 extends BinaryData
-{
-	public function __construct(string $hash256 = null)
-	{
+class Hash256 extends BinaryData {
+	public function __construct(string $hash256 = null){
 		$hash256 = $hash256 ?? str_repeat("\x00", self::size());
 		parent::__construct(32, $hash256);
 	}
 
-	public static function size(): int
-	{
+	public static function size(): int {
 		return 32;
 	}
 
-	public static function deserialize(BinaryReader $reader): self
-	{
+	public static function deserialize(BinaryReader $reader): self {
 		return new self($reader->read(32));
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		return $this->binaryData;
 	}
 }
 
-class Hash512 extends BinaryData
-{
-	public function __construct(string $hash512 = null)
-	{
+class Hash512 extends BinaryData {
+	public function __construct(string $hash512 = null){
 		$hash512 = $hash512 ?? str_repeat("\x00", self::size());
 		parent::__construct(64, $hash512);
 	}
 
-	public static function size(): int
-	{
+	public static function size(): int {
 		return 64;
 	}
 
-	public static function deserialize(BinaryReader $reader): self
-	{
+	public static function deserialize(BinaryReader $reader): self {
 		return new self($reader->read(64));
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		return $this->binaryData;
 	}
 }
 
-class PublicKey extends BinaryData
-{
-	public function __construct(string $publicKey = null)
-	{
+class PublicKey extends BinaryData {
+	public function __construct(string $publicKey = null){
 		$publicKey = $publicKey ?? str_repeat("\x00", self::size());
 		parent::__construct(32, $publicKey);
 	}
 
-	public static function size(): int
-	{
+	public static function size(): int {
 		return 32;
 	}
 
-	public static function deserialize(BinaryReader $reader): self
-	{
+	public static function deserialize(BinaryReader $reader): self {
 		return new self($reader->read(32));
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		return $this->binaryData;
 	}
 }
 
-class VotingPublicKey extends BinaryData
-{
-	public function __construct(string $votingPublicKey = null)
-	{
+class VotingPublicKey extends BinaryData {
+	public function __construct(string $votingPublicKey = null){
 		$votingPublicKey = $votingPublicKey ?? str_repeat("\x00", self::size());
 		parent::__construct(32, $votingPublicKey);
 	}
 
-	public static function size(): int
-	{
+	public static function size(): int {
 		return 32;
 	}
 
-	public static function deserialize(BinaryReader $reader): self
-	{
+	public static function deserialize(BinaryReader $reader): self {
 		return new self($reader->read(32));
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		return $this->binaryData;
 	}
 }
 
-class Signature extends BinaryData
-{
-	public function __construct(string $signature = null)
-	{
+class Signature extends BinaryData {
+	public function __construct(string $signature = null){
 		$signature = $signature ?? str_repeat("\x00", self::size());
 		parent::__construct(64, $signature);
 	}
 
-	public static function size(): int
-	{
+	public static function size(): int {
 		return 64;
 	}
 
-	public static function deserialize(BinaryReader $reader): self
-	{
+	public static function deserialize(BinaryReader $reader): self {
 		return new self($reader->read(64));
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		return $this->binaryData;
 	}
 }
 
-class Mosaic
-{
-	public MosaicId $mosaicId;
+class Mosaic {
+	public ?MosaicId $mosaicId;
 
-	public Amount $amount;
+	public ?Amount $amount;
 
-	public function __construct(?MosaicId $mosaicId = null, ?Amount $amount = null)
-	{
+	public function __construct(?MosaicId $mosaicId = null, ?Amount $amount = null){
 		$this->mosaicId = $mosaicId ?? new MosaicId();
 		$this->amount = $amount ?? new Amount();
 	}
 
-	public function sort()
-	{
+	public function sort(){
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += $this->mosaicId->size();
 		$size += $this->amount->size();
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new Mosaic();
 
 		$mosaicId = MosaicId::deserialize($reader);
@@ -546,16 +395,14 @@ class Mosaic
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$writer->write($this->mosaicId->serialize());
 		$writer->write($this->amount->serialize());
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '';
 		$result .= 'mosaicId: ' . $this->mosaicId . ', ';
 		$result .= 'amount: ' . $this->amount . ', ';
@@ -563,36 +410,30 @@ class Mosaic
 	}
 }
 
-class UnresolvedMosaic
-{
-	public UnresolvedMosaicId $mosaicId;
+class UnresolvedMosaic {
+	public ?UnresolvedMosaicId $mosaicId;
 
-	public Amount $amount;
+	public ?Amount $amount;
 
-	public function __construct(?UnresolvedMosaicId $mosaicId = null, ?Amount $amount = null)
-	{
+	public function __construct(?UnresolvedMosaicId $mosaicId = null, ?Amount $amount = null){
 		$this->mosaicId = $mosaicId ?? new UnresolvedMosaicId();
 		$this->amount = $amount ?? new Amount();
 	}
 
-	public function sort()
-	{
+	public function sort(){
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += $this->mosaicId->size();
 		$size += $this->amount->size();
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new UnresolvedMosaic();
 
 		$mosaicId = UnresolvedMosaicId::deserialize($reader);
-
 		$amount = Amount::deserialize($reader);
 
 		$instance->mosaicId = $mosaicId;
@@ -600,16 +441,14 @@ class UnresolvedMosaic
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$writer->write($this->mosaicId->serialize());
 		$writer->write($this->amount->serialize());
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '';
 		$result .= 'mosaicId: ' . $this->mosaicId . ', ';
 		$result .= 'amount: ' . $this->amount . ', ';
@@ -617,21 +456,18 @@ class UnresolvedMosaic
 	}
 }
 
-class LinkAction
-{
+class LinkAction {
 	const UNLINK = 0;
 
 	const LINK = 1;
 
 	public $value;
 
-	public function __construct(int $value = 0)
-	{
+	public function __construct($value = 0){
 		$this->value = $value;
 	}
 
-	static function valueToKey($value)
-	{
+	static function valueToKey($value){
 		$values = [
 			0, 1
 		];
@@ -646,47 +482,35 @@ class LinkAction
 		return $keys[$index];
 	}
 
-	public static function size()
-	{
+	public static function size(){
 		return 1;
 	}
 
-	public static function deserialize(BinaryReader $reader): self
-	{
-		return new LinkAction(Converter::binaryToInt($reader->read(1), 1));
+	public static function deserialize(BinaryReader $reader): self {
+		return new LinkAction(Utils\binaryToInt($reader->read(1), 1));
 	}
 
-	public static function deserializeAligned(BinaryReader $reader): self
-	{
-		return new LinkAction(Converter::binaryToInt($reader->read(1), 1));
+	public function serialize(): string {
+		return Utils\intToBinary($this->value, 1);
 	}
 
-	public function serialize(): string
-	{
-		return Converter::intToBinary($this->value, 1);
-	}
-
-	public function __toString()
-	{
+	public function __toString(){
 		return "LinkAction." . self::valueToKey($this->value);
 	}
 }
 
-class NetworkType
-{
+class NetworkType {
 	const MAINNET = 104;
 
 	const TESTNET = 152;
 
 	public $value;
 
-	public function __construct(int $value = 0)
-	{
+	public function __construct($value = 0){
 		$this->value = $value;
 	}
 
-	static function valueToKey($value)
-	{
+	static function valueToKey($value){
 		$values = [
 			104, 152
 		];
@@ -701,34 +525,24 @@ class NetworkType
 		return $keys[$index];
 	}
 
-	public static function size()
-	{
+	public static function size(){
 		return 1;
 	}
 
-	public static function deserialize(BinaryReader $reader): self
-	{
-		return new NetworkType(Converter::binaryToInt($reader->read(1), 1));
+	public static function deserialize(BinaryReader $reader): self {
+		return new NetworkType(Utils\binaryToInt($reader->read(1), 1));
 	}
 
-	public static function deserializeAligned(BinaryReader $reader): self
-	{
-		return new NetworkType(Converter::binaryToInt($reader->read(1), 1));
+	public function serialize(): string {
+		return Utils\intToBinary($this->value, 1);
 	}
 
-	public function serialize(): string
-	{
-		return Converter::intToBinary($this->value, 1);
-	}
-
-	public function __toString()
-	{
+	public function __toString(){
 		return "NetworkType." . self::valueToKey($this->value);
 	}
 }
 
-class TransactionType
-{
+class TransactionType {
 	const ACCOUNT_KEY_LINK = 16716;
 
 	const NODE_KEY_LINK = 16972;
@@ -781,13 +595,11 @@ class TransactionType
 
 	public $value;
 
-	public function __construct(int $value = 0)
-	{
+	public function __construct($value = 0){
 		$this->value = $value;
 	}
 
-	static function valueToKey($value)
-	{
+	static function valueToKey($value){
 		$values = [
 			16716, 16972, 16705, 16961, 16707, 16963, 16712, 16722, 16978, 16708, 16964, 17220, 16717, 16973, 17229, 16725, 16974, 17230,
 			16718, 16720, 16976, 17232, 16977, 16721, 16724
@@ -807,47 +619,37 @@ class TransactionType
 		return $keys[$index];
 	}
 
-	public static function size()
-	{
+	public static function size(){
 		return 2;
 	}
 
-	public static function deserialize(BinaryReader $reader): self
-	{
-		return new TransactionType(Converter::binaryToInt($reader->read(2), 2));
+	public static function deserialize(BinaryReader $reader): self {
+		return new TransactionType(Utils\binaryToInt($reader->read(2), 2));
 	}
 
-	public static function deserializeAligned(BinaryReader $reader): self
-	{
-		return new TransactionType(Converter::binaryToInt($reader->read(2), 2));
+	public function serialize(): string {
+		return Utils\intToBinary($this->value, 2);
 	}
 
-	public function serialize(): string
-	{
-		return Converter::intToBinary($this->value, 2);
-	}
-
-	public function __toString()
-	{
+	public function __toString(){
 		return "TransactionType." . self::valueToKey($this->value);
 	}
 }
 
-class Transaction
-{
-	public Signature $signature;
+class Transaction {
+	public ?Signature $signature;
 
-	public PublicKey $signerPublicKey;
+	public ?PublicKey $signerPublicKey;
 
-	public int $version;
+	public ?int $version;
 
-	public NetworkType $network;
+	public ?NetworkType $network;
 
-	public TransactionType $type;
+	public ?TransactionType $type;
 
-	public Amount $fee;
+	public ?Amount $fee;
 
-	public Timestamp $deadline;
+	public ?Timestamp $deadline;
 
 	private int $verifiableEntityHeaderReserved_1 = 0; // reserved field
 
@@ -861,7 +663,7 @@ class Transaction
 		?TransactionType $type = null,
 		?Amount $fee = null,
 		?Timestamp $deadline = null
-	) {
+	){
 		$this->signature = $signature ?? new Signature();
 		$this->signerPublicKey = $signerPublicKey ?? new PublicKey();
 		$this->version = $version ?? 0;
@@ -873,12 +675,10 @@ class Transaction
 		$this->entityBodyReserved_1 = 0; // reserved field
 	}
 
-	public function sort()
-	{
+	public function sort(){
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += 4;
 		$size += 4;
@@ -893,18 +693,17 @@ class Transaction
 		return $size;
 	}
 
-	public static function _deserialize(BinaryReader &$reader, Transaction $instance): void
-	{
-		$size = Converter::binaryToInt($reader->read(4), 4);
-		$verifiableEntityHeaderReserved_1 = Converter::binaryToInt($reader->read(4), 4);
+	public static function _deserialize(BinaryReader &$reader, Transaction $instance): void {
+		$size = Utils\binaryToInt($reader->read(4), 4);
+		$verifiableEntityHeaderReserved_1 = Utils\binaryToInt($reader->read(4), 4);
 		if (0 !== $verifiableEntityHeaderReserved_1)
 			throw new OutOfRangeException('Invalid value of reserved field (' . $verifiableEntityHeaderReserved_1 . ')');
 		$signature = Signature::deserialize($reader);
 		$signerPublicKey = PublicKey::deserialize($reader);
-		$entityBodyReserved_1 = Converter::binaryToInt($reader->read(4), 4);
+		$entityBodyReserved_1 = Utils\binaryToInt($reader->read(4), 4);
 		if (0 !== $entityBodyReserved_1)
 			throw new OutOfRangeException('Invalid value of reserved field (' . $entityBodyReserved_1 . ')');
-		$version = Converter::binaryToInt($reader->read(1), 1);
+		$version = Utils\binaryToInt($reader->read(1), 1);
 		$network = NetworkType::deserialize($reader);
 		$type = TransactionType::deserialize($reader);
 		$fee = Amount::deserialize($reader);
@@ -919,26 +718,24 @@ class Transaction
 		$instance->deadline = $deadline;
 	}
 
-	public function _serialize(BinaryWriter &$writer): void
-	{
-		$writer->write(Converter::intToBinary($this->size(), 4));
-		$writer->write(Converter::intToBinary($this->verifiableEntityHeaderReserved_1, 4));
+	public function _serialize(BinaryWriter &$writer): void {
+		$writer->write(Utils\intToBinary($this->size(), 4));
+		$writer->write(Utils\intToBinary($this->verifiableEntityHeaderReserved_1, 4));
 		$writer->write($this->signature->serialize());
 		$writer->write($this->signerPublicKey->serialize());
-		$writer->write(Converter::intToBinary($this->entityBodyReserved_1, 4));
-		$writer->write(Converter::intToBinary($this->version, 1));
+		$writer->write(Utils\intToBinary($this->entityBodyReserved_1, 4));
+		$writer->write(Utils\intToBinary($this->version, 1));
 		$writer->write($this->network->serialize());
 		$writer->write($this->type->serialize());
 		$writer->write($this->fee->serialize());
 		$writer->write($this->deadline->serialize());
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '';
 		$result .= 'signature: ' . $this->signature . ', ';
 		$result .= 'signerPublicKey: ' . $this->signerPublicKey . ', ';
-		$result .= 'version: ' . '0x' . Converter::intToHex($this->version, 1) . ', ';
+		$result .= 'version: ' . '0x' . Utils\intToHex($this->version, 1) . ', ';
 		$result .= 'network: ' . $this->network . ', ';
 		$result .= 'type: ' . $this->type . ', ';
 		$result .= 'fee: ' . $this->fee . ', ';
@@ -947,15 +744,14 @@ class Transaction
 	}
 }
 
-class EmbeddedTransaction
-{
-	public PublicKey $signerPublicKey;
+class EmbeddedTransaction {
+	public ?PublicKey $signerPublicKey;
 
-	public int $version;
+	public ?int $version;
 
-	public NetworkType $network;
+	public ?NetworkType $network;
 
-	public TransactionType $type;
+	public ?TransactionType $type;
 
 	private int $embeddedTransactionHeaderReserved_1 = 0; // reserved field
 
@@ -966,7 +762,7 @@ class EmbeddedTransaction
 		?int $version = null,
 		?NetworkType $network = null,
 		?TransactionType $type = null
-	) {
+	){
 		$this->signerPublicKey = $signerPublicKey ?? new PublicKey();
 		$this->version = $version ?? 0;
 		$this->network = $network ?? new NetworkType();
@@ -975,12 +771,10 @@ class EmbeddedTransaction
 		$this->entityBodyReserved_1 = 0; // reserved field
 	}
 
-	public function sort()
-	{
+	public function sort(){
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += 4;
 		$size += 4;
@@ -992,17 +786,16 @@ class EmbeddedTransaction
 		return $size;
 	}
 
-	public static function _deserialize(BinaryReader &$reader, EmbeddedTransaction $instance): void
-	{
-		$size = Converter::binaryToInt($reader->read(4), 4);
-		$embeddedTransactionHeaderReserved_1 = Converter::binaryToInt($reader->read(4), 4);
+	public static function _deserialize(BinaryReader &$reader, EmbeddedTransaction $instance): void {
+		$size = Utils\binaryToInt($reader->read(4), 4);
+		$embeddedTransactionHeaderReserved_1 = Utils\binaryToInt($reader->read(4), 4);
 		if (0 !== $embeddedTransactionHeaderReserved_1)
 			throw new OutOfRangeException('Invalid value of reserved field (' . $embeddedTransactionHeaderReserved_1 . ')');
 		$signerPublicKey = PublicKey::deserialize($reader);
-		$entityBodyReserved_1 = Converter::binaryToInt($reader->read(4), 4);
+		$entityBodyReserved_1 = Utils\binaryToInt($reader->read(4), 4);
 		if (0 !== $entityBodyReserved_1)
 			throw new OutOfRangeException('Invalid value of reserved field (' . $entityBodyReserved_1 . ')');
-		$version = Converter::binaryToInt($reader->read(1), 1);
+		$version = Utils\binaryToInt($reader->read(1), 1);
 		$network = NetworkType::deserialize($reader);
 		$type = TransactionType::deserialize($reader);
 
@@ -1012,102 +805,84 @@ class EmbeddedTransaction
 		$instance->type = $type;
 	}
 
-	public function _serialize(BinaryWriter &$writer): void
-	{
-		$writer->write(Converter::intToBinary($this->size(), 4));
-		$writer->write(Converter::intToBinary($this->embeddedTransactionHeaderReserved_1, 4));
+	public function _serialize(BinaryWriter &$writer): void {
+		$writer->write(Utils\intToBinary($this->size(), 4));
+		$writer->write(Utils\intToBinary($this->embeddedTransactionHeaderReserved_1, 4));
 		$writer->write($this->signerPublicKey->serialize());
-		$writer->write(Converter::intToBinary($this->entityBodyReserved_1, 4));
-		$writer->write(Converter::intToBinary($this->version, 1));
+		$writer->write(Utils\intToBinary($this->entityBodyReserved_1, 4));
+		$writer->write(Utils\intToBinary($this->version, 1));
 		$writer->write($this->network->serialize());
 		$writer->write($this->type->serialize());
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '';
 		$result .= 'signerPublicKey: ' . $this->signerPublicKey . ', ';
-		$result .= 'version: ' . '0x' . Converter::intToHex($this->version, 1) . ', ';
+		$result .= 'version: ' . '0x' . Utils\intToHex($this->version, 1) . ', ';
 		$result .= 'network: ' . $this->network . ', ';
 		$result .= 'type: ' . $this->type . ', ';
 		return $result;
 	}
 }
 
-class ProofGamma extends BinaryData
-{
-	public function __construct(string $proofGamma = null)
-	{
+class ProofGamma extends BinaryData {
+	public function __construct(string $proofGamma = null){
 		$proofGamma = $proofGamma ?? str_repeat("\x00", self::size());
 		parent::__construct(32, $proofGamma);
 	}
 
-	public static function size(): int
-	{
+	public static function size(): int {
 		return 32;
 	}
 
-	public static function deserialize(BinaryReader $reader): self
-	{
+	public static function deserialize(BinaryReader $reader): self {
 		return new self($reader->read(32));
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		return $this->binaryData;
 	}
 }
 
-class ProofVerificationHash extends BinaryData
-{
-	public function __construct(string $proofVerificationHash = null)
-	{
+class ProofVerificationHash extends BinaryData {
+	public function __construct(string $proofVerificationHash = null){
 		$proofVerificationHash = $proofVerificationHash ?? str_repeat("\x00", self::size());
 		parent::__construct(16, $proofVerificationHash);
 	}
 
-	public static function size(): int
-	{
+	public static function size(): int {
 		return 16;
 	}
 
-	public static function deserialize(BinaryReader $reader): self
-	{
+	public static function deserialize(BinaryReader $reader): self {
 		return new self($reader->read(16));
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		return $this->binaryData;
 	}
 }
 
-class ProofScalar extends BinaryData
-{
-	public function __construct(string $proofScalar = null)
-	{
+class ProofScalar extends BinaryData {
+	public function __construct(string $proofScalar = null){
 		$proofScalar = $proofScalar ?? str_repeat("\x00", self::size());
 		parent::__construct(32, $proofScalar);
 	}
 
-	public static function size(): int
-	{
+	public static function size(): int {
 		return 32;
 	}
 
-	public static function deserialize(BinaryReader $reader): self
-	{
+	public static function deserialize(BinaryReader $reader): self {
 		return new self($reader->read(32));
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		return $this->binaryData;
 	}
 }
 
-class BlockType
-{
+class BlockType {
 	const NEMESIS = 32835;
 
 	const NORMAL = 33091;
@@ -1116,13 +891,11 @@ class BlockType
 
 	public $value;
 
-	public function __construct(int $value = 0)
-	{
+	public function __construct($value = 0){
 		$this->value = $value;
 	}
 
-	static function valueToKey($value)
-	{
+	static function valueToKey($value){
 		$values = [
 			32835, 33091, 33347
 		];
@@ -1137,56 +910,44 @@ class BlockType
 		return $keys[$index];
 	}
 
-	public static function size()
-	{
+	public static function size(){
 		return 2;
 	}
 
-	public static function deserialize(BinaryReader $reader): self
-	{
-		return new BlockType(Converter::binaryToInt($reader->read(2), 2));
+	public static function deserialize(BinaryReader $reader): self {
+		return new BlockType(Utils\binaryToInt($reader->read(2), 2));
 	}
 
-	public static function deserializeAligned(BinaryReader $reader): self
-	{
-		return new BlockType(Converter::binaryToInt($reader->read(2), 2));
+	public function serialize(): string {
+		return Utils\intToBinary($this->value, 2);
 	}
 
-	public function serialize(): string
-	{
-		return Converter::intToBinary($this->value, 2);
-	}
-
-	public function __toString()
-	{
+	public function __toString(){
 		return "BlockType." . self::valueToKey($this->value);
 	}
 }
 
-class VrfProof
-{
-	public ProofGamma $gamma;
+class VrfProof {
+	public ?ProofGamma $gamma;
 
-	public ProofVerificationHash $verificationHash;
+	public ?ProofVerificationHash $verificationHash;
 
-	public ProofScalar $scalar;
+	public ?ProofScalar $scalar;
 
 	public function __construct(
 		?ProofGamma $gamma = null,
 		?ProofVerificationHash $verificationHash = null,
 		?ProofScalar $scalar = null
-	) {
+	){
 		$this->gamma = $gamma ?? new ProofGamma();
 		$this->verificationHash = $verificationHash ?? new ProofVerificationHash();
 		$this->scalar = $scalar ?? new ProofScalar();
 	}
 
-	public function sort()
-	{
+	public function sort(){
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += $this->gamma->size();
 		$size += $this->verificationHash->size();
@@ -1194,8 +955,7 @@ class VrfProof
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new VrfProof();
 
 		$gamma = ProofGamma::deserialize($reader);
@@ -1208,8 +968,7 @@ class VrfProof
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$writer->write($this->gamma->serialize());
 		$writer->write($this->verificationHash->serialize());
@@ -1217,8 +976,7 @@ class VrfProof
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '';
 		$result .= 'gamma: ' . $this->gamma . ', ';
 		$result .= 'verificationHash: ' . $this->verificationHash . ', ';
@@ -1227,37 +985,36 @@ class VrfProof
 	}
 }
 
-class Block
-{
-	public Signature $signature;
+class Block {
+	public ?Signature $signature;
 
-	public PublicKey $signerPublicKey;
+	public ?PublicKey $signerPublicKey;
 
-	public int $version;
+	public ?int $version;
 
-	public NetworkType $network;
+	public ?NetworkType $network;
 
-	public BlockType $type;
+	public ?BlockType $type;
 
-	public Height $height;
+	public ?Height $height;
 
-	public Timestamp $timestamp;
+	public ?Timestamp $timestamp;
 
-	public Difficulty $difficulty;
+	public ?Difficulty $difficulty;
 
-	public VrfProof $generationHashProof;
+	public ?VrfProof $generationHashProof;
 
-	public Hash256 $previousBlockHash;
+	public ?Hash256 $previousBlockHash;
 
-	public Hash256 $transactionsHash;
+	public ?Hash256 $transactionsHash;
 
-	public Hash256 $receiptsHash;
+	public ?Hash256 $receiptsHash;
 
-	public Hash256 $stateHash;
+	public ?Hash256 $stateHash;
 
-	public Address $beneficiaryAddress;
+	public ?Address $beneficiaryAddress;
 
-	public BlockFeeMultiplier $feeMultiplier;
+	public ?BlockFeeMultiplier $feeMultiplier;
 
 	private int $verifiableEntityHeaderReserved_1 = 0; // reserved field
 
@@ -1279,7 +1036,7 @@ class Block
 		?Hash256 $stateHash = null,
 		?Address $beneficiaryAddress = null,
 		?BlockFeeMultiplier $feeMultiplier = null
-	) {
+	){
 		$this->signature = $signature ?? new Signature();
 		$this->signerPublicKey = $signerPublicKey ?? new PublicKey();
 		$this->version = $version ?? 0;
@@ -1299,13 +1056,11 @@ class Block
 		$this->entityBodyReserved_1 = 0; // reserved field
 	}
 
-	public function sort()
-	{
+	public function sort(){
 		$this->generationHashProof->sort();
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += 4;
 		$size += 4;
@@ -1328,18 +1083,17 @@ class Block
 		return $size;
 	}
 
-	public static function _deserialize(BinaryReader &$reader, Block $instance): void
-	{
-		$size = Converter::binaryToInt($reader->read(4), 4);
-		$verifiableEntityHeaderReserved_1 = Converter::binaryToInt($reader->read(4), 4);
+	public static function _deserialize(BinaryReader &$reader, Block $instance): void {
+		$size = Utils\binaryToInt($reader->read(4), 4);
+		$verifiableEntityHeaderReserved_1 = Utils\binaryToInt($reader->read(4), 4);
 		if (0 !== $verifiableEntityHeaderReserved_1)
 			throw new OutOfRangeException('Invalid value of reserved field (' . $verifiableEntityHeaderReserved_1 . ')');
 		$signature = Signature::deserialize($reader);
 		$signerPublicKey = PublicKey::deserialize($reader);
-		$entityBodyReserved_1 = Converter::binaryToInt($reader->read(4), 4);
+		$entityBodyReserved_1 = Utils\binaryToInt($reader->read(4), 4);
 		if (0 !== $entityBodyReserved_1)
 			throw new OutOfRangeException('Invalid value of reserved field (' . $entityBodyReserved_1 . ')');
-		$version = Converter::binaryToInt($reader->read(1), 1);
+		$version = Utils\binaryToInt($reader->read(1), 1);
 		$network = NetworkType::deserialize($reader);
 		$type = BlockType::deserialize($reader);
 		$height = Height::deserialize($reader);
@@ -1370,14 +1124,13 @@ class Block
 		$instance->feeMultiplier = $feeMultiplier;
 	}
 
-	public function _serialize(BinaryWriter &$writer): void
-	{
-		$writer->write(Converter::intToBinary($this->size(), 4));
-		$writer->write(Converter::intToBinary($this->verifiableEntityHeaderReserved_1, 4));
+	public function _serialize(BinaryWriter &$writer): void {
+		$writer->write(Utils\intToBinary($this->size(), 4));
+		$writer->write(Utils\intToBinary($this->verifiableEntityHeaderReserved_1, 4));
 		$writer->write($this->signature->serialize());
 		$writer->write($this->signerPublicKey->serialize());
-		$writer->write(Converter::intToBinary($this->entityBodyReserved_1, 4));
-		$writer->write(Converter::intToBinary($this->version, 1));
+		$writer->write(Utils\intToBinary($this->entityBodyReserved_1, 4));
+		$writer->write(Utils\intToBinary($this->version, 1));
 		$writer->write($this->network->serialize());
 		$writer->write($this->type->serialize());
 		$writer->write($this->height->serialize());
@@ -1392,12 +1145,11 @@ class Block
 		$writer->write($this->feeMultiplier->serialize());
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '';
 		$result .= 'signature: ' . $this->signature . ', ';
 		$result .= 'signerPublicKey: ' . $this->signerPublicKey . ', ';
-		$result .= 'version: ' . '0x' . Converter::intToHex($this->version, 1) . ', ';
+		$result .= 'version: ' . '0x' . Utils\intToHex($this->version, 1) . ', ';
 		$result .= 'network: ' . $this->network . ', ';
 		$result .= 'type: ' . $this->type . ', ';
 		$result .= 'height: ' . $this->height . ', ';
@@ -1414,21 +1166,20 @@ class Block
 	}
 }
 
-class NemesisBlockV1 extends Block
-{
+class NemesisBlockV1 extends Block {
 	const BLOCK_VERSION = 1;
 
 	const BLOCK_TYPE = BlockType::NEMESIS;
 
-	public int $votingEligibleAccountsCount;
+	public ?int $votingEligibleAccountsCount;
 
-	public int $harvestingEligibleAccountsCount;
+	public ?int $harvestingEligibleAccountsCount;
 
-	public Amount $totalVotingBalance;
+	public ?Amount $totalVotingBalance;
 
-	public Hash256 $previousImportanceBlockHash;
+	public ?Hash256 $previousImportanceBlockHash;
 
-	public array $transactions;
+	public ?array $transactions;
 
 	public function __construct(
 		?Signature $signature = null,
@@ -1449,7 +1200,7 @@ class NemesisBlockV1 extends Block
 		?Amount $totalVotingBalance = null,
 		?Hash256 $previousImportanceBlockHash = null,
 		?array $transactions = null
-	) {
+	){
 		parent::__construct(
 			$signature,
 			$signerPublicKey,
@@ -1474,33 +1225,30 @@ class NemesisBlockV1 extends Block
 		$this->transactions = $transactions ?? [];
 	}
 
-	public function sort()
-	{
+	public function sort(){
 		$this->generationHashProof->sort();
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += parent::size();
 		$size += 4;
 		$size += 8;
 		$size += $this->totalVotingBalance->size();
 		$size += $this->previousImportanceBlockHash->size();
-		$size += ArrayHelpers::size($this->transactions, 8, true);
+		$size += Utils\size($this->transactions, 8, true);
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new NemesisBlockV1();
 
 		Block::_deserialize($reader, $instance);
-		$votingEligibleAccountsCount = Converter::binaryToInt($reader->read(4), 4);
-		$harvestingEligibleAccountsCount = Converter::binaryToInt($reader->read(8), 8);
+		$votingEligibleAccountsCount = Utils\binaryToInt($reader->read(4), 4);
+		$harvestingEligibleAccountsCount = Utils\binaryToInt($reader->read(8), 8);
 		$totalVotingBalance = Amount::deserialize($reader);
 		$previousImportanceBlockHash = Hash256::deserialize($reader);
-		$transactions = ArrayHelpers::readVariableSizeElements($reader, [TransactionFactory::class, 'deserialize'], 8, true);
+		$transactions = Utils\readVariableSizeElements($reader, [TransactionFactory::class, 'deserialize'], $reader->getRemainingLength(), 8, true);
 
 		$instance->votingEligibleAccountsCount = $votingEligibleAccountsCount;
 		$instance->harvestingEligibleAccountsCount = $harvestingEligibleAccountsCount;
@@ -1510,25 +1258,23 @@ class NemesisBlockV1 extends Block
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$this->sort();
 		parent::_serialize($writer);
-		$writer->write(Converter::intToBinary($this->votingEligibleAccountsCount, 4));
-		$writer->write(Converter::intToBinary($this->harvestingEligibleAccountsCount, 8));
+		$writer->write(Utils\intToBinary($this->votingEligibleAccountsCount, 4));
+		$writer->write(Utils\intToBinary($this->harvestingEligibleAccountsCount, 8));
 		$writer->write($this->totalVotingBalance->serialize());
 		$writer->write($this->previousImportanceBlockHash->serialize());
-		ArrayHelpers::writeVariableSizeElements($writer, $this->transactions, 8, true);
+		Utils\writeVariableSizeElements($writer, $this->transactions, 8, true);
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '(';
 		$result .= parent::__toString();
-		$result .= 'votingEligibleAccountsCount: ' . '0x' . Converter::intToHex($this->votingEligibleAccountsCount, 4) . ', ';
-		$result .= 'harvestingEligibleAccountsCount: ' . '0x' . Converter::intToHex($this->harvestingEligibleAccountsCount, 8) . ', ';
+		$result .= 'votingEligibleAccountsCount: ' . '0x' . Utils\intToHex($this->votingEligibleAccountsCount, 4) . ', ';
+		$result .= 'harvestingEligibleAccountsCount: ' . '0x' . Utils\intToHex($this->harvestingEligibleAccountsCount, 8) . ', ';
 		$result .= 'totalVotingBalance: ' . $this->totalVotingBalance . ', ';
 		$result .= 'previousImportanceBlockHash: ' . $this->previousImportanceBlockHash . ', ';
 		$result .= 'transactions: ' . '[' . implode(',', array_map(fn ($e) => $e, $this->transactions)) . ']' . ', ';
@@ -1537,13 +1283,12 @@ class NemesisBlockV1 extends Block
 	}
 }
 
-class NormalBlockV1 extends Block
-{
+class NormalBlockV1 extends Block {
 	const BLOCK_VERSION = 1;
 
 	const BLOCK_TYPE = BlockType::NORMAL;
 
-	public array $transactions;
+	public ?array $transactions;
 
 	private int $blockHeaderReserved_1 = 0; // reserved field
 
@@ -1562,7 +1307,7 @@ class NormalBlockV1 extends Block
 		?Address $beneficiaryAddress = null,
 		?BlockFeeMultiplier $feeMultiplier = null,
 		?array $transactions = null
-	) {
+	){
 		parent::__construct(
 			$signature,
 			$signerPublicKey,
@@ -1584,46 +1329,41 @@ class NormalBlockV1 extends Block
 		$this->blockHeaderReserved_1 = 0; // reserved field
 	}
 
-	public function sort()
-	{
+	public function sort(){
 		$this->generationHashProof->sort();
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += parent::size();
 		$size += 4;
-		$size += ArrayHelpers::size($this->transactions, 8, true);
+		$size += Utils\size($this->transactions, 8, true);
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new NormalBlockV1();
 
 		Block::_deserialize($reader, $instance);
-		$blockHeaderReserved_1 = Converter::binaryToInt($reader->read(4), 4);
+		$blockHeaderReserved_1 = Utils\binaryToInt($reader->read(4), 4);
 		if (0 !== $blockHeaderReserved_1)
 			throw new OutOfRangeException('Invalid value of reserved field (' . $blockHeaderReserved_1 . ')');
-		$transactions = ArrayHelpers::readVariableSizeElements($reader, [TransactionFactory::class, 'deserialize'], 8, true);
+		$transactions = Utils\readVariableSizeElements($reader, [TransactionFactory::class, 'deserialize'], $reader->getRemainingLength(), 8, true);
 
 		$instance->transactions = $transactions;
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$this->sort();
 		parent::_serialize($writer);
-		$writer->write(Converter::intToBinary($this->blockHeaderReserved_1, 4));
-		ArrayHelpers::writeVariableSizeElements($writer, $this->transactions, 8, true);
+		$writer->write(Utils\intToBinary($this->blockHeaderReserved_1, 4));
+		Utils\writeVariableSizeElements($writer, $this->transactions, 8, true);
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '(';
 		$result .= parent::__toString();
 		$result .= 'transactions: ' . '[' . implode(',', array_map(fn ($e) => $e, $this->transactions)) . ']' . ', ';
@@ -1632,21 +1372,20 @@ class NormalBlockV1 extends Block
 	}
 }
 
-class ImportanceBlockV1 extends Block
-{
+class ImportanceBlockV1 extends Block {
 	const BLOCK_VERSION = 1;
 
 	const BLOCK_TYPE = BlockType::IMPORTANCE;
 
-	public int $votingEligibleAccountsCount;
+	public ?int $votingEligibleAccountsCount;
 
-	public int $harvestingEligibleAccountsCount;
+	public ?int $harvestingEligibleAccountsCount;
 
-	public Amount $totalVotingBalance;
+	public ?Amount $totalVotingBalance;
 
-	public Hash256 $previousImportanceBlockHash;
+	public ?Hash256 $previousImportanceBlockHash;
 
-	public array $transactions;
+	public ?array $transactions;
 
 	public function __construct(
 		?Signature $signature = null,
@@ -1667,7 +1406,7 @@ class ImportanceBlockV1 extends Block
 		?Amount $totalVotingBalance = null,
 		?Hash256 $previousImportanceBlockHash = null,
 		?array $transactions = null
-	) {
+	){
 		parent::__construct(
 			$signature,
 			$signerPublicKey,
@@ -1692,33 +1431,30 @@ class ImportanceBlockV1 extends Block
 		$this->transactions = $transactions ?? [];
 	}
 
-	public function sort()
-	{
+	public function sort(){
 		$this->generationHashProof->sort();
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += parent::size();
 		$size += 4;
 		$size += 8;
 		$size += $this->totalVotingBalance->size();
 		$size += $this->previousImportanceBlockHash->size();
-		$size += ArrayHelpers::size($this->transactions, 8, true);
+		$size += Utils\size($this->transactions, 8, true);
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new ImportanceBlockV1();
 
 		Block::_deserialize($reader, $instance);
-		$votingEligibleAccountsCount = Converter::binaryToInt($reader->read(4), 4);
-		$harvestingEligibleAccountsCount = Converter::binaryToInt($reader->read(8), 8);
+		$votingEligibleAccountsCount = Utils\binaryToInt($reader->read(4), 4);
+		$harvestingEligibleAccountsCount = Utils\binaryToInt($reader->read(8), 8);
 		$totalVotingBalance = Amount::deserialize($reader);
 		$previousImportanceBlockHash = Hash256::deserialize($reader);
-		$transactions = ArrayHelpers::readVariableSizeElements($reader, [TransactionFactory::class, 'deserialize'], 8, true);
+		$transactions = Utils\readVariableSizeElements($reader, [TransactionFactory::class, 'deserialize'], $reader->getRemainingLength(), 8, true);
 
 		$instance->votingEligibleAccountsCount = $votingEligibleAccountsCount;
 		$instance->harvestingEligibleAccountsCount = $harvestingEligibleAccountsCount;
@@ -1728,25 +1464,23 @@ class ImportanceBlockV1 extends Block
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$this->sort();
 		parent::_serialize($writer);
-		$writer->write(Converter::intToBinary($this->votingEligibleAccountsCount, 4));
-		$writer->write(Converter::intToBinary($this->harvestingEligibleAccountsCount, 8));
+		$writer->write(Utils\intToBinary($this->votingEligibleAccountsCount, 4));
+		$writer->write(Utils\intToBinary($this->harvestingEligibleAccountsCount, 8));
 		$writer->write($this->totalVotingBalance->serialize());
 		$writer->write($this->previousImportanceBlockHash->serialize());
-		ArrayHelpers::writeVariableSizeElements($writer, $this->transactions, 8, true);
+		Utils\writeVariableSizeElements($writer, $this->transactions, 8, true);
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '(';
 		$result .= parent::__toString();
-		$result .= 'votingEligibleAccountsCount: ' . '0x' . Converter::intToHex($this->votingEligibleAccountsCount, 4) . ', ';
-		$result .= 'harvestingEligibleAccountsCount: ' . '0x' . Converter::intToHex($this->harvestingEligibleAccountsCount, 8) . ', ';
+		$result .= 'votingEligibleAccountsCount: ' . '0x' . Utils\intToHex($this->votingEligibleAccountsCount, 4) . ', ';
+		$result .= 'harvestingEligibleAccountsCount: ' . '0x' . Utils\intToHex($this->harvestingEligibleAccountsCount, 8) . ', ';
 		$result .= 'totalVotingBalance: ' . $this->totalVotingBalance . ', ';
 		$result .= 'previousImportanceBlockHash: ' . $this->previousImportanceBlockHash . ', ';
 		$result .= 'transactions: ' . '[' . implode(',', array_map(fn ($e) => $e, $this->transactions)) . ']' . ', ';
@@ -1755,32 +1489,27 @@ class ImportanceBlockV1 extends Block
 	}
 }
 
-class FinalizationRound
-{
-	public FinalizationEpoch $epoch;
+class FinalizationRound {
+	public ?FinalizationEpoch $epoch;
 
-	public FinalizationPoint $point;
+	public ?FinalizationPoint $point;
 
-	public function __construct(?FinalizationEpoch $epoch = null, ?FinalizationPoint $point = null)
-	{
+	public function __construct(?FinalizationEpoch $epoch = null, ?FinalizationPoint $point = null){
 		$this->epoch = $epoch ?? new FinalizationEpoch();
 		$this->point = $point ?? new FinalizationPoint();
 	}
 
-	public function sort()
-	{
+	public function sort(){
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += $this->epoch->size();
 		$size += $this->point->size();
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new FinalizationRound();
 
 		$epoch = FinalizationEpoch::deserialize($reader);
@@ -1791,16 +1520,14 @@ class FinalizationRound
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$writer->write($this->epoch->serialize());
 		$writer->write($this->point->serialize());
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '';
 		$result .= 'epoch: ' . $this->epoch . ', ';
 		$result .= 'point: ' . $this->point . ', ';
@@ -1808,28 +1535,24 @@ class FinalizationRound
 	}
 }
 
-class FinalizedBlockHeader
-{
-	public FinalizationRound $round;
+class FinalizedBlockHeader {
+	public ?FinalizationRound $round;
 
-	public Height $height;
+	public ?Height $height;
 
-	public Hash256 $hash;
+	public ?Hash256 $hash;
 
-	public function __construct(?FinalizationRound $round = null, ?Height $height = null, ?Hash256 $hash = null)
-	{
+	public function __construct(?FinalizationRound $round = null, ?Height $height = null, ?Hash256 $hash = null){
 		$this->round = $round ?? new FinalizationRound();
 		$this->height = $height ?? new Height();
 		$this->hash = $hash ?? new Hash256();
 	}
 
-	public function sort()
-	{
+	public function sort(){
 		$this->round->sort();
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += $this->round->size();
 		$size += $this->height->size();
@@ -1837,8 +1560,7 @@ class FinalizedBlockHeader
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new FinalizedBlockHeader();
 
 		$round = FinalizationRound::deserialize($reader);
@@ -1851,8 +1573,7 @@ class FinalizedBlockHeader
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$writer->write($this->round->serialize());
 		$writer->write($this->height->serialize());
@@ -1860,8 +1581,7 @@ class FinalizedBlockHeader
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '';
 		$result .= 'round: ' . $this->round . ', ';
 		$result .= 'height: ' . $this->height . ', ';
@@ -1870,8 +1590,7 @@ class FinalizedBlockHeader
 	}
 }
 
-class ReceiptType
-{
+class ReceiptType {
 	const MOSAIC_RENTAL_FEE = 4685;
 
 	const NAMESPACE_RENTAL_FEE = 4942;
@@ -1906,13 +1625,11 @@ class ReceiptType
 
 	public $value;
 
-	public function __construct(int $value = 0)
-	{
+	public function __construct($value = 0){
 		$this->value = $value;
 	}
 
-	static function valueToKey($value)
-	{
+	static function valueToKey($value){
 		$values = [
 			4685, 4942, 8515, 8776, 9032, 8786, 9042, 12616, 12626, 16717, 16718, 16974, 20803, 57667, 61763, 62019
 		];
@@ -1929,50 +1646,37 @@ class ReceiptType
 		return $keys[$index];
 	}
 
-	public static function size()
-	{
+	public static function size(){
 		return 2;
 	}
 
-	public static function deserialize(BinaryReader $reader): self
-	{
-		return new ReceiptType(Converter::binaryToInt($reader->read(2), 2));
+	public static function deserialize(BinaryReader $reader): self {
+		return new ReceiptType(Utils\binaryToInt($reader->read(2), 2));
 	}
 
-	public static function deserializeAligned(BinaryReader $reader): self
-	{
-		return new ReceiptType(Converter::binaryToInt($reader->read(2), 2));
+	public function serialize(): string {
+		return Utils\intToBinary($this->value, 2);
 	}
 
-	public function serialize(): string
-	{
-		return Converter::intToBinary($this->value, 2);
-	}
-
-	public function __toString()
-	{
+	public function __toString(){
 		return "ReceiptType." . self::valueToKey($this->value);
 	}
 }
 
-class Receipt
-{
-	public int $version;
+class Receipt {
+	public ?int $version;
 
-	public ReceiptType $type;
+	public ?ReceiptType $type;
 
-	public function __construct(?int $version = null, ?ReceiptType $type = null)
-	{
+	public function __construct(?int $version = null, ?ReceiptType $type = null){
 		$this->version = $version ?? 0;
 		$this->type = $type ?? new ReceiptType();
 	}
 
-	public function sort()
-	{
+	public function sort(){
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += 4;
 		$size += 2;
@@ -1980,42 +1684,37 @@ class Receipt
 		return $size;
 	}
 
-	public static function _deserialize(BinaryReader &$reader, Receipt $instance): void
-	{
-		$size = Converter::binaryToInt($reader->read(4), 4);
-		$version = Converter::binaryToInt($reader->read(2), 2);
+	public static function _deserialize(BinaryReader &$reader, Receipt $instance): void {
+		$size = Utils\binaryToInt($reader->read(4), 4);
+		$version = Utils\binaryToInt($reader->read(2), 2);
 		$type = ReceiptType::deserialize($reader);
 
 		$instance->version = $version;
 		$instance->type = $type;
 	}
 
-	public function _serialize(BinaryWriter &$writer): void
-	{
-		$writer->write(Converter::intToBinary($this->size(), 4));
-		$writer->write(Converter::intToBinary($this->version, 2));
+	public function _serialize(BinaryWriter &$writer): void {
+		$writer->write(Utils\intToBinary($this->size(), 4));
+		$writer->write(Utils\intToBinary($this->version, 2));
 		$writer->write($this->type->serialize());
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '';
-		$result .= 'version: ' . '0x' . Converter::intToHex($this->version, 2) . ', ';
+		$result .= 'version: ' . '0x' . Utils\intToHex($this->version, 2) . ', ';
 		$result .= 'type: ' . $this->type . ', ';
 		return $result;
 	}
 }
 
-class HarvestFeeReceipt extends Receipt
-{
+class HarvestFeeReceipt extends Receipt {
 	const RECEIPT_TYPE = ReceiptType::HARVEST_FEE;
 
-	public Mosaic $mosaic;
+	public ?Mosaic $mosaic;
 
-	public Address $targetAddress;
+	public ?Address $targetAddress;
 
-	public function __construct(?int $version = null, ?Mosaic $mosaic = null, ?Address $targetAddress = null)
-	{
+	public function __construct(?int $version = null, ?Mosaic $mosaic = null, ?Address $targetAddress = null){
 		parent::__construct(
 			$version,
 			new ReceiptType(HarvestFeeReceipt::RECEIPT_TYPE),
@@ -2024,13 +1723,11 @@ class HarvestFeeReceipt extends Receipt
 		$this->targetAddress = $targetAddress ?? new Address();
 	}
 
-	public function sort()
-	{
+	public function sort(){
 		$this->mosaic->sort();
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += parent::size();
 		$size += $this->mosaic->size();
@@ -2038,8 +1735,7 @@ class HarvestFeeReceipt extends Receipt
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new HarvestFeeReceipt();
 
 		Receipt::_deserialize($reader, $instance);
@@ -2051,8 +1747,7 @@ class HarvestFeeReceipt extends Receipt
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$this->sort();
 		parent::_serialize($writer);
@@ -2061,8 +1756,7 @@ class HarvestFeeReceipt extends Receipt
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '(';
 		$result .= parent::__toString();
 		$result .= 'mosaic: ' . $this->mosaic . ', ';
@@ -2072,14 +1766,12 @@ class HarvestFeeReceipt extends Receipt
 	}
 }
 
-class InflationReceipt extends Receipt
-{
+class InflationReceipt extends Receipt {
 	const RECEIPT_TYPE = ReceiptType::INFLATION;
 
-	public Mosaic $mosaic;
+	public ?Mosaic $mosaic;
 
-	public function __construct(?int $version = null, ?Mosaic $mosaic = null)
-	{
+	public function __construct(?int $version = null, ?Mosaic $mosaic = null){
 		parent::__construct(
 			$version,
 			new ReceiptType(InflationReceipt::RECEIPT_TYPE),
@@ -2087,21 +1779,18 @@ class InflationReceipt extends Receipt
 		$this->mosaic = $mosaic ?? new Mosaic();
 	}
 
-	public function sort()
-	{
+	public function sort(){
 		$this->mosaic->sort();
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += parent::size();
 		$size += $this->mosaic->size();
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new InflationReceipt();
 
 		Receipt::_deserialize($reader, $instance);
@@ -2111,8 +1800,7 @@ class InflationReceipt extends Receipt
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$this->sort();
 		parent::_serialize($writer);
@@ -2120,8 +1808,7 @@ class InflationReceipt extends Receipt
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '(';
 		$result .= parent::__toString();
 		$result .= 'mosaic: ' . $this->mosaic . ', ';
@@ -2130,16 +1817,14 @@ class InflationReceipt extends Receipt
 	}
 }
 
-class LockHashCreatedFeeReceipt extends Receipt
-{
+class LockHashCreatedFeeReceipt extends Receipt {
 	const RECEIPT_TYPE = ReceiptType::LOCK_HASH_CREATED;
 
-	public Mosaic $mosaic;
+	public ?Mosaic $mosaic;
 
-	public Address $targetAddress;
+	public ?Address $targetAddress;
 
-	public function __construct(?int $version = null, ?Mosaic $mosaic = null, ?Address $targetAddress = null)
-	{
+	public function __construct(?int $version = null, ?Mosaic $mosaic = null, ?Address $targetAddress = null){
 		parent::__construct(
 			$version,
 			new ReceiptType(LockHashCreatedFeeReceipt::RECEIPT_TYPE),
@@ -2148,13 +1833,11 @@ class LockHashCreatedFeeReceipt extends Receipt
 		$this->targetAddress = $targetAddress ?? new Address();
 	}
 
-	public function sort()
-	{
+	public function sort(){
 		$this->mosaic->sort();
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += parent::size();
 		$size += $this->mosaic->size();
@@ -2162,8 +1845,7 @@ class LockHashCreatedFeeReceipt extends Receipt
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new LockHashCreatedFeeReceipt();
 
 		Receipt::_deserialize($reader, $instance);
@@ -2175,8 +1857,7 @@ class LockHashCreatedFeeReceipt extends Receipt
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$this->sort();
 		parent::_serialize($writer);
@@ -2185,8 +1866,7 @@ class LockHashCreatedFeeReceipt extends Receipt
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '(';
 		$result .= parent::__toString();
 		$result .= 'mosaic: ' . $this->mosaic . ', ';
@@ -2196,16 +1876,14 @@ class LockHashCreatedFeeReceipt extends Receipt
 	}
 }
 
-class LockHashCompletedFeeReceipt extends Receipt
-{
+class LockHashCompletedFeeReceipt extends Receipt {
 	const RECEIPT_TYPE = ReceiptType::LOCK_HASH_COMPLETED;
 
-	public Mosaic $mosaic;
+	public ?Mosaic $mosaic;
 
-	public Address $targetAddress;
+	public ?Address $targetAddress;
 
-	public function __construct(?int $version = null, ?Mosaic $mosaic = null, ?Address $targetAddress = null)
-	{
+	public function __construct(?int $version = null, ?Mosaic $mosaic = null, ?Address $targetAddress = null){
 		parent::__construct(
 			$version,
 			new ReceiptType(LockHashCompletedFeeReceipt::RECEIPT_TYPE),
@@ -2214,13 +1892,11 @@ class LockHashCompletedFeeReceipt extends Receipt
 		$this->targetAddress = $targetAddress ?? new Address();
 	}
 
-	public function sort()
-	{
+	public function sort(){
 		$this->mosaic->sort();
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += parent::size();
 		$size += $this->mosaic->size();
@@ -2228,8 +1904,7 @@ class LockHashCompletedFeeReceipt extends Receipt
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new LockHashCompletedFeeReceipt();
 
 		Receipt::_deserialize($reader, $instance);
@@ -2241,8 +1916,7 @@ class LockHashCompletedFeeReceipt extends Receipt
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$this->sort();
 		parent::_serialize($writer);
@@ -2251,8 +1925,7 @@ class LockHashCompletedFeeReceipt extends Receipt
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '(';
 		$result .= parent::__toString();
 		$result .= 'mosaic: ' . $this->mosaic . ', ';
@@ -2262,16 +1935,14 @@ class LockHashCompletedFeeReceipt extends Receipt
 	}
 }
 
-class LockHashExpiredFeeReceipt extends Receipt
-{
+class LockHashExpiredFeeReceipt extends Receipt {
 	const RECEIPT_TYPE = ReceiptType::LOCK_HASH_EXPIRED;
 
-	public Mosaic $mosaic;
+	public ?Mosaic $mosaic;
 
-	public Address $targetAddress;
+	public ?Address $targetAddress;
 
-	public function __construct(?int $version = null, ?Mosaic $mosaic = null, ?Address $targetAddress = null)
-	{
+	public function __construct(?int $version = null, ?Mosaic $mosaic = null, ?Address $targetAddress = null){
 		parent::__construct(
 			$version,
 			new ReceiptType(LockHashExpiredFeeReceipt::RECEIPT_TYPE),
@@ -2280,13 +1951,11 @@ class LockHashExpiredFeeReceipt extends Receipt
 		$this->targetAddress = $targetAddress ?? new Address();
 	}
 
-	public function sort()
-	{
+	public function sort(){
 		$this->mosaic->sort();
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += parent::size();
 		$size += $this->mosaic->size();
@@ -2294,8 +1963,7 @@ class LockHashExpiredFeeReceipt extends Receipt
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new LockHashExpiredFeeReceipt();
 
 		Receipt::_deserialize($reader, $instance);
@@ -2307,8 +1975,7 @@ class LockHashExpiredFeeReceipt extends Receipt
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$this->sort();
 		parent::_serialize($writer);
@@ -2317,8 +1984,7 @@ class LockHashExpiredFeeReceipt extends Receipt
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '(';
 		$result .= parent::__toString();
 		$result .= 'mosaic: ' . $this->mosaic . ', ';
@@ -2328,16 +1994,14 @@ class LockHashExpiredFeeReceipt extends Receipt
 	}
 }
 
-class LockSecretCreatedFeeReceipt extends Receipt
-{
+class LockSecretCreatedFeeReceipt extends Receipt {
 	const RECEIPT_TYPE = ReceiptType::LOCK_SECRET_CREATED;
 
-	public Mosaic $mosaic;
+	public ?Mosaic $mosaic;
 
-	public Address $targetAddress;
+	public ?Address $targetAddress;
 
-	public function __construct(?int $version = null, ?Mosaic $mosaic = null, ?Address $targetAddress = null)
-	{
+	public function __construct(?int $version = null, ?Mosaic $mosaic = null, ?Address $targetAddress = null){
 		parent::__construct(
 			$version,
 			new ReceiptType(LockSecretCreatedFeeReceipt::RECEIPT_TYPE),
@@ -2346,13 +2010,11 @@ class LockSecretCreatedFeeReceipt extends Receipt
 		$this->targetAddress = $targetAddress ?? new Address();
 	}
 
-	public function sort()
-	{
+	public function sort(){
 		$this->mosaic->sort();
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += parent::size();
 		$size += $this->mosaic->size();
@@ -2360,8 +2022,7 @@ class LockSecretCreatedFeeReceipt extends Receipt
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new LockSecretCreatedFeeReceipt();
 
 		Receipt::_deserialize($reader, $instance);
@@ -2373,8 +2034,7 @@ class LockSecretCreatedFeeReceipt extends Receipt
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$this->sort();
 		parent::_serialize($writer);
@@ -2383,8 +2043,7 @@ class LockSecretCreatedFeeReceipt extends Receipt
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '(';
 		$result .= parent::__toString();
 		$result .= 'mosaic: ' . $this->mosaic . ', ';
@@ -2394,16 +2053,14 @@ class LockSecretCreatedFeeReceipt extends Receipt
 	}
 }
 
-class LockSecretCompletedFeeReceipt extends Receipt
-{
+class LockSecretCompletedFeeReceipt extends Receipt {
 	const RECEIPT_TYPE = ReceiptType::LOCK_SECRET_COMPLETED;
 
-	public Mosaic $mosaic;
+	public ?Mosaic $mosaic;
 
-	public Address $targetAddress;
+	public ?Address $targetAddress;
 
-	public function __construct(?int $version = null, ?Mosaic $mosaic = null, ?Address $targetAddress = null)
-	{
+	public function __construct(?int $version = null, ?Mosaic $mosaic = null, ?Address $targetAddress = null){
 		parent::__construct(
 			$version,
 			new ReceiptType(LockSecretCompletedFeeReceipt::RECEIPT_TYPE),
@@ -2412,13 +2069,11 @@ class LockSecretCompletedFeeReceipt extends Receipt
 		$this->targetAddress = $targetAddress ?? new Address();
 	}
 
-	public function sort()
-	{
+	public function sort(){
 		$this->mosaic->sort();
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += parent::size();
 		$size += $this->mosaic->size();
@@ -2426,8 +2081,7 @@ class LockSecretCompletedFeeReceipt extends Receipt
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new LockSecretCompletedFeeReceipt();
 
 		Receipt::_deserialize($reader, $instance);
@@ -2439,8 +2093,7 @@ class LockSecretCompletedFeeReceipt extends Receipt
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$this->sort();
 		parent::_serialize($writer);
@@ -2449,8 +2102,7 @@ class LockSecretCompletedFeeReceipt extends Receipt
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '(';
 		$result .= parent::__toString();
 		$result .= 'mosaic: ' . $this->mosaic . ', ';
@@ -2460,16 +2112,14 @@ class LockSecretCompletedFeeReceipt extends Receipt
 	}
 }
 
-class LockSecretExpiredFeeReceipt extends Receipt
-{
+class LockSecretExpiredFeeReceipt extends Receipt {
 	const RECEIPT_TYPE = ReceiptType::LOCK_SECRET_EXPIRED;
 
-	public Mosaic $mosaic;
+	public ?Mosaic $mosaic;
 
-	public Address $targetAddress;
+	public ?Address $targetAddress;
 
-	public function __construct(?int $version = null, ?Mosaic $mosaic = null, ?Address $targetAddress = null)
-	{
+	public function __construct(?int $version = null, ?Mosaic $mosaic = null, ?Address $targetAddress = null){
 		parent::__construct(
 			$version,
 			new ReceiptType(LockSecretExpiredFeeReceipt::RECEIPT_TYPE),
@@ -2478,13 +2128,11 @@ class LockSecretExpiredFeeReceipt extends Receipt
 		$this->targetAddress = $targetAddress ?? new Address();
 	}
 
-	public function sort()
-	{
+	public function sort(){
 		$this->mosaic->sort();
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += parent::size();
 		$size += $this->mosaic->size();
@@ -2492,8 +2140,7 @@ class LockSecretExpiredFeeReceipt extends Receipt
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new LockSecretExpiredFeeReceipt();
 
 		Receipt::_deserialize($reader, $instance);
@@ -2505,8 +2152,7 @@ class LockSecretExpiredFeeReceipt extends Receipt
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$this->sort();
 		parent::_serialize($writer);
@@ -2515,8 +2161,7 @@ class LockSecretExpiredFeeReceipt extends Receipt
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '(';
 		$result .= parent::__toString();
 		$result .= 'mosaic: ' . $this->mosaic . ', ';
@@ -2526,14 +2171,12 @@ class LockSecretExpiredFeeReceipt extends Receipt
 	}
 }
 
-class MosaicExpiredReceipt extends Receipt
-{
+class MosaicExpiredReceipt extends Receipt {
 	const RECEIPT_TYPE = ReceiptType::MOSAIC_EXPIRED;
 
-	public MosaicId $artifactId;
+	public ?MosaicId $artifactId;
 
-	public function __construct(?int $version = null, ?MosaicId $artifactId = null)
-	{
+	public function __construct(?int $version = null, ?MosaicId $artifactId = null){
 		parent::__construct(
 			$version,
 			new ReceiptType(MosaicExpiredReceipt::RECEIPT_TYPE),
@@ -2541,20 +2184,17 @@ class MosaicExpiredReceipt extends Receipt
 		$this->artifactId = $artifactId ?? new MosaicId();
 	}
 
-	public function sort()
-	{
+	public function sort(){
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += parent::size();
 		$size += $this->artifactId->size();
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new MosaicExpiredReceipt();
 
 		Receipt::_deserialize($reader, $instance);
@@ -2564,8 +2204,7 @@ class MosaicExpiredReceipt extends Receipt
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$this->sort();
 		parent::_serialize($writer);
@@ -2573,8 +2212,7 @@ class MosaicExpiredReceipt extends Receipt
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '(';
 		$result .= parent::__toString();
 		$result .= 'artifactId: ' . $this->artifactId . ', ';
@@ -2583,22 +2221,21 @@ class MosaicExpiredReceipt extends Receipt
 	}
 }
 
-class MosaicRentalFeeReceipt extends Receipt
-{
+class MosaicRentalFeeReceipt extends Receipt {
 	const RECEIPT_TYPE = ReceiptType::MOSAIC_RENTAL_FEE;
 
-	public Mosaic $mosaic;
+	public ?Mosaic $mosaic;
 
-	public Address $senderAddress;
+	public ?Address $senderAddress;
 
-	public Address $recipientAddress;
+	public ?Address $recipientAddress;
 
 	public function __construct(
 		?int $version = null,
 		?Mosaic $mosaic = null,
 		?Address $senderAddress = null,
 		?Address $recipientAddress = null
-	) {
+	){
 		parent::__construct(
 			$version,
 			new ReceiptType(MosaicRentalFeeReceipt::RECEIPT_TYPE),
@@ -2608,13 +2245,11 @@ class MosaicRentalFeeReceipt extends Receipt
 		$this->recipientAddress = $recipientAddress ?? new Address();
 	}
 
-	public function sort()
-	{
+	public function sort(){
 		$this->mosaic->sort();
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += parent::size();
 		$size += $this->mosaic->size();
@@ -2623,8 +2258,7 @@ class MosaicRentalFeeReceipt extends Receipt
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new MosaicRentalFeeReceipt();
 
 		Receipt::_deserialize($reader, $instance);
@@ -2638,8 +2272,7 @@ class MosaicRentalFeeReceipt extends Receipt
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$this->sort();
 		parent::_serialize($writer);
@@ -2649,8 +2282,7 @@ class MosaicRentalFeeReceipt extends Receipt
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '(';
 		$result .= parent::__toString();
 		$result .= 'mosaic: ' . $this->mosaic . ', ';
@@ -2661,49 +2293,36 @@ class MosaicRentalFeeReceipt extends Receipt
 	}
 }
 
-class NamespaceId extends BaseValue
-{
-	public function __construct(int $namespaceId = 0)
-	{
+class NamespaceId extends BaseValue {
+	public function __construct($namespaceId = 0){
 		parent::__construct(8, $namespaceId);
 	}
 
-	public static function size(): int
-	{
+	public static function size(): int {
 		return 8;
 	}
 
-	public static function deserialize(BinaryReader $reader): self
-	{
-		return new self(Converter::binaryToInt($reader->read(8), 8));
+	public static function deserialize(BinaryReader $reader): self {
+		return new self(Utils\binaryToInt($reader->read(8), 8));
 	}
 
-	public static function deserializeAligned(BinaryReader $reader): self
-	{
-		return new self(Converter::binaryToInt($reader->read(8), 8));
-	}
-
-	public function serialize(): string
-	{
-		return Converter::intToBinary($this->value, 8);
+	public function serialize(): string {
+		return Utils\intToBinary($this->value, 8);
 	}
 }
 
-class NamespaceRegistrationType
-{
+class NamespaceRegistrationType {
 	const ROOT = 0;
 
 	const CHILD = 1;
 
 	public $value;
 
-	public function __construct(int $value = 0)
-	{
+	public function __construct($value = 0){
 		$this->value = $value;
 	}
 
-	static function valueToKey($value)
-	{
+	static function valueToKey($value){
 		$values = [
 			0, 1
 		];
@@ -2718,47 +2337,35 @@ class NamespaceRegistrationType
 		return $keys[$index];
 	}
 
-	public static function size()
-	{
+	public static function size(){
 		return 1;
 	}
 
-	public static function deserialize(BinaryReader $reader): self
-	{
-		return new NamespaceRegistrationType(Converter::binaryToInt($reader->read(1), 1));
+	public static function deserialize(BinaryReader $reader): self {
+		return new NamespaceRegistrationType(Utils\binaryToInt($reader->read(1), 1));
 	}
 
-	public static function deserializeAligned(BinaryReader $reader): self
-	{
-		return new NamespaceRegistrationType(Converter::binaryToInt($reader->read(1), 1));
+	public function serialize(): string {
+		return Utils\intToBinary($this->value, 1);
 	}
 
-	public function serialize(): string
-	{
-		return Converter::intToBinary($this->value, 1);
-	}
-
-	public function __toString()
-	{
+	public function __toString(){
 		return "NamespaceRegistrationType." . self::valueToKey($this->value);
 	}
 }
 
-class AliasAction
-{
+class AliasAction {
 	const UNLINK = 0;
 
 	const LINK = 1;
 
 	public $value;
 
-	public function __construct(int $value = 0)
-	{
+	public function __construct($value = 0){
 		$this->value = $value;
 	}
 
-	static function valueToKey($value)
-	{
+	static function valueToKey($value){
 		$values = [
 			0, 1
 		];
@@ -2773,40 +2380,29 @@ class AliasAction
 		return $keys[$index];
 	}
 
-	public static function size()
-	{
+	public static function size(){
 		return 1;
 	}
 
-	public static function deserialize(BinaryReader $reader): self
-	{
-		return new AliasAction(Converter::binaryToInt($reader->read(1), 1));
+	public static function deserialize(BinaryReader $reader): self {
+		return new AliasAction(Utils\binaryToInt($reader->read(1), 1));
 	}
 
-	public static function deserializeAligned(BinaryReader $reader): self
-	{
-		return new AliasAction(Converter::binaryToInt($reader->read(1), 1));
+	public function serialize(): string {
+		return Utils\intToBinary($this->value, 1);
 	}
 
-	public function serialize(): string
-	{
-		return Converter::intToBinary($this->value, 1);
-	}
-
-	public function __toString()
-	{
+	public function __toString(){
 		return "AliasAction." . self::valueToKey($this->value);
 	}
 }
 
-class NamespaceExpiredReceipt extends Receipt
-{
+class NamespaceExpiredReceipt extends Receipt {
 	const RECEIPT_TYPE = ReceiptType::NAMESPACE_EXPIRED;
 
-	public NamespaceId $artifactId;
+	public ?NamespaceId $artifactId;
 
-	public function __construct(?int $version = null, ?NamespaceId $artifactId = null)
-	{
+	public function __construct(?int $version = null, ?NamespaceId $artifactId = null){
 		parent::__construct(
 			$version,
 			new ReceiptType(NamespaceExpiredReceipt::RECEIPT_TYPE),
@@ -2814,20 +2410,17 @@ class NamespaceExpiredReceipt extends Receipt
 		$this->artifactId = $artifactId ?? new NamespaceId();
 	}
 
-	public function sort()
-	{
+	public function sort(){
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += parent::size();
 		$size += $this->artifactId->size();
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new NamespaceExpiredReceipt();
 
 		Receipt::_deserialize($reader, $instance);
@@ -2837,8 +2430,7 @@ class NamespaceExpiredReceipt extends Receipt
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$this->sort();
 		parent::_serialize($writer);
@@ -2846,8 +2438,7 @@ class NamespaceExpiredReceipt extends Receipt
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '(';
 		$result .= parent::__toString();
 		$result .= 'artifactId: ' . $this->artifactId . ', ';
@@ -2856,14 +2447,12 @@ class NamespaceExpiredReceipt extends Receipt
 	}
 }
 
-class NamespaceDeletedReceipt extends Receipt
-{
+class NamespaceDeletedReceipt extends Receipt {
 	const RECEIPT_TYPE = ReceiptType::NAMESPACE_DELETED;
 
-	public NamespaceId $artifactId;
+	public ?NamespaceId $artifactId;
 
-	public function __construct(?int $version = null, ?NamespaceId $artifactId = null)
-	{
+	public function __construct(?int $version = null, ?NamespaceId $artifactId = null){
 		parent::__construct(
 			$version,
 			new ReceiptType(NamespaceDeletedReceipt::RECEIPT_TYPE),
@@ -2871,20 +2460,17 @@ class NamespaceDeletedReceipt extends Receipt
 		$this->artifactId = $artifactId ?? new NamespaceId();
 	}
 
-	public function sort()
-	{
+	public function sort(){
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += parent::size();
 		$size += $this->artifactId->size();
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new NamespaceDeletedReceipt();
 
 		Receipt::_deserialize($reader, $instance);
@@ -2894,8 +2480,7 @@ class NamespaceDeletedReceipt extends Receipt
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$this->sort();
 		parent::_serialize($writer);
@@ -2903,8 +2488,7 @@ class NamespaceDeletedReceipt extends Receipt
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '(';
 		$result .= parent::__toString();
 		$result .= 'artifactId: ' . $this->artifactId . ', ';
@@ -2913,22 +2497,21 @@ class NamespaceDeletedReceipt extends Receipt
 	}
 }
 
-class NamespaceRentalFeeReceipt extends Receipt
-{
+class NamespaceRentalFeeReceipt extends Receipt {
 	const RECEIPT_TYPE = ReceiptType::NAMESPACE_RENTAL_FEE;
 
-	public Mosaic $mosaic;
+	public ?Mosaic $mosaic;
 
-	public Address $senderAddress;
+	public ?Address $senderAddress;
 
-	public Address $recipientAddress;
+	public ?Address $recipientAddress;
 
 	public function __construct(
 		?int $version = null,
 		?Mosaic $mosaic = null,
 		?Address $senderAddress = null,
 		?Address $recipientAddress = null
-	) {
+	){
 		parent::__construct(
 			$version,
 			new ReceiptType(NamespaceRentalFeeReceipt::RECEIPT_TYPE),
@@ -2938,13 +2521,11 @@ class NamespaceRentalFeeReceipt extends Receipt
 		$this->recipientAddress = $recipientAddress ?? new Address();
 	}
 
-	public function sort()
-	{
+	public function sort(){
 		$this->mosaic->sort();
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += parent::size();
 		$size += $this->mosaic->size();
@@ -2953,8 +2534,7 @@ class NamespaceRentalFeeReceipt extends Receipt
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new NamespaceRentalFeeReceipt();
 
 		Receipt::_deserialize($reader, $instance);
@@ -2968,8 +2548,7 @@ class NamespaceRentalFeeReceipt extends Receipt
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$this->sort();
 		parent::_serialize($writer);
@@ -2979,8 +2558,7 @@ class NamespaceRentalFeeReceipt extends Receipt
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '(';
 		$result .= parent::__toString();
 		$result .= 'mosaic: ' . $this->mosaic . ', ';
@@ -2991,86 +2569,74 @@ class NamespaceRentalFeeReceipt extends Receipt
 	}
 }
 
-class ReceiptSource
-{
-	public int $primaryId;
+class ReceiptSource {
+	public ?int $primaryId;
 
-	public int $secondaryId;
+	public ?int $secondaryId;
 
-	public function __construct(?int $primaryId = null, ?int $secondaryId = null)
-	{
+	public function __construct(?int $primaryId = null, ?int $secondaryId = null){
 		$this->primaryId = $primaryId ?? 0;
 		$this->secondaryId = $secondaryId ?? 0;
 	}
 
-	public function sort()
-	{
+	public function sort(){
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += 4;
 		$size += 4;
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new ReceiptSource();
 
-		$primaryId = Converter::binaryToInt($reader->read(4), 4);
-		$secondaryId = Converter::binaryToInt($reader->read(4), 4);
+		$primaryId = Utils\binaryToInt($reader->read(4), 4);
+		$secondaryId = Utils\binaryToInt($reader->read(4), 4);
 
 		$instance->primaryId = $primaryId;
 		$instance->secondaryId = $secondaryId;
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
-		$writer->write(Converter::intToBinary($this->primaryId, 4));
-		$writer->write(Converter::intToBinary($this->secondaryId, 4));
+		$writer->write(Utils\intToBinary($this->primaryId, 4));
+		$writer->write(Utils\intToBinary($this->secondaryId, 4));
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '';
-		$result .= 'primaryId: ' . '0x' . Converter::intToHex($this->primaryId, 4) . ', ';
-		$result .= 'secondaryId: ' . '0x' . Converter::intToHex($this->secondaryId, 4) . ', ';
+		$result .= 'primaryId: ' . '0x' . Utils\intToHex($this->primaryId, 4) . ', ';
+		$result .= 'secondaryId: ' . '0x' . Utils\intToHex($this->secondaryId, 4) . ', ';
 		return $result;
 	}
 }
 
-class AddressResolutionEntry
-{
-	public ReceiptSource $source;
+class AddressResolutionEntry {
+	public ?ReceiptSource $source;
 
-	public Address $resolvedValue;
+	public ?Address $resolvedValue;
 
-	public function __construct(?ReceiptSource $source = null, ?Address $resolvedValue = null)
-	{
+	public function __construct(?ReceiptSource $source = null, ?Address $resolvedValue = null){
 		$this->source = $source ?? new ReceiptSource();
 		$this->resolvedValue = $resolvedValue ?? new Address();
 	}
 
-	public function sort()
-	{
+	public function sort(){
 		$this->source->sort();
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += $this->source->size();
 		$size += $this->resolvedValue->size();
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new AddressResolutionEntry();
 
 		$source = ReceiptSource::deserialize($reader);
@@ -3081,16 +2647,14 @@ class AddressResolutionEntry
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$writer->write($this->source->serialize());
 		$writer->write($this->resolvedValue->serialize());
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '';
 		$result .= 'source: ' . $this->source . ', ';
 		$result .= 'resolvedValue: ' . $this->resolvedValue . ', ';
@@ -3098,55 +2662,48 @@ class AddressResolutionEntry
 	}
 }
 
-class AddressResolutionStatement
-{
-	public UnresolvedAddress $unresolved;
+class AddressResolutionStatement {
+	public ?UnresolvedAddress $unresolved;
 
-	public array $resolutionEntries;
+	public ?array $resolutionEntries;
 
-	public function __construct(?UnresolvedAddress $unresolved = null, ?array $resolutionEntries = null)
-	{
+	public function __construct(?UnresolvedAddress $unresolved = null, ?array $resolutionEntries = null){
 		$this->unresolved = $unresolved ?? new UnresolvedAddress();
 		$this->resolutionEntries = $resolutionEntries ?? [];
 	}
 
-	public function sort()
-	{
+	public function sort(){
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += $this->unresolved->size();
 		$size += 4;
-		$size += ArrayHelpers::size($this->resolutionEntries);
+		$size += Utils\size($this->resolutionEntries);
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new AddressResolutionStatement();
 
 		$unresolved = UnresolvedAddress::deserialize($reader);
-		$resolutionEntriesCount = Converter::binaryToInt($reader->read(4), 4);
-		$resolutionEntries = ArrayHelpers::readArrayCount($reader, [AddressResolutionEntry::class, 'deserialize'], $resolutionEntriesCount);
+		$resolutionEntriesCount = Utils\binaryToInt($reader->read(4), 4);
+		$resolutionEntries = Utils\readArrayCount($reader, [AddressResolutionEntry::class, 'deserialize'], $resolutionEntriesCount);
 
 		$instance->unresolved = $unresolved;
 		$instance->resolutionEntries = $resolutionEntries;
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$writer->write($this->unresolved->serialize());
-		$writer->write(Converter::intToBinary(count($this->resolutionEntries), 4)); // bound: resolution_entries_count
-		ArrayHelpers::writeArray($writer, $this->resolutionEntries);
+		$writer->write(Utils\intToBinary(count($this->resolutionEntries), 4)); // bound: resolution_entries_count
+		Utils\writeArray($writer, $this->resolutionEntries);
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '';
 		$result .= 'unresolved: ' . $this->unresolved . ', ';
 		$result .= 'resolutionEntries: ' . '[' . implode(',', array_map(fn ($e) => $e, $this->resolutionEntries)) . ']' . ', ';
@@ -3154,33 +2711,28 @@ class AddressResolutionStatement
 	}
 }
 
-class MosaicResolutionEntry
-{
-	public ReceiptSource $source;
+class MosaicResolutionEntry {
+	public ?ReceiptSource $source;
 
-	public MosaicId $resolvedValue;
+	public ?MosaicId $resolvedValue;
 
-	public function __construct(?ReceiptSource $source = null, ?MosaicId $resolvedValue = null)
-	{
+	public function __construct(?ReceiptSource $source = null, ?MosaicId $resolvedValue = null){
 		$this->source = $source ?? new ReceiptSource();
 		$this->resolvedValue = $resolvedValue ?? new MosaicId();
 	}
 
-	public function sort()
-	{
+	public function sort(){
 		$this->source->sort();
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += $this->source->size();
 		$size += $this->resolvedValue->size();
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new MosaicResolutionEntry();
 
 		$source = ReceiptSource::deserialize($reader);
@@ -3191,16 +2743,14 @@ class MosaicResolutionEntry
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$writer->write($this->source->serialize());
 		$writer->write($this->resolvedValue->serialize());
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '';
 		$result .= 'source: ' . $this->source . ', ';
 		$result .= 'resolvedValue: ' . $this->resolvedValue . ', ';
@@ -3208,55 +2758,48 @@ class MosaicResolutionEntry
 	}
 }
 
-class MosaicResolutionStatement
-{
-	public UnresolvedMosaicId $unresolved;
+class MosaicResolutionStatement {
+	public ?UnresolvedMosaicId $unresolved;
 
-	public array $resolutionEntries;
+	public ?array $resolutionEntries;
 
-	public function __construct(?UnresolvedMosaicId $unresolved = null, ?array $resolutionEntries = null)
-	{
+	public function __construct(?UnresolvedMosaicId $unresolved = null, ?array $resolutionEntries = null){
 		$this->unresolved = $unresolved ?? new UnresolvedMosaicId();
 		$this->resolutionEntries = $resolutionEntries ?? [];
 	}
 
-	public function sort()
-	{
+	public function sort(){
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += $this->unresolved->size();
 		$size += 4;
-		$size += ArrayHelpers::size($this->resolutionEntries);
+		$size += Utils\size($this->resolutionEntries);
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new MosaicResolutionStatement();
 
 		$unresolved = UnresolvedMosaicId::deserialize($reader);
-		$resolutionEntriesCount = Converter::binaryToInt($reader->read(4), 4);
-		$resolutionEntries = ArrayHelpers::readArrayCount($reader, [MosaicResolutionEntry::class, 'deserialize'], $resolutionEntriesCount);
+		$resolutionEntriesCount = Utils\binaryToInt($reader->read(4), 4);
+		$resolutionEntries = Utils\readArrayCount($reader, [MosaicResolutionEntry::class, 'deserialize'], $resolutionEntriesCount);
 
 		$instance->unresolved = $unresolved;
 		$instance->resolutionEntries = $resolutionEntries;
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$writer->write($this->unresolved->serialize());
-		$writer->write(Converter::intToBinary(count($this->resolutionEntries), 4)); // bound: resolution_entries_count
-		ArrayHelpers::writeArray($writer, $this->resolutionEntries);
+		$writer->write(Utils\intToBinary(count($this->resolutionEntries), 4)); // bound: resolution_entries_count
+		Utils\writeArray($writer, $this->resolutionEntries);
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '';
 		$result .= 'unresolved: ' . $this->unresolved . ', ';
 		$result .= 'resolutionEntries: ' . '[' . implode(',', array_map(fn ($e) => $e, $this->resolutionEntries)) . ']' . ', ';
@@ -3264,43 +2807,38 @@ class MosaicResolutionStatement
 	}
 }
 
-class TransactionStatement
-{
-	public int $primaryId;
+class TransactionStatement {
+	public ?int $primaryId;
 
-	public int $secondaryId;
+	public ?int $secondaryId;
 
-	public array $receipts;
+	public ?array $receipts;
 
-	public function __construct(?int $primaryId = null, ?int $secondaryId = null, ?array $receipts = null)
-	{
+	public function __construct(?int $primaryId = null, ?int $secondaryId = null, ?array $receipts = null){
 		$this->primaryId = $primaryId ?? 0;
 		$this->secondaryId = $secondaryId ?? 0;
 		$this->receipts = $receipts ?? [];
 	}
 
-	public function sort()
-	{
+	public function sort(){
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += 4;
 		$size += 4;
 		$size += 4;
-		$size += ArrayHelpers::size($this->receipts);
+		$size += Utils\size($this->receipts);
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new TransactionStatement();
 
-		$primaryId = Converter::binaryToInt($reader->read(4), 4);
-		$secondaryId = Converter::binaryToInt($reader->read(4), 4);
-		$receiptCount = Converter::binaryToInt($reader->read(4), 4);
-		$receipts = ArrayHelpers::readArrayCount($reader, [ReceiptFactory::class, 'deserialize'], $receiptCount);
+		$primaryId = Utils\binaryToInt($reader->read(4), 4);
+		$secondaryId = Utils\binaryToInt($reader->read(4), 4);
+		$receiptCount = Utils\binaryToInt($reader->read(4), 4);
+		$receipts = Utils\readArrayCount($reader, [ReceiptFactory::class, 'deserialize'], $receiptCount);
 
 		$instance->primaryId = $primaryId;
 		$instance->secondaryId = $secondaryId;
@@ -3308,70 +2846,64 @@ class TransactionStatement
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
-		$writer->write(Converter::intToBinary($this->primaryId, 4));
-		$writer->write(Converter::intToBinary($this->secondaryId, 4));
-		$writer->write(Converter::intToBinary(count($this->receipts), 4)); // bound: receipt_count
-		ArrayHelpers::writeArray($writer, $this->receipts);
+		$writer->write(Utils\intToBinary($this->primaryId, 4));
+		$writer->write(Utils\intToBinary($this->secondaryId, 4));
+		$writer->write(Utils\intToBinary(count($this->receipts), 4)); // bound: receipt_count
+		Utils\writeArray($writer, $this->receipts);
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '';
-		$result .= 'primaryId: ' . '0x' . Converter::intToHex($this->primaryId, 4) . ', ';
-		$result .= 'secondaryId: ' . '0x' . Converter::intToHex($this->secondaryId, 4) . ', ';
+		$result .= 'primaryId: ' . '0x' . Utils\intToHex($this->primaryId, 4) . ', ';
+		$result .= 'secondaryId: ' . '0x' . Utils\intToHex($this->secondaryId, 4) . ', ';
 		$result .= 'receipts: ' . '[' . implode(',', array_map(fn ($e) => $e, $this->receipts)) . ']' . ', ';
 		return $result;
 	}
 }
 
-class BlockStatement
-{
-	public array $transactionStatements;
+class BlockStatement {
+	public ?array $transactionStatements;
 
-	public array $addressResolutionStatements;
+	public ?array $addressResolutionStatements;
 
-	public array $mosaicResolutionStatements;
+	public ?array $mosaicResolutionStatements;
 
 	public function __construct(
 		?array $transactionStatements = null,
 		?array $addressResolutionStatements = null,
 		?array $mosaicResolutionStatements = null
-	) {
+	){
 		$this->transactionStatements = $transactionStatements ?? [];
 		$this->addressResolutionStatements = $addressResolutionStatements ?? [];
 		$this->mosaicResolutionStatements = $mosaicResolutionStatements ?? [];
 	}
 
-	public function sort()
-	{
+	public function sort(){
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += 4;
-		$size += ArrayHelpers::size($this->transactionStatements);
+		$size += Utils\size($this->transactionStatements);
 		$size += 4;
-		$size += ArrayHelpers::size($this->addressResolutionStatements);
+		$size += Utils\size($this->addressResolutionStatements);
 		$size += 4;
-		$size += ArrayHelpers::size($this->mosaicResolutionStatements);
+		$size += Utils\size($this->mosaicResolutionStatements);
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new BlockStatement();
 
-		$transactionStatementCount = Converter::binaryToInt($reader->read(4), 4);
-		$transactionStatements = ArrayHelpers::readArrayCount($reader, [TransactionStatement::class, 'deserialize'], $transactionStatementCount);
-		$addressResolutionStatementCount = Converter::binaryToInt($reader->read(4), 4);
-		$addressResolutionStatements = ArrayHelpers::readArrayCount($reader, [AddressResolutionStatement::class, 'deserialize'], $addressResolutionStatementCount);
-		$mosaicResolutionStatementCount = Converter::binaryToInt($reader->read(4), 4);
-		$mosaicResolutionStatements = ArrayHelpers::readArrayCount($reader, [MosaicResolutionStatement::class, 'deserialize'], $mosaicResolutionStatementCount);
+		$transactionStatementCount = Utils\binaryToInt($reader->read(4), 4);
+		$transactionStatements = Utils\readArrayCount($reader, [TransactionStatement::class, 'deserialize'], $transactionStatementCount);
+		$addressResolutionStatementCount = Utils\binaryToInt($reader->read(4), 4);
+		$addressResolutionStatements = Utils\readArrayCount($reader, [AddressResolutionStatement::class, 'deserialize'], $addressResolutionStatementCount);
+		$mosaicResolutionStatementCount = Utils\binaryToInt($reader->read(4), 4);
+		$mosaicResolutionStatements = Utils\readArrayCount($reader, [MosaicResolutionStatement::class, 'deserialize'], $mosaicResolutionStatementCount);
 
 		$instance->transactionStatements = $transactionStatements;
 		$instance->addressResolutionStatements = $addressResolutionStatements;
@@ -3379,20 +2911,18 @@ class BlockStatement
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
-		$writer->write(Converter::intToBinary(count($this->transactionStatements), 4)); // bound: transaction_statement_count
-		ArrayHelpers::writeArray($writer, $this->transactionStatements);
-		$writer->write(Converter::intToBinary(count($this->addressResolutionStatements), 4)); // bound: address_resolution_statement_count
-		ArrayHelpers::writeArray($writer, $this->addressResolutionStatements);
-		$writer->write(Converter::intToBinary(count($this->mosaicResolutionStatements), 4)); // bound: mosaic_resolution_statement_count
-		ArrayHelpers::writeArray($writer, $this->mosaicResolutionStatements);
+		$writer->write(Utils\intToBinary(count($this->transactionStatements), 4)); // bound: transaction_statement_count
+		Utils\writeArray($writer, $this->transactionStatements);
+		$writer->write(Utils\intToBinary(count($this->addressResolutionStatements), 4)); // bound: address_resolution_statement_count
+		Utils\writeArray($writer, $this->addressResolutionStatements);
+		$writer->write(Utils\intToBinary(count($this->mosaicResolutionStatements), 4)); // bound: mosaic_resolution_statement_count
+		Utils\writeArray($writer, $this->mosaicResolutionStatements);
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '';
 		$result .= 'transactionStatements: ' . '[' . implode(',', array_map(fn ($e) => $e, $this->transactionStatements)) . ']' . ', ';
 		$result .= 'addressResolutionStatements: ' . '[' . implode(',', array_map(fn ($e) => $e, $this->addressResolutionStatements)) . ']' . ', ';
@@ -3401,15 +2931,14 @@ class BlockStatement
 	}
 }
 
-class AccountKeyLinkTransactionV1 extends Transaction
-{
+class AccountKeyLinkTransactionV1 extends Transaction {
 	const TRANSACTION_VERSION = 1;
 
 	const TRANSACTION_TYPE = TransactionType::ACCOUNT_KEY_LINK;
 
-	public PublicKey $linkedPublicKey;
+	public ?PublicKey $linkedPublicKey;
 
-	public LinkAction $linkAction;
+	public ?LinkAction $linkAction;
 
 	public function __construct(
 		?Signature $signature = null,
@@ -3419,7 +2948,7 @@ class AccountKeyLinkTransactionV1 extends Transaction
 		?Timestamp $deadline = null,
 		?PublicKey $linkedPublicKey = null,
 		?LinkAction $linkAction = null
-	) {
+	){
 		parent::__construct(
 			$signature,
 			$signerPublicKey,
@@ -3433,12 +2962,10 @@ class AccountKeyLinkTransactionV1 extends Transaction
 		$this->linkAction = $linkAction ?? new LinkAction();
 	}
 
-	public function sort()
-	{
+	public function sort(){
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += parent::size();
 		$size += $this->linkedPublicKey->size();
@@ -3446,8 +2973,7 @@ class AccountKeyLinkTransactionV1 extends Transaction
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new AccountKeyLinkTransactionV1();
 
 		Transaction::_deserialize($reader, $instance);
@@ -3459,8 +2985,7 @@ class AccountKeyLinkTransactionV1 extends Transaction
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$this->sort();
 		parent::_serialize($writer);
@@ -3469,8 +2994,7 @@ class AccountKeyLinkTransactionV1 extends Transaction
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '(';
 		$result .= parent::__toString();
 		$result .= 'linkedPublicKey: ' . $this->linkedPublicKey . ', ';
@@ -3480,22 +3004,21 @@ class AccountKeyLinkTransactionV1 extends Transaction
 	}
 }
 
-class EmbeddedAccountKeyLinkTransactionV1 extends EmbeddedTransaction
-{
+class EmbeddedAccountKeyLinkTransactionV1 extends EmbeddedTransaction {
 	const TRANSACTION_VERSION = 1;
 
 	const TRANSACTION_TYPE = TransactionType::ACCOUNT_KEY_LINK;
 
-	public PublicKey $linkedPublicKey;
+	public ?PublicKey $linkedPublicKey;
 
-	public LinkAction $linkAction;
+	public ?LinkAction $linkAction;
 
 	public function __construct(
 		?PublicKey $signerPublicKey = null,
 		?NetworkType $network = null,
 		?PublicKey $linkedPublicKey = null,
 		?LinkAction $linkAction = null
-	) {
+	){
 		parent::__construct(
 			$signerPublicKey,
 			EmbeddedAccountKeyLinkTransactionV1::TRANSACTION_VERSION,
@@ -3506,12 +3029,10 @@ class EmbeddedAccountKeyLinkTransactionV1 extends EmbeddedTransaction
 		$this->linkAction = $linkAction ?? new LinkAction();
 	}
 
-	public function sort()
-	{
+	public function sort(){
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += parent::size();
 		$size += $this->linkedPublicKey->size();
@@ -3519,8 +3040,7 @@ class EmbeddedAccountKeyLinkTransactionV1 extends EmbeddedTransaction
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new EmbeddedAccountKeyLinkTransactionV1();
 
 		EmbeddedTransaction::_deserialize($reader, $instance);
@@ -3532,8 +3052,7 @@ class EmbeddedAccountKeyLinkTransactionV1 extends EmbeddedTransaction
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$this->sort();
 		parent::_serialize($writer);
@@ -3542,8 +3061,7 @@ class EmbeddedAccountKeyLinkTransactionV1 extends EmbeddedTransaction
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '(';
 		$result .= parent::__toString();
 		$result .= 'linkedPublicKey: ' . $this->linkedPublicKey . ', ';
@@ -3553,15 +3071,14 @@ class EmbeddedAccountKeyLinkTransactionV1 extends EmbeddedTransaction
 	}
 }
 
-class NodeKeyLinkTransactionV1 extends Transaction
-{
+class NodeKeyLinkTransactionV1 extends Transaction {
 	const TRANSACTION_VERSION = 1;
 
 	const TRANSACTION_TYPE = TransactionType::NODE_KEY_LINK;
 
-	public PublicKey $linkedPublicKey;
+	public ?PublicKey $linkedPublicKey;
 
-	public LinkAction $linkAction;
+	public ?LinkAction $linkAction;
 
 	public function __construct(
 		?Signature $signature = null,
@@ -3571,7 +3088,7 @@ class NodeKeyLinkTransactionV1 extends Transaction
 		?Timestamp $deadline = null,
 		?PublicKey $linkedPublicKey = null,
 		?LinkAction $linkAction = null
-	) {
+	){
 		parent::__construct(
 			$signature,
 			$signerPublicKey,
@@ -3585,12 +3102,10 @@ class NodeKeyLinkTransactionV1 extends Transaction
 		$this->linkAction = $linkAction ?? new LinkAction();
 	}
 
-	public function sort()
-	{
+	public function sort(){
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += parent::size();
 		$size += $this->linkedPublicKey->size();
@@ -3598,8 +3113,7 @@ class NodeKeyLinkTransactionV1 extends Transaction
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new NodeKeyLinkTransactionV1();
 
 		Transaction::_deserialize($reader, $instance);
@@ -3611,8 +3125,7 @@ class NodeKeyLinkTransactionV1 extends Transaction
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$this->sort();
 		parent::_serialize($writer);
@@ -3621,8 +3134,7 @@ class NodeKeyLinkTransactionV1 extends Transaction
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '(';
 		$result .= parent::__toString();
 		$result .= 'linkedPublicKey: ' . $this->linkedPublicKey . ', ';
@@ -3632,22 +3144,21 @@ class NodeKeyLinkTransactionV1 extends Transaction
 	}
 }
 
-class EmbeddedNodeKeyLinkTransactionV1 extends EmbeddedTransaction
-{
+class EmbeddedNodeKeyLinkTransactionV1 extends EmbeddedTransaction {
 	const TRANSACTION_VERSION = 1;
 
 	const TRANSACTION_TYPE = TransactionType::NODE_KEY_LINK;
 
-	public PublicKey $linkedPublicKey;
+	public ?PublicKey $linkedPublicKey;
 
-	public LinkAction $linkAction;
+	public ?LinkAction $linkAction;
 
 	public function __construct(
 		?PublicKey $signerPublicKey = null,
 		?NetworkType $network = null,
 		?PublicKey $linkedPublicKey = null,
 		?LinkAction $linkAction = null
-	) {
+	){
 		parent::__construct(
 			$signerPublicKey,
 			EmbeddedNodeKeyLinkTransactionV1::TRANSACTION_VERSION,
@@ -3658,12 +3169,10 @@ class EmbeddedNodeKeyLinkTransactionV1 extends EmbeddedTransaction
 		$this->linkAction = $linkAction ?? new LinkAction();
 	}
 
-	public function sort()
-	{
+	public function sort(){
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += parent::size();
 		$size += $this->linkedPublicKey->size();
@@ -3671,8 +3180,7 @@ class EmbeddedNodeKeyLinkTransactionV1 extends EmbeddedTransaction
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new EmbeddedNodeKeyLinkTransactionV1();
 
 		EmbeddedTransaction::_deserialize($reader, $instance);
@@ -3684,8 +3192,7 @@ class EmbeddedNodeKeyLinkTransactionV1 extends EmbeddedTransaction
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$this->sort();
 		parent::_serialize($writer);
@@ -3694,8 +3201,7 @@ class EmbeddedNodeKeyLinkTransactionV1 extends EmbeddedTransaction
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '(';
 		$result .= parent::__toString();
 		$result .= 'linkedPublicKey: ' . $this->linkedPublicKey . ', ';
@@ -3705,27 +3211,23 @@ class EmbeddedNodeKeyLinkTransactionV1 extends EmbeddedTransaction
 	}
 }
 
-class Cosignature
-{
-	public int $version;
+class Cosignature {
+	public ?int $version;
 
-	public PublicKey $signerPublicKey;
+	public ?PublicKey $signerPublicKey;
 
-	public Signature $signature;
+	public ?Signature $signature;
 
-	public function __construct(?int $version = null, ?PublicKey $signerPublicKey = null, ?Signature $signature = null)
-	{
+	public function __construct(?int $version = null, ?PublicKey $signerPublicKey = null, ?Signature $signature = null){
 		$this->version = $version ?? 0;
 		$this->signerPublicKey = $signerPublicKey ?? new PublicKey();
 		$this->signature = $signature ?? new Signature();
 	}
 
-	public function sort()
-	{
+	public function sort(){
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += 8;
 		$size += $this->signerPublicKey->size();
@@ -3733,11 +3235,10 @@ class Cosignature
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new Cosignature();
 
-		$version = Converter::binaryToInt($reader->read(8), 8);
+		$version = Utils\binaryToInt($reader->read(8), 8);
 		$signerPublicKey = PublicKey::deserialize($reader);
 		$signature = Signature::deserialize($reader);
 
@@ -3747,53 +3248,48 @@ class Cosignature
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
-		$writer->write(Converter::intToBinary($this->version, 8));
+		$writer->write(Utils\intToBinary($this->version, 8));
 		$writer->write($this->signerPublicKey->serialize());
 		$writer->write($this->signature->serialize());
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '';
-		$result .= 'version: ' . '0x' . Converter::intToHex($this->version, 8) . ', ';
+		$result .= 'version: ' . '0x' . Utils\intToHex($this->version, 8) . ', ';
 		$result .= 'signerPublicKey: ' . $this->signerPublicKey . ', ';
 		$result .= 'signature: ' . $this->signature . ', ';
 		return $result;
 	}
 }
 
-class DetachedCosignature
-{
-	public int $version;
+class DetachedCosignature {
+	public ?int $version;
 
-	public PublicKey $signerPublicKey;
+	public ?PublicKey $signerPublicKey;
 
-	public Signature $signature;
+	public ?Signature $signature;
 
-	public Hash256 $parentHash;
+	public ?Hash256 $parentHash;
 
 	public function __construct(
 		?int $version = null,
 		?PublicKey $signerPublicKey = null,
 		?Signature $signature = null,
 		?Hash256 $parentHash = null
-	) {
+	){
 		$this->version = $version ?? 0;
 		$this->signerPublicKey = $signerPublicKey ?? new PublicKey();
 		$this->signature = $signature ?? new Signature();
 		$this->parentHash = $parentHash ?? new Hash256();
 	}
 
-	public function sort()
-	{
+	public function sort(){
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += 8;
 		$size += $this->signerPublicKey->size();
@@ -3802,11 +3298,10 @@ class DetachedCosignature
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new DetachedCosignature();
 
-		$version = Converter::binaryToInt($reader->read(8), 8);
+		$version = Utils\binaryToInt($reader->read(8), 8);
 		$signerPublicKey = PublicKey::deserialize($reader);
 		$signature = Signature::deserialize($reader);
 		$parentHash = Hash256::deserialize($reader);
@@ -3818,20 +3313,18 @@ class DetachedCosignature
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
-		$writer->write(Converter::intToBinary($this->version, 8));
+		$writer->write(Utils\intToBinary($this->version, 8));
 		$writer->write($this->signerPublicKey->serialize());
 		$writer->write($this->signature->serialize());
 		$writer->write($this->parentHash->serialize());
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '';
-		$result .= 'version: ' . '0x' . Converter::intToHex($this->version, 8) . ', ';
+		$result .= 'version: ' . '0x' . Utils\intToHex($this->version, 8) . ', ';
 		$result .= 'signerPublicKey: ' . $this->signerPublicKey . ', ';
 		$result .= 'signature: ' . $this->signature . ', ';
 		$result .= 'parentHash: ' . $this->parentHash . ', ';
@@ -3839,17 +3332,16 @@ class DetachedCosignature
 	}
 }
 
-class AggregateCompleteTransactionV1 extends Transaction
-{
+class AggregateCompleteTransactionV1 extends Transaction {
 	const TRANSACTION_VERSION = 1;
 
 	const TRANSACTION_TYPE = TransactionType::AGGREGATE_COMPLETE;
 
-	public Hash256 $transactionsHash;
+	public ?Hash256 $transactionsHash;
 
-	public array $transactions;
+	public ?array $transactions;
 
-	public array $cosignatures;
+	public ?array $cosignatures;
 
 	private int $aggregateTransactionHeaderReserved_1 = 0; // reserved field
 
@@ -3862,7 +3354,7 @@ class AggregateCompleteTransactionV1 extends Transaction
 		?Hash256 $transactionsHash = null,
 		?array $transactions = null,
 		?array $cosignatures = null
-	) {
+	){
 		parent::__construct(
 			$signature,
 			$signerPublicKey,
@@ -3878,34 +3370,31 @@ class AggregateCompleteTransactionV1 extends Transaction
 		$this->aggregateTransactionHeaderReserved_1 = 0; // reserved field
 	}
 
-	public function sort()
-	{
+	public function sort(){
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += parent::size();
 		$size += $this->transactionsHash->size();
 		$size += 4;
 		$size += 4;
-		$size += ArrayHelpers::size($this->transactions, 8, false);
-		$size += ArrayHelpers::size($this->cosignatures);
+		$size += Utils\size($this->transactions, 8, false);
+		$size += Utils\size($this->cosignatures);
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new AggregateCompleteTransactionV1();
 
 		Transaction::_deserialize($reader, $instance);
 		$transactionsHash = Hash256::deserialize($reader);
-		$payloadSize = Converter::binaryToInt($reader->read(4), 4);
-		$aggregateTransactionHeaderReserved_1 = Converter::binaryToInt($reader->read(4), 4);
+		$payloadSize = Utils\binaryToInt($reader->read(4), 4);
+		$aggregateTransactionHeaderReserved_1 = Utils\binaryToInt($reader->read(4), 4);
 		if (0 !== $aggregateTransactionHeaderReserved_1)
 			throw new OutOfRangeException('Invalid value of reserved field (' . $aggregateTransactionHeaderReserved_1 . ')');
-		$transactions = ArrayHelpers::readVariableSizeElements($reader, [EmbeddedTransactionFactory::class, 'deserialize'], 8, false);
-		$cosignatures = ArrayHelpers::readArray($reader, [Cosignature::class, 'deserialize']);
+		$transactions = Utils\readVariableSizeElements($reader, [EmbeddedTransactionFactory::class, 'deserialize'], $payloadSize, 8, false);
+		$cosignatures = Utils\readArray($reader, [Cosignature::class, 'deserialize']);
 
 		$instance->transactionsHash = $transactionsHash;
 		$instance->transactions = $transactions;
@@ -3913,21 +3402,19 @@ class AggregateCompleteTransactionV1 extends Transaction
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$this->sort();
 		parent::_serialize($writer);
 		$writer->write($this->transactionsHash->serialize());
-		$writer->write(Converter::intToBinary(ArrayHelpers::size($this->transactions, 8, false), 4)); // bound: payload_size
-		$writer->write(Converter::intToBinary($this->aggregateTransactionHeaderReserved_1, 4));
-		ArrayHelpers::writeVariableSizeElements($writer, $this->transactions, 8, false);
-		ArrayHelpers::writeArray($writer, $this->cosignatures);
+		$writer->write(Utils\intToBinary(Utils\size($this->transactions, 8, false), 4)); // bound: payload_size
+		$writer->write(Utils\intToBinary($this->aggregateTransactionHeaderReserved_1, 4));
+		Utils\writeVariableSizeElements($writer, $this->transactions, 8, false);
+		Utils\writeArray($writer, $this->cosignatures);
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '(';
 		$result .= parent::__toString();
 		$result .= 'transactionsHash: ' . $this->transactionsHash . ', ';
@@ -3938,17 +3425,16 @@ class AggregateCompleteTransactionV1 extends Transaction
 	}
 }
 
-class AggregateCompleteTransactionV2 extends Transaction
-{
+class AggregateCompleteTransactionV2 extends Transaction {
 	const TRANSACTION_VERSION = 2;
 
 	const TRANSACTION_TYPE = TransactionType::AGGREGATE_COMPLETE;
 
-	public Hash256 $transactionsHash;
+	public ?Hash256 $transactionsHash;
 
-	public array $transactions;
+	public ?array $transactions;
 
-	public array $cosignatures;
+	public ?array $cosignatures;
 
 	private int $aggregateTransactionHeaderReserved_1 = 0; // reserved field
 
@@ -3961,7 +3447,7 @@ class AggregateCompleteTransactionV2 extends Transaction
 		?Hash256 $transactionsHash = null,
 		?array $transactions = null,
 		?array $cosignatures = null
-	) {
+	){
 		parent::__construct(
 			$signature,
 			$signerPublicKey,
@@ -3977,34 +3463,31 @@ class AggregateCompleteTransactionV2 extends Transaction
 		$this->aggregateTransactionHeaderReserved_1 = 0; // reserved field
 	}
 
-	public function sort()
-	{
+	public function sort(){
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += parent::size();
 		$size += $this->transactionsHash->size();
 		$size += 4;
 		$size += 4;
-		$size += ArrayHelpers::size($this->transactions, 8, false);
-		$size += ArrayHelpers::size($this->cosignatures);
+		$size += Utils\size($this->transactions, 8, false);
+		$size += Utils\size($this->cosignatures);
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new AggregateCompleteTransactionV2();
 
 		Transaction::_deserialize($reader, $instance);
 		$transactionsHash = Hash256::deserialize($reader);
-		$payloadSize = Converter::binaryToInt($reader->read(4), 4);
-		$aggregateTransactionHeaderReserved_1 = Converter::binaryToInt($reader->read(4), 4);
+		$payloadSize = Utils\binaryToInt($reader->read(4), 4);
+		$aggregateTransactionHeaderReserved_1 = Utils\binaryToInt($reader->read(4), 4);
 		if (0 !== $aggregateTransactionHeaderReserved_1)
 			throw new OutOfRangeException('Invalid value of reserved field (' . $aggregateTransactionHeaderReserved_1 . ')');
-		$transactions = ArrayHelpers::readVariableSizeElements($reader, [EmbeddedTransactionFactory::class, 'deserialize'], 8, false);
-		$cosignatures = ArrayHelpers::readArray($reader, [Cosignature::class, 'deserialize']);
+		$transactions = Utils\readVariableSizeElements($reader, [EmbeddedTransactionFactory::class, 'deserialize'], $payloadSize, 8, false);
+		$cosignatures = Utils\readArray($reader, [Cosignature::class, 'deserialize']);
 
 		$instance->transactionsHash = $transactionsHash;
 		$instance->transactions = $transactions;
@@ -4012,21 +3495,19 @@ class AggregateCompleteTransactionV2 extends Transaction
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$this->sort();
 		parent::_serialize($writer);
 		$writer->write($this->transactionsHash->serialize());
-		$writer->write(Converter::intToBinary(ArrayHelpers::size($this->transactions, 8, false), 4)); // bound: payload_size
-		$writer->write(Converter::intToBinary($this->aggregateTransactionHeaderReserved_1, 4));
-		ArrayHelpers::writeVariableSizeElements($writer, $this->transactions, 8, false);
-		ArrayHelpers::writeArray($writer, $this->cosignatures);
+		$writer->write(Utils\intToBinary(Utils\size($this->transactions, 8, false), 4)); // bound: payload_size
+		$writer->write(Utils\intToBinary($this->aggregateTransactionHeaderReserved_1, 4));
+		Utils\writeVariableSizeElements($writer, $this->transactions, 8, false);
+		Utils\writeArray($writer, $this->cosignatures);
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '(';
 		$result .= parent::__toString();
 		$result .= 'transactionsHash: ' . $this->transactionsHash . ', ';
@@ -4037,17 +3518,16 @@ class AggregateCompleteTransactionV2 extends Transaction
 	}
 }
 
-class AggregateBondedTransactionV1 extends Transaction
-{
+class AggregateBondedTransactionV1 extends Transaction {
 	const TRANSACTION_VERSION = 1;
 
 	const TRANSACTION_TYPE = TransactionType::AGGREGATE_BONDED;
 
-	public Hash256 $transactionsHash;
+	public ?Hash256 $transactionsHash;
 
-	public array $transactions;
+	public ?array $transactions;
 
-	public array $cosignatures;
+	public ?array $cosignatures;
 
 	private int $aggregateTransactionHeaderReserved_1 = 0; // reserved field
 
@@ -4060,7 +3540,7 @@ class AggregateBondedTransactionV1 extends Transaction
 		?Hash256 $transactionsHash = null,
 		?array $transactions = null,
 		?array $cosignatures = null
-	) {
+	){
 		parent::__construct(
 			$signature,
 			$signerPublicKey,
@@ -4076,34 +3556,31 @@ class AggregateBondedTransactionV1 extends Transaction
 		$this->aggregateTransactionHeaderReserved_1 = 0; // reserved field
 	}
 
-	public function sort()
-	{
+	public function sort(){
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += parent::size();
 		$size += $this->transactionsHash->size();
 		$size += 4;
 		$size += 4;
-		$size += ArrayHelpers::size($this->transactions, 8, false);
-		$size += ArrayHelpers::size($this->cosignatures);
+		$size += Utils\size($this->transactions, 8, false);
+		$size += Utils\size($this->cosignatures);
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new AggregateBondedTransactionV1();
 
 		Transaction::_deserialize($reader, $instance);
 		$transactionsHash = Hash256::deserialize($reader);
-		$payloadSize = Converter::binaryToInt($reader->read(4), 4);
-		$aggregateTransactionHeaderReserved_1 = Converter::binaryToInt($reader->read(4), 4);
+		$payloadSize = Utils\binaryToInt($reader->read(4), 4);
+		$aggregateTransactionHeaderReserved_1 = Utils\binaryToInt($reader->read(4), 4);
 		if (0 !== $aggregateTransactionHeaderReserved_1)
 			throw new OutOfRangeException('Invalid value of reserved field (' . $aggregateTransactionHeaderReserved_1 . ')');
-		$transactions = ArrayHelpers::readVariableSizeElements($reader, [EmbeddedTransactionFactory::class, 'deserialize'], 8, false);
-		$cosignatures = ArrayHelpers::readArray($reader, [Cosignature::class, 'deserialize']);
+		$transactions = Utils\readVariableSizeElements($reader, [EmbeddedTransactionFactory::class, 'deserialize'], $payloadSize, 8, false);
+		$cosignatures = Utils\readArray($reader, [Cosignature::class, 'deserialize']);
 
 		$instance->transactionsHash = $transactionsHash;
 		$instance->transactions = $transactions;
@@ -4111,21 +3588,19 @@ class AggregateBondedTransactionV1 extends Transaction
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$this->sort();
 		parent::_serialize($writer);
 		$writer->write($this->transactionsHash->serialize());
-		$writer->write(Converter::intToBinary(ArrayHelpers::size($this->transactions, 8, false), 4)); // bound: payload_size
-		$writer->write(Converter::intToBinary($this->aggregateTransactionHeaderReserved_1, 4));
-		ArrayHelpers::writeVariableSizeElements($writer, $this->transactions, 8, false);
-		ArrayHelpers::writeArray($writer, $this->cosignatures);
+		$writer->write(Utils\intToBinary(Utils\size($this->transactions, 8, false), 4)); // bound: payload_size
+		$writer->write(Utils\intToBinary($this->aggregateTransactionHeaderReserved_1, 4));
+		Utils\writeVariableSizeElements($writer, $this->transactions, 8, false);
+		Utils\writeArray($writer, $this->cosignatures);
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '(';
 		$result .= parent::__toString();
 		$result .= 'transactionsHash: ' . $this->transactionsHash . ', ';
@@ -4136,17 +3611,16 @@ class AggregateBondedTransactionV1 extends Transaction
 	}
 }
 
-class AggregateBondedTransactionV2 extends Transaction
-{
+class AggregateBondedTransactionV2 extends Transaction {
 	const TRANSACTION_VERSION = 2;
 
 	const TRANSACTION_TYPE = TransactionType::AGGREGATE_BONDED;
 
-	public Hash256 $transactionsHash;
+	public ?Hash256 $transactionsHash;
 
-	public array $transactions;
+	public ?array $transactions;
 
-	public array $cosignatures;
+	public ?array $cosignatures;
 
 	private int $aggregateTransactionHeaderReserved_1 = 0; // reserved field
 
@@ -4159,7 +3633,7 @@ class AggregateBondedTransactionV2 extends Transaction
 		?Hash256 $transactionsHash = null,
 		?array $transactions = null,
 		?array $cosignatures = null
-	) {
+	){
 		parent::__construct(
 			$signature,
 			$signerPublicKey,
@@ -4175,34 +3649,31 @@ class AggregateBondedTransactionV2 extends Transaction
 		$this->aggregateTransactionHeaderReserved_1 = 0; // reserved field
 	}
 
-	public function sort()
-	{
+	public function sort(){
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += parent::size();
 		$size += $this->transactionsHash->size();
 		$size += 4;
 		$size += 4;
-		$size += ArrayHelpers::size($this->transactions, 8, false);
-		$size += ArrayHelpers::size($this->cosignatures);
+		$size += Utils\size($this->transactions, 8, false);
+		$size += Utils\size($this->cosignatures);
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new AggregateBondedTransactionV2();
 
 		Transaction::_deserialize($reader, $instance);
 		$transactionsHash = Hash256::deserialize($reader);
-		$payloadSize = Converter::binaryToInt($reader->read(4), 4);
-		$aggregateTransactionHeaderReserved_1 = Converter::binaryToInt($reader->read(4), 4);
+		$payloadSize = Utils\binaryToInt($reader->read(4), 4);
+		$aggregateTransactionHeaderReserved_1 = Utils\binaryToInt($reader->read(4), 4);
 		if (0 !== $aggregateTransactionHeaderReserved_1)
 			throw new OutOfRangeException('Invalid value of reserved field (' . $aggregateTransactionHeaderReserved_1 . ')');
-		$transactions = ArrayHelpers::readVariableSizeElements($reader, [EmbeddedTransactionFactory::class, 'deserialize'], 8, false);
-		$cosignatures = ArrayHelpers::readArray($reader, [Cosignature::class, 'deserialize']);
+		$transactions = Utils\readVariableSizeElements($reader, [EmbeddedTransactionFactory::class, 'deserialize'], $payloadSize, 8, false);
+		$cosignatures = Utils\readArray($reader, [Cosignature::class, 'deserialize']);
 
 		$instance->transactionsHash = $transactionsHash;
 		$instance->transactions = $transactions;
@@ -4210,21 +3681,19 @@ class AggregateBondedTransactionV2 extends Transaction
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$this->sort();
 		parent::_serialize($writer);
 		$writer->write($this->transactionsHash->serialize());
-		$writer->write(Converter::intToBinary(ArrayHelpers::size($this->transactions, 8, false), 4)); // bound: payload_size
-		$writer->write(Converter::intToBinary($this->aggregateTransactionHeaderReserved_1, 4));
-		ArrayHelpers::writeVariableSizeElements($writer, $this->transactions, 8, false);
-		ArrayHelpers::writeArray($writer, $this->cosignatures);
+		$writer->write(Utils\intToBinary(Utils\size($this->transactions, 8, false), 4)); // bound: payload_size
+		$writer->write(Utils\intToBinary($this->aggregateTransactionHeaderReserved_1, 4));
+		Utils\writeVariableSizeElements($writer, $this->transactions, 8, false);
+		Utils\writeArray($writer, $this->cosignatures);
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '(';
 		$result .= parent::__toString();
 		$result .= 'transactionsHash: ' . $this->transactionsHash . ', ';
@@ -4235,19 +3704,18 @@ class AggregateBondedTransactionV2 extends Transaction
 	}
 }
 
-class VotingKeyLinkTransactionV1 extends Transaction
-{
+class VotingKeyLinkTransactionV1 extends Transaction {
 	const TRANSACTION_VERSION = 1;
 
 	const TRANSACTION_TYPE = TransactionType::VOTING_KEY_LINK;
 
-	public VotingPublicKey $linkedPublicKey;
+	public ?VotingPublicKey $linkedPublicKey;
 
-	public FinalizationEpoch $startEpoch;
+	public ?FinalizationEpoch $startEpoch;
 
-	public FinalizationEpoch $endEpoch;
+	public ?FinalizationEpoch $endEpoch;
 
-	public LinkAction $linkAction;
+	public ?LinkAction $linkAction;
 
 	public function __construct(
 		?Signature $signature = null,
@@ -4259,7 +3727,7 @@ class VotingKeyLinkTransactionV1 extends Transaction
 		?FinalizationEpoch $startEpoch = null,
 		?FinalizationEpoch $endEpoch = null,
 		?LinkAction $linkAction = null
-	) {
+	){
 		parent::__construct(
 			$signature,
 			$signerPublicKey,
@@ -4275,12 +3743,10 @@ class VotingKeyLinkTransactionV1 extends Transaction
 		$this->linkAction = $linkAction ?? new LinkAction();
 	}
 
-	public function sort()
-	{
+	public function sort(){
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += parent::size();
 		$size += $this->linkedPublicKey->size();
@@ -4290,8 +3756,7 @@ class VotingKeyLinkTransactionV1 extends Transaction
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new VotingKeyLinkTransactionV1();
 
 		Transaction::_deserialize($reader, $instance);
@@ -4307,8 +3772,7 @@ class VotingKeyLinkTransactionV1 extends Transaction
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$this->sort();
 		parent::_serialize($writer);
@@ -4319,8 +3783,7 @@ class VotingKeyLinkTransactionV1 extends Transaction
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '(';
 		$result .= parent::__toString();
 		$result .= 'linkedPublicKey: ' . $this->linkedPublicKey . ', ';
@@ -4332,19 +3795,18 @@ class VotingKeyLinkTransactionV1 extends Transaction
 	}
 }
 
-class EmbeddedVotingKeyLinkTransactionV1 extends EmbeddedTransaction
-{
+class EmbeddedVotingKeyLinkTransactionV1 extends EmbeddedTransaction {
 	const TRANSACTION_VERSION = 1;
 
 	const TRANSACTION_TYPE = TransactionType::VOTING_KEY_LINK;
 
-	public VotingPublicKey $linkedPublicKey;
+	public ?VotingPublicKey $linkedPublicKey;
 
-	public FinalizationEpoch $startEpoch;
+	public ?FinalizationEpoch $startEpoch;
 
-	public FinalizationEpoch $endEpoch;
+	public ?FinalizationEpoch $endEpoch;
 
-	public LinkAction $linkAction;
+	public ?LinkAction $linkAction;
 
 	public function __construct(
 		?PublicKey $signerPublicKey = null,
@@ -4353,7 +3815,7 @@ class EmbeddedVotingKeyLinkTransactionV1 extends EmbeddedTransaction
 		?FinalizationEpoch $startEpoch = null,
 		?FinalizationEpoch $endEpoch = null,
 		?LinkAction $linkAction = null
-	) {
+	){
 		parent::__construct(
 			$signerPublicKey,
 			EmbeddedVotingKeyLinkTransactionV1::TRANSACTION_VERSION,
@@ -4366,12 +3828,10 @@ class EmbeddedVotingKeyLinkTransactionV1 extends EmbeddedTransaction
 		$this->linkAction = $linkAction ?? new LinkAction();
 	}
 
-	public function sort()
-	{
+	public function sort(){
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += parent::size();
 		$size += $this->linkedPublicKey->size();
@@ -4381,8 +3841,7 @@ class EmbeddedVotingKeyLinkTransactionV1 extends EmbeddedTransaction
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new EmbeddedVotingKeyLinkTransactionV1();
 
 		EmbeddedTransaction::_deserialize($reader, $instance);
@@ -4398,8 +3857,7 @@ class EmbeddedVotingKeyLinkTransactionV1 extends EmbeddedTransaction
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$this->sort();
 		parent::_serialize($writer);
@@ -4410,8 +3868,7 @@ class EmbeddedVotingKeyLinkTransactionV1 extends EmbeddedTransaction
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '(';
 		$result .= parent::__toString();
 		$result .= 'linkedPublicKey: ' . $this->linkedPublicKey . ', ';
@@ -4423,15 +3880,14 @@ class EmbeddedVotingKeyLinkTransactionV1 extends EmbeddedTransaction
 	}
 }
 
-class VrfKeyLinkTransactionV1 extends Transaction
-{
+class VrfKeyLinkTransactionV1 extends Transaction {
 	const TRANSACTION_VERSION = 1;
 
 	const TRANSACTION_TYPE = TransactionType::VRF_KEY_LINK;
 
-	public PublicKey $linkedPublicKey;
+	public ?PublicKey $linkedPublicKey;
 
-	public LinkAction $linkAction;
+	public ?LinkAction $linkAction;
 
 	public function __construct(
 		?Signature $signature = null,
@@ -4441,7 +3897,7 @@ class VrfKeyLinkTransactionV1 extends Transaction
 		?Timestamp $deadline = null,
 		?PublicKey $linkedPublicKey = null,
 		?LinkAction $linkAction = null
-	) {
+	){
 		parent::__construct(
 			$signature,
 			$signerPublicKey,
@@ -4455,12 +3911,10 @@ class VrfKeyLinkTransactionV1 extends Transaction
 		$this->linkAction = $linkAction ?? new LinkAction();
 	}
 
-	public function sort()
-	{
+	public function sort(){
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += parent::size();
 		$size += $this->linkedPublicKey->size();
@@ -4468,8 +3922,7 @@ class VrfKeyLinkTransactionV1 extends Transaction
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new VrfKeyLinkTransactionV1();
 
 		Transaction::_deserialize($reader, $instance);
@@ -4481,8 +3934,7 @@ class VrfKeyLinkTransactionV1 extends Transaction
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$this->sort();
 		parent::_serialize($writer);
@@ -4491,8 +3943,7 @@ class VrfKeyLinkTransactionV1 extends Transaction
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '(';
 		$result .= parent::__toString();
 		$result .= 'linkedPublicKey: ' . $this->linkedPublicKey . ', ';
@@ -4502,22 +3953,21 @@ class VrfKeyLinkTransactionV1 extends Transaction
 	}
 }
 
-class EmbeddedVrfKeyLinkTransactionV1 extends EmbeddedTransaction
-{
+class EmbeddedVrfKeyLinkTransactionV1 extends EmbeddedTransaction {
 	const TRANSACTION_VERSION = 1;
 
 	const TRANSACTION_TYPE = TransactionType::VRF_KEY_LINK;
 
-	public PublicKey $linkedPublicKey;
+	public ?PublicKey $linkedPublicKey;
 
-	public LinkAction $linkAction;
+	public ?LinkAction $linkAction;
 
 	public function __construct(
 		?PublicKey $signerPublicKey = null,
 		?NetworkType $network = null,
 		?PublicKey $linkedPublicKey = null,
 		?LinkAction $linkAction = null
-	) {
+	){
 		parent::__construct(
 			$signerPublicKey,
 			EmbeddedVrfKeyLinkTransactionV1::TRANSACTION_VERSION,
@@ -4528,12 +3978,10 @@ class EmbeddedVrfKeyLinkTransactionV1 extends EmbeddedTransaction
 		$this->linkAction = $linkAction ?? new LinkAction();
 	}
 
-	public function sort()
-	{
+	public function sort(){
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += parent::size();
 		$size += $this->linkedPublicKey->size();
@@ -4541,8 +3989,7 @@ class EmbeddedVrfKeyLinkTransactionV1 extends EmbeddedTransaction
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new EmbeddedVrfKeyLinkTransactionV1();
 
 		EmbeddedTransaction::_deserialize($reader, $instance);
@@ -4554,8 +4001,7 @@ class EmbeddedVrfKeyLinkTransactionV1 extends EmbeddedTransaction
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$this->sort();
 		parent::_serialize($writer);
@@ -4564,8 +4010,7 @@ class EmbeddedVrfKeyLinkTransactionV1 extends EmbeddedTransaction
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '(';
 		$result .= parent::__toString();
 		$result .= 'linkedPublicKey: ' . $this->linkedPublicKey . ', ';
@@ -4575,17 +4020,16 @@ class EmbeddedVrfKeyLinkTransactionV1 extends EmbeddedTransaction
 	}
 }
 
-class HashLockTransactionV1 extends Transaction
-{
+class HashLockTransactionV1 extends Transaction {
 	const TRANSACTION_VERSION = 1;
 
 	const TRANSACTION_TYPE = TransactionType::HASH_LOCK;
 
-	public UnresolvedMosaic $mosaic;
+	public ?UnresolvedMosaic $mosaic;
 
-	public BlockDuration $duration;
+	public ?BlockDuration $duration;
 
-	public Hash256 $hash;
+	public ?Hash256 $hash;
 
 	public function __construct(
 		?Signature $signature = null,
@@ -4596,7 +4040,7 @@ class HashLockTransactionV1 extends Transaction
 		?UnresolvedMosaic $mosaic = null,
 		?BlockDuration $duration = null,
 		?Hash256 $hash = null
-	) {
+	){
 		parent::__construct(
 			$signature,
 			$signerPublicKey,
@@ -4611,13 +4055,11 @@ class HashLockTransactionV1 extends Transaction
 		$this->hash = $hash ?? new Hash256();
 	}
 
-	public function sort()
-	{
+	public function sort(){
 		$this->mosaic->sort();
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += parent::size();
 		$size += $this->mosaic->size();
@@ -4626,8 +4068,7 @@ class HashLockTransactionV1 extends Transaction
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new HashLockTransactionV1();
 
 		Transaction::_deserialize($reader, $instance);
@@ -4641,8 +4082,7 @@ class HashLockTransactionV1 extends Transaction
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$this->sort();
 		parent::_serialize($writer);
@@ -4652,8 +4092,7 @@ class HashLockTransactionV1 extends Transaction
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '(';
 		$result .= parent::__toString();
 		$result .= 'mosaic: ' . $this->mosaic . ', ';
@@ -4664,17 +4103,16 @@ class HashLockTransactionV1 extends Transaction
 	}
 }
 
-class EmbeddedHashLockTransactionV1 extends EmbeddedTransaction
-{
+class EmbeddedHashLockTransactionV1 extends EmbeddedTransaction {
 	const TRANSACTION_VERSION = 1;
 
 	const TRANSACTION_TYPE = TransactionType::HASH_LOCK;
 
-	public UnresolvedMosaic $mosaic;
+	public ?UnresolvedMosaic $mosaic;
 
-	public BlockDuration $duration;
+	public ?BlockDuration $duration;
 
-	public Hash256 $hash;
+	public ?Hash256 $hash;
 
 	public function __construct(
 		?PublicKey $signerPublicKey = null,
@@ -4682,7 +4120,7 @@ class EmbeddedHashLockTransactionV1 extends EmbeddedTransaction
 		?UnresolvedMosaic $mosaic = null,
 		?BlockDuration $duration = null,
 		?Hash256 $hash = null
-	) {
+	){
 		parent::__construct(
 			$signerPublicKey,
 			EmbeddedHashLockTransactionV1::TRANSACTION_VERSION,
@@ -4694,13 +4132,11 @@ class EmbeddedHashLockTransactionV1 extends EmbeddedTransaction
 		$this->hash = $hash ?? new Hash256();
 	}
 
-	public function sort()
-	{
+	public function sort(){
 		$this->mosaic->sort();
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += parent::size();
 		$size += $this->mosaic->size();
@@ -4709,8 +4145,7 @@ class EmbeddedHashLockTransactionV1 extends EmbeddedTransaction
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new EmbeddedHashLockTransactionV1();
 
 		EmbeddedTransaction::_deserialize($reader, $instance);
@@ -4724,8 +4159,7 @@ class EmbeddedHashLockTransactionV1 extends EmbeddedTransaction
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$this->sort();
 		parent::_serialize($writer);
@@ -4735,8 +4169,7 @@ class EmbeddedHashLockTransactionV1 extends EmbeddedTransaction
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '(';
 		$result .= parent::__toString();
 		$result .= 'mosaic: ' . $this->mosaic . ', ';
@@ -4747,8 +4180,7 @@ class EmbeddedHashLockTransactionV1 extends EmbeddedTransaction
 	}
 }
 
-class LockHashAlgorithm
-{
+class LockHashAlgorithm {
 	const SHA3_256 = 0;
 
 	const HASH_160 = 1;
@@ -4757,13 +4189,11 @@ class LockHashAlgorithm
 
 	public $value;
 
-	public function __construct(int $value = 0)
-	{
+	public function __construct($value = 0){
 		$this->value = $value;
 	}
 
-	static function valueToKey($value)
-	{
+	static function valueToKey($value){
 		$values = [
 			0, 1, 2
 		];
@@ -4778,47 +4208,37 @@ class LockHashAlgorithm
 		return $keys[$index];
 	}
 
-	public static function size()
-	{
+	public static function size(){
 		return 1;
 	}
 
-	public static function deserialize(BinaryReader $reader): self
-	{
-		return new LockHashAlgorithm(Converter::binaryToInt($reader->read(1), 1));
+	public static function deserialize(BinaryReader $reader): self {
+		return new LockHashAlgorithm(Utils\binaryToInt($reader->read(1), 1));
 	}
 
-	public static function deserializeAligned(BinaryReader $reader): self
-	{
-		return new LockHashAlgorithm(Converter::binaryToInt($reader->read(1), 1));
+	public function serialize(): string {
+		return Utils\intToBinary($this->value, 1);
 	}
 
-	public function serialize(): string
-	{
-		return Converter::intToBinary($this->value, 1);
-	}
-
-	public function __toString()
-	{
+	public function __toString(){
 		return "LockHashAlgorithm." . self::valueToKey($this->value);
 	}
 }
 
-class SecretLockTransactionV1 extends Transaction
-{
+class SecretLockTransactionV1 extends Transaction {
 	const TRANSACTION_VERSION = 1;
 
 	const TRANSACTION_TYPE = TransactionType::SECRET_LOCK;
 
-	public UnresolvedAddress $recipientAddress;
+	public ?UnresolvedAddress $recipientAddress;
 
-	public Hash256 $secret;
+	public ?Hash256 $secret;
 
-	public UnresolvedMosaic $mosaic;
+	public ?UnresolvedMosaic $mosaic;
 
-	public BlockDuration $duration;
+	public ?BlockDuration $duration;
 
-	public LockHashAlgorithm $hashAlgorithm;
+	public ?LockHashAlgorithm $hashAlgorithm;
 
 	public function __construct(
 		?Signature $signature = null,
@@ -4831,7 +4251,7 @@ class SecretLockTransactionV1 extends Transaction
 		?UnresolvedMosaic $mosaic = null,
 		?BlockDuration $duration = null,
 		?LockHashAlgorithm $hashAlgorithm = null
-	) {
+	){
 		parent::__construct(
 			$signature,
 			$signerPublicKey,
@@ -4848,13 +4268,11 @@ class SecretLockTransactionV1 extends Transaction
 		$this->hashAlgorithm = $hashAlgorithm ?? new LockHashAlgorithm();
 	}
 
-	public function sort()
-	{
+	public function sort(){
 		$this->mosaic->sort();
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += parent::size();
 		$size += $this->recipientAddress->size();
@@ -4865,8 +4283,7 @@ class SecretLockTransactionV1 extends Transaction
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new SecretLockTransactionV1();
 
 		Transaction::_deserialize($reader, $instance);
@@ -4884,8 +4301,7 @@ class SecretLockTransactionV1 extends Transaction
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$this->sort();
 		parent::_serialize($writer);
@@ -4897,8 +4313,7 @@ class SecretLockTransactionV1 extends Transaction
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '(';
 		$result .= parent::__toString();
 		$result .= 'recipientAddress: ' . $this->recipientAddress . ', ';
@@ -4911,21 +4326,20 @@ class SecretLockTransactionV1 extends Transaction
 	}
 }
 
-class EmbeddedSecretLockTransactionV1 extends EmbeddedTransaction
-{
+class EmbeddedSecretLockTransactionV1 extends EmbeddedTransaction {
 	const TRANSACTION_VERSION = 1;
 
 	const TRANSACTION_TYPE = TransactionType::SECRET_LOCK;
 
-	public UnresolvedAddress $recipientAddress;
+	public ?UnresolvedAddress $recipientAddress;
 
-	public Hash256 $secret;
+	public ?Hash256 $secret;
 
-	public UnresolvedMosaic $mosaic;
+	public ?UnresolvedMosaic $mosaic;
 
-	public BlockDuration $duration;
+	public ?BlockDuration $duration;
 
-	public LockHashAlgorithm $hashAlgorithm;
+	public ?LockHashAlgorithm $hashAlgorithm;
 
 	public function __construct(
 		?PublicKey $signerPublicKey = null,
@@ -4935,7 +4349,7 @@ class EmbeddedSecretLockTransactionV1 extends EmbeddedTransaction
 		?UnresolvedMosaic $mosaic = null,
 		?BlockDuration $duration = null,
 		?LockHashAlgorithm $hashAlgorithm = null
-	) {
+	){
 		parent::__construct(
 			$signerPublicKey,
 			EmbeddedSecretLockTransactionV1::TRANSACTION_VERSION,
@@ -4949,13 +4363,11 @@ class EmbeddedSecretLockTransactionV1 extends EmbeddedTransaction
 		$this->hashAlgorithm = $hashAlgorithm ?? new LockHashAlgorithm();
 	}
 
-	public function sort()
-	{
+	public function sort(){
 		$this->mosaic->sort();
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += parent::size();
 		$size += $this->recipientAddress->size();
@@ -4966,8 +4378,7 @@ class EmbeddedSecretLockTransactionV1 extends EmbeddedTransaction
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new EmbeddedSecretLockTransactionV1();
 
 		EmbeddedTransaction::_deserialize($reader, $instance);
@@ -4985,8 +4396,7 @@ class EmbeddedSecretLockTransactionV1 extends EmbeddedTransaction
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$this->sort();
 		parent::_serialize($writer);
@@ -4998,8 +4408,7 @@ class EmbeddedSecretLockTransactionV1 extends EmbeddedTransaction
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '(';
 		$result .= parent::__toString();
 		$result .= 'recipientAddress: ' . $this->recipientAddress . ', ';
@@ -5012,19 +4421,18 @@ class EmbeddedSecretLockTransactionV1 extends EmbeddedTransaction
 	}
 }
 
-class SecretProofTransactionV1 extends Transaction
-{
+class SecretProofTransactionV1 extends Transaction {
 	const TRANSACTION_VERSION = 1;
 
 	const TRANSACTION_TYPE = TransactionType::SECRET_PROOF;
 
-	public UnresolvedAddress $recipientAddress;
+	public ?UnresolvedAddress $recipientAddress;
 
-	public Hash256 $secret;
+	public ?Hash256 $secret;
 
-	public LockHashAlgorithm $hashAlgorithm;
+	public ?LockHashAlgorithm $hashAlgorithm;
 
-	public string $proof;
+	public ?string $proof;
 
 	public function __construct(
 		?Signature $signature = null,
@@ -5036,7 +4444,7 @@ class SecretProofTransactionV1 extends Transaction
 		?Hash256 $secret = null,
 		?LockHashAlgorithm $hashAlgorithm = null,
 		?string $proof = null
-	) {
+	){
 		parent::__construct(
 			$signature,
 			$signerPublicKey,
@@ -5052,12 +4460,10 @@ class SecretProofTransactionV1 extends Transaction
 		$this->proof = $proof ?? '';
 	}
 
-	public function sort()
-	{
+	public function sort(){
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += parent::size();
 		$size += $this->recipientAddress->size();
@@ -5068,14 +4474,13 @@ class SecretProofTransactionV1 extends Transaction
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new SecretProofTransactionV1();
 
 		Transaction::_deserialize($reader, $instance);
 		$recipientAddress = UnresolvedAddress::deserialize($reader);
 		$secret = Hash256::deserialize($reader);
-		$proofSize = Converter::binaryToInt($reader->read(2), 2);
+		$proofSize = Utils\binaryToInt($reader->read(2), 2);
 		$hashAlgorithm = LockHashAlgorithm::deserialize($reader);
 		$proof = $reader->read($proofSize);
 
@@ -5086,21 +4491,19 @@ class SecretProofTransactionV1 extends Transaction
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$this->sort();
 		parent::_serialize($writer);
 		$writer->write($this->recipientAddress->serialize());
 		$writer->write($this->secret->serialize());
-		$writer->write(Converter::intToBinary(strlen($this->proof), 2)); // bound: proof_size
+		$writer->write(Utils\intToBinary(strlen($this->proof), 2)); // bound: proof_size
 		$writer->write($this->hashAlgorithm->serialize());
 		$writer->write($this->proof);
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '(';
 		$result .= parent::__toString();
 		$result .= 'recipientAddress: ' . $this->recipientAddress . ', ';
@@ -5112,19 +4515,18 @@ class SecretProofTransactionV1 extends Transaction
 	}
 }
 
-class EmbeddedSecretProofTransactionV1 extends EmbeddedTransaction
-{
+class EmbeddedSecretProofTransactionV1 extends EmbeddedTransaction {
 	const TRANSACTION_VERSION = 1;
 
 	const TRANSACTION_TYPE = TransactionType::SECRET_PROOF;
 
-	public UnresolvedAddress $recipientAddress;
+	public ?UnresolvedAddress $recipientAddress;
 
-	public Hash256 $secret;
+	public ?Hash256 $secret;
 
-	public LockHashAlgorithm $hashAlgorithm;
+	public ?LockHashAlgorithm $hashAlgorithm;
 
-	public string $proof;
+	public ?string $proof;
 
 	public function __construct(
 		?PublicKey $signerPublicKey = null,
@@ -5133,7 +4535,7 @@ class EmbeddedSecretProofTransactionV1 extends EmbeddedTransaction
 		?Hash256 $secret = null,
 		?LockHashAlgorithm $hashAlgorithm = null,
 		?string $proof = null
-	) {
+	){
 		parent::__construct(
 			$signerPublicKey,
 			EmbeddedSecretProofTransactionV1::TRANSACTION_VERSION,
@@ -5146,12 +4548,10 @@ class EmbeddedSecretProofTransactionV1 extends EmbeddedTransaction
 		$this->proof = $proof ?? '';
 	}
 
-	public function sort()
-	{
+	public function sort(){
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += parent::size();
 		$size += $this->recipientAddress->size();
@@ -5162,14 +4562,13 @@ class EmbeddedSecretProofTransactionV1 extends EmbeddedTransaction
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new EmbeddedSecretProofTransactionV1();
 
 		EmbeddedTransaction::_deserialize($reader, $instance);
 		$recipientAddress = UnresolvedAddress::deserialize($reader);
 		$secret = Hash256::deserialize($reader);
-		$proofSize = Converter::binaryToInt($reader->read(2), 2);
+		$proofSize = Utils\binaryToInt($reader->read(2), 2);
 		$hashAlgorithm = LockHashAlgorithm::deserialize($reader);
 		$proof = $reader->read($proofSize);
 
@@ -5180,21 +4579,19 @@ class EmbeddedSecretProofTransactionV1 extends EmbeddedTransaction
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$this->sort();
 		parent::_serialize($writer);
 		$writer->write($this->recipientAddress->serialize());
 		$writer->write($this->secret->serialize());
-		$writer->write(Converter::intToBinary(strlen($this->proof), 2)); // bound: proof_size
+		$writer->write(Utils\intToBinary(strlen($this->proof), 2)); // bound: proof_size
 		$writer->write($this->hashAlgorithm->serialize());
 		$writer->write($this->proof);
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '(';
 		$result .= parent::__toString();
 		$result .= 'recipientAddress: ' . $this->recipientAddress . ', ';
@@ -5206,19 +4603,18 @@ class EmbeddedSecretProofTransactionV1 extends EmbeddedTransaction
 	}
 }
 
-class AccountMetadataTransactionV1 extends Transaction
-{
+class AccountMetadataTransactionV1 extends Transaction {
 	const TRANSACTION_VERSION = 1;
 
 	const TRANSACTION_TYPE = TransactionType::ACCOUNT_METADATA;
 
-	public UnresolvedAddress $targetAddress;
+	public ?UnresolvedAddress $targetAddress;
 
-	public int $scopedMetadataKey;
+	public ?int $scopedMetadataKey;
 
-	public int $valueSizeDelta;
+	public ?int $valueSizeDelta;
 
-	public string $value;
+	public ?string $value;
 
 	public function __construct(
 		?Signature $signature = null,
@@ -5230,7 +4626,7 @@ class AccountMetadataTransactionV1 extends Transaction
 		?int $scopedMetadataKey = null,
 		?int $valueSizeDelta = null,
 		?string $value = null
-	) {
+	){
 		parent::__construct(
 			$signature,
 			$signerPublicKey,
@@ -5246,12 +4642,10 @@ class AccountMetadataTransactionV1 extends Transaction
 		$this->value = $value ?? '';
 	}
 
-	public function sort()
-	{
+	public function sort(){
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += parent::size();
 		$size += $this->targetAddress->size();
@@ -5262,15 +4656,14 @@ class AccountMetadataTransactionV1 extends Transaction
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new AccountMetadataTransactionV1();
 
 		Transaction::_deserialize($reader, $instance);
 		$targetAddress = UnresolvedAddress::deserialize($reader);
-		$scopedMetadataKey = Converter::binaryToInt($reader->read(8), 8);
-		$valueSizeDelta = Converter::binaryToInt($reader->read(2), 2);
-		$valueSize = Converter::binaryToInt($reader->read(2), 2);
+		$scopedMetadataKey = Utils\binaryToInt($reader->read(8), 8);
+		$valueSizeDelta = Utils\binaryToInt($reader->read(2), 2);
+		$valueSize = Utils\binaryToInt($reader->read(2), 2);
 		$value = $reader->read($valueSize);
 
 		$instance->targetAddress = $targetAddress;
@@ -5280,45 +4673,42 @@ class AccountMetadataTransactionV1 extends Transaction
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$this->sort();
 		parent::_serialize($writer);
 		$writer->write($this->targetAddress->serialize());
-		$writer->write(Converter::intToBinary($this->scopedMetadataKey, 8));
-		$writer->write(Converter::intToBinary($this->valueSizeDelta, 2));
-		$writer->write(Converter::intToBinary(strlen($this->value), 2)); // bound: value_size
+		$writer->write(Utils\intToBinary($this->scopedMetadataKey, 8));
+		$writer->write(Utils\intToBinary($this->valueSizeDelta, 2));
+		$writer->write(Utils\intToBinary(strlen($this->value), 2)); // bound: value_size
 		$writer->write($this->value);
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '(';
 		$result .= parent::__toString();
 		$result .= 'targetAddress: ' . $this->targetAddress . ', ';
-		$result .= 'scopedMetadataKey: ' . '0x' . Converter::intToHex($this->scopedMetadataKey, 8) . ', ';
-		$result .= 'valueSizeDelta: ' . '0x' . Converter::intToHex($this->valueSizeDelta, 2) . ', ';
+		$result .= 'scopedMetadataKey: ' . '0x' . Utils\intToHex($this->scopedMetadataKey, 8) . ', ';
+		$result .= 'valueSizeDelta: ' . '0x' . Utils\intToHex($this->valueSizeDelta, 2) . ', ';
 		$result .= 'value: ' . 'hex(0x' . strtoupper(bin2hex($this->value)) . ')' . ', ';
 		$result .= ')';
 		return $result;
 	}
 }
 
-class EmbeddedAccountMetadataTransactionV1 extends EmbeddedTransaction
-{
+class EmbeddedAccountMetadataTransactionV1 extends EmbeddedTransaction {
 	const TRANSACTION_VERSION = 1;
 
 	const TRANSACTION_TYPE = TransactionType::ACCOUNT_METADATA;
 
-	public UnresolvedAddress $targetAddress;
+	public ?UnresolvedAddress $targetAddress;
 
-	public int $scopedMetadataKey;
+	public ?int $scopedMetadataKey;
 
-	public int $valueSizeDelta;
+	public ?int $valueSizeDelta;
 
-	public string $value;
+	public ?string $value;
 
 	public function __construct(
 		?PublicKey $signerPublicKey = null,
@@ -5327,7 +4717,7 @@ class EmbeddedAccountMetadataTransactionV1 extends EmbeddedTransaction
 		?int $scopedMetadataKey = null,
 		?int $valueSizeDelta = null,
 		?string $value = null
-	) {
+	){
 		parent::__construct(
 			$signerPublicKey,
 			EmbeddedAccountMetadataTransactionV1::TRANSACTION_VERSION,
@@ -5340,12 +4730,10 @@ class EmbeddedAccountMetadataTransactionV1 extends EmbeddedTransaction
 		$this->value = $value ?? '';
 	}
 
-	public function sort()
-	{
+	public function sort(){
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += parent::size();
 		$size += $this->targetAddress->size();
@@ -5356,15 +4744,14 @@ class EmbeddedAccountMetadataTransactionV1 extends EmbeddedTransaction
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new EmbeddedAccountMetadataTransactionV1();
 
 		EmbeddedTransaction::_deserialize($reader, $instance);
 		$targetAddress = UnresolvedAddress::deserialize($reader);
-		$scopedMetadataKey = Converter::binaryToInt($reader->read(8), 8);
-		$valueSizeDelta = Converter::binaryToInt($reader->read(2), 2);
-		$valueSize = Converter::binaryToInt($reader->read(2), 2);
+		$scopedMetadataKey = Utils\binaryToInt($reader->read(8), 8);
+		$valueSizeDelta = Utils\binaryToInt($reader->read(2), 2);
+		$valueSize = Utils\binaryToInt($reader->read(2), 2);
 		$value = $reader->read($valueSize);
 
 		$instance->targetAddress = $targetAddress;
@@ -5374,47 +4761,44 @@ class EmbeddedAccountMetadataTransactionV1 extends EmbeddedTransaction
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$this->sort();
 		parent::_serialize($writer);
 		$writer->write($this->targetAddress->serialize());
-		$writer->write(Converter::intToBinary($this->scopedMetadataKey, 8));
-		$writer->write(Converter::intToBinary($this->valueSizeDelta, 2));
-		$writer->write(Converter::intToBinary(strlen($this->value), 2)); // bound: value_size
+		$writer->write(Utils\intToBinary($this->scopedMetadataKey, 8));
+		$writer->write(Utils\intToBinary($this->valueSizeDelta, 2));
+		$writer->write(Utils\intToBinary(strlen($this->value), 2)); // bound: value_size
 		$writer->write($this->value);
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '(';
 		$result .= parent::__toString();
 		$result .= 'targetAddress: ' . $this->targetAddress . ', ';
-		$result .= 'scopedMetadataKey: ' . '0x' . Converter::intToHex($this->scopedMetadataKey, 8) . ', ';
-		$result .= 'valueSizeDelta: ' . '0x' . Converter::intToHex($this->valueSizeDelta, 2) . ', ';
+		$result .= 'scopedMetadataKey: ' . '0x' . Utils\intToHex($this->scopedMetadataKey, 8) . ', ';
+		$result .= 'valueSizeDelta: ' . '0x' . Utils\intToHex($this->valueSizeDelta, 2) . ', ';
 		$result .= 'value: ' . 'hex(0x' . strtoupper(bin2hex($this->value)) . ')' . ', ';
 		$result .= ')';
 		return $result;
 	}
 }
 
-class MosaicMetadataTransactionV1 extends Transaction
-{
+class MosaicMetadataTransactionV1 extends Transaction {
 	const TRANSACTION_VERSION = 1;
 
 	const TRANSACTION_TYPE = TransactionType::MOSAIC_METADATA;
 
-	public UnresolvedAddress $targetAddress;
+	public ?UnresolvedAddress $targetAddress;
 
-	public int $scopedMetadataKey;
+	public ?int $scopedMetadataKey;
 
-	public UnresolvedMosaicId $targetMosaicId;
+	public ?UnresolvedMosaicId $targetMosaicId;
 
-	public int $valueSizeDelta;
+	public ?int $valueSizeDelta;
 
-	public string $value;
+	public ?string $value;
 
 	public function __construct(
 		?Signature $signature = null,
@@ -5427,7 +4811,7 @@ class MosaicMetadataTransactionV1 extends Transaction
 		?UnresolvedMosaicId $targetMosaicId = null,
 		?int $valueSizeDelta = null,
 		?string $value = null
-	) {
+	){
 		parent::__construct(
 			$signature,
 			$signerPublicKey,
@@ -5444,12 +4828,10 @@ class MosaicMetadataTransactionV1 extends Transaction
 		$this->value = $value ?? '';
 	}
 
-	public function sort()
-	{
+	public function sort(){
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += parent::size();
 		$size += $this->targetAddress->size();
@@ -5461,16 +4843,15 @@ class MosaicMetadataTransactionV1 extends Transaction
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new MosaicMetadataTransactionV1();
 
 		Transaction::_deserialize($reader, $instance);
 		$targetAddress = UnresolvedAddress::deserialize($reader);
-		$scopedMetadataKey = Converter::binaryToInt($reader->read(8), 8);
+		$scopedMetadataKey = Utils\binaryToInt($reader->read(8), 8);
 		$targetMosaicId = UnresolvedMosaicId::deserialize($reader);
-		$valueSizeDelta = Converter::binaryToInt($reader->read(2), 2);
-		$valueSize = Converter::binaryToInt($reader->read(2), 2);
+		$valueSizeDelta = Utils\binaryToInt($reader->read(2), 2);
+		$valueSize = Utils\binaryToInt($reader->read(2), 2);
 		$value = $reader->read($valueSize);
 
 		$instance->targetAddress = $targetAddress;
@@ -5481,49 +4862,46 @@ class MosaicMetadataTransactionV1 extends Transaction
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$this->sort();
 		parent::_serialize($writer);
 		$writer->write($this->targetAddress->serialize());
-		$writer->write(Converter::intToBinary($this->scopedMetadataKey, 8));
+		$writer->write(Utils\intToBinary($this->scopedMetadataKey, 8));
 		$writer->write($this->targetMosaicId->serialize());
-		$writer->write(Converter::intToBinary($this->valueSizeDelta, 2));
-		$writer->write(Converter::intToBinary(strlen($this->value), 2)); // bound: value_size
+		$writer->write(Utils\intToBinary($this->valueSizeDelta, 2));
+		$writer->write(Utils\intToBinary(strlen($this->value), 2)); // bound: value_size
 		$writer->write($this->value);
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '(';
 		$result .= parent::__toString();
 		$result .= 'targetAddress: ' . $this->targetAddress . ', ';
-		$result .= 'scopedMetadataKey: ' . '0x' . Converter::intToHex($this->scopedMetadataKey, 8) . ', ';
+		$result .= 'scopedMetadataKey: ' . '0x' . Utils\intToHex($this->scopedMetadataKey, 8) . ', ';
 		$result .= 'targetMosaicId: ' . $this->targetMosaicId . ', ';
-		$result .= 'valueSizeDelta: ' . '0x' . Converter::intToHex($this->valueSizeDelta, 2) . ', ';
+		$result .= 'valueSizeDelta: ' . '0x' . Utils\intToHex($this->valueSizeDelta, 2) . ', ';
 		$result .= 'value: ' . 'hex(0x' . strtoupper(bin2hex($this->value)) . ')' . ', ';
 		$result .= ')';
 		return $result;
 	}
 }
 
-class EmbeddedMosaicMetadataTransactionV1 extends EmbeddedTransaction
-{
+class EmbeddedMosaicMetadataTransactionV1 extends EmbeddedTransaction {
 	const TRANSACTION_VERSION = 1;
 
 	const TRANSACTION_TYPE = TransactionType::MOSAIC_METADATA;
 
-	public UnresolvedAddress $targetAddress;
+	public ?UnresolvedAddress $targetAddress;
 
-	public int $scopedMetadataKey;
+	public ?int $scopedMetadataKey;
 
-	public UnresolvedMosaicId $targetMosaicId;
+	public ?UnresolvedMosaicId $targetMosaicId;
 
-	public int $valueSizeDelta;
+	public ?int $valueSizeDelta;
 
-	public string $value;
+	public ?string $value;
 
 	public function __construct(
 		?PublicKey $signerPublicKey = null,
@@ -5533,7 +4911,7 @@ class EmbeddedMosaicMetadataTransactionV1 extends EmbeddedTransaction
 		?UnresolvedMosaicId $targetMosaicId = null,
 		?int $valueSizeDelta = null,
 		?string $value = null
-	) {
+	){
 		parent::__construct(
 			$signerPublicKey,
 			EmbeddedMosaicMetadataTransactionV1::TRANSACTION_VERSION,
@@ -5547,12 +4925,10 @@ class EmbeddedMosaicMetadataTransactionV1 extends EmbeddedTransaction
 		$this->value = $value ?? '';
 	}
 
-	public function sort()
-	{
+	public function sort(){
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += parent::size();
 		$size += $this->targetAddress->size();
@@ -5564,16 +4940,15 @@ class EmbeddedMosaicMetadataTransactionV1 extends EmbeddedTransaction
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new EmbeddedMosaicMetadataTransactionV1();
 
 		EmbeddedTransaction::_deserialize($reader, $instance);
 		$targetAddress = UnresolvedAddress::deserialize($reader);
-		$scopedMetadataKey = Converter::binaryToInt($reader->read(8), 8);
+		$scopedMetadataKey = Utils\binaryToInt($reader->read(8), 8);
 		$targetMosaicId = UnresolvedMosaicId::deserialize($reader);
-		$valueSizeDelta = Converter::binaryToInt($reader->read(2), 2);
-		$valueSize = Converter::binaryToInt($reader->read(2), 2);
+		$valueSizeDelta = Utils\binaryToInt($reader->read(2), 2);
+		$valueSize = Utils\binaryToInt($reader->read(2), 2);
 		$value = $reader->read($valueSize);
 
 		$instance->targetAddress = $targetAddress;
@@ -5584,49 +4959,46 @@ class EmbeddedMosaicMetadataTransactionV1 extends EmbeddedTransaction
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$this->sort();
 		parent::_serialize($writer);
 		$writer->write($this->targetAddress->serialize());
-		$writer->write(Converter::intToBinary($this->scopedMetadataKey, 8));
+		$writer->write(Utils\intToBinary($this->scopedMetadataKey, 8));
 		$writer->write($this->targetMosaicId->serialize());
-		$writer->write(Converter::intToBinary($this->valueSizeDelta, 2));
-		$writer->write(Converter::intToBinary(strlen($this->value), 2)); // bound: value_size
+		$writer->write(Utils\intToBinary($this->valueSizeDelta, 2));
+		$writer->write(Utils\intToBinary(strlen($this->value), 2)); // bound: value_size
 		$writer->write($this->value);
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '(';
 		$result .= parent::__toString();
 		$result .= 'targetAddress: ' . $this->targetAddress . ', ';
-		$result .= 'scopedMetadataKey: ' . '0x' . Converter::intToHex($this->scopedMetadataKey, 8) . ', ';
+		$result .= 'scopedMetadataKey: ' . '0x' . Utils\intToHex($this->scopedMetadataKey, 8) . ', ';
 		$result .= 'targetMosaicId: ' . $this->targetMosaicId . ', ';
-		$result .= 'valueSizeDelta: ' . '0x' . Converter::intToHex($this->valueSizeDelta, 2) . ', ';
+		$result .= 'valueSizeDelta: ' . '0x' . Utils\intToHex($this->valueSizeDelta, 2) . ', ';
 		$result .= 'value: ' . 'hex(0x' . strtoupper(bin2hex($this->value)) . ')' . ', ';
 		$result .= ')';
 		return $result;
 	}
 }
 
-class NamespaceMetadataTransactionV1 extends Transaction
-{
+class NamespaceMetadataTransactionV1 extends Transaction {
 	const TRANSACTION_VERSION = 1;
 
 	const TRANSACTION_TYPE = TransactionType::NAMESPACE_METADATA;
 
-	public UnresolvedAddress $targetAddress;
+	public ?UnresolvedAddress $targetAddress;
 
-	public int $scopedMetadataKey;
+	public ?int $scopedMetadataKey;
 
-	public NamespaceId $targetNamespaceId;
+	public ?NamespaceId $targetNamespaceId;
 
-	public int $valueSizeDelta;
+	public ?int $valueSizeDelta;
 
-	public string $value;
+	public ?string $value;
 
 	public function __construct(
 		?Signature $signature = null,
@@ -5639,7 +5011,7 @@ class NamespaceMetadataTransactionV1 extends Transaction
 		?NamespaceId $targetNamespaceId = null,
 		?int $valueSizeDelta = null,
 		?string $value = null
-	) {
+	){
 		parent::__construct(
 			$signature,
 			$signerPublicKey,
@@ -5656,12 +5028,10 @@ class NamespaceMetadataTransactionV1 extends Transaction
 		$this->value = $value ?? '';
 	}
 
-	public function sort()
-	{
+	public function sort(){
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += parent::size();
 		$size += $this->targetAddress->size();
@@ -5673,16 +5043,15 @@ class NamespaceMetadataTransactionV1 extends Transaction
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new NamespaceMetadataTransactionV1();
 
 		Transaction::_deserialize($reader, $instance);
 		$targetAddress = UnresolvedAddress::deserialize($reader);
-		$scopedMetadataKey = Converter::binaryToInt($reader->read(8), 8);
+		$scopedMetadataKey = Utils\binaryToInt($reader->read(8), 8);
 		$targetNamespaceId = NamespaceId::deserialize($reader);
-		$valueSizeDelta = Converter::binaryToInt($reader->read(2), 2);
-		$valueSize = Converter::binaryToInt($reader->read(2), 2);
+		$valueSizeDelta = Utils\binaryToInt($reader->read(2), 2);
+		$valueSize = Utils\binaryToInt($reader->read(2), 2);
 		$value = $reader->read($valueSize);
 
 		$instance->targetAddress = $targetAddress;
@@ -5693,49 +5062,46 @@ class NamespaceMetadataTransactionV1 extends Transaction
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$this->sort();
 		parent::_serialize($writer);
 		$writer->write($this->targetAddress->serialize());
-		$writer->write(Converter::intToBinary($this->scopedMetadataKey, 8));
+		$writer->write(Utils\intToBinary($this->scopedMetadataKey, 8));
 		$writer->write($this->targetNamespaceId->serialize());
-		$writer->write(Converter::intToBinary($this->valueSizeDelta, 2));
-		$writer->write(Converter::intToBinary(strlen($this->value), 2)); // bound: value_size
+		$writer->write(Utils\intToBinary($this->valueSizeDelta, 2));
+		$writer->write(Utils\intToBinary(strlen($this->value), 2)); // bound: value_size
 		$writer->write($this->value);
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '(';
 		$result .= parent::__toString();
 		$result .= 'targetAddress: ' . $this->targetAddress . ', ';
-		$result .= 'scopedMetadataKey: ' . '0x' . Converter::intToHex($this->scopedMetadataKey, 8) . ', ';
+		$result .= 'scopedMetadataKey: ' . '0x' . Utils\intToHex($this->scopedMetadataKey, 8) . ', ';
 		$result .= 'targetNamespaceId: ' . $this->targetNamespaceId . ', ';
-		$result .= 'valueSizeDelta: ' . '0x' . Converter::intToHex($this->valueSizeDelta, 2) . ', ';
+		$result .= 'valueSizeDelta: ' . '0x' . Utils\intToHex($this->valueSizeDelta, 2) . ', ';
 		$result .= 'value: ' . 'hex(0x' . strtoupper(bin2hex($this->value)) . ')' . ', ';
 		$result .= ')';
 		return $result;
 	}
 }
 
-class EmbeddedNamespaceMetadataTransactionV1 extends EmbeddedTransaction
-{
+class EmbeddedNamespaceMetadataTransactionV1 extends EmbeddedTransaction {
 	const TRANSACTION_VERSION = 1;
 
 	const TRANSACTION_TYPE = TransactionType::NAMESPACE_METADATA;
 
-	public UnresolvedAddress $targetAddress;
+	public ?UnresolvedAddress $targetAddress;
 
-	public int $scopedMetadataKey;
+	public ?int $scopedMetadataKey;
 
-	public NamespaceId $targetNamespaceId;
+	public ?NamespaceId $targetNamespaceId;
 
-	public int $valueSizeDelta;
+	public ?int $valueSizeDelta;
 
-	public string $value;
+	public ?string $value;
 
 	public function __construct(
 		?PublicKey $signerPublicKey = null,
@@ -5745,7 +5111,7 @@ class EmbeddedNamespaceMetadataTransactionV1 extends EmbeddedTransaction
 		?NamespaceId $targetNamespaceId = null,
 		?int $valueSizeDelta = null,
 		?string $value = null
-	) {
+	){
 		parent::__construct(
 			$signerPublicKey,
 			EmbeddedNamespaceMetadataTransactionV1::TRANSACTION_VERSION,
@@ -5759,12 +5125,10 @@ class EmbeddedNamespaceMetadataTransactionV1 extends EmbeddedTransaction
 		$this->value = $value ?? '';
 	}
 
-	public function sort()
-	{
+	public function sort(){
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += parent::size();
 		$size += $this->targetAddress->size();
@@ -5776,16 +5140,15 @@ class EmbeddedNamespaceMetadataTransactionV1 extends EmbeddedTransaction
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new EmbeddedNamespaceMetadataTransactionV1();
 
 		EmbeddedTransaction::_deserialize($reader, $instance);
 		$targetAddress = UnresolvedAddress::deserialize($reader);
-		$scopedMetadataKey = Converter::binaryToInt($reader->read(8), 8);
+		$scopedMetadataKey = Utils\binaryToInt($reader->read(8), 8);
 		$targetNamespaceId = NamespaceId::deserialize($reader);
-		$valueSizeDelta = Converter::binaryToInt($reader->read(2), 2);
-		$valueSize = Converter::binaryToInt($reader->read(2), 2);
+		$valueSizeDelta = Utils\binaryToInt($reader->read(2), 2);
+		$valueSize = Utils\binaryToInt($reader->read(2), 2);
 		$value = $reader->read($valueSize);
 
 		$instance->targetAddress = $targetAddress;
@@ -5796,64 +5159,51 @@ class EmbeddedNamespaceMetadataTransactionV1 extends EmbeddedTransaction
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$this->sort();
 		parent::_serialize($writer);
 		$writer->write($this->targetAddress->serialize());
-		$writer->write(Converter::intToBinary($this->scopedMetadataKey, 8));
+		$writer->write(Utils\intToBinary($this->scopedMetadataKey, 8));
 		$writer->write($this->targetNamespaceId->serialize());
-		$writer->write(Converter::intToBinary($this->valueSizeDelta, 2));
-		$writer->write(Converter::intToBinary(strlen($this->value), 2)); // bound: value_size
+		$writer->write(Utils\intToBinary($this->valueSizeDelta, 2));
+		$writer->write(Utils\intToBinary(strlen($this->value), 2)); // bound: value_size
 		$writer->write($this->value);
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '(';
 		$result .= parent::__toString();
 		$result .= 'targetAddress: ' . $this->targetAddress . ', ';
-		$result .= 'scopedMetadataKey: ' . '0x' . Converter::intToHex($this->scopedMetadataKey, 8) . ', ';
+		$result .= 'scopedMetadataKey: ' . '0x' . Utils\intToHex($this->scopedMetadataKey, 8) . ', ';
 		$result .= 'targetNamespaceId: ' . $this->targetNamespaceId . ', ';
-		$result .= 'valueSizeDelta: ' . '0x' . Converter::intToHex($this->valueSizeDelta, 2) . ', ';
+		$result .= 'valueSizeDelta: ' . '0x' . Utils\intToHex($this->valueSizeDelta, 2) . ', ';
 		$result .= 'value: ' . 'hex(0x' . strtoupper(bin2hex($this->value)) . ')' . ', ';
 		$result .= ')';
 		return $result;
 	}
 }
 
-class MosaicNonce extends BaseValue
-{
-	public function __construct(int $mosaicNonce = 0)
-	{
+class MosaicNonce extends BaseValue {
+	public function __construct($mosaicNonce = 0){
 		parent::__construct(4, $mosaicNonce);
 	}
 
-	public static function size(): int
-	{
+	public static function size(): int {
 		return 4;
 	}
 
-	public static function deserialize(BinaryReader $reader): self
-	{
-		return new self(Converter::binaryToInt($reader->read(4), 4));
+	public static function deserialize(BinaryReader $reader): self {
+		return new self(Utils\binaryToInt($reader->read(4), 4));
 	}
 
-	public static function deserializeAligned(BinaryReader $reader): self
-	{
-		return new self(Converter::binaryToInt($reader->read(4), 4));
-	}
-
-	public function serialize(): string
-	{
-		return Converter::intToBinary($this->value, 4);
+	public function serialize(): string {
+		return Utils\intToBinary($this->value, 4);
 	}
 }
 
-class MosaicFlags
-{
+class MosaicFlags {
 	const NONE = 0;
 
 	const SUPPLY_MUTABLE = 1;
@@ -5866,38 +5216,27 @@ class MosaicFlags
 
 	public $value;
 
-	public function __construct(int $value = 0)
-	{
+	public function __construct($value = 0){
 		$this->value = $value;
 	}
 
-	public function has($flag): bool
-	{
+	public function has($flag): bool {
 		return 0 !== ($this->value & $flag);
 	}
 
-	public static function size()
-	{
+	public static function size(){
 		return 1;
 	}
 
-	public static function deserialize(BinaryReader $reader): self
-	{
-		return new MosaicFlags(Converter::binaryToInt($reader->read(1), 1));
+	public static function deserialize(BinaryReader $reader): self {
+		return new MosaicFlags(Utils\binaryToInt($reader->read(1), 1));
 	}
 
-	public static function deserializeAligned(BinaryReader $reader): self
-	{
-		return new MosaicFlags(Converter::binaryToInt($reader->read(1), 1));
+	public function serialize(): string {
+		return Utils\intToBinary($this->value, 1);
 	}
 
-	public function serialize(): string
-	{
-		return Converter::intToBinary($this->value, 1);
-	}
-
-	public function __toString()
-	{
+	public function __toString(){
 		$values = [
 			0, 1, 2, 4, 8
 		];
@@ -5917,21 +5256,18 @@ class MosaicFlags
 	}
 }
 
-class MosaicSupplyChangeAction
-{
+class MosaicSupplyChangeAction {
 	const DECREASE = 0;
 
 	const INCREASE = 1;
 
 	public $value;
 
-	public function __construct(int $value = 0)
-	{
+	public function __construct($value = 0){
 		$this->value = $value;
 	}
 
-	static function valueToKey($value)
-	{
+	static function valueToKey($value){
 		$values = [
 			0, 1
 		];
@@ -5946,47 +5282,37 @@ class MosaicSupplyChangeAction
 		return $keys[$index];
 	}
 
-	public static function size()
-	{
+	public static function size(){
 		return 1;
 	}
 
-	public static function deserialize(BinaryReader $reader): self
-	{
-		return new MosaicSupplyChangeAction(Converter::binaryToInt($reader->read(1), 1));
+	public static function deserialize(BinaryReader $reader): self {
+		return new MosaicSupplyChangeAction(Utils\binaryToInt($reader->read(1), 1));
 	}
 
-	public static function deserializeAligned(BinaryReader $reader): self
-	{
-		return new MosaicSupplyChangeAction(Converter::binaryToInt($reader->read(1), 1));
+	public function serialize(): string {
+		return Utils\intToBinary($this->value, 1);
 	}
 
-	public function serialize(): string
-	{
-		return Converter::intToBinary($this->value, 1);
-	}
-
-	public function __toString()
-	{
+	public function __toString(){
 		return "MosaicSupplyChangeAction." . self::valueToKey($this->value);
 	}
 }
 
-class MosaicDefinitionTransactionV1 extends Transaction
-{
+class MosaicDefinitionTransactionV1 extends Transaction {
 	const TRANSACTION_VERSION = 1;
 
 	const TRANSACTION_TYPE = TransactionType::MOSAIC_DEFINITION;
 
-	public MosaicId $id;
+	public ?MosaicId $id;
 
-	public BlockDuration $duration;
+	public ?BlockDuration $duration;
 
-	public MosaicNonce $nonce;
+	public ?MosaicNonce $nonce;
 
-	public MosaicFlags $flags;
+	public ?MosaicFlags $flags;
 
-	public int $divisibility;
+	public ?int $divisibility;
 
 	public function __construct(
 		?Signature $signature = null,
@@ -5999,7 +5325,7 @@ class MosaicDefinitionTransactionV1 extends Transaction
 		?MosaicNonce $nonce = null,
 		?MosaicFlags $flags = null,
 		?int $divisibility = null
-	) {
+	){
 		parent::__construct(
 			$signature,
 			$signerPublicKey,
@@ -6016,12 +5342,10 @@ class MosaicDefinitionTransactionV1 extends Transaction
 		$this->divisibility = $divisibility ?? 0;
 	}
 
-	public function sort()
-	{
+	public function sort(){
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += parent::size();
 		$size += $this->id->size();
@@ -6032,8 +5356,7 @@ class MosaicDefinitionTransactionV1 extends Transaction
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new MosaicDefinitionTransactionV1();
 
 		Transaction::_deserialize($reader, $instance);
@@ -6041,7 +5364,7 @@ class MosaicDefinitionTransactionV1 extends Transaction
 		$duration = BlockDuration::deserialize($reader);
 		$nonce = MosaicNonce::deserialize($reader);
 		$flags = MosaicFlags::deserialize($reader);
-		$divisibility = Converter::binaryToInt($reader->read(1), 1);
+		$divisibility = Utils\binaryToInt($reader->read(1), 1);
 
 		$instance->id = $id;
 		$instance->duration = $duration;
@@ -6051,8 +5374,7 @@ class MosaicDefinitionTransactionV1 extends Transaction
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$this->sort();
 		parent::_serialize($writer);
@@ -6060,39 +5382,37 @@ class MosaicDefinitionTransactionV1 extends Transaction
 		$writer->write($this->duration->serialize());
 		$writer->write($this->nonce->serialize());
 		$writer->write($this->flags->serialize());
-		$writer->write(Converter::intToBinary($this->divisibility, 1));
+		$writer->write(Utils\intToBinary($this->divisibility, 1));
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '(';
 		$result .= parent::__toString();
 		$result .= 'id: ' . $this->id . ', ';
 		$result .= 'duration: ' . $this->duration . ', ';
 		$result .= 'nonce: ' . $this->nonce . ', ';
 		$result .= 'flags: ' . $this->flags . ', ';
-		$result .= 'divisibility: ' . '0x' . Converter::intToHex($this->divisibility, 1) . ', ';
+		$result .= 'divisibility: ' . '0x' . Utils\intToHex($this->divisibility, 1) . ', ';
 		$result .= ')';
 		return $result;
 	}
 }
 
-class EmbeddedMosaicDefinitionTransactionV1 extends EmbeddedTransaction
-{
+class EmbeddedMosaicDefinitionTransactionV1 extends EmbeddedTransaction {
 	const TRANSACTION_VERSION = 1;
 
 	const TRANSACTION_TYPE = TransactionType::MOSAIC_DEFINITION;
 
-	public MosaicId $id;
+	public ?MosaicId $id;
 
-	public BlockDuration $duration;
+	public ?BlockDuration $duration;
 
-	public MosaicNonce $nonce;
+	public ?MosaicNonce $nonce;
 
-	public MosaicFlags $flags;
+	public ?MosaicFlags $flags;
 
-	public int $divisibility;
+	public ?int $divisibility;
 
 	public function __construct(
 		?PublicKey $signerPublicKey = null,
@@ -6102,7 +5422,7 @@ class EmbeddedMosaicDefinitionTransactionV1 extends EmbeddedTransaction
 		?MosaicNonce $nonce = null,
 		?MosaicFlags $flags = null,
 		?int $divisibility = null
-	) {
+	){
 		parent::__construct(
 			$signerPublicKey,
 			EmbeddedMosaicDefinitionTransactionV1::TRANSACTION_VERSION,
@@ -6116,12 +5436,10 @@ class EmbeddedMosaicDefinitionTransactionV1 extends EmbeddedTransaction
 		$this->divisibility = $divisibility ?? 0;
 	}
 
-	public function sort()
-	{
+	public function sort(){
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += parent::size();
 		$size += $this->id->size();
@@ -6132,8 +5450,7 @@ class EmbeddedMosaicDefinitionTransactionV1 extends EmbeddedTransaction
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new EmbeddedMosaicDefinitionTransactionV1();
 
 		EmbeddedTransaction::_deserialize($reader, $instance);
@@ -6141,7 +5458,7 @@ class EmbeddedMosaicDefinitionTransactionV1 extends EmbeddedTransaction
 		$duration = BlockDuration::deserialize($reader);
 		$nonce = MosaicNonce::deserialize($reader);
 		$flags = MosaicFlags::deserialize($reader);
-		$divisibility = Converter::binaryToInt($reader->read(1), 1);
+		$divisibility = Utils\binaryToInt($reader->read(1), 1);
 
 		$instance->id = $id;
 		$instance->duration = $duration;
@@ -6151,8 +5468,7 @@ class EmbeddedMosaicDefinitionTransactionV1 extends EmbeddedTransaction
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$this->sort();
 		parent::_serialize($writer);
@@ -6160,35 +5476,33 @@ class EmbeddedMosaicDefinitionTransactionV1 extends EmbeddedTransaction
 		$writer->write($this->duration->serialize());
 		$writer->write($this->nonce->serialize());
 		$writer->write($this->flags->serialize());
-		$writer->write(Converter::intToBinary($this->divisibility, 1));
+		$writer->write(Utils\intToBinary($this->divisibility, 1));
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '(';
 		$result .= parent::__toString();
 		$result .= 'id: ' . $this->id . ', ';
 		$result .= 'duration: ' . $this->duration . ', ';
 		$result .= 'nonce: ' . $this->nonce . ', ';
 		$result .= 'flags: ' . $this->flags . ', ';
-		$result .= 'divisibility: ' . '0x' . Converter::intToHex($this->divisibility, 1) . ', ';
+		$result .= 'divisibility: ' . '0x' . Utils\intToHex($this->divisibility, 1) . ', ';
 		$result .= ')';
 		return $result;
 	}
 }
 
-class MosaicSupplyChangeTransactionV1 extends Transaction
-{
+class MosaicSupplyChangeTransactionV1 extends Transaction {
 	const TRANSACTION_VERSION = 1;
 
 	const TRANSACTION_TYPE = TransactionType::MOSAIC_SUPPLY_CHANGE;
 
-	public UnresolvedMosaicId $mosaicId;
+	public ?UnresolvedMosaicId $mosaicId;
 
-	public Amount $delta;
+	public ?Amount $delta;
 
-	public MosaicSupplyChangeAction $action;
+	public ?MosaicSupplyChangeAction $action;
 
 	public function __construct(
 		?Signature $signature = null,
@@ -6199,7 +5513,7 @@ class MosaicSupplyChangeTransactionV1 extends Transaction
 		?UnresolvedMosaicId $mosaicId = null,
 		?Amount $delta = null,
 		?MosaicSupplyChangeAction $action = null
-	) {
+	){
 		parent::__construct(
 			$signature,
 			$signerPublicKey,
@@ -6214,12 +5528,10 @@ class MosaicSupplyChangeTransactionV1 extends Transaction
 		$this->action = $action ?? new MosaicSupplyChangeAction();
 	}
 
-	public function sort()
-	{
+	public function sort(){
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += parent::size();
 		$size += $this->mosaicId->size();
@@ -6228,8 +5540,7 @@ class MosaicSupplyChangeTransactionV1 extends Transaction
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new MosaicSupplyChangeTransactionV1();
 
 		Transaction::_deserialize($reader, $instance);
@@ -6243,8 +5554,7 @@ class MosaicSupplyChangeTransactionV1 extends Transaction
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$this->sort();
 		parent::_serialize($writer);
@@ -6254,8 +5564,7 @@ class MosaicSupplyChangeTransactionV1 extends Transaction
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '(';
 		$result .= parent::__toString();
 		$result .= 'mosaicId: ' . $this->mosaicId . ', ';
@@ -6266,17 +5575,16 @@ class MosaicSupplyChangeTransactionV1 extends Transaction
 	}
 }
 
-class EmbeddedMosaicSupplyChangeTransactionV1 extends EmbeddedTransaction
-{
+class EmbeddedMosaicSupplyChangeTransactionV1 extends EmbeddedTransaction {
 	const TRANSACTION_VERSION = 1;
 
 	const TRANSACTION_TYPE = TransactionType::MOSAIC_SUPPLY_CHANGE;
 
-	public UnresolvedMosaicId $mosaicId;
+	public ?UnresolvedMosaicId $mosaicId;
 
-	public Amount $delta;
+	public ?Amount $delta;
 
-	public MosaicSupplyChangeAction $action;
+	public ?MosaicSupplyChangeAction $action;
 
 	public function __construct(
 		?PublicKey $signerPublicKey = null,
@@ -6284,7 +5592,7 @@ class EmbeddedMosaicSupplyChangeTransactionV1 extends EmbeddedTransaction
 		?UnresolvedMosaicId $mosaicId = null,
 		?Amount $delta = null,
 		?MosaicSupplyChangeAction $action = null
-	) {
+	){
 		parent::__construct(
 			$signerPublicKey,
 			EmbeddedMosaicSupplyChangeTransactionV1::TRANSACTION_VERSION,
@@ -6296,12 +5604,10 @@ class EmbeddedMosaicSupplyChangeTransactionV1 extends EmbeddedTransaction
 		$this->action = $action ?? new MosaicSupplyChangeAction();
 	}
 
-	public function sort()
-	{
+	public function sort(){
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += parent::size();
 		$size += $this->mosaicId->size();
@@ -6310,8 +5616,7 @@ class EmbeddedMosaicSupplyChangeTransactionV1 extends EmbeddedTransaction
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new EmbeddedMosaicSupplyChangeTransactionV1();
 
 		EmbeddedTransaction::_deserialize($reader, $instance);
@@ -6325,8 +5630,7 @@ class EmbeddedMosaicSupplyChangeTransactionV1 extends EmbeddedTransaction
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$this->sort();
 		parent::_serialize($writer);
@@ -6336,8 +5640,7 @@ class EmbeddedMosaicSupplyChangeTransactionV1 extends EmbeddedTransaction
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '(';
 		$result .= parent::__toString();
 		$result .= 'mosaicId: ' . $this->mosaicId . ', ';
@@ -6348,15 +5651,14 @@ class EmbeddedMosaicSupplyChangeTransactionV1 extends EmbeddedTransaction
 	}
 }
 
-class MosaicSupplyRevocationTransactionV1 extends Transaction
-{
+class MosaicSupplyRevocationTransactionV1 extends Transaction {
 	const TRANSACTION_VERSION = 1;
 
 	const TRANSACTION_TYPE = TransactionType::MOSAIC_SUPPLY_REVOCATION;
 
-	public UnresolvedAddress $sourceAddress;
+	public ?UnresolvedAddress $sourceAddress;
 
-	public UnresolvedMosaic $mosaic;
+	public ?UnresolvedMosaic $mosaic;
 
 	public function __construct(
 		?Signature $signature = null,
@@ -6366,7 +5668,7 @@ class MosaicSupplyRevocationTransactionV1 extends Transaction
 		?Timestamp $deadline = null,
 		?UnresolvedAddress $sourceAddress = null,
 		?UnresolvedMosaic $mosaic = null
-	) {
+	){
 		parent::__construct(
 			$signature,
 			$signerPublicKey,
@@ -6380,13 +5682,11 @@ class MosaicSupplyRevocationTransactionV1 extends Transaction
 		$this->mosaic = $mosaic ?? new UnresolvedMosaic();
 	}
 
-	public function sort()
-	{
+	public function sort(){
 		$this->mosaic->sort();
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += parent::size();
 		$size += $this->sourceAddress->size();
@@ -6394,8 +5694,7 @@ class MosaicSupplyRevocationTransactionV1 extends Transaction
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new MosaicSupplyRevocationTransactionV1();
 
 		Transaction::_deserialize($reader, $instance);
@@ -6407,8 +5706,7 @@ class MosaicSupplyRevocationTransactionV1 extends Transaction
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$this->sort();
 		parent::_serialize($writer);
@@ -6417,8 +5715,7 @@ class MosaicSupplyRevocationTransactionV1 extends Transaction
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '(';
 		$result .= parent::__toString();
 		$result .= 'sourceAddress: ' . $this->sourceAddress . ', ';
@@ -6428,22 +5725,21 @@ class MosaicSupplyRevocationTransactionV1 extends Transaction
 	}
 }
 
-class EmbeddedMosaicSupplyRevocationTransactionV1 extends EmbeddedTransaction
-{
+class EmbeddedMosaicSupplyRevocationTransactionV1 extends EmbeddedTransaction {
 	const TRANSACTION_VERSION = 1;
 
 	const TRANSACTION_TYPE = TransactionType::MOSAIC_SUPPLY_REVOCATION;
 
-	public UnresolvedAddress $sourceAddress;
+	public ?UnresolvedAddress $sourceAddress;
 
-	public UnresolvedMosaic $mosaic;
+	public ?UnresolvedMosaic $mosaic;
 
 	public function __construct(
 		?PublicKey $signerPublicKey = null,
 		?NetworkType $network = null,
 		?UnresolvedAddress $sourceAddress = null,
 		?UnresolvedMosaic $mosaic = null
-	) {
+	){
 		parent::__construct(
 			$signerPublicKey,
 			EmbeddedMosaicSupplyRevocationTransactionV1::TRANSACTION_VERSION,
@@ -6454,13 +5750,11 @@ class EmbeddedMosaicSupplyRevocationTransactionV1 extends EmbeddedTransaction
 		$this->mosaic = $mosaic ?? new UnresolvedMosaic();
 	}
 
-	public function sort()
-	{
+	public function sort(){
 		$this->mosaic->sort();
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += parent::size();
 		$size += $this->sourceAddress->size();
@@ -6468,8 +5762,7 @@ class EmbeddedMosaicSupplyRevocationTransactionV1 extends EmbeddedTransaction
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new EmbeddedMosaicSupplyRevocationTransactionV1();
 
 		EmbeddedTransaction::_deserialize($reader, $instance);
@@ -6481,8 +5774,7 @@ class EmbeddedMosaicSupplyRevocationTransactionV1 extends EmbeddedTransaction
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$this->sort();
 		parent::_serialize($writer);
@@ -6491,8 +5783,7 @@ class EmbeddedMosaicSupplyRevocationTransactionV1 extends EmbeddedTransaction
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '(';
 		$result .= parent::__toString();
 		$result .= 'sourceAddress: ' . $this->sourceAddress . ', ';
@@ -6502,19 +5793,18 @@ class EmbeddedMosaicSupplyRevocationTransactionV1 extends EmbeddedTransaction
 	}
 }
 
-class MultisigAccountModificationTransactionV1 extends Transaction
-{
+class MultisigAccountModificationTransactionV1 extends Transaction {
 	const TRANSACTION_VERSION = 1;
 
 	const TRANSACTION_TYPE = TransactionType::MULTISIG_ACCOUNT_MODIFICATION;
 
-	public int $minRemovalDelta;
+	public ?int $minRemovalDelta;
 
-	public int $minApprovalDelta;
+	public ?int $minApprovalDelta;
 
-	public array $addressAdditions;
+	public ?array $addressAdditions;
 
-	public array $addressDeletions;
+	public ?array $addressDeletions;
 
 	private int $multisigAccountModificationTransactionBodyReserved_1 = 0; // reserved field
 
@@ -6528,7 +5818,7 @@ class MultisigAccountModificationTransactionV1 extends Transaction
 		?int $minApprovalDelta = null,
 		?array $addressAdditions = null,
 		?array $addressDeletions = null
-	) {
+	){
 		parent::__construct(
 			$signature,
 			$signerPublicKey,
@@ -6545,12 +5835,10 @@ class MultisigAccountModificationTransactionV1 extends Transaction
 		$this->multisigAccountModificationTransactionBodyReserved_1 = 0; // reserved field
 	}
 
-	public function sort()
-	{
+	public function sort(){
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += parent::size();
 		$size += 1;
@@ -6558,25 +5846,24 @@ class MultisigAccountModificationTransactionV1 extends Transaction
 		$size += 1;
 		$size += 1;
 		$size += 4;
-		$size += ArrayHelpers::size($this->addressAdditions);
-		$size += ArrayHelpers::size($this->addressDeletions);
+		$size += Utils\size($this->addressAdditions);
+		$size += Utils\size($this->addressDeletions);
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new MultisigAccountModificationTransactionV1();
 
 		Transaction::_deserialize($reader, $instance);
-		$minRemovalDelta = Converter::binaryToInt($reader->read(1), 1);
-		$minApprovalDelta = Converter::binaryToInt($reader->read(1), 1);
-		$addressAdditionsCount = Converter::binaryToInt($reader->read(1), 1);
-		$addressDeletionsCount = Converter::binaryToInt($reader->read(1), 1);
-		$multisigAccountModificationTransactionBodyReserved_1 = Converter::binaryToInt($reader->read(4), 4);
+		$minRemovalDelta = Utils\binaryToInt($reader->read(1), 1);
+		$minApprovalDelta = Utils\binaryToInt($reader->read(1), 1);
+		$addressAdditionsCount = Utils\binaryToInt($reader->read(1), 1);
+		$addressDeletionsCount = Utils\binaryToInt($reader->read(1), 1);
+		$multisigAccountModificationTransactionBodyReserved_1 = Utils\binaryToInt($reader->read(4), 4);
 		if (0 !== $multisigAccountModificationTransactionBodyReserved_1)
 			throw new OutOfRangeException('Invalid value of reserved field (' . $multisigAccountModificationTransactionBodyReserved_1 . ')');
-		$addressAdditions = ArrayHelpers::readArrayCount($reader, [UnresolvedAddress::class, 'deserialize'], $addressAdditionsCount);
-		$addressDeletions = ArrayHelpers::readArrayCount($reader, [UnresolvedAddress::class, 'deserialize'], $addressDeletionsCount);
+		$addressAdditions = Utils\readArrayCount($reader, [UnresolvedAddress::class, 'deserialize'], $addressAdditionsCount);
+		$addressDeletions = Utils\readArrayCount($reader, [UnresolvedAddress::class, 'deserialize'], $addressDeletionsCount);
 
 		$instance->minRemovalDelta = $minRemovalDelta;
 		$instance->minApprovalDelta = $minApprovalDelta;
@@ -6585,27 +5872,25 @@ class MultisigAccountModificationTransactionV1 extends Transaction
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$this->sort();
 		parent::_serialize($writer);
-		$writer->write(Converter::intToBinary($this->minRemovalDelta, 1));
-		$writer->write(Converter::intToBinary($this->minApprovalDelta, 1));
-		$writer->write(Converter::intToBinary(count($this->addressAdditions), 1)); // bound: address_additions_count
-		$writer->write(Converter::intToBinary(count($this->addressDeletions), 1)); // bound: address_deletions_count
-		$writer->write(Converter::intToBinary($this->multisigAccountModificationTransactionBodyReserved_1, 4));
-		ArrayHelpers::writeArray($writer, $this->addressAdditions);
-		ArrayHelpers::writeArray($writer, $this->addressDeletions);
+		$writer->write(Utils\intToBinary($this->minRemovalDelta, 1));
+		$writer->write(Utils\intToBinary($this->minApprovalDelta, 1));
+		$writer->write(Utils\intToBinary(count($this->addressAdditions), 1)); // bound: address_additions_count
+		$writer->write(Utils\intToBinary(count($this->addressDeletions), 1)); // bound: address_deletions_count
+		$writer->write(Utils\intToBinary($this->multisigAccountModificationTransactionBodyReserved_1, 4));
+		Utils\writeArray($writer, $this->addressAdditions);
+		Utils\writeArray($writer, $this->addressDeletions);
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '(';
 		$result .= parent::__toString();
-		$result .= 'minRemovalDelta: ' . '0x' . Converter::intToHex($this->minRemovalDelta, 1) . ', ';
-		$result .= 'minApprovalDelta: ' . '0x' . Converter::intToHex($this->minApprovalDelta, 1) . ', ';
+		$result .= 'minRemovalDelta: ' . '0x' . Utils\intToHex($this->minRemovalDelta, 1) . ', ';
+		$result .= 'minApprovalDelta: ' . '0x' . Utils\intToHex($this->minApprovalDelta, 1) . ', ';
 		$result .= 'addressAdditions: ' . '[' . implode(',', array_map(fn ($e) => $e, $this->addressAdditions)) . ']' . ', ';
 		$result .= 'addressDeletions: ' . '[' . implode(',', array_map(fn ($e) => $e, $this->addressDeletions)) . ']' . ', ';
 		$result .= ')';
@@ -6613,19 +5898,18 @@ class MultisigAccountModificationTransactionV1 extends Transaction
 	}
 }
 
-class EmbeddedMultisigAccountModificationTransactionV1 extends EmbeddedTransaction
-{
+class EmbeddedMultisigAccountModificationTransactionV1 extends EmbeddedTransaction {
 	const TRANSACTION_VERSION = 1;
 
 	const TRANSACTION_TYPE = TransactionType::MULTISIG_ACCOUNT_MODIFICATION;
 
-	public int $minRemovalDelta;
+	public ?int $minRemovalDelta;
 
-	public int $minApprovalDelta;
+	public ?int $minApprovalDelta;
 
-	public array $addressAdditions;
+	public ?array $addressAdditions;
 
-	public array $addressDeletions;
+	public ?array $addressDeletions;
 
 	private int $multisigAccountModificationTransactionBodyReserved_1 = 0; // reserved field
 
@@ -6636,7 +5920,7 @@ class EmbeddedMultisigAccountModificationTransactionV1 extends EmbeddedTransacti
 		?int $minApprovalDelta = null,
 		?array $addressAdditions = null,
 		?array $addressDeletions = null
-	) {
+	){
 		parent::__construct(
 			$signerPublicKey,
 			EmbeddedMultisigAccountModificationTransactionV1::TRANSACTION_VERSION,
@@ -6650,12 +5934,10 @@ class EmbeddedMultisigAccountModificationTransactionV1 extends EmbeddedTransacti
 		$this->multisigAccountModificationTransactionBodyReserved_1 = 0; // reserved field
 	}
 
-	public function sort()
-	{
+	public function sort(){
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += parent::size();
 		$size += 1;
@@ -6663,25 +5945,24 @@ class EmbeddedMultisigAccountModificationTransactionV1 extends EmbeddedTransacti
 		$size += 1;
 		$size += 1;
 		$size += 4;
-		$size += ArrayHelpers::size($this->addressAdditions);
-		$size += ArrayHelpers::size($this->addressDeletions);
+		$size += Utils\size($this->addressAdditions);
+		$size += Utils\size($this->addressDeletions);
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new EmbeddedMultisigAccountModificationTransactionV1();
 
 		EmbeddedTransaction::_deserialize($reader, $instance);
-		$minRemovalDelta = Converter::binaryToInt($reader->read(1), 1);
-		$minApprovalDelta = Converter::binaryToInt($reader->read(1), 1);
-		$addressAdditionsCount = Converter::binaryToInt($reader->read(1), 1);
-		$addressDeletionsCount = Converter::binaryToInt($reader->read(1), 1);
-		$multisigAccountModificationTransactionBodyReserved_1 = Converter::binaryToInt($reader->read(4), 4);
+		$minRemovalDelta = Utils\binaryToInt($reader->read(1), 1);
+		$minApprovalDelta = Utils\binaryToInt($reader->read(1), 1);
+		$addressAdditionsCount = Utils\binaryToInt($reader->read(1), 1);
+		$addressDeletionsCount = Utils\binaryToInt($reader->read(1), 1);
+		$multisigAccountModificationTransactionBodyReserved_1 = Utils\binaryToInt($reader->read(4), 4);
 		if (0 !== $multisigAccountModificationTransactionBodyReserved_1)
 			throw new OutOfRangeException('Invalid value of reserved field (' . $multisigAccountModificationTransactionBodyReserved_1 . ')');
-		$addressAdditions = ArrayHelpers::readArrayCount($reader, [UnresolvedAddress::class, 'deserialize'], $addressAdditionsCount);
-		$addressDeletions = ArrayHelpers::readArrayCount($reader, [UnresolvedAddress::class, 'deserialize'], $addressDeletionsCount);
+		$addressAdditions = Utils\readArrayCount($reader, [UnresolvedAddress::class, 'deserialize'], $addressAdditionsCount);
+		$addressDeletions = Utils\readArrayCount($reader, [UnresolvedAddress::class, 'deserialize'], $addressDeletionsCount);
 
 		$instance->minRemovalDelta = $minRemovalDelta;
 		$instance->minApprovalDelta = $minApprovalDelta;
@@ -6690,27 +5971,25 @@ class EmbeddedMultisigAccountModificationTransactionV1 extends EmbeddedTransacti
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$this->sort();
 		parent::_serialize($writer);
-		$writer->write(Converter::intToBinary($this->minRemovalDelta, 1));
-		$writer->write(Converter::intToBinary($this->minApprovalDelta, 1));
-		$writer->write(Converter::intToBinary(count($this->addressAdditions), 1)); // bound: address_additions_count
-		$writer->write(Converter::intToBinary(count($this->addressDeletions), 1)); // bound: address_deletions_count
-		$writer->write(Converter::intToBinary($this->multisigAccountModificationTransactionBodyReserved_1, 4));
-		ArrayHelpers::writeArray($writer, $this->addressAdditions);
-		ArrayHelpers::writeArray($writer, $this->addressDeletions);
+		$writer->write(Utils\intToBinary($this->minRemovalDelta, 1));
+		$writer->write(Utils\intToBinary($this->minApprovalDelta, 1));
+		$writer->write(Utils\intToBinary(count($this->addressAdditions), 1)); // bound: address_additions_count
+		$writer->write(Utils\intToBinary(count($this->addressDeletions), 1)); // bound: address_deletions_count
+		$writer->write(Utils\intToBinary($this->multisigAccountModificationTransactionBodyReserved_1, 4));
+		Utils\writeArray($writer, $this->addressAdditions);
+		Utils\writeArray($writer, $this->addressDeletions);
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '(';
 		$result .= parent::__toString();
-		$result .= 'minRemovalDelta: ' . '0x' . Converter::intToHex($this->minRemovalDelta, 1) . ', ';
-		$result .= 'minApprovalDelta: ' . '0x' . Converter::intToHex($this->minApprovalDelta, 1) . ', ';
+		$result .= 'minRemovalDelta: ' . '0x' . Utils\intToHex($this->minRemovalDelta, 1) . ', ';
+		$result .= 'minApprovalDelta: ' . '0x' . Utils\intToHex($this->minApprovalDelta, 1) . ', ';
 		$result .= 'addressAdditions: ' . '[' . implode(',', array_map(fn ($e) => $e, $this->addressAdditions)) . ']' . ', ';
 		$result .= 'addressDeletions: ' . '[' . implode(',', array_map(fn ($e) => $e, $this->addressDeletions)) . ']' . ', ';
 		$result .= ')';
@@ -6718,17 +5997,16 @@ class EmbeddedMultisigAccountModificationTransactionV1 extends EmbeddedTransacti
 	}
 }
 
-class AddressAliasTransactionV1 extends Transaction
-{
+class AddressAliasTransactionV1 extends Transaction {
 	const TRANSACTION_VERSION = 1;
 
 	const TRANSACTION_TYPE = TransactionType::ADDRESS_ALIAS;
 
-	public NamespaceId $namespaceId;
+	public ?NamespaceId $namespaceId;
 
-	public Address $address;
+	public ?Address $address;
 
-	public AliasAction $aliasAction;
+	public ?AliasAction $aliasAction;
 
 	public function __construct(
 		?Signature $signature = null,
@@ -6739,7 +6017,7 @@ class AddressAliasTransactionV1 extends Transaction
 		?NamespaceId $namespaceId = null,
 		?Address $address = null,
 		?AliasAction $aliasAction = null
-	) {
+	){
 		parent::__construct(
 			$signature,
 			$signerPublicKey,
@@ -6754,12 +6032,10 @@ class AddressAliasTransactionV1 extends Transaction
 		$this->aliasAction = $aliasAction ?? new AliasAction();
 	}
 
-	public function sort()
-	{
+	public function sort(){
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += parent::size();
 		$size += $this->namespaceId->size();
@@ -6768,8 +6044,7 @@ class AddressAliasTransactionV1 extends Transaction
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new AddressAliasTransactionV1();
 
 		Transaction::_deserialize($reader, $instance);
@@ -6783,8 +6058,7 @@ class AddressAliasTransactionV1 extends Transaction
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$this->sort();
 		parent::_serialize($writer);
@@ -6794,8 +6068,7 @@ class AddressAliasTransactionV1 extends Transaction
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '(';
 		$result .= parent::__toString();
 		$result .= 'namespaceId: ' . $this->namespaceId . ', ';
@@ -6806,17 +6079,16 @@ class AddressAliasTransactionV1 extends Transaction
 	}
 }
 
-class EmbeddedAddressAliasTransactionV1 extends EmbeddedTransaction
-{
+class EmbeddedAddressAliasTransactionV1 extends EmbeddedTransaction {
 	const TRANSACTION_VERSION = 1;
 
 	const TRANSACTION_TYPE = TransactionType::ADDRESS_ALIAS;
 
-	public NamespaceId $namespaceId;
+	public ?NamespaceId $namespaceId;
 
-	public Address $address;
+	public ?Address $address;
 
-	public AliasAction $aliasAction;
+	public ?AliasAction $aliasAction;
 
 	public function __construct(
 		?PublicKey $signerPublicKey = null,
@@ -6824,7 +6096,7 @@ class EmbeddedAddressAliasTransactionV1 extends EmbeddedTransaction
 		?NamespaceId $namespaceId = null,
 		?Address $address = null,
 		?AliasAction $aliasAction = null
-	) {
+	){
 		parent::__construct(
 			$signerPublicKey,
 			EmbeddedAddressAliasTransactionV1::TRANSACTION_VERSION,
@@ -6836,12 +6108,10 @@ class EmbeddedAddressAliasTransactionV1 extends EmbeddedTransaction
 		$this->aliasAction = $aliasAction ?? new AliasAction();
 	}
 
-	public function sort()
-	{
+	public function sort(){
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += parent::size();
 		$size += $this->namespaceId->size();
@@ -6850,8 +6120,7 @@ class EmbeddedAddressAliasTransactionV1 extends EmbeddedTransaction
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new EmbeddedAddressAliasTransactionV1();
 
 		EmbeddedTransaction::_deserialize($reader, $instance);
@@ -6865,8 +6134,7 @@ class EmbeddedAddressAliasTransactionV1 extends EmbeddedTransaction
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$this->sort();
 		parent::_serialize($writer);
@@ -6876,8 +6144,7 @@ class EmbeddedAddressAliasTransactionV1 extends EmbeddedTransaction
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '(';
 		$result .= parent::__toString();
 		$result .= 'namespaceId: ' . $this->namespaceId . ', ';
@@ -6888,17 +6155,16 @@ class EmbeddedAddressAliasTransactionV1 extends EmbeddedTransaction
 	}
 }
 
-class MosaicAliasTransactionV1 extends Transaction
-{
+class MosaicAliasTransactionV1 extends Transaction {
 	const TRANSACTION_VERSION = 1;
 
 	const TRANSACTION_TYPE = TransactionType::MOSAIC_ALIAS;
 
-	public NamespaceId $namespaceId;
+	public ?NamespaceId $namespaceId;
 
-	public MosaicId $mosaicId;
+	public ?MosaicId $mosaicId;
 
-	public AliasAction $aliasAction;
+	public ?AliasAction $aliasAction;
 
 	public function __construct(
 		?Signature $signature = null,
@@ -6909,7 +6175,7 @@ class MosaicAliasTransactionV1 extends Transaction
 		?NamespaceId $namespaceId = null,
 		?MosaicId $mosaicId = null,
 		?AliasAction $aliasAction = null
-	) {
+	){
 		parent::__construct(
 			$signature,
 			$signerPublicKey,
@@ -6924,12 +6190,10 @@ class MosaicAliasTransactionV1 extends Transaction
 		$this->aliasAction = $aliasAction ?? new AliasAction();
 	}
 
-	public function sort()
-	{
+	public function sort(){
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += parent::size();
 		$size += $this->namespaceId->size();
@@ -6938,8 +6202,7 @@ class MosaicAliasTransactionV1 extends Transaction
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new MosaicAliasTransactionV1();
 
 		Transaction::_deserialize($reader, $instance);
@@ -6953,8 +6216,7 @@ class MosaicAliasTransactionV1 extends Transaction
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$this->sort();
 		parent::_serialize($writer);
@@ -6964,8 +6226,7 @@ class MosaicAliasTransactionV1 extends Transaction
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '(';
 		$result .= parent::__toString();
 		$result .= 'namespaceId: ' . $this->namespaceId . ', ';
@@ -6976,17 +6237,16 @@ class MosaicAliasTransactionV1 extends Transaction
 	}
 }
 
-class EmbeddedMosaicAliasTransactionV1 extends EmbeddedTransaction
-{
+class EmbeddedMosaicAliasTransactionV1 extends EmbeddedTransaction {
 	const TRANSACTION_VERSION = 1;
 
 	const TRANSACTION_TYPE = TransactionType::MOSAIC_ALIAS;
 
-	public NamespaceId $namespaceId;
+	public ?NamespaceId $namespaceId;
 
-	public MosaicId $mosaicId;
+	public ?MosaicId $mosaicId;
 
-	public AliasAction $aliasAction;
+	public ?AliasAction $aliasAction;
 
 	public function __construct(
 		?PublicKey $signerPublicKey = null,
@@ -6994,7 +6254,7 @@ class EmbeddedMosaicAliasTransactionV1 extends EmbeddedTransaction
 		?NamespaceId $namespaceId = null,
 		?MosaicId $mosaicId = null,
 		?AliasAction $aliasAction = null
-	) {
+	){
 		parent::__construct(
 			$signerPublicKey,
 			EmbeddedMosaicAliasTransactionV1::TRANSACTION_VERSION,
@@ -7006,12 +6266,10 @@ class EmbeddedMosaicAliasTransactionV1 extends EmbeddedTransaction
 		$this->aliasAction = $aliasAction ?? new AliasAction();
 	}
 
-	public function sort()
-	{
+	public function sort(){
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += parent::size();
 		$size += $this->namespaceId->size();
@@ -7020,8 +6278,7 @@ class EmbeddedMosaicAliasTransactionV1 extends EmbeddedTransaction
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new EmbeddedMosaicAliasTransactionV1();
 
 		EmbeddedTransaction::_deserialize($reader, $instance);
@@ -7035,8 +6292,7 @@ class EmbeddedMosaicAliasTransactionV1 extends EmbeddedTransaction
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$this->sort();
 		parent::_serialize($writer);
@@ -7046,8 +6302,7 @@ class EmbeddedMosaicAliasTransactionV1 extends EmbeddedTransaction
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '(';
 		$result .= parent::__toString();
 		$result .= 'namespaceId: ' . $this->namespaceId . ', ';
@@ -7058,21 +6313,20 @@ class EmbeddedMosaicAliasTransactionV1 extends EmbeddedTransaction
 	}
 }
 
-class NamespaceRegistrationTransactionV1 extends Transaction
-{
+class NamespaceRegistrationTransactionV1 extends Transaction {
 	const TRANSACTION_VERSION = 1;
 
 	const TRANSACTION_TYPE = TransactionType::NAMESPACE_REGISTRATION;
 
-	public BlockDuration $duration;
+	public ?BlockDuration $duration;
 
-	public NamespaceId $parentId;
+	public ?NamespaceId $parentId;
 
-	public NamespaceId $id;
+	public ?NamespaceId $id;
 
-	public NamespaceRegistrationType $registrationType;
+	public ?NamespaceRegistrationType $registrationType;
 
-	public string $name;
+	public ?string $name;
 
 	public function __construct(
 		?Signature $signature = null,
@@ -7085,7 +6339,7 @@ class NamespaceRegistrationTransactionV1 extends Transaction
 		?NamespaceId $id = null,
 		?NamespaceRegistrationType $registrationType = null,
 		?string $name = null
-	) {
+	){
 		parent::__construct(
 			$signature,
 			$signerPublicKey,
@@ -7095,19 +6349,17 @@ class NamespaceRegistrationTransactionV1 extends Transaction
 			$fee,
 			$deadline,
 		);
-		$this->duration = null;
-		$this->parentId = null;
+		$this->duration = $duration ?? new BlockDuration();
+		$this->parentId = $parentId ?? new NamespaceId();
 		$this->id = $id ?? new NamespaceId();
 		$this->registrationType = $registrationType ?? new NamespaceRegistrationType();
 		$this->name = $name ?? '';
 	}
 
-	public function sort()
-	{
+	public function sort(){
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += parent::size();
 		if (NamespaceRegistrationType::ROOT === $this->registrationType->value)
@@ -7123,14 +6375,13 @@ class NamespaceRegistrationTransactionV1 extends Transaction
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new NamespaceRegistrationTransactionV1();
 
 		Transaction::_deserialize($reader, $instance);
 		// deserialize to temporary buffer for further processing
 		$durationTemporary = BlockDuration::deserialize($reader);
-		$registration_type_condition_reader = new BinaryReader($reader->read($durationTemporary->size));
+		$registration_type_condition_reader = new BinaryReader($durationTemporary->serialize());
 
 
 		$id = NamespaceId::deserialize($reader);
@@ -7143,7 +6394,7 @@ class NamespaceRegistrationTransactionV1 extends Transaction
 		if (NamespaceRegistrationType::CHILD === $registrationType->value)
 			$parentId = NamespaceId::deserialize($registration_type_condition_reader);
 
-		$nameSize = Converter::binaryToInt($reader->read(1), 1);
+		$nameSize = Utils\binaryToInt($reader->read(1), 1);
 		$name = $reader->read($nameSize);
 
 		$instance->duration = $duration;
@@ -7154,8 +6405,7 @@ class NamespaceRegistrationTransactionV1 extends Transaction
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$this->sort();
 		parent::_serialize($writer);
@@ -7167,13 +6417,12 @@ class NamespaceRegistrationTransactionV1 extends Transaction
 
 		$writer->write($this->id->serialize());
 		$writer->write($this->registrationType->serialize());
-		$writer->write(Converter::intToBinary(strlen($this->name), 1)); // bound: name_size
+		$writer->write(Utils\intToBinary(strlen($this->name), 1)); // bound: name_size
 		$writer->write($this->name);
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '(';
 		$result .= parent::__toString();
 		if (NamespaceRegistrationType::ROOT === $this->registrationType->value)
@@ -7190,21 +6439,20 @@ class NamespaceRegistrationTransactionV1 extends Transaction
 	}
 }
 
-class EmbeddedNamespaceRegistrationTransactionV1 extends EmbeddedTransaction
-{
+class EmbeddedNamespaceRegistrationTransactionV1 extends EmbeddedTransaction {
 	const TRANSACTION_VERSION = 1;
 
 	const TRANSACTION_TYPE = TransactionType::NAMESPACE_REGISTRATION;
 
-	public BlockDuration $duration;
+	public ?BlockDuration $duration;
 
-	public NamespaceId $parentId;
+	public ?NamespaceId $parentId;
 
-	public NamespaceId $id;
+	public ?NamespaceId $id;
 
-	public NamespaceRegistrationType $registrationType;
+	public ?NamespaceRegistrationType $registrationType;
 
-	public string $name;
+	public ?string $name;
 
 	public function __construct(
 		?PublicKey $signerPublicKey = null,
@@ -7214,26 +6462,24 @@ class EmbeddedNamespaceRegistrationTransactionV1 extends EmbeddedTransaction
 		?NamespaceId $id = null,
 		?NamespaceRegistrationType $registrationType = null,
 		?string $name = null
-	) {
+	){
 		parent::__construct(
 			$signerPublicKey,
 			EmbeddedNamespaceRegistrationTransactionV1::TRANSACTION_VERSION,
 			$network,
 			new TransactionType(EmbeddedNamespaceRegistrationTransactionV1::TRANSACTION_TYPE),
 		);
-		$this->duration = null;
-		$this->parentId = null;
+		$this->duration = $duration ?? new BlockDuration();
+		$this->parentId = $parentId ?? new NamespaceId();
 		$this->id = $id ?? new NamespaceId();
 		$this->registrationType = $registrationType ?? new NamespaceRegistrationType();
 		$this->name = $name ?? '';
 	}
 
-	public function sort()
-	{
+	public function sort(){
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += parent::size();
 		if (NamespaceRegistrationType::ROOT === $this->registrationType->value)
@@ -7249,14 +6495,13 @@ class EmbeddedNamespaceRegistrationTransactionV1 extends EmbeddedTransaction
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new EmbeddedNamespaceRegistrationTransactionV1();
 
 		EmbeddedTransaction::_deserialize($reader, $instance);
 		// deserialize to temporary buffer for further processing
 		$durationTemporary = BlockDuration::deserialize($reader);
-		$registration_type_condition_reader = new BinaryReader($reader->read($durationTemporary->size));
+		$registration_type_condition_reader = new BinaryReader($durationTemporary->serialize());
 
 
 		$id = NamespaceId::deserialize($reader);
@@ -7269,7 +6514,7 @@ class EmbeddedNamespaceRegistrationTransactionV1 extends EmbeddedTransaction
 		if (NamespaceRegistrationType::CHILD === $registrationType->value)
 			$parentId = NamespaceId::deserialize($registration_type_condition_reader);
 
-		$nameSize = Converter::binaryToInt($reader->read(1), 1);
+		$nameSize = Utils\binaryToInt($reader->read(1), 1);
 		$name = $reader->read($nameSize);
 
 		$instance->duration = $duration;
@@ -7280,8 +6525,7 @@ class EmbeddedNamespaceRegistrationTransactionV1 extends EmbeddedTransaction
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$this->sort();
 		parent::_serialize($writer);
@@ -7293,13 +6537,12 @@ class EmbeddedNamespaceRegistrationTransactionV1 extends EmbeddedTransaction
 
 		$writer->write($this->id->serialize());
 		$writer->write($this->registrationType->serialize());
-		$writer->write(Converter::intToBinary(strlen($this->name), 1)); // bound: name_size
+		$writer->write(Utils\intToBinary(strlen($this->name), 1)); // bound: name_size
 		$writer->write($this->name);
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '(';
 		$result .= parent::__toString();
 		if (NamespaceRegistrationType::ROOT === $this->registrationType->value)
@@ -7316,8 +6559,7 @@ class EmbeddedNamespaceRegistrationTransactionV1 extends EmbeddedTransaction
 	}
 }
 
-class AccountRestrictionFlags
-{
+class AccountRestrictionFlags {
 	const ADDRESS = 1;
 
 	const MOSAIC_ID = 2;
@@ -7330,38 +6572,27 @@ class AccountRestrictionFlags
 
 	public $value;
 
-	public function __construct(int $value = 0)
-	{
+	public function __construct($value = 0){
 		$this->value = $value;
 	}
 
-	public function has($flag): bool
-	{
+	public function has($flag): bool {
 		return 0 !== ($this->value & $flag);
 	}
 
-	public static function size()
-	{
+	public static function size(){
 		return 2;
 	}
 
-	public static function deserialize(BinaryReader $reader): self
-	{
-		return new AccountRestrictionFlags(Converter::binaryToInt($reader->read(2), 2));
+	public static function deserialize(BinaryReader $reader): self {
+		return new AccountRestrictionFlags(Utils\binaryToInt($reader->read(2), 2));
 	}
 
-	public static function deserializeAligned(BinaryReader $reader): self
-	{
-		return new AccountRestrictionFlags(Converter::binaryToInt($reader->read(2), 2));
+	public function serialize(): string {
+		return Utils\intToBinary($this->value, 2);
 	}
 
-	public function serialize(): string
-	{
-		return Converter::intToBinary($this->value, 2);
-	}
-
-	public function __toString()
-	{
+	public function __toString(){
 		$values = [
 			1, 2, 4, 16384, 32768
 		];
@@ -7381,17 +6612,16 @@ class AccountRestrictionFlags
 	}
 }
 
-class AccountAddressRestrictionTransactionV1 extends Transaction
-{
+class AccountAddressRestrictionTransactionV1 extends Transaction {
 	const TRANSACTION_VERSION = 1;
 
 	const TRANSACTION_TYPE = TransactionType::ACCOUNT_ADDRESS_RESTRICTION;
 
-	public AccountRestrictionFlags $restrictionFlags;
+	public ?AccountRestrictionFlags $restrictionFlags;
 
-	public array $restrictionAdditions;
+	public ?array $restrictionAdditions;
 
-	public array $restrictionDeletions;
+	public ?array $restrictionDeletions;
 
 	private int $accountRestrictionTransactionBodyReserved_1 = 0; // reserved field
 
@@ -7404,7 +6634,7 @@ class AccountAddressRestrictionTransactionV1 extends Transaction
 		?AccountRestrictionFlags $restrictionFlags = null,
 		?array $restrictionAdditions = null,
 		?array $restrictionDeletions = null
-	) {
+	){
 		parent::__construct(
 			$signature,
 			$signerPublicKey,
@@ -7420,36 +6650,33 @@ class AccountAddressRestrictionTransactionV1 extends Transaction
 		$this->accountRestrictionTransactionBodyReserved_1 = 0; // reserved field
 	}
 
-	public function sort()
-	{
+	public function sort(){
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += parent::size();
 		$size += $this->restrictionFlags->size();
 		$size += 1;
 		$size += 1;
 		$size += 4;
-		$size += ArrayHelpers::size($this->restrictionAdditions);
-		$size += ArrayHelpers::size($this->restrictionDeletions);
+		$size += Utils\size($this->restrictionAdditions);
+		$size += Utils\size($this->restrictionDeletions);
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new AccountAddressRestrictionTransactionV1();
 
 		Transaction::_deserialize($reader, $instance);
 		$restrictionFlags = AccountRestrictionFlags::deserialize($reader);
-		$restrictionAdditionsCount = Converter::binaryToInt($reader->read(1), 1);
-		$restrictionDeletionsCount = Converter::binaryToInt($reader->read(1), 1);
-		$accountRestrictionTransactionBodyReserved_1 = Converter::binaryToInt($reader->read(4), 4);
+		$restrictionAdditionsCount = Utils\binaryToInt($reader->read(1), 1);
+		$restrictionDeletionsCount = Utils\binaryToInt($reader->read(1), 1);
+		$accountRestrictionTransactionBodyReserved_1 = Utils\binaryToInt($reader->read(4), 4);
 		if (0 !== $accountRestrictionTransactionBodyReserved_1)
 			throw new OutOfRangeException('Invalid value of reserved field (' . $accountRestrictionTransactionBodyReserved_1 . ')');
-		$restrictionAdditions = ArrayHelpers::readArrayCount($reader, [UnresolvedAddress::class, 'deserialize'], $restrictionAdditionsCount);
-		$restrictionDeletions = ArrayHelpers::readArrayCount($reader, [UnresolvedAddress::class, 'deserialize'], $restrictionDeletionsCount);
+		$restrictionAdditions = Utils\readArrayCount($reader, [UnresolvedAddress::class, 'deserialize'], $restrictionAdditionsCount);
+		$restrictionDeletions = Utils\readArrayCount($reader, [UnresolvedAddress::class, 'deserialize'], $restrictionDeletionsCount);
 
 		$instance->restrictionFlags = $restrictionFlags;
 		$instance->restrictionAdditions = $restrictionAdditions;
@@ -7457,22 +6684,20 @@ class AccountAddressRestrictionTransactionV1 extends Transaction
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$this->sort();
 		parent::_serialize($writer);
 		$writer->write($this->restrictionFlags->serialize());
-		$writer->write(Converter::intToBinary(count($this->restrictionAdditions), 1)); // bound: restriction_additions_count
-		$writer->write(Converter::intToBinary(count($this->restrictionDeletions), 1)); // bound: restriction_deletions_count
-		$writer->write(Converter::intToBinary($this->accountRestrictionTransactionBodyReserved_1, 4));
-		ArrayHelpers::writeArray($writer, $this->restrictionAdditions);
-		ArrayHelpers::writeArray($writer, $this->restrictionDeletions);
+		$writer->write(Utils\intToBinary(count($this->restrictionAdditions), 1)); // bound: restriction_additions_count
+		$writer->write(Utils\intToBinary(count($this->restrictionDeletions), 1)); // bound: restriction_deletions_count
+		$writer->write(Utils\intToBinary($this->accountRestrictionTransactionBodyReserved_1, 4));
+		Utils\writeArray($writer, $this->restrictionAdditions);
+		Utils\writeArray($writer, $this->restrictionDeletions);
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '(';
 		$result .= parent::__toString();
 		$result .= 'restrictionFlags: ' . $this->restrictionFlags . ', ';
@@ -7483,17 +6708,16 @@ class AccountAddressRestrictionTransactionV1 extends Transaction
 	}
 }
 
-class EmbeddedAccountAddressRestrictionTransactionV1 extends EmbeddedTransaction
-{
+class EmbeddedAccountAddressRestrictionTransactionV1 extends EmbeddedTransaction {
 	const TRANSACTION_VERSION = 1;
 
 	const TRANSACTION_TYPE = TransactionType::ACCOUNT_ADDRESS_RESTRICTION;
 
-	public AccountRestrictionFlags $restrictionFlags;
+	public ?AccountRestrictionFlags $restrictionFlags;
 
-	public array $restrictionAdditions;
+	public ?array $restrictionAdditions;
 
-	public array $restrictionDeletions;
+	public ?array $restrictionDeletions;
 
 	private int $accountRestrictionTransactionBodyReserved_1 = 0; // reserved field
 
@@ -7503,7 +6727,7 @@ class EmbeddedAccountAddressRestrictionTransactionV1 extends EmbeddedTransaction
 		?AccountRestrictionFlags $restrictionFlags = null,
 		?array $restrictionAdditions = null,
 		?array $restrictionDeletions = null
-	) {
+	){
 		parent::__construct(
 			$signerPublicKey,
 			EmbeddedAccountAddressRestrictionTransactionV1::TRANSACTION_VERSION,
@@ -7516,36 +6740,33 @@ class EmbeddedAccountAddressRestrictionTransactionV1 extends EmbeddedTransaction
 		$this->accountRestrictionTransactionBodyReserved_1 = 0; // reserved field
 	}
 
-	public function sort()
-	{
+	public function sort(){
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += parent::size();
 		$size += $this->restrictionFlags->size();
 		$size += 1;
 		$size += 1;
 		$size += 4;
-		$size += ArrayHelpers::size($this->restrictionAdditions);
-		$size += ArrayHelpers::size($this->restrictionDeletions);
+		$size += Utils\size($this->restrictionAdditions);
+		$size += Utils\size($this->restrictionDeletions);
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new EmbeddedAccountAddressRestrictionTransactionV1();
 
 		EmbeddedTransaction::_deserialize($reader, $instance);
 		$restrictionFlags = AccountRestrictionFlags::deserialize($reader);
-		$restrictionAdditionsCount = Converter::binaryToInt($reader->read(1), 1);
-		$restrictionDeletionsCount = Converter::binaryToInt($reader->read(1), 1);
-		$accountRestrictionTransactionBodyReserved_1 = Converter::binaryToInt($reader->read(4), 4);
+		$restrictionAdditionsCount = Utils\binaryToInt($reader->read(1), 1);
+		$restrictionDeletionsCount = Utils\binaryToInt($reader->read(1), 1);
+		$accountRestrictionTransactionBodyReserved_1 = Utils\binaryToInt($reader->read(4), 4);
 		if (0 !== $accountRestrictionTransactionBodyReserved_1)
 			throw new OutOfRangeException('Invalid value of reserved field (' . $accountRestrictionTransactionBodyReserved_1 . ')');
-		$restrictionAdditions = ArrayHelpers::readArrayCount($reader, [UnresolvedAddress::class, 'deserialize'], $restrictionAdditionsCount);
-		$restrictionDeletions = ArrayHelpers::readArrayCount($reader, [UnresolvedAddress::class, 'deserialize'], $restrictionDeletionsCount);
+		$restrictionAdditions = Utils\readArrayCount($reader, [UnresolvedAddress::class, 'deserialize'], $restrictionAdditionsCount);
+		$restrictionDeletions = Utils\readArrayCount($reader, [UnresolvedAddress::class, 'deserialize'], $restrictionDeletionsCount);
 
 		$instance->restrictionFlags = $restrictionFlags;
 		$instance->restrictionAdditions = $restrictionAdditions;
@@ -7553,22 +6774,20 @@ class EmbeddedAccountAddressRestrictionTransactionV1 extends EmbeddedTransaction
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$this->sort();
 		parent::_serialize($writer);
 		$writer->write($this->restrictionFlags->serialize());
-		$writer->write(Converter::intToBinary(count($this->restrictionAdditions), 1)); // bound: restriction_additions_count
-		$writer->write(Converter::intToBinary(count($this->restrictionDeletions), 1)); // bound: restriction_deletions_count
-		$writer->write(Converter::intToBinary($this->accountRestrictionTransactionBodyReserved_1, 4));
-		ArrayHelpers::writeArray($writer, $this->restrictionAdditions);
-		ArrayHelpers::writeArray($writer, $this->restrictionDeletions);
+		$writer->write(Utils\intToBinary(count($this->restrictionAdditions), 1)); // bound: restriction_additions_count
+		$writer->write(Utils\intToBinary(count($this->restrictionDeletions), 1)); // bound: restriction_deletions_count
+		$writer->write(Utils\intToBinary($this->accountRestrictionTransactionBodyReserved_1, 4));
+		Utils\writeArray($writer, $this->restrictionAdditions);
+		Utils\writeArray($writer, $this->restrictionDeletions);
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '(';
 		$result .= parent::__toString();
 		$result .= 'restrictionFlags: ' . $this->restrictionFlags . ', ';
@@ -7579,17 +6798,16 @@ class EmbeddedAccountAddressRestrictionTransactionV1 extends EmbeddedTransaction
 	}
 }
 
-class AccountMosaicRestrictionTransactionV1 extends Transaction
-{
+class AccountMosaicRestrictionTransactionV1 extends Transaction {
 	const TRANSACTION_VERSION = 1;
 
 	const TRANSACTION_TYPE = TransactionType::ACCOUNT_MOSAIC_RESTRICTION;
 
-	public AccountRestrictionFlags $restrictionFlags;
+	public ?AccountRestrictionFlags $restrictionFlags;
 
-	public array $restrictionAdditions;
+	public ?array $restrictionAdditions;
 
-	public array $restrictionDeletions;
+	public ?array $restrictionDeletions;
 
 	private int $accountRestrictionTransactionBodyReserved_1 = 0; // reserved field
 
@@ -7602,7 +6820,7 @@ class AccountMosaicRestrictionTransactionV1 extends Transaction
 		?AccountRestrictionFlags $restrictionFlags = null,
 		?array $restrictionAdditions = null,
 		?array $restrictionDeletions = null
-	) {
+	){
 		parent::__construct(
 			$signature,
 			$signerPublicKey,
@@ -7618,36 +6836,33 @@ class AccountMosaicRestrictionTransactionV1 extends Transaction
 		$this->accountRestrictionTransactionBodyReserved_1 = 0; // reserved field
 	}
 
-	public function sort()
-	{
+	public function sort(){
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += parent::size();
 		$size += $this->restrictionFlags->size();
 		$size += 1;
 		$size += 1;
 		$size += 4;
-		$size += ArrayHelpers::size($this->restrictionAdditions);
-		$size += ArrayHelpers::size($this->restrictionDeletions);
+		$size += Utils\size($this->restrictionAdditions);
+		$size += Utils\size($this->restrictionDeletions);
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new AccountMosaicRestrictionTransactionV1();
 
 		Transaction::_deserialize($reader, $instance);
 		$restrictionFlags = AccountRestrictionFlags::deserialize($reader);
-		$restrictionAdditionsCount = Converter::binaryToInt($reader->read(1), 1);
-		$restrictionDeletionsCount = Converter::binaryToInt($reader->read(1), 1);
-		$accountRestrictionTransactionBodyReserved_1 = Converter::binaryToInt($reader->read(4), 4);
+		$restrictionAdditionsCount = Utils\binaryToInt($reader->read(1), 1);
+		$restrictionDeletionsCount = Utils\binaryToInt($reader->read(1), 1);
+		$accountRestrictionTransactionBodyReserved_1 = Utils\binaryToInt($reader->read(4), 4);
 		if (0 !== $accountRestrictionTransactionBodyReserved_1)
 			throw new OutOfRangeException('Invalid value of reserved field (' . $accountRestrictionTransactionBodyReserved_1 . ')');
-		$restrictionAdditions = ArrayHelpers::readArrayCount($reader, [UnresolvedMosaicId::class, 'deserialize'], $restrictionAdditionsCount);
-		$restrictionDeletions = ArrayHelpers::readArrayCount($reader, [UnresolvedMosaicId::class, 'deserialize'], $restrictionDeletionsCount);
+		$restrictionAdditions = Utils\readArrayCount($reader, [UnresolvedMosaicId::class, 'deserialize'], $restrictionAdditionsCount);
+		$restrictionDeletions = Utils\readArrayCount($reader, [UnresolvedMosaicId::class, 'deserialize'], $restrictionDeletionsCount);
 
 		$instance->restrictionFlags = $restrictionFlags;
 		$instance->restrictionAdditions = $restrictionAdditions;
@@ -7655,22 +6870,20 @@ class AccountMosaicRestrictionTransactionV1 extends Transaction
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$this->sort();
 		parent::_serialize($writer);
 		$writer->write($this->restrictionFlags->serialize());
-		$writer->write(Converter::intToBinary(count($this->restrictionAdditions), 1)); // bound: restriction_additions_count
-		$writer->write(Converter::intToBinary(count($this->restrictionDeletions), 1)); // bound: restriction_deletions_count
-		$writer->write(Converter::intToBinary($this->accountRestrictionTransactionBodyReserved_1, 4));
-		ArrayHelpers::writeArray($writer, $this->restrictionAdditions);
-		ArrayHelpers::writeArray($writer, $this->restrictionDeletions);
+		$writer->write(Utils\intToBinary(count($this->restrictionAdditions), 1)); // bound: restriction_additions_count
+		$writer->write(Utils\intToBinary(count($this->restrictionDeletions), 1)); // bound: restriction_deletions_count
+		$writer->write(Utils\intToBinary($this->accountRestrictionTransactionBodyReserved_1, 4));
+		Utils\writeArray($writer, $this->restrictionAdditions);
+		Utils\writeArray($writer, $this->restrictionDeletions);
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '(';
 		$result .= parent::__toString();
 		$result .= 'restrictionFlags: ' . $this->restrictionFlags . ', ';
@@ -7681,17 +6894,16 @@ class AccountMosaicRestrictionTransactionV1 extends Transaction
 	}
 }
 
-class EmbeddedAccountMosaicRestrictionTransactionV1 extends EmbeddedTransaction
-{
+class EmbeddedAccountMosaicRestrictionTransactionV1 extends EmbeddedTransaction {
 	const TRANSACTION_VERSION = 1;
 
 	const TRANSACTION_TYPE = TransactionType::ACCOUNT_MOSAIC_RESTRICTION;
 
-	public AccountRestrictionFlags $restrictionFlags;
+	public ?AccountRestrictionFlags $restrictionFlags;
 
-	public array $restrictionAdditions;
+	public ?array $restrictionAdditions;
 
-	public array $restrictionDeletions;
+	public ?array $restrictionDeletions;
 
 	private int $accountRestrictionTransactionBodyReserved_1 = 0; // reserved field
 
@@ -7701,7 +6913,7 @@ class EmbeddedAccountMosaicRestrictionTransactionV1 extends EmbeddedTransaction
 		?AccountRestrictionFlags $restrictionFlags = null,
 		?array $restrictionAdditions = null,
 		?array $restrictionDeletions = null
-	) {
+	){
 		parent::__construct(
 			$signerPublicKey,
 			EmbeddedAccountMosaicRestrictionTransactionV1::TRANSACTION_VERSION,
@@ -7714,36 +6926,33 @@ class EmbeddedAccountMosaicRestrictionTransactionV1 extends EmbeddedTransaction
 		$this->accountRestrictionTransactionBodyReserved_1 = 0; // reserved field
 	}
 
-	public function sort()
-	{
+	public function sort(){
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += parent::size();
 		$size += $this->restrictionFlags->size();
 		$size += 1;
 		$size += 1;
 		$size += 4;
-		$size += ArrayHelpers::size($this->restrictionAdditions);
-		$size += ArrayHelpers::size($this->restrictionDeletions);
+		$size += Utils\size($this->restrictionAdditions);
+		$size += Utils\size($this->restrictionDeletions);
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new EmbeddedAccountMosaicRestrictionTransactionV1();
 
 		EmbeddedTransaction::_deserialize($reader, $instance);
 		$restrictionFlags = AccountRestrictionFlags::deserialize($reader);
-		$restrictionAdditionsCount = Converter::binaryToInt($reader->read(1), 1);
-		$restrictionDeletionsCount = Converter::binaryToInt($reader->read(1), 1);
-		$accountRestrictionTransactionBodyReserved_1 = Converter::binaryToInt($reader->read(4), 4);
+		$restrictionAdditionsCount = Utils\binaryToInt($reader->read(1), 1);
+		$restrictionDeletionsCount = Utils\binaryToInt($reader->read(1), 1);
+		$accountRestrictionTransactionBodyReserved_1 = Utils\binaryToInt($reader->read(4), 4);
 		if (0 !== $accountRestrictionTransactionBodyReserved_1)
 			throw new OutOfRangeException('Invalid value of reserved field (' . $accountRestrictionTransactionBodyReserved_1 . ')');
-		$restrictionAdditions = ArrayHelpers::readArrayCount($reader, [UnresolvedMosaicId::class, 'deserialize'], $restrictionAdditionsCount);
-		$restrictionDeletions = ArrayHelpers::readArrayCount($reader, [UnresolvedMosaicId::class, 'deserialize'], $restrictionDeletionsCount);
+		$restrictionAdditions = Utils\readArrayCount($reader, [UnresolvedMosaicId::class, 'deserialize'], $restrictionAdditionsCount);
+		$restrictionDeletions = Utils\readArrayCount($reader, [UnresolvedMosaicId::class, 'deserialize'], $restrictionDeletionsCount);
 
 		$instance->restrictionFlags = $restrictionFlags;
 		$instance->restrictionAdditions = $restrictionAdditions;
@@ -7751,22 +6960,20 @@ class EmbeddedAccountMosaicRestrictionTransactionV1 extends EmbeddedTransaction
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$this->sort();
 		parent::_serialize($writer);
 		$writer->write($this->restrictionFlags->serialize());
-		$writer->write(Converter::intToBinary(count($this->restrictionAdditions), 1)); // bound: restriction_additions_count
-		$writer->write(Converter::intToBinary(count($this->restrictionDeletions), 1)); // bound: restriction_deletions_count
-		$writer->write(Converter::intToBinary($this->accountRestrictionTransactionBodyReserved_1, 4));
-		ArrayHelpers::writeArray($writer, $this->restrictionAdditions);
-		ArrayHelpers::writeArray($writer, $this->restrictionDeletions);
+		$writer->write(Utils\intToBinary(count($this->restrictionAdditions), 1)); // bound: restriction_additions_count
+		$writer->write(Utils\intToBinary(count($this->restrictionDeletions), 1)); // bound: restriction_deletions_count
+		$writer->write(Utils\intToBinary($this->accountRestrictionTransactionBodyReserved_1, 4));
+		Utils\writeArray($writer, $this->restrictionAdditions);
+		Utils\writeArray($writer, $this->restrictionDeletions);
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '(';
 		$result .= parent::__toString();
 		$result .= 'restrictionFlags: ' . $this->restrictionFlags . ', ';
@@ -7777,17 +6984,16 @@ class EmbeddedAccountMosaicRestrictionTransactionV1 extends EmbeddedTransaction
 	}
 }
 
-class AccountOperationRestrictionTransactionV1 extends Transaction
-{
+class AccountOperationRestrictionTransactionV1 extends Transaction {
 	const TRANSACTION_VERSION = 1;
 
 	const TRANSACTION_TYPE = TransactionType::ACCOUNT_OPERATION_RESTRICTION;
 
-	public AccountRestrictionFlags $restrictionFlags;
+	public ?AccountRestrictionFlags $restrictionFlags;
 
-	public array $restrictionAdditions;
+	public ?array $restrictionAdditions;
 
-	public array $restrictionDeletions;
+	public ?array $restrictionDeletions;
 
 	private int $accountRestrictionTransactionBodyReserved_1 = 0; // reserved field
 
@@ -7800,7 +7006,7 @@ class AccountOperationRestrictionTransactionV1 extends Transaction
 		?AccountRestrictionFlags $restrictionFlags = null,
 		?array $restrictionAdditions = null,
 		?array $restrictionDeletions = null
-	) {
+	){
 		parent::__construct(
 			$signature,
 			$signerPublicKey,
@@ -7816,36 +7022,33 @@ class AccountOperationRestrictionTransactionV1 extends Transaction
 		$this->accountRestrictionTransactionBodyReserved_1 = 0; // reserved field
 	}
 
-	public function sort()
-	{
+	public function sort(){
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += parent::size();
 		$size += $this->restrictionFlags->size();
 		$size += 1;
 		$size += 1;
 		$size += 4;
-		$size += ArrayHelpers::size($this->restrictionAdditions);
-		$size += ArrayHelpers::size($this->restrictionDeletions);
+		$size += Utils\size($this->restrictionAdditions);
+		$size += Utils\size($this->restrictionDeletions);
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new AccountOperationRestrictionTransactionV1();
 
 		Transaction::_deserialize($reader, $instance);
 		$restrictionFlags = AccountRestrictionFlags::deserialize($reader);
-		$restrictionAdditionsCount = Converter::binaryToInt($reader->read(1), 1);
-		$restrictionDeletionsCount = Converter::binaryToInt($reader->read(1), 1);
-		$accountRestrictionTransactionBodyReserved_1 = Converter::binaryToInt($reader->read(4), 4);
+		$restrictionAdditionsCount = Utils\binaryToInt($reader->read(1), 1);
+		$restrictionDeletionsCount = Utils\binaryToInt($reader->read(1), 1);
+		$accountRestrictionTransactionBodyReserved_1 = Utils\binaryToInt($reader->read(4), 4);
 		if (0 !== $accountRestrictionTransactionBodyReserved_1)
 			throw new OutOfRangeException('Invalid value of reserved field (' . $accountRestrictionTransactionBodyReserved_1 . ')');
-		$restrictionAdditions = ArrayHelpers::readArrayCount($reader, [TransactionType::class, 'deserialize'], $restrictionAdditionsCount);
-		$restrictionDeletions = ArrayHelpers::readArrayCount($reader, [TransactionType::class, 'deserialize'], $restrictionDeletionsCount);
+		$restrictionAdditions = Utils\readArrayCount($reader, [TransactionType::class, 'deserialize'], $restrictionAdditionsCount);
+		$restrictionDeletions = Utils\readArrayCount($reader, [TransactionType::class, 'deserialize'], $restrictionDeletionsCount);
 
 		$instance->restrictionFlags = $restrictionFlags;
 		$instance->restrictionAdditions = $restrictionAdditions;
@@ -7853,22 +7056,20 @@ class AccountOperationRestrictionTransactionV1 extends Transaction
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$this->sort();
 		parent::_serialize($writer);
 		$writer->write($this->restrictionFlags->serialize());
-		$writer->write(Converter::intToBinary(count($this->restrictionAdditions), 1)); // bound: restriction_additions_count
-		$writer->write(Converter::intToBinary(count($this->restrictionDeletions), 1)); // bound: restriction_deletions_count
-		$writer->write(Converter::intToBinary($this->accountRestrictionTransactionBodyReserved_1, 4));
-		ArrayHelpers::writeArray($writer, $this->restrictionAdditions);
-		ArrayHelpers::writeArray($writer, $this->restrictionDeletions);
+		$writer->write(Utils\intToBinary(count($this->restrictionAdditions), 1)); // bound: restriction_additions_count
+		$writer->write(Utils\intToBinary(count($this->restrictionDeletions), 1)); // bound: restriction_deletions_count
+		$writer->write(Utils\intToBinary($this->accountRestrictionTransactionBodyReserved_1, 4));
+		Utils\writeArray($writer, $this->restrictionAdditions);
+		Utils\writeArray($writer, $this->restrictionDeletions);
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '(';
 		$result .= parent::__toString();
 		$result .= 'restrictionFlags: ' . $this->restrictionFlags . ', ';
@@ -7879,17 +7080,16 @@ class AccountOperationRestrictionTransactionV1 extends Transaction
 	}
 }
 
-class EmbeddedAccountOperationRestrictionTransactionV1 extends EmbeddedTransaction
-{
+class EmbeddedAccountOperationRestrictionTransactionV1 extends EmbeddedTransaction {
 	const TRANSACTION_VERSION = 1;
 
 	const TRANSACTION_TYPE = TransactionType::ACCOUNT_OPERATION_RESTRICTION;
 
-	public AccountRestrictionFlags $restrictionFlags;
+	public ?AccountRestrictionFlags $restrictionFlags;
 
-	public array $restrictionAdditions;
+	public ?array $restrictionAdditions;
 
-	public array $restrictionDeletions;
+	public ?array $restrictionDeletions;
 
 	private int $accountRestrictionTransactionBodyReserved_1 = 0; // reserved field
 
@@ -7899,7 +7099,7 @@ class EmbeddedAccountOperationRestrictionTransactionV1 extends EmbeddedTransacti
 		?AccountRestrictionFlags $restrictionFlags = null,
 		?array $restrictionAdditions = null,
 		?array $restrictionDeletions = null
-	) {
+	){
 		parent::__construct(
 			$signerPublicKey,
 			EmbeddedAccountOperationRestrictionTransactionV1::TRANSACTION_VERSION,
@@ -7912,36 +7112,33 @@ class EmbeddedAccountOperationRestrictionTransactionV1 extends EmbeddedTransacti
 		$this->accountRestrictionTransactionBodyReserved_1 = 0; // reserved field
 	}
 
-	public function sort()
-	{
+	public function sort(){
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += parent::size();
 		$size += $this->restrictionFlags->size();
 		$size += 1;
 		$size += 1;
 		$size += 4;
-		$size += ArrayHelpers::size($this->restrictionAdditions);
-		$size += ArrayHelpers::size($this->restrictionDeletions);
+		$size += Utils\size($this->restrictionAdditions);
+		$size += Utils\size($this->restrictionDeletions);
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new EmbeddedAccountOperationRestrictionTransactionV1();
 
 		EmbeddedTransaction::_deserialize($reader, $instance);
 		$restrictionFlags = AccountRestrictionFlags::deserialize($reader);
-		$restrictionAdditionsCount = Converter::binaryToInt($reader->read(1), 1);
-		$restrictionDeletionsCount = Converter::binaryToInt($reader->read(1), 1);
-		$accountRestrictionTransactionBodyReserved_1 = Converter::binaryToInt($reader->read(4), 4);
+		$restrictionAdditionsCount = Utils\binaryToInt($reader->read(1), 1);
+		$restrictionDeletionsCount = Utils\binaryToInt($reader->read(1), 1);
+		$accountRestrictionTransactionBodyReserved_1 = Utils\binaryToInt($reader->read(4), 4);
 		if (0 !== $accountRestrictionTransactionBodyReserved_1)
 			throw new OutOfRangeException('Invalid value of reserved field (' . $accountRestrictionTransactionBodyReserved_1 . ')');
-		$restrictionAdditions = ArrayHelpers::readArrayCount($reader, [TransactionType::class, 'deserialize'], $restrictionAdditionsCount);
-		$restrictionDeletions = ArrayHelpers::readArrayCount($reader, [TransactionType::class, 'deserialize'], $restrictionDeletionsCount);
+		$restrictionAdditions = Utils\readArrayCount($reader, [TransactionType::class, 'deserialize'], $restrictionAdditionsCount);
+		$restrictionDeletions = Utils\readArrayCount($reader, [TransactionType::class, 'deserialize'], $restrictionDeletionsCount);
 
 		$instance->restrictionFlags = $restrictionFlags;
 		$instance->restrictionAdditions = $restrictionAdditions;
@@ -7949,22 +7146,20 @@ class EmbeddedAccountOperationRestrictionTransactionV1 extends EmbeddedTransacti
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$this->sort();
 		parent::_serialize($writer);
 		$writer->write($this->restrictionFlags->serialize());
-		$writer->write(Converter::intToBinary(count($this->restrictionAdditions), 1)); // bound: restriction_additions_count
-		$writer->write(Converter::intToBinary(count($this->restrictionDeletions), 1)); // bound: restriction_deletions_count
-		$writer->write(Converter::intToBinary($this->accountRestrictionTransactionBodyReserved_1, 4));
-		ArrayHelpers::writeArray($writer, $this->restrictionAdditions);
-		ArrayHelpers::writeArray($writer, $this->restrictionDeletions);
+		$writer->write(Utils\intToBinary(count($this->restrictionAdditions), 1)); // bound: restriction_additions_count
+		$writer->write(Utils\intToBinary(count($this->restrictionDeletions), 1)); // bound: restriction_deletions_count
+		$writer->write(Utils\intToBinary($this->accountRestrictionTransactionBodyReserved_1, 4));
+		Utils\writeArray($writer, $this->restrictionAdditions);
+		Utils\writeArray($writer, $this->restrictionDeletions);
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '(';
 		$result .= parent::__toString();
 		$result .= 'restrictionFlags: ' . $this->restrictionFlags . ', ';
@@ -7975,21 +7170,20 @@ class EmbeddedAccountOperationRestrictionTransactionV1 extends EmbeddedTransacti
 	}
 }
 
-class MosaicAddressRestrictionTransactionV1 extends Transaction
-{
+class MosaicAddressRestrictionTransactionV1 extends Transaction {
 	const TRANSACTION_VERSION = 1;
 
 	const TRANSACTION_TYPE = TransactionType::MOSAIC_ADDRESS_RESTRICTION;
 
-	public UnresolvedMosaicId $mosaicId;
+	public ?UnresolvedMosaicId $mosaicId;
 
-	public int $restrictionKey;
+	public ?int $restrictionKey;
 
-	public int $previousRestrictionValue;
+	public ?int $previousRestrictionValue;
 
-	public int $newRestrictionValue;
+	public ?int $newRestrictionValue;
 
-	public UnresolvedAddress $targetAddress;
+	public ?UnresolvedAddress $targetAddress;
 
 	public function __construct(
 		?Signature $signature = null,
@@ -8002,7 +7196,7 @@ class MosaicAddressRestrictionTransactionV1 extends Transaction
 		?int $previousRestrictionValue = null,
 		?int $newRestrictionValue = null,
 		?UnresolvedAddress $targetAddress = null
-	) {
+	){
 		parent::__construct(
 			$signature,
 			$signerPublicKey,
@@ -8019,12 +7213,10 @@ class MosaicAddressRestrictionTransactionV1 extends Transaction
 		$this->targetAddress = $targetAddress ?? new UnresolvedAddress();
 	}
 
-	public function sort()
-	{
+	public function sort(){
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += parent::size();
 		$size += $this->mosaicId->size();
@@ -8035,15 +7227,14 @@ class MosaicAddressRestrictionTransactionV1 extends Transaction
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new MosaicAddressRestrictionTransactionV1();
 
 		Transaction::_deserialize($reader, $instance);
 		$mosaicId = UnresolvedMosaicId::deserialize($reader);
-		$restrictionKey = Converter::binaryToInt($reader->read(8), 8);
-		$previousRestrictionValue = Converter::binaryToInt($reader->read(8), 8);
-		$newRestrictionValue = Converter::binaryToInt($reader->read(8), 8);
+		$restrictionKey = Utils\binaryToInt($reader->read(8), 8);
+		$previousRestrictionValue = Utils\binaryToInt($reader->read(8), 8);
+		$newRestrictionValue = Utils\binaryToInt($reader->read(8), 8);
 		$targetAddress = UnresolvedAddress::deserialize($reader);
 
 		$instance->mosaicId = $mosaicId;
@@ -8054,48 +7245,45 @@ class MosaicAddressRestrictionTransactionV1 extends Transaction
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$this->sort();
 		parent::_serialize($writer);
 		$writer->write($this->mosaicId->serialize());
-		$writer->write(Converter::intToBinary($this->restrictionKey, 8));
-		$writer->write(Converter::intToBinary($this->previousRestrictionValue, 8));
-		$writer->write(Converter::intToBinary($this->newRestrictionValue, 8));
+		$writer->write(Utils\intToBinary($this->restrictionKey, 8));
+		$writer->write(Utils\intToBinary($this->previousRestrictionValue, 8));
+		$writer->write(Utils\intToBinary($this->newRestrictionValue, 8));
 		$writer->write($this->targetAddress->serialize());
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '(';
 		$result .= parent::__toString();
 		$result .= 'mosaicId: ' . $this->mosaicId . ', ';
-		$result .= 'restrictionKey: ' . '0x' . Converter::intToHex($this->restrictionKey, 8) . ', ';
-		$result .= 'previousRestrictionValue: ' . '0x' . Converter::intToHex($this->previousRestrictionValue, 8) . ', ';
-		$result .= 'newRestrictionValue: ' . '0x' . Converter::intToHex($this->newRestrictionValue, 8) . ', ';
+		$result .= 'restrictionKey: ' . '0x' . Utils\intToHex($this->restrictionKey, 8) . ', ';
+		$result .= 'previousRestrictionValue: ' . '0x' . Utils\intToHex($this->previousRestrictionValue, 8) . ', ';
+		$result .= 'newRestrictionValue: ' . '0x' . Utils\intToHex($this->newRestrictionValue, 8) . ', ';
 		$result .= 'targetAddress: ' . $this->targetAddress . ', ';
 		$result .= ')';
 		return $result;
 	}
 }
 
-class EmbeddedMosaicAddressRestrictionTransactionV1 extends EmbeddedTransaction
-{
+class EmbeddedMosaicAddressRestrictionTransactionV1 extends EmbeddedTransaction {
 	const TRANSACTION_VERSION = 1;
 
 	const TRANSACTION_TYPE = TransactionType::MOSAIC_ADDRESS_RESTRICTION;
 
-	public UnresolvedMosaicId $mosaicId;
+	public ?UnresolvedMosaicId $mosaicId;
 
-	public int $restrictionKey;
+	public ?int $restrictionKey;
 
-	public int $previousRestrictionValue;
+	public ?int $previousRestrictionValue;
 
-	public int $newRestrictionValue;
+	public ?int $newRestrictionValue;
 
-	public UnresolvedAddress $targetAddress;
+	public ?UnresolvedAddress $targetAddress;
 
 	public function __construct(
 		?PublicKey $signerPublicKey = null,
@@ -8105,7 +7293,7 @@ class EmbeddedMosaicAddressRestrictionTransactionV1 extends EmbeddedTransaction
 		?int $previousRestrictionValue = null,
 		?int $newRestrictionValue = null,
 		?UnresolvedAddress $targetAddress = null
-	) {
+	){
 		parent::__construct(
 			$signerPublicKey,
 			EmbeddedMosaicAddressRestrictionTransactionV1::TRANSACTION_VERSION,
@@ -8119,12 +7307,10 @@ class EmbeddedMosaicAddressRestrictionTransactionV1 extends EmbeddedTransaction
 		$this->targetAddress = $targetAddress ?? new UnresolvedAddress();
 	}
 
-	public function sort()
-	{
+	public function sort(){
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += parent::size();
 		$size += $this->mosaicId->size();
@@ -8135,15 +7321,14 @@ class EmbeddedMosaicAddressRestrictionTransactionV1 extends EmbeddedTransaction
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new EmbeddedMosaicAddressRestrictionTransactionV1();
 
 		EmbeddedTransaction::_deserialize($reader, $instance);
 		$mosaicId = UnresolvedMosaicId::deserialize($reader);
-		$restrictionKey = Converter::binaryToInt($reader->read(8), 8);
-		$previousRestrictionValue = Converter::binaryToInt($reader->read(8), 8);
-		$newRestrictionValue = Converter::binaryToInt($reader->read(8), 8);
+		$restrictionKey = Utils\binaryToInt($reader->read(8), 8);
+		$previousRestrictionValue = Utils\binaryToInt($reader->read(8), 8);
+		$newRestrictionValue = Utils\binaryToInt($reader->read(8), 8);
 		$targetAddress = UnresolvedAddress::deserialize($reader);
 
 		$instance->mosaicId = $mosaicId;
@@ -8154,63 +7339,50 @@ class EmbeddedMosaicAddressRestrictionTransactionV1 extends EmbeddedTransaction
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$this->sort();
 		parent::_serialize($writer);
 		$writer->write($this->mosaicId->serialize());
-		$writer->write(Converter::intToBinary($this->restrictionKey, 8));
-		$writer->write(Converter::intToBinary($this->previousRestrictionValue, 8));
-		$writer->write(Converter::intToBinary($this->newRestrictionValue, 8));
+		$writer->write(Utils\intToBinary($this->restrictionKey, 8));
+		$writer->write(Utils\intToBinary($this->previousRestrictionValue, 8));
+		$writer->write(Utils\intToBinary($this->newRestrictionValue, 8));
 		$writer->write($this->targetAddress->serialize());
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '(';
 		$result .= parent::__toString();
 		$result .= 'mosaicId: ' . $this->mosaicId . ', ';
-		$result .= 'restrictionKey: ' . '0x' . Converter::intToHex($this->restrictionKey, 8) . ', ';
-		$result .= 'previousRestrictionValue: ' . '0x' . Converter::intToHex($this->previousRestrictionValue, 8) . ', ';
-		$result .= 'newRestrictionValue: ' . '0x' . Converter::intToHex($this->newRestrictionValue, 8) . ', ';
+		$result .= 'restrictionKey: ' . '0x' . Utils\intToHex($this->restrictionKey, 8) . ', ';
+		$result .= 'previousRestrictionValue: ' . '0x' . Utils\intToHex($this->previousRestrictionValue, 8) . ', ';
+		$result .= 'newRestrictionValue: ' . '0x' . Utils\intToHex($this->newRestrictionValue, 8) . ', ';
 		$result .= 'targetAddress: ' . $this->targetAddress . ', ';
 		$result .= ')';
 		return $result;
 	}
 }
 
-class MosaicRestrictionKey extends BaseValue
-{
-	public function __construct(int $mosaicRestrictionKey = 0)
-	{
+class MosaicRestrictionKey extends BaseValue {
+	public function __construct($mosaicRestrictionKey = 0){
 		parent::__construct(8, $mosaicRestrictionKey);
 	}
 
-	public static function size(): int
-	{
+	public static function size(): int {
 		return 8;
 	}
 
-	public static function deserialize(BinaryReader $reader): self
-	{
-		return new self(Converter::binaryToInt($reader->read(8), 8));
+	public static function deserialize(BinaryReader $reader): self {
+		return new self(Utils\binaryToInt($reader->read(8), 8));
 	}
 
-	public static function deserializeAligned(BinaryReader $reader): self
-	{
-		return new self(Converter::binaryToInt($reader->read(8), 8));
-	}
-
-	public function serialize(): string
-	{
-		return Converter::intToBinary($this->value, 8);
+	public function serialize(): string {
+		return Utils\intToBinary($this->value, 8);
 	}
 }
 
-class MosaicRestrictionType
-{
+class MosaicRestrictionType {
 	const NONE = 0;
 
 	const EQ = 1;
@@ -8227,13 +7399,11 @@ class MosaicRestrictionType
 
 	public $value;
 
-	public function __construct(int $value = 0)
-	{
+	public function __construct($value = 0){
 		$this->value = $value;
 	}
 
-	static function valueToKey($value)
-	{
+	static function valueToKey($value){
 		$values = [
 			0, 1, 2, 3, 4, 5, 6
 		];
@@ -8248,51 +7418,41 @@ class MosaicRestrictionType
 		return $keys[$index];
 	}
 
-	public static function size()
-	{
+	public static function size(){
 		return 1;
 	}
 
-	public static function deserialize(BinaryReader $reader): self
-	{
-		return new MosaicRestrictionType(Converter::binaryToInt($reader->read(1), 1));
+	public static function deserialize(BinaryReader $reader): self {
+		return new MosaicRestrictionType(Utils\binaryToInt($reader->read(1), 1));
 	}
 
-	public static function deserializeAligned(BinaryReader $reader): self
-	{
-		return new MosaicRestrictionType(Converter::binaryToInt($reader->read(1), 1));
+	public function serialize(): string {
+		return Utils\intToBinary($this->value, 1);
 	}
 
-	public function serialize(): string
-	{
-		return Converter::intToBinary($this->value, 1);
-	}
-
-	public function __toString()
-	{
+	public function __toString(){
 		return "MosaicRestrictionType." . self::valueToKey($this->value);
 	}
 }
 
-class MosaicGlobalRestrictionTransactionV1 extends Transaction
-{
+class MosaicGlobalRestrictionTransactionV1 extends Transaction {
 	const TRANSACTION_VERSION = 1;
 
 	const TRANSACTION_TYPE = TransactionType::MOSAIC_GLOBAL_RESTRICTION;
 
-	public UnresolvedMosaicId $mosaicId;
+	public ?UnresolvedMosaicId $mosaicId;
 
-	public UnresolvedMosaicId $referenceMosaicId;
+	public ?UnresolvedMosaicId $referenceMosaicId;
 
-	public int $restrictionKey;
+	public ?int $restrictionKey;
 
-	public int $previousRestrictionValue;
+	public ?int $previousRestrictionValue;
 
-	public int $newRestrictionValue;
+	public ?int $newRestrictionValue;
 
-	public MosaicRestrictionType $previousRestrictionType;
+	public ?MosaicRestrictionType $previousRestrictionType;
 
-	public MosaicRestrictionType $newRestrictionType;
+	public ?MosaicRestrictionType $newRestrictionType;
 
 	public function __construct(
 		?Signature $signature = null,
@@ -8307,7 +7467,7 @@ class MosaicGlobalRestrictionTransactionV1 extends Transaction
 		?int $newRestrictionValue = null,
 		?MosaicRestrictionType $previousRestrictionType = null,
 		?MosaicRestrictionType $newRestrictionType = null
-	) {
+	){
 		parent::__construct(
 			$signature,
 			$signerPublicKey,
@@ -8326,12 +7486,10 @@ class MosaicGlobalRestrictionTransactionV1 extends Transaction
 		$this->newRestrictionType = $newRestrictionType ?? new MosaicRestrictionType();
 	}
 
-	public function sort()
-	{
+	public function sort(){
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += parent::size();
 		$size += $this->mosaicId->size();
@@ -8344,16 +7502,15 @@ class MosaicGlobalRestrictionTransactionV1 extends Transaction
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new MosaicGlobalRestrictionTransactionV1();
 
 		Transaction::_deserialize($reader, $instance);
 		$mosaicId = UnresolvedMosaicId::deserialize($reader);
 		$referenceMosaicId = UnresolvedMosaicId::deserialize($reader);
-		$restrictionKey = Converter::binaryToInt($reader->read(8), 8);
-		$previousRestrictionValue = Converter::binaryToInt($reader->read(8), 8);
-		$newRestrictionValue = Converter::binaryToInt($reader->read(8), 8);
+		$restrictionKey = Utils\binaryToInt($reader->read(8), 8);
+		$previousRestrictionValue = Utils\binaryToInt($reader->read(8), 8);
+		$newRestrictionValue = Utils\binaryToInt($reader->read(8), 8);
 		$previousRestrictionType = MosaicRestrictionType::deserialize($reader);
 		$newRestrictionType = MosaicRestrictionType::deserialize($reader);
 
@@ -8367,30 +7524,28 @@ class MosaicGlobalRestrictionTransactionV1 extends Transaction
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$this->sort();
 		parent::_serialize($writer);
 		$writer->write($this->mosaicId->serialize());
 		$writer->write($this->referenceMosaicId->serialize());
-		$writer->write(Converter::intToBinary($this->restrictionKey, 8));
-		$writer->write(Converter::intToBinary($this->previousRestrictionValue, 8));
-		$writer->write(Converter::intToBinary($this->newRestrictionValue, 8));
+		$writer->write(Utils\intToBinary($this->restrictionKey, 8));
+		$writer->write(Utils\intToBinary($this->previousRestrictionValue, 8));
+		$writer->write(Utils\intToBinary($this->newRestrictionValue, 8));
 		$writer->write($this->previousRestrictionType->serialize());
 		$writer->write($this->newRestrictionType->serialize());
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '(';
 		$result .= parent::__toString();
 		$result .= 'mosaicId: ' . $this->mosaicId . ', ';
 		$result .= 'referenceMosaicId: ' . $this->referenceMosaicId . ', ';
-		$result .= 'restrictionKey: ' . '0x' . Converter::intToHex($this->restrictionKey, 8) . ', ';
-		$result .= 'previousRestrictionValue: ' . '0x' . Converter::intToHex($this->previousRestrictionValue, 8) . ', ';
-		$result .= 'newRestrictionValue: ' . '0x' . Converter::intToHex($this->newRestrictionValue, 8) . ', ';
+		$result .= 'restrictionKey: ' . '0x' . Utils\intToHex($this->restrictionKey, 8) . ', ';
+		$result .= 'previousRestrictionValue: ' . '0x' . Utils\intToHex($this->previousRestrictionValue, 8) . ', ';
+		$result .= 'newRestrictionValue: ' . '0x' . Utils\intToHex($this->newRestrictionValue, 8) . ', ';
 		$result .= 'previousRestrictionType: ' . $this->previousRestrictionType . ', ';
 		$result .= 'newRestrictionType: ' . $this->newRestrictionType . ', ';
 		$result .= ')';
@@ -8398,25 +7553,24 @@ class MosaicGlobalRestrictionTransactionV1 extends Transaction
 	}
 }
 
-class EmbeddedMosaicGlobalRestrictionTransactionV1 extends EmbeddedTransaction
-{
+class EmbeddedMosaicGlobalRestrictionTransactionV1 extends EmbeddedTransaction {
 	const TRANSACTION_VERSION = 1;
 
 	const TRANSACTION_TYPE = TransactionType::MOSAIC_GLOBAL_RESTRICTION;
 
-	public UnresolvedMosaicId $mosaicId;
+	public ?UnresolvedMosaicId $mosaicId;
 
-	public UnresolvedMosaicId $referenceMosaicId;
+	public ?UnresolvedMosaicId $referenceMosaicId;
 
-	public int $restrictionKey;
+	public ?int $restrictionKey;
 
-	public int $previousRestrictionValue;
+	public ?int $previousRestrictionValue;
 
-	public int $newRestrictionValue;
+	public ?int $newRestrictionValue;
 
-	public MosaicRestrictionType $previousRestrictionType;
+	public ?MosaicRestrictionType $previousRestrictionType;
 
-	public MosaicRestrictionType $newRestrictionType;
+	public ?MosaicRestrictionType $newRestrictionType;
 
 	public function __construct(
 		?PublicKey $signerPublicKey = null,
@@ -8428,7 +7582,7 @@ class EmbeddedMosaicGlobalRestrictionTransactionV1 extends EmbeddedTransaction
 		?int $newRestrictionValue = null,
 		?MosaicRestrictionType $previousRestrictionType = null,
 		?MosaicRestrictionType $newRestrictionType = null
-	) {
+	){
 		parent::__construct(
 			$signerPublicKey,
 			EmbeddedMosaicGlobalRestrictionTransactionV1::TRANSACTION_VERSION,
@@ -8444,12 +7598,10 @@ class EmbeddedMosaicGlobalRestrictionTransactionV1 extends EmbeddedTransaction
 		$this->newRestrictionType = $newRestrictionType ?? new MosaicRestrictionType();
 	}
 
-	public function sort()
-	{
+	public function sort(){
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += parent::size();
 		$size += $this->mosaicId->size();
@@ -8462,16 +7614,15 @@ class EmbeddedMosaicGlobalRestrictionTransactionV1 extends EmbeddedTransaction
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new EmbeddedMosaicGlobalRestrictionTransactionV1();
 
 		EmbeddedTransaction::_deserialize($reader, $instance);
 		$mosaicId = UnresolvedMosaicId::deserialize($reader);
 		$referenceMosaicId = UnresolvedMosaicId::deserialize($reader);
-		$restrictionKey = Converter::binaryToInt($reader->read(8), 8);
-		$previousRestrictionValue = Converter::binaryToInt($reader->read(8), 8);
-		$newRestrictionValue = Converter::binaryToInt($reader->read(8), 8);
+		$restrictionKey = Utils\binaryToInt($reader->read(8), 8);
+		$previousRestrictionValue = Utils\binaryToInt($reader->read(8), 8);
+		$newRestrictionValue = Utils\binaryToInt($reader->read(8), 8);
 		$previousRestrictionType = MosaicRestrictionType::deserialize($reader);
 		$newRestrictionType = MosaicRestrictionType::deserialize($reader);
 
@@ -8485,30 +7636,28 @@ class EmbeddedMosaicGlobalRestrictionTransactionV1 extends EmbeddedTransaction
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$this->sort();
 		parent::_serialize($writer);
 		$writer->write($this->mosaicId->serialize());
 		$writer->write($this->referenceMosaicId->serialize());
-		$writer->write(Converter::intToBinary($this->restrictionKey, 8));
-		$writer->write(Converter::intToBinary($this->previousRestrictionValue, 8));
-		$writer->write(Converter::intToBinary($this->newRestrictionValue, 8));
+		$writer->write(Utils\intToBinary($this->restrictionKey, 8));
+		$writer->write(Utils\intToBinary($this->previousRestrictionValue, 8));
+		$writer->write(Utils\intToBinary($this->newRestrictionValue, 8));
 		$writer->write($this->previousRestrictionType->serialize());
 		$writer->write($this->newRestrictionType->serialize());
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '(';
 		$result .= parent::__toString();
 		$result .= 'mosaicId: ' . $this->mosaicId . ', ';
 		$result .= 'referenceMosaicId: ' . $this->referenceMosaicId . ', ';
-		$result .= 'restrictionKey: ' . '0x' . Converter::intToHex($this->restrictionKey, 8) . ', ';
-		$result .= 'previousRestrictionValue: ' . '0x' . Converter::intToHex($this->previousRestrictionValue, 8) . ', ';
-		$result .= 'newRestrictionValue: ' . '0x' . Converter::intToHex($this->newRestrictionValue, 8) . ', ';
+		$result .= 'restrictionKey: ' . '0x' . Utils\intToHex($this->restrictionKey, 8) . ', ';
+		$result .= 'previousRestrictionValue: ' . '0x' . Utils\intToHex($this->previousRestrictionValue, 8) . ', ';
+		$result .= 'newRestrictionValue: ' . '0x' . Utils\intToHex($this->newRestrictionValue, 8) . ', ';
 		$result .= 'previousRestrictionType: ' . $this->previousRestrictionType . ', ';
 		$result .= 'newRestrictionType: ' . $this->newRestrictionType . ', ';
 		$result .= ')';
@@ -8516,17 +7665,16 @@ class EmbeddedMosaicGlobalRestrictionTransactionV1 extends EmbeddedTransaction
 	}
 }
 
-class TransferTransactionV1 extends Transaction
-{
+class TransferTransactionV1 extends Transaction {
 	const TRANSACTION_VERSION = 1;
 
 	const TRANSACTION_TYPE = TransactionType::TRANSFER;
 
-	public UnresolvedAddress $recipientAddress;
+	public ?UnresolvedAddress $recipientAddress;
 
-	public array $mosaics;
+	public ?array $mosaics;
 
-	public string $message;
+	public ?string $message;
 
 	private int $transferTransactionBodyReserved_1 = 0; // reserved field
 
@@ -8541,7 +7689,7 @@ class TransferTransactionV1 extends Transaction
 		?UnresolvedAddress $recipientAddress = null,
 		?array $mosaics = null,
 		?string $message = null
-	) {
+	){
 		parent::__construct(
 			$signature,
 			$signerPublicKey,
@@ -8558,20 +7706,18 @@ class TransferTransactionV1 extends Transaction
 		$this->transferTransactionBodyReserved_2 = 0; // reserved field
 	}
 
-	public function sort()
-	{
+	public function sort(){
 		usort(
 			$this->mosaics,
 			fn ($lhs, $rhs) =>
-			ArrayHelpers::deepCompare(
+			Utils\deepCompare(
 				isset($lhs->mosaicId->comparer) ? $lhs->mosaicId->comparer() : $lhs->mosaicId->value,
 				isset($rhs->mosaicId->comparer) ? $rhs->mosaicId->comparer() : $rhs->mosaicId->value
 			)
 		);
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += parent::size();
 		$size += $this->recipientAddress->size();
@@ -8579,26 +7725,25 @@ class TransferTransactionV1 extends Transaction
 		$size += 1;
 		$size += 1;
 		$size += 4;
-		$size += ArrayHelpers::size($this->mosaics);
+		$size += Utils\size($this->mosaics);
 		$size += strlen($this->message);
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new TransferTransactionV1();
 
 		Transaction::_deserialize($reader, $instance);
 		$recipientAddress = UnresolvedAddress::deserialize($reader);
-		$messageSize = Converter::binaryToInt($reader->read(2), 2);
-		$mosaicsCount = Converter::binaryToInt($reader->read(1), 1);
-		$transferTransactionBodyReserved_1 = Converter::binaryToInt($reader->read(1), 1);
+		$messageSize = Utils\binaryToInt($reader->read(2), 2);
+		$mosaicsCount = Utils\binaryToInt($reader->read(1), 1);
+		$transferTransactionBodyReserved_1 = Utils\binaryToInt($reader->read(1), 1);
 		if (0 !== $transferTransactionBodyReserved_1)
 			throw new OutOfRangeException('Invalid value of reserved field (' . $transferTransactionBodyReserved_1 . ')');
-		$transferTransactionBodyReserved_2 = Converter::binaryToInt($reader->read(4), 4);
+		$transferTransactionBodyReserved_2 = Utils\binaryToInt($reader->read(4), 4);
 		if (0 !== $transferTransactionBodyReserved_2)
 			throw new OutOfRangeException('Invalid value of reserved field (' . $transferTransactionBodyReserved_2 . ')');
-		$mosaics = ArrayHelpers::readArrayCount($reader, [UnresolvedMosaic::class, 'deserialize'], $mosaicsCount, fn ($e) => isset($e->mosaicId->comparer) ? $e->mosaicId->comparer() : $e->mosaicId->value);
+		$mosaics = Utils\readArrayCount($reader, [UnresolvedMosaic::class, 'deserialize'], $mosaicsCount, fn ($e) => isset($e->mosaicId->comparer) ? $e->mosaicId->comparer() : $e->mosaicId->value);
 		$message = $reader->read($messageSize);
 
 		$instance->recipientAddress = $recipientAddress;
@@ -8607,23 +7752,21 @@ class TransferTransactionV1 extends Transaction
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$this->sort();
 		parent::_serialize($writer);
 		$writer->write($this->recipientAddress->serialize());
-		$writer->write(Converter::intToBinary(strlen($this->message), 2)); // bound: message_size
-		$writer->write(Converter::intToBinary(count($this->mosaics), 1)); // bound: mosaics_count
-		$writer->write(Converter::intToBinary($this->transferTransactionBodyReserved_1, 1));
-		$writer->write(Converter::intToBinary($this->transferTransactionBodyReserved_2, 4));
-		ArrayHelpers::writeArray($writer, $this->mosaics, fn ($e) => isset($e->mosaicId->comparer) ? $e->mosaicId->comparer() : $e->mosaicId->value);
+		$writer->write(Utils\intToBinary(strlen($this->message), 2)); // bound: message_size
+		$writer->write(Utils\intToBinary(count($this->mosaics), 1)); // bound: mosaics_count
+		$writer->write(Utils\intToBinary($this->transferTransactionBodyReserved_1, 1));
+		$writer->write(Utils\intToBinary($this->transferTransactionBodyReserved_2, 4));
+		Utils\writeArray($writer, $this->mosaics, fn ($e) => isset($e->mosaicId->comparer) ? $e->mosaicId->comparer() : $e->mosaicId->value);
 		$writer->write($this->message);
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '(';
 		$result .= parent::__toString();
 		$result .= 'recipientAddress: ' . $this->recipientAddress . ', ';
@@ -8634,17 +7777,16 @@ class TransferTransactionV1 extends Transaction
 	}
 }
 
-class EmbeddedTransferTransactionV1 extends EmbeddedTransaction
-{
+class EmbeddedTransferTransactionV1 extends EmbeddedTransaction {
 	const TRANSACTION_VERSION = 1;
 
 	const TRANSACTION_TYPE = TransactionType::TRANSFER;
 
-	public UnresolvedAddress $recipientAddress;
+	public ?UnresolvedAddress $recipientAddress;
 
-	public array $mosaics;
+	public ?array $mosaics;
 
-	public string $message;
+	public ?string $message;
 
 	private int $transferTransactionBodyReserved_1 = 0; // reserved field
 
@@ -8656,7 +7798,7 @@ class EmbeddedTransferTransactionV1 extends EmbeddedTransaction
 		?UnresolvedAddress $recipientAddress = null,
 		?array $mosaics = null,
 		?string $message = null
-	) {
+	){
 		parent::__construct(
 			$signerPublicKey,
 			EmbeddedTransferTransactionV1::TRANSACTION_VERSION,
@@ -8670,20 +7812,18 @@ class EmbeddedTransferTransactionV1 extends EmbeddedTransaction
 		$this->transferTransactionBodyReserved_2 = 0; // reserved field
 	}
 
-	public function sort()
-	{
+	public function sort(){
 		usort(
 			$this->mosaics,
 			fn ($lhs, $rhs) =>
-			ArrayHelpers::deepCompare(
+			Utils\deepCompare(
 				isset($lhs->mosaicId->comparer) ? $lhs->mosaicId->comparer() : $lhs->mosaicId->value,
 				isset($rhs->mosaicId->comparer) ? $rhs->mosaicId->comparer() : $rhs->mosaicId->value
 			)
 		);
 	}
 
-	public function size()
-	{
+	public function size(){
 		$size = 0;
 		$size += parent::size();
 		$size += $this->recipientAddress->size();
@@ -8691,26 +7831,25 @@ class EmbeddedTransferTransactionV1 extends EmbeddedTransaction
 		$size += 1;
 		$size += 1;
 		$size += 4;
-		$size += ArrayHelpers::size($this->mosaics);
+		$size += Utils\size($this->mosaics);
 		$size += strlen($this->message);
 		return $size;
 	}
 
-	public static function deserialize(BinaryReader $reader)
-	{
+	public static function deserialize(BinaryReader $reader){
 		$instance = new EmbeddedTransferTransactionV1();
 
 		EmbeddedTransaction::_deserialize($reader, $instance);
 		$recipientAddress = UnresolvedAddress::deserialize($reader);
-		$messageSize = Converter::binaryToInt($reader->read(2), 2);
-		$mosaicsCount = Converter::binaryToInt($reader->read(1), 1);
-		$transferTransactionBodyReserved_1 = Converter::binaryToInt($reader->read(1), 1);
+		$messageSize = Utils\binaryToInt($reader->read(2), 2);
+		$mosaicsCount = Utils\binaryToInt($reader->read(1), 1);
+		$transferTransactionBodyReserved_1 = Utils\binaryToInt($reader->read(1), 1);
 		if (0 !== $transferTransactionBodyReserved_1)
 			throw new OutOfRangeException('Invalid value of reserved field (' . $transferTransactionBodyReserved_1 . ')');
-		$transferTransactionBodyReserved_2 = Converter::binaryToInt($reader->read(4), 4);
+		$transferTransactionBodyReserved_2 = Utils\binaryToInt($reader->read(4), 4);
 		if (0 !== $transferTransactionBodyReserved_2)
 			throw new OutOfRangeException('Invalid value of reserved field (' . $transferTransactionBodyReserved_2 . ')');
-		$mosaics = ArrayHelpers::readArrayCount($reader, [UnresolvedMosaic::class, 'deserialize'], $mosaicsCount, fn ($e) => isset($e->mosaicId->comparer) ? $e->mosaicId->comparer() : $e->mosaicId->value);
+		$mosaics = Utils\readArrayCount($reader, [UnresolvedMosaic::class, 'deserialize'], $mosaicsCount, fn ($e) => isset($e->mosaicId->comparer) ? $e->mosaicId->comparer() : $e->mosaicId->value);
 		$message = $reader->read($messageSize);
 
 		$instance->recipientAddress = $recipientAddress;
@@ -8719,23 +7858,21 @@ class EmbeddedTransferTransactionV1 extends EmbeddedTransaction
 		return $instance;
 	}
 
-	public function serialize(): string
-	{
+	public function serialize(): string {
 		$writer = new BinaryWriter($this->size());
 		$this->sort();
 		parent::_serialize($writer);
 		$writer->write($this->recipientAddress->serialize());
-		$writer->write(Converter::intToBinary(strlen($this->message), 2)); // bound: message_size
-		$writer->write(Converter::intToBinary(count($this->mosaics), 1)); // bound: mosaics_count
-		$writer->write(Converter::intToBinary($this->transferTransactionBodyReserved_1, 1));
-		$writer->write(Converter::intToBinary($this->transferTransactionBodyReserved_2, 4));
-		ArrayHelpers::writeArray($writer, $this->mosaics, fn ($e) => isset($e->mosaicId->comparer) ? $e->mosaicId->comparer() : $e->mosaicId->value);
+		$writer->write(Utils\intToBinary(strlen($this->message), 2)); // bound: message_size
+		$writer->write(Utils\intToBinary(count($this->mosaics), 1)); // bound: mosaics_count
+		$writer->write(Utils\intToBinary($this->transferTransactionBodyReserved_1, 1));
+		$writer->write(Utils\intToBinary($this->transferTransactionBodyReserved_2, 4));
+		Utils\writeArray($writer, $this->mosaics, fn ($e) => isset($e->mosaicId->comparer) ? $e->mosaicId->comparer() : $e->mosaicId->value);
 		$writer->write($this->message);
 		return $writer->getBinaryData();
 	}
 
-	public function __toString()
-	{
+	public function __toString(){
 		$result = '(';
 		$result .= parent::__toString();
 		$result .= 'recipientAddress: ' . $this->recipientAddress . ', ';
@@ -8746,10 +7883,8 @@ class EmbeddedTransferTransactionV1 extends EmbeddedTransaction
 	}
 }
 
-class TransactionFactory
-{
-	public static function toKey($values)
-	{
+class TransactionFactory {
+	public static function toKey($values){
 		if (count($values) === 1) {
 			return $values[0];
 		}
@@ -8760,41 +7895,39 @@ class TransactionFactory
 		}, 0);
 	}
 
-	public static function deserialize($binaryData)
-	{
+	public static function deserialize($binaryData){
 		$reader = new BinaryReader($binaryData);
 		$parent = new Transaction();
 		Transaction::_deserialize($reader, $parent);
 		$reader->setPosition(0);
 		$mapping = [
-			self::toKey([AccountKeyLinkTransactionV1::TRANSACTION_TYPE, AccountKeyLinkTransactionV1::TRANSACTION_VERSION]) => AccountKeyLinkTransactionV1::class,
-			self::toKey([NodeKeyLinkTransactionV1::TRANSACTION_TYPE, NodeKeyLinkTransactionV1::TRANSACTION_VERSION]) => NodeKeyLinkTransactionV1::class,
-			self::toKey([AggregateCompleteTransactionV1::TRANSACTION_TYPE, AggregateCompleteTransactionV1::TRANSACTION_VERSION]) => AggregateCompleteTransactionV1::class,
-			self::toKey([AggregateCompleteTransactionV2::TRANSACTION_TYPE, AggregateCompleteTransactionV2::TRANSACTION_VERSION]) => AggregateCompleteTransactionV2::class,
-			self::toKey([AggregateBondedTransactionV1::TRANSACTION_TYPE, AggregateBondedTransactionV1::TRANSACTION_VERSION]) => AggregateBondedTransactionV1::class,
-			self::toKey([AggregateBondedTransactionV2::TRANSACTION_TYPE, AggregateBondedTransactionV2::TRANSACTION_VERSION]) => AggregateBondedTransactionV2::class,
-			self::toKey([VotingKeyLinkTransactionV1::TRANSACTION_TYPE, VotingKeyLinkTransactionV1::TRANSACTION_VERSION]) => VotingKeyLinkTransactionV1::class,
-			self::toKey([VrfKeyLinkTransactionV1::TRANSACTION_TYPE, VrfKeyLinkTransactionV1::TRANSACTION_VERSION]) => VrfKeyLinkTransactionV1::class,
-			self::toKey([HashLockTransactionV1::TRANSACTION_TYPE, HashLockTransactionV1::TRANSACTION_VERSION]) => HashLockTransactionV1::class,
-			self::toKey([SecretLockTransactionV1::TRANSACTION_TYPE, SecretLockTransactionV1::TRANSACTION_VERSION]) => SecretLockTransactionV1::class,
-			self::toKey([SecretProofTransactionV1::TRANSACTION_TYPE, SecretProofTransactionV1::TRANSACTION_VERSION]) => SecretProofTransactionV1::class,
-			self::toKey([AccountMetadataTransactionV1::TRANSACTION_TYPE, AccountMetadataTransactionV1::TRANSACTION_VERSION]) => AccountMetadataTransactionV1::class,
-			self::toKey([MosaicMetadataTransactionV1::TRANSACTION_TYPE, MosaicMetadataTransactionV1::TRANSACTION_VERSION]) => MosaicMetadataTransactionV1::class,
-			self::toKey([NamespaceMetadataTransactionV1::TRANSACTION_TYPE, NamespaceMetadataTransactionV1::TRANSACTION_VERSION]) => NamespaceMetadataTransactionV1::class,
-			self::toKey([MosaicDefinitionTransactionV1::TRANSACTION_TYPE, MosaicDefinitionTransactionV1::TRANSACTION_VERSION]) => MosaicDefinitionTransactionV1::class,
-			self::toKey([MosaicSupplyChangeTransactionV1::TRANSACTION_TYPE, MosaicSupplyChangeTransactionV1::TRANSACTION_VERSION]) => MosaicSupplyChangeTransactionV1::class,
-			self::toKey([MosaicSupplyRevocationTransactionV1::TRANSACTION_TYPE, MosaicSupplyRevocationTransactionV1::TRANSACTION_VERSION]) => MosaicSupplyRevocationTransactionV1::class,
-			self::toKey([MultisigAccountModificationTransactionV1::TRANSACTION_TYPE, MultisigAccountModificationTransactionV1::TRANSACTION_VERSION]) => MultisigAccountModificationTransactionV1::class,
-			self::toKey([AddressAliasTransactionV1::TRANSACTION_TYPE, AddressAliasTransactionV1::TRANSACTION_VERSION]) => AddressAliasTransactionV1::class,
-			self::toKey([MosaicAliasTransactionV1::TRANSACTION_TYPE, MosaicAliasTransactionV1::TRANSACTION_VERSION]) => MosaicAliasTransactionV1::class,
-			self::toKey([NamespaceRegistrationTransactionV1::TRANSACTION_TYPE, NamespaceRegistrationTransactionV1::TRANSACTION_VERSION]) => NamespaceRegistrationTransactionV1::class,
-			self::toKey([AccountAddressRestrictionTransactionV1::TRANSACTION_TYPE, AccountAddressRestrictionTransactionV1::TRANSACTION_VERSION]) => AccountAddressRestrictionTransactionV1::class,
-			self::toKey([AccountMosaicRestrictionTransactionV1::TRANSACTION_TYPE, AccountMosaicRestrictionTransactionV1::TRANSACTION_VERSION]) => AccountMosaicRestrictionTransactionV1::class,
-			self::toKey([AccountOperationRestrictionTransactionV1::TRANSACTION_TYPE, AccountOperationRestrictionTransactionV1::TRANSACTION_VERSION]) => AccountOperationRestrictionTransactionV1::class,
-			self::toKey([MosaicAddressRestrictionTransactionV1::TRANSACTION_TYPE, MosaicAddressRestrictionTransactionV1::TRANSACTION_VERSION]) => MosaicAddressRestrictionTransactionV1::class,
-			self::toKey([MosaicGlobalRestrictionTransactionV1::TRANSACTION_TYPE, MosaicGlobalRestrictionTransactionV1::TRANSACTION_VERSION]) => MosaicGlobalRestrictionTransactionV1::class,
-			self::toKey([TransferTransactionV1::TRANSACTION_TYPE, TransferTransactionV1::TRANSACTION_VERSION]) => TransferTransactionV1::class,
-		];
+		self::toKey([AccountKeyLinkTransactionV1::TRANSACTION_TYPE, AccountKeyLinkTransactionV1::TRANSACTION_VERSION]) => AccountKeyLinkTransactionV1::class,
+		self::toKey([NodeKeyLinkTransactionV1::TRANSACTION_TYPE, NodeKeyLinkTransactionV1::TRANSACTION_VERSION]) => NodeKeyLinkTransactionV1::class,
+		self::toKey([AggregateCompleteTransactionV1::TRANSACTION_TYPE, AggregateCompleteTransactionV1::TRANSACTION_VERSION]) => AggregateCompleteTransactionV1::class,
+		self::toKey([AggregateCompleteTransactionV2::TRANSACTION_TYPE, AggregateCompleteTransactionV2::TRANSACTION_VERSION]) => AggregateCompleteTransactionV2::class,
+		self::toKey([AggregateBondedTransactionV1::TRANSACTION_TYPE, AggregateBondedTransactionV1::TRANSACTION_VERSION]) => AggregateBondedTransactionV1::class,
+		self::toKey([AggregateBondedTransactionV2::TRANSACTION_TYPE, AggregateBondedTransactionV2::TRANSACTION_VERSION]) => AggregateBondedTransactionV2::class,
+		self::toKey([VotingKeyLinkTransactionV1::TRANSACTION_TYPE, VotingKeyLinkTransactionV1::TRANSACTION_VERSION]) => VotingKeyLinkTransactionV1::class,
+		self::toKey([VrfKeyLinkTransactionV1::TRANSACTION_TYPE, VrfKeyLinkTransactionV1::TRANSACTION_VERSION]) => VrfKeyLinkTransactionV1::class,
+		self::toKey([HashLockTransactionV1::TRANSACTION_TYPE, HashLockTransactionV1::TRANSACTION_VERSION]) => HashLockTransactionV1::class,
+		self::toKey([SecretLockTransactionV1::TRANSACTION_TYPE, SecretLockTransactionV1::TRANSACTION_VERSION]) => SecretLockTransactionV1::class,
+		self::toKey([SecretProofTransactionV1::TRANSACTION_TYPE, SecretProofTransactionV1::TRANSACTION_VERSION]) => SecretProofTransactionV1::class,
+		self::toKey([AccountMetadataTransactionV1::TRANSACTION_TYPE, AccountMetadataTransactionV1::TRANSACTION_VERSION]) => AccountMetadataTransactionV1::class,
+		self::toKey([MosaicMetadataTransactionV1::TRANSACTION_TYPE, MosaicMetadataTransactionV1::TRANSACTION_VERSION]) => MosaicMetadataTransactionV1::class,
+		self::toKey([NamespaceMetadataTransactionV1::TRANSACTION_TYPE, NamespaceMetadataTransactionV1::TRANSACTION_VERSION]) => NamespaceMetadataTransactionV1::class,
+		self::toKey([MosaicDefinitionTransactionV1::TRANSACTION_TYPE, MosaicDefinitionTransactionV1::TRANSACTION_VERSION]) => MosaicDefinitionTransactionV1::class,
+		self::toKey([MosaicSupplyChangeTransactionV1::TRANSACTION_TYPE, MosaicSupplyChangeTransactionV1::TRANSACTION_VERSION]) => MosaicSupplyChangeTransactionV1::class,
+		self::toKey([MosaicSupplyRevocationTransactionV1::TRANSACTION_TYPE, MosaicSupplyRevocationTransactionV1::TRANSACTION_VERSION]) => MosaicSupplyRevocationTransactionV1::class,
+		self::toKey([MultisigAccountModificationTransactionV1::TRANSACTION_TYPE, MultisigAccountModificationTransactionV1::TRANSACTION_VERSION]) => MultisigAccountModificationTransactionV1::class,
+		self::toKey([AddressAliasTransactionV1::TRANSACTION_TYPE, AddressAliasTransactionV1::TRANSACTION_VERSION]) => AddressAliasTransactionV1::class,
+		self::toKey([MosaicAliasTransactionV1::TRANSACTION_TYPE, MosaicAliasTransactionV1::TRANSACTION_VERSION]) => MosaicAliasTransactionV1::class,
+		self::toKey([NamespaceRegistrationTransactionV1::TRANSACTION_TYPE, NamespaceRegistrationTransactionV1::TRANSACTION_VERSION]) => NamespaceRegistrationTransactionV1::class,
+		self::toKey([AccountAddressRestrictionTransactionV1::TRANSACTION_TYPE, AccountAddressRestrictionTransactionV1::TRANSACTION_VERSION]) => AccountAddressRestrictionTransactionV1::class,
+		self::toKey([AccountMosaicRestrictionTransactionV1::TRANSACTION_TYPE, AccountMosaicRestrictionTransactionV1::TRANSACTION_VERSION]) => AccountMosaicRestrictionTransactionV1::class,
+		self::toKey([AccountOperationRestrictionTransactionV1::TRANSACTION_TYPE, AccountOperationRestrictionTransactionV1::TRANSACTION_VERSION]) => AccountOperationRestrictionTransactionV1::class,
+		self::toKey([MosaicAddressRestrictionTransactionV1::TRANSACTION_TYPE, MosaicAddressRestrictionTransactionV1::TRANSACTION_VERSION]) => MosaicAddressRestrictionTransactionV1::class,
+		self::toKey([MosaicGlobalRestrictionTransactionV1::TRANSACTION_TYPE, MosaicGlobalRestrictionTransactionV1::TRANSACTION_VERSION]) => MosaicGlobalRestrictionTransactionV1::class,
+		self::toKey([TransferTransactionV1::TRANSACTION_TYPE, TransferTransactionV1::TRANSACTION_VERSION]) => TransferTransactionV1::class,];
 		$discriminator = self::toKey([$parent->type->value, $parent->version]);
 		if (!array_key_exists($discriminator, $mapping)) {
 			throw new Exception("Unknown Transaction type");
@@ -8804,10 +7937,8 @@ class TransactionFactory
 	}
 }
 
-class EmbeddedTransactionFactory
-{
-	public static function toKey($values)
-	{
+class EmbeddedTransactionFactory {
+	public static function toKey($values){
 		if (count($values) === 1) {
 			return $values[0];
 		}
@@ -8818,37 +7949,35 @@ class EmbeddedTransactionFactory
 		}, 0);
 	}
 
-	public static function deserialize($binaryData)
-	{
+	public static function deserialize($binaryData){
 		$reader = new BinaryReader($binaryData);
 		$parent = new EmbeddedTransaction();
 		EmbeddedTransaction::_deserialize($reader, $parent);
 		$reader->setPosition(0);
 		$mapping = [
-			self::toKey([EmbeddedAccountKeyLinkTransactionV1::TRANSACTION_TYPE, EmbeddedAccountKeyLinkTransactionV1::TRANSACTION_VERSION]) => EmbeddedAccountKeyLinkTransactionV1::class,
-			self::toKey([EmbeddedNodeKeyLinkTransactionV1::TRANSACTION_TYPE, EmbeddedNodeKeyLinkTransactionV1::TRANSACTION_VERSION]) => EmbeddedNodeKeyLinkTransactionV1::class,
-			self::toKey([EmbeddedVotingKeyLinkTransactionV1::TRANSACTION_TYPE, EmbeddedVotingKeyLinkTransactionV1::TRANSACTION_VERSION]) => EmbeddedVotingKeyLinkTransactionV1::class,
-			self::toKey([EmbeddedVrfKeyLinkTransactionV1::TRANSACTION_TYPE, EmbeddedVrfKeyLinkTransactionV1::TRANSACTION_VERSION]) => EmbeddedVrfKeyLinkTransactionV1::class,
-			self::toKey([EmbeddedHashLockTransactionV1::TRANSACTION_TYPE, EmbeddedHashLockTransactionV1::TRANSACTION_VERSION]) => EmbeddedHashLockTransactionV1::class,
-			self::toKey([EmbeddedSecretLockTransactionV1::TRANSACTION_TYPE, EmbeddedSecretLockTransactionV1::TRANSACTION_VERSION]) => EmbeddedSecretLockTransactionV1::class,
-			self::toKey([EmbeddedSecretProofTransactionV1::TRANSACTION_TYPE, EmbeddedSecretProofTransactionV1::TRANSACTION_VERSION]) => EmbeddedSecretProofTransactionV1::class,
-			self::toKey([EmbeddedAccountMetadataTransactionV1::TRANSACTION_TYPE, EmbeddedAccountMetadataTransactionV1::TRANSACTION_VERSION]) => EmbeddedAccountMetadataTransactionV1::class,
-			self::toKey([EmbeddedMosaicMetadataTransactionV1::TRANSACTION_TYPE, EmbeddedMosaicMetadataTransactionV1::TRANSACTION_VERSION]) => EmbeddedMosaicMetadataTransactionV1::class,
-			self::toKey([EmbeddedNamespaceMetadataTransactionV1::TRANSACTION_TYPE, EmbeddedNamespaceMetadataTransactionV1::TRANSACTION_VERSION]) => EmbeddedNamespaceMetadataTransactionV1::class,
-			self::toKey([EmbeddedMosaicDefinitionTransactionV1::TRANSACTION_TYPE, EmbeddedMosaicDefinitionTransactionV1::TRANSACTION_VERSION]) => EmbeddedMosaicDefinitionTransactionV1::class,
-			self::toKey([EmbeddedMosaicSupplyChangeTransactionV1::TRANSACTION_TYPE, EmbeddedMosaicSupplyChangeTransactionV1::TRANSACTION_VERSION]) => EmbeddedMosaicSupplyChangeTransactionV1::class,
-			self::toKey([EmbeddedMosaicSupplyRevocationTransactionV1::TRANSACTION_TYPE, EmbeddedMosaicSupplyRevocationTransactionV1::TRANSACTION_VERSION]) => EmbeddedMosaicSupplyRevocationTransactionV1::class,
-			self::toKey([EmbeddedMultisigAccountModificationTransactionV1::TRANSACTION_TYPE, EmbeddedMultisigAccountModificationTransactionV1::TRANSACTION_VERSION]) => EmbeddedMultisigAccountModificationTransactionV1::class,
-			self::toKey([EmbeddedAddressAliasTransactionV1::TRANSACTION_TYPE, EmbeddedAddressAliasTransactionV1::TRANSACTION_VERSION]) => EmbeddedAddressAliasTransactionV1::class,
-			self::toKey([EmbeddedMosaicAliasTransactionV1::TRANSACTION_TYPE, EmbeddedMosaicAliasTransactionV1::TRANSACTION_VERSION]) => EmbeddedMosaicAliasTransactionV1::class,
-			self::toKey([EmbeddedNamespaceRegistrationTransactionV1::TRANSACTION_TYPE, EmbeddedNamespaceRegistrationTransactionV1::TRANSACTION_VERSION]) => EmbeddedNamespaceRegistrationTransactionV1::class,
-			self::toKey([EmbeddedAccountAddressRestrictionTransactionV1::TRANSACTION_TYPE, EmbeddedAccountAddressRestrictionTransactionV1::TRANSACTION_VERSION]) => EmbeddedAccountAddressRestrictionTransactionV1::class,
-			self::toKey([EmbeddedAccountMosaicRestrictionTransactionV1::TRANSACTION_TYPE, EmbeddedAccountMosaicRestrictionTransactionV1::TRANSACTION_VERSION]) => EmbeddedAccountMosaicRestrictionTransactionV1::class,
-			self::toKey([EmbeddedAccountOperationRestrictionTransactionV1::TRANSACTION_TYPE, EmbeddedAccountOperationRestrictionTransactionV1::TRANSACTION_VERSION]) => EmbeddedAccountOperationRestrictionTransactionV1::class,
-			self::toKey([EmbeddedMosaicAddressRestrictionTransactionV1::TRANSACTION_TYPE, EmbeddedMosaicAddressRestrictionTransactionV1::TRANSACTION_VERSION]) => EmbeddedMosaicAddressRestrictionTransactionV1::class,
-			self::toKey([EmbeddedMosaicGlobalRestrictionTransactionV1::TRANSACTION_TYPE, EmbeddedMosaicGlobalRestrictionTransactionV1::TRANSACTION_VERSION]) => EmbeddedMosaicGlobalRestrictionTransactionV1::class,
-			self::toKey([EmbeddedTransferTransactionV1::TRANSACTION_TYPE, EmbeddedTransferTransactionV1::TRANSACTION_VERSION]) => EmbeddedTransferTransactionV1::class,
-		];
+		self::toKey([EmbeddedAccountKeyLinkTransactionV1::TRANSACTION_TYPE, EmbeddedAccountKeyLinkTransactionV1::TRANSACTION_VERSION]) => EmbeddedAccountKeyLinkTransactionV1::class,
+		self::toKey([EmbeddedNodeKeyLinkTransactionV1::TRANSACTION_TYPE, EmbeddedNodeKeyLinkTransactionV1::TRANSACTION_VERSION]) => EmbeddedNodeKeyLinkTransactionV1::class,
+		self::toKey([EmbeddedVotingKeyLinkTransactionV1::TRANSACTION_TYPE, EmbeddedVotingKeyLinkTransactionV1::TRANSACTION_VERSION]) => EmbeddedVotingKeyLinkTransactionV1::class,
+		self::toKey([EmbeddedVrfKeyLinkTransactionV1::TRANSACTION_TYPE, EmbeddedVrfKeyLinkTransactionV1::TRANSACTION_VERSION]) => EmbeddedVrfKeyLinkTransactionV1::class,
+		self::toKey([EmbeddedHashLockTransactionV1::TRANSACTION_TYPE, EmbeddedHashLockTransactionV1::TRANSACTION_VERSION]) => EmbeddedHashLockTransactionV1::class,
+		self::toKey([EmbeddedSecretLockTransactionV1::TRANSACTION_TYPE, EmbeddedSecretLockTransactionV1::TRANSACTION_VERSION]) => EmbeddedSecretLockTransactionV1::class,
+		self::toKey([EmbeddedSecretProofTransactionV1::TRANSACTION_TYPE, EmbeddedSecretProofTransactionV1::TRANSACTION_VERSION]) => EmbeddedSecretProofTransactionV1::class,
+		self::toKey([EmbeddedAccountMetadataTransactionV1::TRANSACTION_TYPE, EmbeddedAccountMetadataTransactionV1::TRANSACTION_VERSION]) => EmbeddedAccountMetadataTransactionV1::class,
+		self::toKey([EmbeddedMosaicMetadataTransactionV1::TRANSACTION_TYPE, EmbeddedMosaicMetadataTransactionV1::TRANSACTION_VERSION]) => EmbeddedMosaicMetadataTransactionV1::class,
+		self::toKey([EmbeddedNamespaceMetadataTransactionV1::TRANSACTION_TYPE, EmbeddedNamespaceMetadataTransactionV1::TRANSACTION_VERSION]) => EmbeddedNamespaceMetadataTransactionV1::class,
+		self::toKey([EmbeddedMosaicDefinitionTransactionV1::TRANSACTION_TYPE, EmbeddedMosaicDefinitionTransactionV1::TRANSACTION_VERSION]) => EmbeddedMosaicDefinitionTransactionV1::class,
+		self::toKey([EmbeddedMosaicSupplyChangeTransactionV1::TRANSACTION_TYPE, EmbeddedMosaicSupplyChangeTransactionV1::TRANSACTION_VERSION]) => EmbeddedMosaicSupplyChangeTransactionV1::class,
+		self::toKey([EmbeddedMosaicSupplyRevocationTransactionV1::TRANSACTION_TYPE, EmbeddedMosaicSupplyRevocationTransactionV1::TRANSACTION_VERSION]) => EmbeddedMosaicSupplyRevocationTransactionV1::class,
+		self::toKey([EmbeddedMultisigAccountModificationTransactionV1::TRANSACTION_TYPE, EmbeddedMultisigAccountModificationTransactionV1::TRANSACTION_VERSION]) => EmbeddedMultisigAccountModificationTransactionV1::class,
+		self::toKey([EmbeddedAddressAliasTransactionV1::TRANSACTION_TYPE, EmbeddedAddressAliasTransactionV1::TRANSACTION_VERSION]) => EmbeddedAddressAliasTransactionV1::class,
+		self::toKey([EmbeddedMosaicAliasTransactionV1::TRANSACTION_TYPE, EmbeddedMosaicAliasTransactionV1::TRANSACTION_VERSION]) => EmbeddedMosaicAliasTransactionV1::class,
+		self::toKey([EmbeddedNamespaceRegistrationTransactionV1::TRANSACTION_TYPE, EmbeddedNamespaceRegistrationTransactionV1::TRANSACTION_VERSION]) => EmbeddedNamespaceRegistrationTransactionV1::class,
+		self::toKey([EmbeddedAccountAddressRestrictionTransactionV1::TRANSACTION_TYPE, EmbeddedAccountAddressRestrictionTransactionV1::TRANSACTION_VERSION]) => EmbeddedAccountAddressRestrictionTransactionV1::class,
+		self::toKey([EmbeddedAccountMosaicRestrictionTransactionV1::TRANSACTION_TYPE, EmbeddedAccountMosaicRestrictionTransactionV1::TRANSACTION_VERSION]) => EmbeddedAccountMosaicRestrictionTransactionV1::class,
+		self::toKey([EmbeddedAccountOperationRestrictionTransactionV1::TRANSACTION_TYPE, EmbeddedAccountOperationRestrictionTransactionV1::TRANSACTION_VERSION]) => EmbeddedAccountOperationRestrictionTransactionV1::class,
+		self::toKey([EmbeddedMosaicAddressRestrictionTransactionV1::TRANSACTION_TYPE, EmbeddedMosaicAddressRestrictionTransactionV1::TRANSACTION_VERSION]) => EmbeddedMosaicAddressRestrictionTransactionV1::class,
+		self::toKey([EmbeddedMosaicGlobalRestrictionTransactionV1::TRANSACTION_TYPE, EmbeddedMosaicGlobalRestrictionTransactionV1::TRANSACTION_VERSION]) => EmbeddedMosaicGlobalRestrictionTransactionV1::class,
+		self::toKey([EmbeddedTransferTransactionV1::TRANSACTION_TYPE, EmbeddedTransferTransactionV1::TRANSACTION_VERSION]) => EmbeddedTransferTransactionV1::class,];
 		$discriminator = self::toKey([$parent->type->value, $parent->version]);
 		if (!array_key_exists($discriminator, $mapping)) {
 			throw new Exception("Unknown EmbeddedTransaction type");
@@ -8858,10 +7987,8 @@ class EmbeddedTransactionFactory
 	}
 }
 
-class BlockFactory
-{
-	public static function toKey($values)
-	{
+class BlockFactory {
+	public static function toKey($values){
 		if (count($values) === 1) {
 			return $values[0];
 		}
@@ -8872,17 +7999,15 @@ class BlockFactory
 		}, 0);
 	}
 
-	public static function deserialize($binaryData)
-	{
+	public static function deserialize($binaryData){
 		$reader = new BinaryReader($binaryData);
 		$parent = new Block();
 		Block::_deserialize($reader, $parent);
 		$reader->setPosition(0);
 		$mapping = [
-			self::toKey([NemesisBlockV1::BLOCK_TYPE]) => NemesisBlockV1::class,
-			self::toKey([NormalBlockV1::BLOCK_TYPE]) => NormalBlockV1::class,
-			self::toKey([ImportanceBlockV1::BLOCK_TYPE]) => ImportanceBlockV1::class,
-		];
+		self::toKey([NemesisBlockV1::BLOCK_TYPE]) => NemesisBlockV1::class,
+		self::toKey([NormalBlockV1::BLOCK_TYPE]) => NormalBlockV1::class,
+		self::toKey([ImportanceBlockV1::BLOCK_TYPE]) => ImportanceBlockV1::class,];
 		$discriminator = self::toKey([$parent->type->value]);
 		if (!array_key_exists($discriminator, $mapping)) {
 			throw new Exception("Unknown Block type");
@@ -8892,10 +8017,8 @@ class BlockFactory
 	}
 }
 
-class ReceiptFactory
-{
-	public static function toKey($values)
-	{
+class ReceiptFactory {
+	public static function toKey($values){
 		if (count($values) === 1) {
 			return $values[0];
 		}
@@ -8906,27 +8029,25 @@ class ReceiptFactory
 		}, 0);
 	}
 
-	public static function deserialize($binaryData)
-	{
+	public static function deserialize($binaryData){
 		$reader = new BinaryReader($binaryData);
 		$parent = new Receipt();
 		Receipt::_deserialize($reader, $parent);
 		$reader->setPosition(0);
 		$mapping = [
-			self::toKey([HarvestFeeReceipt::RECEIPT_TYPE]) => HarvestFeeReceipt::class,
-			self::toKey([InflationReceipt::RECEIPT_TYPE]) => InflationReceipt::class,
-			self::toKey([LockHashCreatedFeeReceipt::RECEIPT_TYPE]) => LockHashCreatedFeeReceipt::class,
-			self::toKey([LockHashCompletedFeeReceipt::RECEIPT_TYPE]) => LockHashCompletedFeeReceipt::class,
-			self::toKey([LockHashExpiredFeeReceipt::RECEIPT_TYPE]) => LockHashExpiredFeeReceipt::class,
-			self::toKey([LockSecretCreatedFeeReceipt::RECEIPT_TYPE]) => LockSecretCreatedFeeReceipt::class,
-			self::toKey([LockSecretCompletedFeeReceipt::RECEIPT_TYPE]) => LockSecretCompletedFeeReceipt::class,
-			self::toKey([LockSecretExpiredFeeReceipt::RECEIPT_TYPE]) => LockSecretExpiredFeeReceipt::class,
-			self::toKey([MosaicExpiredReceipt::RECEIPT_TYPE]) => MosaicExpiredReceipt::class,
-			self::toKey([MosaicRentalFeeReceipt::RECEIPT_TYPE]) => MosaicRentalFeeReceipt::class,
-			self::toKey([NamespaceExpiredReceipt::RECEIPT_TYPE]) => NamespaceExpiredReceipt::class,
-			self::toKey([NamespaceDeletedReceipt::RECEIPT_TYPE]) => NamespaceDeletedReceipt::class,
-			self::toKey([NamespaceRentalFeeReceipt::RECEIPT_TYPE]) => NamespaceRentalFeeReceipt::class,
-		];
+		self::toKey([HarvestFeeReceipt::RECEIPT_TYPE]) => HarvestFeeReceipt::class,
+		self::toKey([InflationReceipt::RECEIPT_TYPE]) => InflationReceipt::class,
+		self::toKey([LockHashCreatedFeeReceipt::RECEIPT_TYPE]) => LockHashCreatedFeeReceipt::class,
+		self::toKey([LockHashCompletedFeeReceipt::RECEIPT_TYPE]) => LockHashCompletedFeeReceipt::class,
+		self::toKey([LockHashExpiredFeeReceipt::RECEIPT_TYPE]) => LockHashExpiredFeeReceipt::class,
+		self::toKey([LockSecretCreatedFeeReceipt::RECEIPT_TYPE]) => LockSecretCreatedFeeReceipt::class,
+		self::toKey([LockSecretCompletedFeeReceipt::RECEIPT_TYPE]) => LockSecretCompletedFeeReceipt::class,
+		self::toKey([LockSecretExpiredFeeReceipt::RECEIPT_TYPE]) => LockSecretExpiredFeeReceipt::class,
+		self::toKey([MosaicExpiredReceipt::RECEIPT_TYPE]) => MosaicExpiredReceipt::class,
+		self::toKey([MosaicRentalFeeReceipt::RECEIPT_TYPE]) => MosaicRentalFeeReceipt::class,
+		self::toKey([NamespaceExpiredReceipt::RECEIPT_TYPE]) => NamespaceExpiredReceipt::class,
+		self::toKey([NamespaceDeletedReceipt::RECEIPT_TYPE]) => NamespaceDeletedReceipt::class,
+		self::toKey([NamespaceRentalFeeReceipt::RECEIPT_TYPE]) => NamespaceRentalFeeReceipt::class,];
 		$discriminator = self::toKey([$parent->type->value]);
 		if (!array_key_exists($discriminator, $mapping)) {
 			throw new Exception("Unknown Receipt type");

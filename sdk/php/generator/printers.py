@@ -35,26 +35,20 @@ class IntPrinter(Printer):
 		data_size = self.get_size()
 		arguments = f'{data_size}'
 
-		# is_aligned - handles both generation of deserializeAligned for pod and enum types and generation of fields within struct
-		#if is_aligned:
-		#	return f'Converter::binaryToInt($reader->read({arguments}), {data_size})'
-
-		return f'Converter::binaryToInt($reader->read({arguments}), {data_size})'
-		#return f'$reader->read({arguments})'
+		return f'Utils\\binaryToInt($reader->read({arguments}), {data_size})'
 	
 	def advancement_size(self):
 		return self.get_size()
 
 	def store(self, field_name):
-		return f'Converter::intToBinary({field_name}, {self.get_size()})'
+		return f'Utils\\intToBinary({field_name}, {self.get_size()})'
 
 	@staticmethod
 	def assign(value):
 		return str(value)
 
 	def to_string(self, field_name):
-		return f'\'0x\' . Converter::intToHex({field_name}, {self.get_size()})'
-
+		return f'\'0x\' . Utils\\intToHex({field_name}, {self.get_size()})'
 
 class TypedArrayPrinter(Printer):
 	def __init__(self, descriptor, name=None):
@@ -78,9 +72,9 @@ class TypedArrayPrinter(Printer):
 		if self.is_variable_size:
 			alignment = self.descriptor.field_type.alignment
 			skip_last_element_padding = js_bool(not self.descriptor.field_type.is_last_element_padded)
-			return f'ArrayHelpers::size($this->{self.name}, {alignment}, {skip_last_element_padding})'
+			return f'Utils\\size($this->{self.name}, {alignment}, {skip_last_element_padding})'
 
-		return f'ArrayHelpers::size($this->{self.name})'
+		return f'Utils\\size($this->{self.name})'
 							
 	def _get_sort_comparer(self, variable_name):
 		sort_key = lang_field_name(self.descriptor.field_type.sort_key)
@@ -101,6 +95,11 @@ class TypedArrayPrinter(Printer):
 			element_type = f'{element_type}Factory'
 
 		if self.is_variable_size:
+			data_size = ''
+			if self.descriptor.field_type.is_expandable:
+				data_size = '$reader->getRemainingLength()'
+			else:
+				data_size = f'${lang_field_name(self.descriptor.size)}'
 			buffer_view = '$reader'
 
 			""" buffer_view = None
@@ -112,10 +111,10 @@ class TypedArrayPrinter(Printer):
 
 			alignment = self.descriptor.field_type.alignment
 			skip_last_element_padding = js_bool(not self.descriptor.field_type.is_last_element_padded)
-			return f"ArrayHelpers::readVariableSizeElements({buffer_view}, [{element_type}::class, 'deserialize'], {alignment}, {skip_last_element_padding})"
+			return f"Utils\\readVariableSizeElements({buffer_view}, [{element_type}::class, 'deserialize'], {data_size}, {alignment}, {skip_last_element_padding})"
 
 		if self.descriptor.field_type.is_expandable:
-			return f"ArrayHelpers::readArray($reader, [{element_type}::class, 'deserialize'])"
+			return f"Utils\\readArray($reader, [{element_type}::class, 'deserialize'])"
 
 		args = [
 			'$reader',
@@ -126,7 +125,7 @@ class TypedArrayPrinter(Printer):
 			args.append(self._get_sort_accessor())
 
 		args_str = ', '.join(args)
-		return f'ArrayHelpers::readArrayCount({args_str})'
+		return f'Utils\\readArrayCount({args_str})'
 
 	def advancement_size(self):
 		if self.descriptor.field_type.is_byte_constrained:
@@ -135,18 +134,18 @@ class TypedArrayPrinter(Printer):
 		alignment = self.descriptor.field_type.alignment
 		if alignment:
 			skip_last_element_padding = js_bool(not self.descriptor.field_type.is_last_element_padded)
-			return f'ArrayHelpers::size({self.name}, {alignment}, {skip_last_element_padding})'
+			return f'Utils\\size({self.name}, {alignment}, {skip_last_element_padding})'
 
-		return f'ArrayHelpers::size({self.name})'
+		return f'Utils\\size({self.name})'
 
 	def store(self, field_name, buffer_name):
 		if self.is_variable_size:
 			alignment = self.descriptor.field_type.alignment
 			skip_last_element_padding = js_bool(not self.descriptor.field_type.is_last_element_padded)
-			return f'ArrayHelpers::writeVariableSizeElements({buffer_name}, {field_name}, {alignment}, {skip_last_element_padding})'
+			return f'Utils\\writeVariableSizeElements({buffer_name}, {field_name}, {alignment}, {skip_last_element_padding})'
 
 		if self.descriptor.field_type.is_expandable:
-			return f'ArrayHelpers::writeArray({buffer_name}, {field_name})'
+			return f'Utils\\writeArray({buffer_name}, {field_name})'
 
 		args = [buffer_name, field_name]
 		size = self.descriptor.size
@@ -158,9 +157,9 @@ class TypedArrayPrinter(Printer):
 
 		args_str = ', '.join(args)
 		if isinstance(size, str):
-			return f'ArrayHelpers::writeArray({args_str})'
+			return f'Utils\\writeArray({args_str})'
 
-		return f'ArrayHelpers::writeArrayCount({args_str})'
+		return f'Utils\\writeArrayCount({args_str})'
 
 	def sort(self, field_name):
 		if not self.descriptor.field_type.sort_key:
@@ -169,7 +168,7 @@ class TypedArrayPrinter(Printer):
 		body = 'usort(\n'
 		body += f'\t{field_name},\n'
 		body += '\tfn ($lhs, $rhs) =>\n'
-		body += '\tArrayHelpers::deepCompare(\n'
+		body += '\tUtils\\deepCompare(\n'
 		body += f'\t\t{self._get_sort_comparer("lhs")},\n'
 		body += f'\t\t{self._get_sort_comparer("rhs")}\n'
 		body += '\t)\n'
@@ -242,12 +241,6 @@ class BuiltinPrinter(Printer):
 	def get_default_value(self):
 		return f'new {self.get_type()}()'
 
-		""" if DisplayType.ENUM == self.descriptor.display_type:
-			first_enum_value_name = self.descriptor.values[0].name
-			return f'new {self.get_type()}()'
-
-		return f'new {self.get_type()}()' """
-
 	def get_size(self):
 		return f'$this->{self.name}->size()'
 
@@ -258,9 +251,6 @@ class BuiltinPrinter(Printer):
 			if '$parent' != self.name:
 				factory_name = self.get_type() + 'Factory'
 				return f'{factory_name}::deserialize({buffer_name})'
-
-		#if is_aligned and display_type in (DisplayType.INTEGER, DisplayType.ENUM):
-		#	return f'{self.get_type()}::deserializeAligned({buffer_name})'
 
 		return f'{self.get_type()}::deserialize({buffer_name})'
 

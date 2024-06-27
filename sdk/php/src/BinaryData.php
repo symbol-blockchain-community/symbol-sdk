@@ -1,6 +1,11 @@
 <?php
-$base_path = dirname(__FILE__);
-require_once $base_path . '/utils/converter.php';
+
+namespace SymbolSdk;
+
+use SymbolSdk\Utils;
+
+use Exception;
+use RangeException;
 
 /**
  * Represents a fixed size byte array.
@@ -16,6 +21,15 @@ class BinaryData
 	 */
 	public function __construct($fixedSize, $binaryData)
 	{
+		if (Utils\isHexString($binaryData)) {
+			$binaryData = hex2bin($binaryData);
+		} else {
+			try {
+				$binaryData = Utils\addressToBinary($binaryData);
+			} catch (Exception $e) {
+				// Not in address format; ignoring without error.
+			}
+		}
 		if ($fixedSize !== strlen($binaryData))
 			throw new RangeException("Bytes was size " . strlen($binaryData) . " but must be $fixedSize");
 
@@ -28,6 +42,10 @@ class BinaryData
 	 */
 	public function __toString()
 	{
+		if (get_class($this) == 'SymbolSdk\Symbol\Address' || get_class($this) == 'SymbolSdk\Symbol\UnresolvedAddress') {
+			return Utils\binaryToAddress($this->binaryData);
+		}
+
 		return '0x' . strtoupper(bin2hex($this->binaryData));
 	}
 }

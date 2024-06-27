@@ -147,50 +147,20 @@ class StructFormatter(AbstractTypeFormatter):
 		default_value = field.extensions.printer.assign(field.value)
 		return f'const {field.name} = {default_value};\n'
 
-	@staticmethod
-	def buffer_view(buffer_name, shift=0, limit=0):
-		shift_str = f' + {shift}' if shift else ''
-		limit_str = f', {limit}' if limit else ''
-		return f'new Uint8Array({buffer_name}.buffer, {buffer_name}.byteOffset{shift_str}{limit_str})'
-
-	@staticmethod
-	def generate_const_field(field):
-		modifier = field.extensions.printer.modifier()
-		default_value = field.extensions.printer.assign(field.value)
-		return f'const {modifier} {field.extensions.printer.get_type()} {field.name} = {default_value};'
-	
 	def generate_non_reserved_field(self, field):
 		const_field = self.get_paired_const_field(field)
 		field_name = field.extensions.printer.name
-		class_name = 'public ' + field.extensions.printer.get_type()
+		class_name = f'public ?{field.extensions.printer.get_type()}'
 		
 		if const_field:
 			return f'{class_name} ${field_name};\n'
     
-		#nullable_suffix = '?' if self.is_nullable_field(field) else ''
 		return f'{class_name} ${field_name};\n'
 
 	def generate_reserved_field(self, field):
 		field_name = field.extensions.printer.name
 		value = field.value
 		return f'private {field.extensions.printer.get_type()} ${field_name} = {value}; // reserved field\n'
-
-	def generate_type_hints(self):
-		body = 'static TYPE_HINTS = {\n'
-		hints = []
-
-		if self.base_struct:
-			hints.append(f'...{self.base_struct.name}.TYPE_HINTS')
-
-		for field in self.non_reserved_fields(include_inherited=False):
-			if not field.extensions.printer.type_hint:
-				continue
-
-			hints.append(f'{field.extensions.printer.name}: \'{field.extensions.printer.type_hint}\'')
-
-		body += indent(',\n'.join(hints))
-		body += '};\n'
-		return body
 
 	def get_fields(self):
 		return list(map(self.generate_class_field, self.const_fields())) + list(map(self.generate_non_reserved_field, self.non_reserved_fields(include_inherited=False))) + list(map(self.generate_reserved_field, self.reserved_fields(include_inherited=False)))
@@ -234,16 +204,6 @@ class StructFormatter(AbstractTypeFormatter):
 			else:
 				if not self._is_inherited_field(field):
 					value = f'${field.extensions.printer.name} ?? {field.extensions.printer.get_default_value()}'
-					if field.is_conditional:
-						conditional = field.value
-						condition_field_name = conditional.linked_field_name
-						condition_field = next(f for f in self.non_const_fields() if condition_field_name == f.name)
-						condition_model = condition_field.extensions.type_model
-
-						# only initialize default implicit union field in constructor
-						if f'{condition_model.name}.{conditional.value}' != condition_field.extensions.printer.get_default_value():
-							value = 'null'  # needs to be null or else field will not be destination when copying descriptor properties
-
 					body += f'{field_name} = {value};\n'
 
 		body += '\n'.join(
@@ -363,37 +323,22 @@ class StructFormatter(AbstractTypeFormatter):
 		use_custom_buffer_name = arg_buffer_name or size_fields
 		if not use_custom_buffer_name:
 			buffer_load_name = '$reader'
-			#if field.display_type == DisplayType.INTEGER:
-			#	buffer_load_name = f'$reader->read({field.extensions.printer.get_size()})'
-			#elif field.display_type == DisplayType.UNSET:
-			#	buffer_load_name = f'$reader->read({field.extensions.printer.get_type()}::size())'
-			#else:
-			#	buffer_load_name = f'$reader->read(${field.extensions.printer.advancement_size()})'
 
 		use_aligned_deserializer = self.struct.is_aligned
 		if DeserializerMode.USE_DEFAULT != deserializer_mode:
 			use_aligned_deserializer = DeserializerMode.USE_ALIGNED == deserializer_mode
 
 		load = field.extensions.printer.load(buffer_load_name, use_aligned_deserializer)
-		# const_field = 'const ' if not condition else ''
-		# deserialize = f'{const_field}{field_name} = {load};\n'
 		deserialize = f'${field_name} = {load};\n'
-
-		# hack: if there's passed buffer name it means it's a name of temporary buffer (used for coditionals)
-		# don't generate adjust in such case
-		# adjust = '' if arg_buffer_name else f'{buffer_name}.shiftRight({field.extensions.printer.advancement_size()});\n'
 
 		additional_statements = ''
 		if is_reserved(field):
 			additional_statements = f'if ({field.value} !== ${field.extensions.printer.name})\n'
 			additional_statements += indent(f"throw new OutOfRangeException('Invalid value of reserved field (' . ${field.extensions.printer.name} . ')');")
-		#if self.struct.size == field.extensions.printer.name:
-		#	additional_statements += f'view.shrink({field_name} - {field.extensions.printer.advancement_size()});\n'
 
 		if is_bound_size(field) and field.is_size_reference:
 			additional_statements += '// marking sizeof field\n'
 
-		# deserialize_field = deserialize + adjust + additional_statements
 		deserialize_field = deserialize + additional_statements
 
 		if condition:
@@ -430,12 +375,8 @@ class StructFormatter(AbstractTypeFormatter):
 						buffer_size = f'{field.extensions.printer.get_type()}::size()'
 						buffer_read = f'$reader'
 						deserialize = f'${field.extensions.printer.name}Temporary = {field.extensions.printer.load(buffer_name=buffer_read)};'
-						#deserialize = f'{field.extensions.printer.name}Temporary = {field.extensions.printer.load(buffer_name=f'$reader->read({field.extensions.printer.get_type()}::size())')};'
 						temporary_buffer = create_temporary_buffer_name(condition_field_name)
-						temporary_buffer_limit = f'{field.extensions.printer.name}Temporary->size'
-						temporary = f'${temporary_buffer} = new BinaryReader($reader->read(${temporary_buffer_limit}));'
-						#adjust = f'view.shiftRight({temporary_buffer_limit}); // skip temporary'
-						#body += comment + '\n' + deserialize + '\n' + temporary + '\n' + adjust + '\n\n'
+						temporary = f'${temporary_buffer} = new BinaryReader(${field.extensions.printer.name}Temporary->serialize());'
 						body += comment + '\n' + deserialize + '\n' + temporary + '\n' + '\n\n'
 
 					# queue field for re-reading it from temporary buffer
@@ -478,12 +419,6 @@ class StructFormatter(AbstractTypeFormatter):
 			return self.get_deserialize_descriptor_impl(DeserializerMode.USE_DEFAULT)
 
 		return self.get_deserialize_descriptor_impl(DeserializerMode.USE_UNALIGNED)
-
-	#def get_deserialize_aligned_descriptor(self):
-	#	if not self.struct.requires_unaligned:
-	#		return None
-
-	#	return self.get_deserialize_descriptor_impl(DeserializerMode.USE_ALIGNED)
 
 	def generate_serialize_field(self, field):
 		condition = self.generate_condition(field, True)
@@ -537,7 +472,7 @@ class StructFormatter(AbstractTypeFormatter):
 
 		first_field = next(fields_iter)
 		if self.struct.size == first_field.extensions.printer.name:
-			body += f'$writer->write(Converter::intToBinary($this->size(), {first_field.size}));\n'
+			body += f'$writer->write(Utils\\intToBinary($this->size(), {first_field.size}));\n'
 		else:
 			body += self.generate_serialize_field(first_field)
 
@@ -607,17 +542,6 @@ class StructFormatter(AbstractTypeFormatter):
 			body=f'{self.field_name(field)} = value;',
 		)
 		return method_descriptor
-
-	def get_getter_setter_descriptors(self):
-		descriptors = []
-		""" for field in self.non_reserved_fields(include_inherited=False):
-			descriptors.append(self.create_getter_descriptor(field))
-			descriptors.append(self.create_setter_descriptor(field)) """
-
-		for field in self.computed_fields(include_inherited=False):
-			descriptors.append(self.create_getter_descriptor(field))
-
-		return descriptors
 
 	def generate_str_field(self, field):
 		condition = self.generate_condition(field, True)
