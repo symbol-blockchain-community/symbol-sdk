@@ -19,7 +19,8 @@ function generate_code() {
 
 if [[ $# -eq 0 ]]; then
 	echo "updating generated code in git"
-	for name in "nem" "symbol";
+	# for name in "nem" "symbol";
+	for name in "symbol";
 	do
 		rm -rf "./src/${name}/models.php"
 		generate_code "${name}" "${name}"
