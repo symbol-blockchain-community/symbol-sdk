@@ -52,6 +52,7 @@ test.ts
 sdk/php/test.php
 sdk/php/vendor
 sdk/php/.phpunit.result.cache
+sdk/php/src/t.php
 
 .mono
 testGenarate.py
