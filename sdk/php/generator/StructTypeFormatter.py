@@ -472,7 +472,7 @@ class StructFormatter(AbstractTypeFormatter):
 
 		first_field = next(fields_iter)
 		if self.struct.size == first_field.extensions.printer.name:
-			body += f'$writer->write(Utils\\intToBinary($this->size(), {first_field.size}));\n'
+			body += f'$writer->write(Converter::intToBinary($this->size(), {first_field.size}));\n'
 		else:
 			body += self.generate_serialize_field(first_field)
 
