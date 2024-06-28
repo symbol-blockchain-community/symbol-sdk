@@ -9,7 +9,7 @@ require_once __DIR__ . '/../NetworkTimestamp.php';
 
 use SymbolSdk\BinaryData;
 use SymbolSdk\Network as BasicNetwork;
-use SymbolSdk\Utils;
+use SymbolSdk\Utils\Converter;
 use SymbolSdk\NetworkTimestampDatetimeConverter;
 
 use DateTime;
@@ -25,7 +25,7 @@ class Address extends BinaryData
   public function __construct($addressInput)
   {
     if (mb_check_encoding($addressInput, 'UTF-8')) {
-      $addressInput = Utils\addressToBinary($addressInput);
+      $addressInput = Converter::addressToBinary($addressInput);
     } else if ($addressInput instanceof Address) {
       $addressInput = $addressInput->binaryData;
     };
