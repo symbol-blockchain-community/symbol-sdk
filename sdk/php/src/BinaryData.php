@@ -2,7 +2,9 @@
 
 namespace SymbolSdk;
 
-use SymbolSdk\Utils;
+require_once __DIR__ . '/utils/converter.php';
+
+use SymbolSdk\Utils\Converter;
 
 use Exception;
 use RangeException;
@@ -21,11 +23,11 @@ class BinaryData
 	 */
 	public function __construct($fixedSize, $binaryData)
 	{
-		if (Utils\isHexString($binaryData)) {
+		if (Converter::isHexString($binaryData)) {
 			$binaryData = hex2bin($binaryData);
 		} else {
 			try {
-				$binaryData = Utils\addressToBinary($binaryData);
+				$binaryData = Converter::addressToBinary($binaryData);
 			} catch (Exception $e) {
 				// Not in address format; ignoring without error.
 			}
@@ -43,7 +45,7 @@ class BinaryData
 	public function __toString()
 	{
 		if (get_class($this) == 'SymbolSdk\Symbol\Address' || get_class($this) == 'SymbolSdk\Symbol\UnresolvedAddress') {
-			return Utils\binaryToAddress($this->binaryData);
+			return Converter::binaryToAddress($this->binaryData);
 		}
 
 		return '0x' . strtoupper(bin2hex($this->binaryData));
