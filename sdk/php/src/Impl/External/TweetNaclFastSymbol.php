@@ -575,18 +575,15 @@ class TweetNaclFastSymbol {
 	}
 
 	private static function crypto_hash(&$out, $m, $n, $hasher) {
-		//echo "aaaaaaaaa" . "\n";
 		for ($i = 0; $i < count($m); $i++) {
 			$m[$i] = pack('C*', $m[$i]);
 		}
 		$binary = implode('', array_slice($m, 0, $n));
-		//echo self::arrayToString(self::binaryTointArray($binary), 1) . "\n";
 		$hash = $hasher == 'sha512' ? hex2bin(hash('sha512', $binary)) : hex2bin(Keccak::hash($binary, 512));
 
 		for ($i = 0; $i < count($out); ++$i)
 			$out[$i] = ord($hash[$i]);
 
-		//self::arrayToString($out, 1);
 		return 0;
 	}
 
@@ -681,7 +678,6 @@ class TweetNaclFastSymbol {
 	private static function modL(&$r, &$x)
   {
 		$carry = 0;
-		//self::arrayToString($x, 1);
 		for ($i = 63; $i >= 32; --$i) {
 				$carry = 0;
 				for ($j = $i - 32, $k = $i - 12; $j < $k; ++$j) {
@@ -702,13 +698,10 @@ class TweetNaclFastSymbol {
 		for ($j = 0; $j < 32; ++$j) {
 				$x[$j] -= $carry * self::$L[$j];
 		}
-		//echo '====================' . "\n";
-		//self::arrayToString($x, 1);
 		for ($i = 0; $i < 32; ++$i) {
 				$x[$i + 1] += $x[$i] >> 8;
 				$r[$i] = $x[$i] & 255;
 		}
-		//self::arrayToString($x, 1);
   }
 
 	private static function reduce(&$r)
