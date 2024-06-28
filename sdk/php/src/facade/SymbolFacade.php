@@ -1,6 +1,6 @@
 <?php
 
-namespace SymbolSdk\Symbol;
+namespace SymbolSdk\Facade;
 
 require_once __DIR__ . '/../Network.php';
 require_once __DIR__ . '/../symbol/Network.php';
