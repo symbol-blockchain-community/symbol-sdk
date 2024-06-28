@@ -1,8 +1,8 @@
 <?php
 
-namespace SymbolSdk;
+namespace SymbolSdk\CryptoTypes;
 
-require __DIR__ . '/BinaryData.php';
+use SymbolSdk\BinaryData;
 
 class Hash256 extends BinaryData
 {
