@@ -4,19 +4,19 @@ namespace SymbolSdk\Utils;
 
 use Exception;
 
-class Converter {
-	static $constants = [
-		'sizes' => [
-			'ripemd160' => 20,
-			'symbolAddressDecoded' => 24,
-			'nemAddressDecoded' => 25,
-			'symbolAddressEncoded' => 39,
-			'nemAddressEncoded' => 40,
-			'key' => 32,
-			'checksum' => 3,
-		]
-	];
-	
+define('CONSTANTS', [
+	'sizes' => [
+		'ripemd160' => 20,
+		'symbolAddressDecoded' => 24,
+		'nemAddressDecoded' => 25,
+		'symbolAddressEncoded' => 39,
+		'nemAddressEncoded' => 40,
+		'key' => 32,
+		'checksum' => 3,
+	]
+]);
+
+class Converter {	
 	/**
 	 * Converts siez to format
 	 * @param int bytes size.
@@ -129,10 +129,10 @@ class Converter {
 	public static function addressToBinary($encoded)
 	{
 		$base32 = new Base2n(5, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567', FALSE, TRUE, TRUE);
-		if (self::$constants['sizes']['symbolAddressEncoded'] == strlen($encoded)) {
+		if (CONSTANTS['sizes']['symbolAddressEncoded'] == strlen($encoded)) {
 			return substr($base32->decode($encoded . "A"), 0, -1);
 		}
-		if (self::$constants['sizes']['nemAddressEncoded'] == strlen($encoded)) {
+		if (CONSTANTS['sizes']['nemAddressEncoded'] == strlen($encoded)) {
 			return mb_convert_encoding($encoded, 'UTF-8', 'ISO-8859-1');
 		}
 		throw new Exception("$encoded does not represent a valid encoded address");
@@ -141,12 +141,12 @@ class Converter {
 	public static function binaryToAddress($decoded)
 	{
 		$base32 = new Base2n(5, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567', FALSE, TRUE, TRUE);
-		if (self::$constants['sizes']['symbolAddressDecoded'] == strlen($decoded)) {
+		if (CONSTANTS['sizes']['symbolAddressDecoded'] == strlen($decoded)) {
 			$padded = $decoded . "\x00";
 			$encoded = $base32->encode($padded);
-			return substr($encoded, 0, self::$constants['sizes']['symbolAddressEncoded']);
+			return substr($encoded, 0, CONSTANTS['sizes']['symbolAddressEncoded']);
 		}
-		if (self::$constants['sizes']['nemAddressDecoded'] == strlen($decoded)) {
+		if (CONSTANTS['sizes']['nemAddressDecoded'] == strlen($decoded)) {
 			return $base32->encode($decoded);
 		}
 		throw new Exception("invalid address type");
