@@ -5,8 +5,7 @@ namespace SymbolSdk\Symbol\Models;
 require_once __DIR__ . '/../../../src/symbol/models.php';
 require_once __DIR__ . '/../../../src/symbol/idGenerator.php';
 
-use SymbolSdk\Symbol;
-use function SymbolSdk\Symbol\generateMosaicId;
+use SymbolSdk\Symbol\IdGenerator;
 use SymbolSdk\Symbol\Models\Address;
 use PHPUnit\Framework\TestCase;
 
@@ -28,19 +27,19 @@ class MosaicIdTest extends TestCase
 
     foreach ($decodedData as $item) {
       $this->assertEquals(
-        self::idTohex(generateMosaicId(new Address($item['address_Public']), $item['mosaicNonce'])),
+        self::idTohex(IdGenerator::generateMosaicId(new Address($item['address_Public']), $item['mosaicNonce'])),
         $item['mosaicId_Public']
       );
       $this->assertEquals(
-        self::idTohex(generateMosaicId(new Address($item['address_PublicTest']), $item['mosaicNonce'])),
+        self::idTohex(IdGenerator::generateMosaicId(new Address($item['address_PublicTest']), $item['mosaicNonce'])),
         $item['mosaicId_PublicTest']
       );
       $this->assertEquals(
-        self::idTohex(generateMosaicId(new Address($item['address_Private']), $item['mosaicNonce'])),
+        self::idTohex(IdGenerator::generateMosaicId(new Address($item['address_Private']), $item['mosaicNonce'])),
         $item['mosaicId_Private']
       );
       $this->assertEquals(
-        self::idTohex(generateMosaicId(new Address($item['address_PrivateTest']), $item['mosaicNonce'])),
+        self::idTohex(IdGenerator::generateMosaicId(new Address($item['address_PrivateTest']), $item['mosaicNonce'])),
         $item['mosaicId_PrivateTest']
       );
     }

@@ -2,7 +2,7 @@
 
 namespace SymbolSdk\Symbol\Models;
 
-use SymbolSdk\Symbol;
+use SymbolSdk\Symbol\IdGenerator;
 use SymbolSdk\Facade\SymbolFacade;
 use function SymbolSdk\Symbol\generateMosaicId;
 
@@ -1457,7 +1457,7 @@ class MosaicDefinitionTransactionV1_mosaic_definition_single_1
       signature: new Signature('5D3116D285D4ED8883DBBBC8E59FED08A888DAB21C6E4B918434BE2B3AF1105EE1B94EAA9C4BB54428F4A71C711964F00848B9A9E00D8F55670991AADC16119F'),
       fee: new Amount('18370164183782063840'),
       deadline: new Timestamp('8207562320463688160'),
-      id: new MosaicId(generateMosaicId($facade->network->publicKeyToAddress(hex2bin("70F08E77C31D9816C0A63009137A9BADBE5F42431EFBC3994822A25CED9D8282")), 0))
+      id: new MosaicId(IdGenerator::generateMosaicId($facade->network->publicKeyToAddress(hex2bin("70F08E77C31D9816C0A63009137A9BADBE5F42431EFBC3994822A25CED9D8282")), 0))
     );
   }
 }
@@ -1480,7 +1480,7 @@ class MosaicDefinitionTransactionV1_mosaic_definition_single_2
       signature: new Signature(hex2bin('D3B6BEF55F6D99281079B8A138EECE9A4CACC052BC3E84D83D72C3FCF0CFA85DEA390B8FCD50F1A6A6E196DDDED52CB92FC3C216C6B5F06F96E89B23FA62B4BE')),
       fee: new Amount('18370164183782063840'),
       deadline: new Timestamp('8207562320463688160'),
-      id: new MosaicId(generateMosaicId($facade->network->publicKeyToAddress(hex2bin("FA59F3C0267DA5F9A11BBC9714B19402172CD1834F42CC4D2699301437B6BF0D")), 3095715558))
+      id: new MosaicId(IdGenerator::generateMosaicId($facade->network->publicKeyToAddress(hex2bin("FA59F3C0267DA5F9A11BBC9714B19402172CD1834F42CC4D2699301437B6BF0D")), 3095715558))
     );
   }
 }
@@ -1504,7 +1504,7 @@ class MosaicDefinitionTransactionV1_mosaic_definition_single_3
       signature: new Signature(hex2bin('3712BC4F3932457AD1A7CC967CC45C3D5F04A52F6B802AEC7D377E504432F1DA40DD1EDAFE9F5899BD04DFBFB1324B198CCEE3344883DEA75DCCE2D1778B6529')),
       fee: new Amount('18370164183782063840'),
       deadline: new Timestamp('8207562320463688160'),
-      id: new MosaicId(generateMosaicId($facade->network->publicKeyToAddress(hex2bin("1138798330AB1EDF113867A0A03285FBFC8D433F7F688B41B33D01C7939086D5")), 3095715558))
+      id: new MosaicId(IdGenerator::generateMosaicId($facade->network->publicKeyToAddress(hex2bin("1138798330AB1EDF113867A0A03285FBFC8D433F7F688B41B33D01C7939086D5")), 3095715558))
     );
   }
 }
@@ -1527,7 +1527,7 @@ class MosaicDefinitionTransactionV1_mosaic_definition_aggregate_1
               + MosaicFlags::SUPPLY_MUTABLE
           ),
           divisibility: 4,
-          id: new MosaicId(generateMosaicId($facade->network->publicKeyToAddress(hex2bin("0000000000000000000000000000000000000000000000000000000000000000")), 0))
+          id: new MosaicId(IdGenerator::generateMosaicId($facade->network->publicKeyToAddress(hex2bin("0000000000000000000000000000000000000000000000000000000000000000")), 0))
         ),
       ],
       signerPublicKey: new PublicKey('9408A21018F5FA6205D0A5D1A99DC3BF7295D686460569F6FC7BCD9D392F2E9E'),
@@ -1557,7 +1557,7 @@ class MosaicDefinitionTransactionV1_mosaic_definition_aggregate_2
             MosaicFlags::NONE
           ),
           divisibility: 3,
-          id: new MosaicId(generateMosaicId($facade->network->publicKeyToAddress(hex2bin("0000000000000000000000000000000000000000000000000000000000000000")), 3095715558))
+          id: new MosaicId(IdGenerator::generateMosaicId($facade->network->publicKeyToAddress(hex2bin("0000000000000000000000000000000000000000000000000000000000000000")), 3095715558))
         ),
       ],
       signerPublicKey: new PublicKey('D962535DE9E97E0CB8E878AA0B68B2D601D20D0BB2A46AE06C086FFED4342DFE'),
@@ -1588,7 +1588,7 @@ class MosaicDefinitionTransactionV1_mosaic_definition_aggregate_3
               + MosaicFlags::TRANSFERABLE
           ),
           divisibility: 2,
-          id: new MosaicId(generateMosaicId($facade->network->publicKeyToAddress(hex2bin("0000000000000000000000000000000000000000000000000000000000000000")), 3095715558))
+          id: new MosaicId(IdGenerator::generateMosaicId($facade->network->publicKeyToAddress(hex2bin("0000000000000000000000000000000000000000000000000000000000000000")), 3095715558))
         ),
       ],
       signerPublicKey: new PublicKey('C1F2E14CBF743FE0A0FC27482BA97B4734B5F80BED8C6642B075EB421F9E2F81'),
