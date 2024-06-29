@@ -500,11 +500,6 @@ class TransactionTest extends TestCase
   }
 }
 
-function unchecked($value)
-{
-  return $value & 0xFFFF;
-}
-
 class AccountAddressRestrictionTransactionV1_account_address_restriction_single_1
 {
   public static $payload = "D0000000000000007695D855CBB6CB83D5BD08E9D76145674F805D741301883387B7101FD8CA84329BB14DBF2F0B4CD58AA84CF31AC6899D134FC38FAB0E7A76F6216ACD60914ACBD294E5E650ACC2A911B548BE2A1806FF4717621BCE3EC1007295219AFFC17B820000000001985041E0FEEEEFFEEEEFFEE0711EE7711EE77101000201000000009841E5B8E40781CF74DABF592817DE48711D778648DEAFB298F409274B52FABBFBCF7E7DF7E20DE1D0C3F657FB8595C1989059321905F681BCF47EA33BBF5E6F8298B5440854FDED";
@@ -718,7 +713,7 @@ class AccountMetadataTransactionV1_account_metadata_single_2
       network: new NetworkType(NetworkType::TESTNET),
       targetAddress: new UnresolvedAddress(('TBA6LOHEA6A465G2X5MSQF66JBYR254GJDPK7MQ')),
       scopedMetadataKey: 11258607,
-      valueSizeDelta: unchecked(-6 - 0xFFFF0000),
+      valueSizeDelta: -6,
       value: hex2bin('313233424143'),
       signerPublicKey: new PublicKey('A679C078A6514E8DC0CA28B1A943D8BA9373AC8B14CCA6B07FEA07ABF9052913'),
       signature: new Signature('03B8387DAA75186536106B847E4AE26213EADCC166A70EAA20C2AF66646D9243D54413EBFA4BB0B614E0ADCAF2417EA350198A26F3DCDBB8B4DACCECC8B1D418'),
@@ -766,7 +761,7 @@ class AccountMetadataTransactionV1_account_metadata_aggregate_2
           network: new NetworkType(NetworkType::TESTNET),
           targetAddress: new UnresolvedAddress(('TBA6LOHEA6A465G2X5MSQF66JBYR254GJDPK7MQ')),
           scopedMetadataKey: 11258607,
-          valueSizeDelta: unchecked(-6 - 0xFFFF0000),
+          valueSizeDelta: -6,
           value: hex2bin('313233424143')
         ),
       ],
@@ -1733,7 +1728,7 @@ class MosaicMetadataTransactionV1_mosaic_metadata_single_2
       targetAddress: new UnresolvedAddress(('TBA6LOHEA6A465G2X5MSQF66JBYR254GJDPK7MQ')),
       scopedMetadataKey: 10,
       targetMosaicId: new UnresolvedMosaicId(1000),
-      valueSizeDelta: unchecked(-5 - 0xFFFF0000),
+      valueSizeDelta: -5,
       value: hex2bin('313233414243'),
       signerPublicKey: new PublicKey('A7FB98F0A1BE958F2D70BC8609A3539DCBD702978FC872C2D388A634FBEA074C'),
       signature: new Signature('EE4682A5FBE4BA1C8F8131DF3C0DF7BE4E8BAF0E3A2B2D288101F2C5261932F03E02FDC4207B5FD7E44A4771E6D3895388213C48789982B42AF05CDEB7F88E26'),
@@ -1783,7 +1778,7 @@ class MosaicMetadataTransactionV1_mosaic_metadata_aggregate_2
           targetAddress: new UnresolvedAddress(('TBA6LOHEA6A465G2X5MSQF66JBYR254GJDPK7MQ')),
           scopedMetadataKey: 10,
           targetMosaicId: new UnresolvedMosaicId(1000),
-          valueSizeDelta: unchecked((-5 - 0xFFFF0000)),
+          valueSizeDelta: -5,
           value: hex2bin('313233414243')
         ),
       ],
@@ -2062,7 +2057,7 @@ class NamespaceMetadataTransactionV1_namespace_metadata_single_2
       targetAddress: new UnresolvedAddress(('TCIFSMQZAX3IDPHUP2RTXP26N6BJRNKEBBKP33I')),
       scopedMetadataKey: 10,
       targetNamespaceId: new NamespaceId(1000),
-      valueSizeDelta: unchecked(-3 - 0xFFFF0000),
+      valueSizeDelta: -3,
       value: "ABC123",
       signerPublicKey: new PublicKey('72D6ECEC68081903BB300BC0C033139CDB18D41EA98F9922CF20A5E1FB6B02D6'),
       signature: new Signature('FD0DDFDC372E15AE261A4AF8C61EFE37FAE5E4D6D8B6E53AA83ED616BD002C1700D2B594C841472C3DC24E4B74DE5E01968A943F8AE7BC34B9C59C9918DA2A46'),
@@ -2112,7 +2107,7 @@ class NamespaceMetadataTransactionV1_namespace_metadata_aggregate_2
           targetAddress: new UnresolvedAddress(('TCIFSMQZAX3IDPHUP2RTXP26N6BJRNKEBBKP33I')),
           scopedMetadataKey: 10,
           targetNamespaceId: new NamespaceId(1000),
-          valueSizeDelta: unchecked(-3 - 0xFFFF0000),
+          valueSizeDelta: -3,
           value: "ABC123"
         ),
       ],
