@@ -39,7 +39,7 @@ class TweetNaclFastSymbol {
 		self::$I = self::gf([0xa0b0, 0x4a0e, 0x1b27, 0xc4ee, 0xe478, 0xad2f, 0x1806, 0x2f43, 0xd7a7, 0x3dfb, 0x0099, 0x2b4d, 0xdf0b, 0x4fc1, 0x2480, 0x2b83]);
 	}
 	// 配列を生成する関数
-	private static function  gf($init = null) {
+	public static function  gf($init = null) {
 			$r = array_fill(0, 16, 0); // 16要素の配列を0で初期化
 
 			if ($init) {
@@ -118,7 +118,7 @@ class TweetNaclFastSymbol {
 		}
 	}
 
-	private static function neq25519($a, $b) {
+	public static function neq25519($a, $b) {
 		$c = array_fill(0, 32, 0);
 		$d = array_fill(0, 32, 0);
 		self::pack25519($c, $a);
@@ -145,7 +145,7 @@ class TweetNaclFastSymbol {
 		}
 	}
 
-	private static function Z(&$o, $a, $b) {
+	public static function Z(&$o, $a, $b) {
 		for ($i = 0; $i < 16; $i++) {
 				$o[$i] = $a[$i] - $b[$i];
 		}
@@ -574,7 +574,7 @@ class TweetNaclFastSymbol {
 		}
 	}
 
-	private static function crypto_hash(&$out, $m, $n, $hasher) {
+	public static function crypto_hash(&$out, $m, $n, $hasher) {
 		for ($i = 0; $i < count($m); $i++) {
 			$m[$i] = pack('C*', $m[$i]);
 		}
@@ -619,7 +619,7 @@ class TweetNaclFastSymbol {
 		}
 	}
 
-	private static function pack(&$r, $p) {
+	public static function pack(&$r, $p) {
 		$tx = self::gf(); $ty = self::gf(); $zi = self::gf();
 		self::inv25519($zi, $p[2]);
 		self::M($tx, $p[0], $zi);
@@ -628,7 +628,7 @@ class TweetNaclFastSymbol {
 		$r[31] ^= self::par25519($tx) << 7;
 	}
 
-	private static function scalarmult(&$p, &$q, $s) {
+	public static function scalarmult(&$p, &$q, $s) {
 		self::set25519($p[0], self::$gf0);
 		self::set25519($p[1], self::$gf1);
 		self::set25519($p[2], self::$gf1);
@@ -673,7 +673,7 @@ class TweetNaclFastSymbol {
 		return 0;
 	}
 
-	static $L = [0xed, 0xd3, 0xf5, 0x5c, 0x1a, 0x63, 0x12, 0x58, 0xd6, 0x9c, 0xf7, 0xa2, 0xde, 0xf9, 0xde, 0x14, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0x10];
+	public static $L = [0xed, 0xd3, 0xf5, 0x5c, 0x1a, 0x63, 0x12, 0x58, 0xd6, 0x9c, 0xf7, 0xa2, 0xde, 0xf9, 0xde, 0x14, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0x10];
 
 	public static function modL(&$r, &$x)
   {
@@ -764,7 +764,7 @@ class TweetNaclFastSymbol {
 		return $smlen;
 	}
 
-	private static function unpackneg(&$r, $p) {
+	public static function unpackneg(&$r, $p) {
 		$t = self::gf(); $chk = self::gf(); $num = self::gf();
 		$den = self::gf(); $den2 = self::gf(); $den4 = self::gf();
 		$den6 = self::gf();
