@@ -7,8 +7,6 @@ require_once __DIR__ . '/../../../src/symbol/models.php';
 use PHPUnit\Framework\TestCase;
 use SymbolSdk\Symbol\Network;
 
-use function SymbolSdk\Utils\binaryToAddress;
-
 class AddressTest extends TestCase
 {
   public function testAddress()
