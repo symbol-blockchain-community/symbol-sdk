@@ -675,7 +675,7 @@ class TweetNaclFastSymbol {
 
 	static $L = [0xed, 0xd3, 0xf5, 0x5c, 0x1a, 0x63, 0x12, 0x58, 0xd6, 0x9c, 0xf7, 0xa2, 0xde, 0xf9, 0xde, 0x14, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0x10];
 
-	private static function modL(&$r, &$x)
+	public static function modL(&$r, &$x)
   {
 		$carry = 0;
 		for ($i = 63; $i >= 32; --$i) {
@@ -704,7 +704,7 @@ class TweetNaclFastSymbol {
 		}
   }
 
-	private static function reduce(&$r)
+	public static function reduce(&$r)
 	{
 			$x = array_fill(0, 64, 0);
 			for ($i = 0; $i < 64; ++$i) {
@@ -764,7 +764,74 @@ class TweetNaclFastSymbol {
 		return $smlen;
 	}
 
-	function is_array_string($array) {
+	private static function unpackneg(&$r, $p) {
+		$t = self::gf(); $chk = self::gf(); $num = self::gf();
+		$den = self::gf(); $den2 = self::gf(); $den4 = self::gf();
+		$den6 = self::gf();
+	
+		self::set25519($r[2], self::$gf1);
+		self::unpack25519($r[1], $p);
+
+		self::S($num, $r[1]);
+		self::M($den, $num, self::$D);
+		self::Z($num, $num, $r[2]);
+		self::A($den, $r[2], $den);
+	
+		self::S($den2, $den);
+		self::S($den4, $den2);
+		self::M($den6, $den4, $den2);
+		self::M($t, $den6, $num);
+		self::M($t, $t, $den);
+	
+		self::pow2523($t, $t);
+		self::M($t, $t, $num);
+		self::M($t, $t, $den);
+		self::M($t, $t, $den);
+		self::M($r[0], $t, $den);
+	
+		self::S($chk, $r[0]);
+		self::M($chk, $chk, $den);
+		if (self::neq25519($chk, $num)) self::M($r[0], $r[0], self::$I);
+	
+		self::S($chk, $r[0]);
+		self::M($chk, $chk, $den);
+		if (self::neq25519($chk, $num)) return -1;
+	
+		if (self::par25519($r[0]) === ($p[31]>>7)) self::Z($r[0], self::$gf0, $r[0]);
+	
+		self::M($r[3], $r[0], $r[1]);
+		return 0;
+	}
+
+	private static function crypto_sign_open($m, $sm, $n, $pk, $hasher) {
+		$t = array_fill(0, 32, 0); $h = array_fill(0, 64, 0);
+		$p = [self::gf(), self::gf(), self::gf(), self::gf()];
+		$q = [self::gf(), self::gf(), self::gf(), self::gf()];
+		if ($n < 64) return -1;
+	
+		if (self::unpackneg($q, $pk)) return -1;
+
+		for ($i = 0; $i < $n; $i++) $m[$i] = $sm[$i];
+		for ($i = 0; $i < 32; $i++) $m[$i+32] = $pk[$i];
+		self::crypto_hash($h, $m, $n, $hasher);
+		self::reduce($h);
+		self::scalarmult($p, $q, $h, true);
+
+		self::scalarbase($q, array_slice($sm, 32));
+		self::add($p, $q);
+		self::pack($t, $p);
+
+		$n -= 64; // eslint-disable-line no-param-reassign
+		if (self::crypto_verify_32($sm, 0, $t, 0)) {
+			for ($i = 0; $i < $n; $i++) $m[$i] = 0;
+			return -1;
+		}
+	
+		for ($i = 0; $i < $n; $i++) $m[$i] = $sm[$i + 64];
+		return $n;
+	}
+
+	public function is_array_string($array) {
 		foreach ($array as $element) {
 			if (!is_string($element)) {
 				return false;
@@ -773,7 +840,7 @@ class TweetNaclFastSymbol {
 		return true;
 	}
 
-	private static function checkArrayTypes(...$params) {
+	public static function checkArrayTypes(...$params) {
 		foreach ($params as $param) {
 			if (!is_array($param)) {
 				throw new TypeError('unexpected type, use array');
@@ -781,7 +848,7 @@ class TweetNaclFastSymbol {
 		}
 	}
 
-	private static function binaryTointArray($binary){
+	public static function binaryTointArray($binary){
 		$intArray = unpack('C*', $binary);
 		array_unshift($intArray, 0);
 		foreach ($intArray as $key => $value) {
@@ -828,7 +895,23 @@ class TweetNaclFastSymbol {
 		return ['publicKey' => self::arrayToBinary($pk), 'secretKey' => self::arrayToBinary($sk)];
 	}
 
-	private static function arrayToBinary($array) {
+	public static function nacl_sign_detached_verify($msg, $sig, $publicKey, $hasher){
+		$msg = self::binaryTointArray($msg);
+		$sig = self::binaryTointArray($sig);
+		$publicKey = self::binaryTointArray($publicKey);
+		self::checkArrayTypes($msg, $sig, $publicKey);
+		if (count($sig) !== self::$crypto_sign_BYTES)
+			throw new Error('bad signature size');
+		if (count($publicKey) !== self::$crypto_sign_PUBLICKEYBYTES)
+			throw new Error('bad public key size');
+		$sm = array_fill(0, self::$crypto_sign_BYTES + count($msg), 0);
+		$m = array_fill(0, self::$crypto_sign_BYTES + count($msg), 0);
+		for ($i = 0; $i < self::$crypto_sign_BYTES; $i++) $sm[$i] = $sig[$i];
+		for ($i = 0; $i < count($msg); $i++) $sm[$i+self::$crypto_sign_BYTES] = $msg[$i];
+		return (self::crypto_sign_open($m, $sm, count($sm), $publicKey, $hasher) >= 0);
+	}
+
+	public static function arrayToBinary($array) {
 		$binaryData = '';
 		foreach ($array as $element) {
 				$binaryData .= pack('C', $element);

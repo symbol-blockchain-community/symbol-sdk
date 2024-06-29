@@ -2,13 +2,12 @@
 
 namespace SymbolSdk\Symbol;
 
-require_once __DIR__ . '/../Impl/External/TweetNaclFastSymbol.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
 
-use Error;
 use SymbolSdk\CryptoTypes\PrivateKey;
 use SymbolSdk\CryptoTypes\PublicKey;
 use SymbolSdk\CryptoTypes\Signature;
-use SymbolSdk\Impl\External\TweetNaclFastSymbol;
+use SymbolSdk\Impl\Ed25519;
 
 class KeyPair
 {
@@ -19,12 +18,11 @@ class KeyPair
   function __construct(PrivateKey $privateKey)
   {
     $this->_privateKey = $privateKey;
-    TweetNaclFastSymbol::init();
-    $this->_keyPair = TweetNaclFastSymbol::nacl_sign_keyPair_fromSeed($privateKey->binaryData, self::HASH_MODE);
+    $this->_keyPair = Ed25519::keyPairFromSeed($privateKey->binaryData, self::HASH_MODE);
   }
 
   public function sign($message){
-    $signature = TweetNaclFastSymbol::nacl_sign_detached($message, $this->_keyPair['secretKey'], self::HASH_MODE);
+    $signature = Ed25519::sign($message, $this->_keyPair, self::HASH_MODE);
     return new Signature($signature);
   }
 
