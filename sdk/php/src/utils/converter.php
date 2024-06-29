@@ -85,7 +85,7 @@ class Converter {
 	 */
 	public static function gmpToBinary(string $gmpValue): string
 	{
-		$gmp = gmp_init($gmpValue, 10);
+		$gmp = $gmpValue < 0 ? gmp_init(sprintf('%u', $gmpValue), 10) : gmp_init($gmpValue, 10);
 		$hex = gmp_strval($gmp, 16);
 		$hex = str_pad($hex, 16, '0', STR_PAD_LEFT);
 		$binary = pack('H*', $hex);
