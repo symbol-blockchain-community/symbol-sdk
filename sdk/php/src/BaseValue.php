@@ -47,7 +47,11 @@ class BaseValue
 				throw new \InvalidArgumentException('For 8-byte integers, value must be a numeric string or a number');
 			}
 			// Ensure the value is a GMP resource
-			return gmp_strval(gmp_init($value, 10));
+			if (is_string($value) && substr($value, 0, 2) === '0x') {
+					return gmp_strval(gmp_init($value, 16));
+			} else {
+					return gmp_strval(gmp_init($value, 10));
+			}
 		} else {
 			if (!is_int($value)) {
 				throw new \InvalidArgumentException('For non 8-byte integers, value must be an integer');
