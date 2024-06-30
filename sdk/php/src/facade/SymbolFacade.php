@@ -12,20 +12,20 @@ use SymbolSdk\Network\NetworkLocator;
 
 class SymbolFacade
 {
-	const TRANSACTION_HEADER_SIZE = 4 + 4 + Signature::$SIZE + PublicKey::$SIZE + 4;
-	const AGGREGATE_HASHED_SIZE = 4 + 8 + 8 + Hash256::$SIZE;
-
 	private static function isAggregateTransaction($transactionBuffer) {
-			$transactionTypeOffset = self::TRANSACTION_HEADER_SIZE + 2; // skip version and network byte
+			$TRANSACTION_HEADER_SIZE = 4 + 4 + Signature::$SIZE + PublicKey::$SIZE + 4;
+			$transactionTypeOffset = $TRANSACTION_HEADER_SIZE + 2; // skip version and network byte
 			$transactionType = ($transactionBuffer[$transactionTypeOffset + 1] << 8) + $transactionBuffer[$transactionTypeOffset];
 			$aggregateTypes = [Models\TransactionType::AGGREGATE_BONDED, Models\TransactionType::AGGREGATE_COMPLETE];
 			return in_array($transactionType, $aggregateTypes, true);
 	}
 
 	private static function transactionDataBuffer($transactionBuffer) {
-		$dataBufferStart = self::TRANSACTION_HEADER_SIZE;
+		$TRANSACTION_HEADER_SIZE = 4 + 4 + Signature::$SIZE + PublicKey::$SIZE + 4;
+		$AGGREGATE_HASHED_SIZE = 4 + 8 + 8 + Hash256::$SIZE;
+		$dataBufferStart = $TRANSACTION_HEADER_SIZE;
 		$dataBufferEnd = self::isAggregateTransaction($transactionBuffer)
-				? self::TRANSACTION_HEADER_SIZE + self::AGGREGATE_HASHED_SIZE
+				? $TRANSACTION_HEADER_SIZE + $AGGREGATE_HASHED_SIZE
 				: count($transactionBuffer);
 
 		return array_slice($transactionBuffer, $dataBufferStart, $dataBufferEnd - $dataBufferStart);

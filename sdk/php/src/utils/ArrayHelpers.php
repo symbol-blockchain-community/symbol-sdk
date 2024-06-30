@@ -13,8 +13,12 @@ class ArrayHelpers {
 		if (!is_array($lhs) && !($lhs instanceof SplFixedArray) && !($lhs instanceof ArrayAccess)) {
 			if ($lhs === $rhs)
 				return 0;
-	
-			return $lhs > $rhs ? 1 : -1;
+
+			if($lhs < 0 || $rhs < 0) {
+				return $lhs < $rhs ? 1 : -1;
+			} else {
+				return $lhs > $rhs ? 1 : -1;
+			}
 		}
 	
 		if (count($lhs) !== count($rhs))

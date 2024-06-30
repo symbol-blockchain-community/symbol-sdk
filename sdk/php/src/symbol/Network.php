@@ -26,7 +26,7 @@ class Network extends BasicNetwork
     parent::__construct(
       $name,
       $identifier,
-      new NetworkTimestampDatetimeConverter($epochTime->getTimestamp() * 1000, 'milliseconds'),
+      new NetworkTimestampDatetimeConverter($epochTime, 'milliseconds'),
       $generationHashSeed,
       function ($addressWithoutChecksum, $checksum) {
         return new Address($addressWithoutChecksum . substr($checksum, 0, 3));

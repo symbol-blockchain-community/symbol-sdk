@@ -59,11 +59,7 @@ class Converter {
 	
 	public static function binaryToInt(string $binary, int $size)
 	{
-		if ($size === 8) {
-			return self::binaryToGmp($binary);
-		} else {
-			return unpack(self::sizeToFormat($size), $binary)[1];
-		}
+		return unpack(self::sizeToFormat($size), $binary)[1];
 	}
 	
 	public static function intToBinary($int, int $size): string
@@ -71,40 +67,9 @@ class Converter {
 		if ($int === 0) {
 			return str_repeat("\0", $size); // Return a string of zeros
 		}
-		if ($size === 8) {
-			return self::gmpToBinary($int);
-		} else {
-			return pack(self::sizeToFormat($size), $int);
-		}
+		return pack(self::sizeToFormat($size), $int);
 	}
-	
-	/**
-	 * Converts GMP value to 64-bit binary string.
-	 * @param string $gmpValue GMP value as string.
-	 * @return string Binary representation.
-	 */
-	public static function gmpToBinary(string $gmpValue): string
-	{
-		$gmp = $gmpValue < 0 ? gmp_init(sprintf('%u', $gmpValue), 10) : gmp_init($gmpValue, 10);
-		$hex = gmp_strval($gmp, 16);
-		$hex = str_pad($hex, 16, '0', STR_PAD_LEFT);
-		$binary = pack('H*', $hex);
-		return strrev($binary);
-	}
-	
-	/**
-	 * Converts binary string to GMP value.
-	 * @param string $binary Binary string.
-	 * @return string GMP value as string.
-	 */
-	public static function binaryToGmp(string $binary): string
-	{
-		$reversedBinary = strrev($binary);
-		$hex = bin2hex($reversedBinary);
-		$gmp = gmp_init($hex, 16);
-		return gmp_strval($gmp, 10);
-	}
-	
+
 	/**
 	 * int to hex of binary
 	 * @param int int
@@ -176,5 +141,68 @@ class Converter {
 			}
 		}
 		echo "\n";
+	}
+
+	public static function intStringToInt(string $input) {
+		if(substr($input, 0, 2) === '0x'){
+			$input = self::hexToSignedInt($input);
+		}
+    if (is_numeric($input) && $input >= PHP_INT_MIN && $input <= PHP_INT_MAX) {
+			return (int)$input;
+		}
+
+		// BCMath 関数を使用して大きな数値を処理
+		$twoTo64 = bcpow('2', '64');
+		$twoTo63 = bcdiv($twoTo64, '2');
+		
+		$unsigned64 = bcmod($input, $twoTo64);
+		if (bccomp($unsigned64, $twoTo63) >= 0) {
+			return (int)bcsub($unsigned64, $twoTo64);
+		} else {
+			throw new Exception("Input exceeds 64-bit range");
+		}
+	}
+
+	public static function hexToSignedInt($hexString) {
+		$hexString = ltrim($hexString, '0x');
+	
+		if (!ctype_xdigit($hexString)) {
+			throw new Exception("Invalid hexadecimal input");
+		}
+	
+		if (strlen($hexString) > 16) {
+			throw new Exception("Input exceeds 64-bit range");
+		}
+
+		$hexString = str_pad($hexString, 16, '0', STR_PAD_LEFT);
+		$isNegative = hexdec($hexString[0]) >= 8;
+		
+		if ($isNegative) {
+				$inverted = '';
+				for ($i = 0; $i < 16; $i++) {
+						$inverted .= dechex(15 - hexdec($hexString[$i]));
+				}
+				$hexString = $inverted;
+				
+				for ($i = 15; $i >= 0; $i--) {
+						$digit = hexdec($hexString[$i]) + 1;
+						if ($digit <= 15) {
+								$hexString[$i] = dechex($digit);
+								break;
+						}
+						$hexString[$i] = '0';
+				}
+		}
+		
+		$decimal = '0';
+		for ($i = 0; $i < 16; $i++) {
+			$decimal = bcadd(bcmul($decimal, '16'), (string)hexdec($hexString[$i]));
+		}
+		
+		if ($isNegative) {
+			$decimal = '-' . $decimal;
+		}
+		
+		return (int)$decimal;
 	}
 }
