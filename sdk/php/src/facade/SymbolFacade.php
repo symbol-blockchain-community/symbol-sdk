@@ -2,11 +2,11 @@
 
 namespace SymbolSdk\Facade;
 
+use DateTime;
 use SymbolSdk\Symbol\Network;
 use SymbolSdk\CryptoTypes\Signature;
 use SymbolSdk\CryptoTypes\PublicKey;
 use SymbolSdk\CryptoTypes\Hash256;
-use SymbolSdk\Symbol\Address;
 use SymbolSdk\Symbol\Models;
 use SymbolSdk\Network\NetworkLocator;
 
@@ -33,11 +33,15 @@ class SymbolFacade
 
 	const BIP32_CURVE_NAME = 'ed25519';
 
-	public $network;
+	public Network $network;
 
 	public function __construct($network)
 	{
 		Network::initialize();
 		$this->network = gettype($network) == 'string' ? NetworkLocator::findByName(Network::$NETWORKS, $network) : $network;
+	}
+
+	public function now(){
+		return $this->network->fromDatetime(new DateTime());
 	}
 }

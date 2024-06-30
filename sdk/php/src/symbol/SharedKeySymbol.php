@@ -2,6 +2,7 @@
 namespace SymbolSdk\Symbol;
 
 use SymbolSdk\SharedKey;
+use SymbolSdk\CryptoTypes\SharedKey256;
 
 class SharedKeySymbol {
   /**
