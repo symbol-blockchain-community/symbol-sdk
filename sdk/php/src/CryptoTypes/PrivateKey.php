@@ -12,4 +12,8 @@ class PrivateKey extends BinaryData
   {
     parent::__construct(self::$SIZE, $privateKey);
   }
+
+  public static function random(){
+    return new self(openssl_random_pseudo_bytes(32));
+  }
 }

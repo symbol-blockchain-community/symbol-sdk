@@ -35,9 +35,4 @@ class KeyPair
   {
     return new PublicKey($this->_keyPair['publicKey']);
   }
-
-  public static function generateKeyPair(): self
-  {
-    return new self(new PrivateKey(random_bytes(32)));
-  }
 }
