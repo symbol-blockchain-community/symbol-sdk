@@ -1,16 +1,17 @@
 <?php
 
 namespace SymbolSdk\Network;
+use ReflectionClass;
 
 class Network
 {
   public string $name;
   public $identifier;
-  public $datetimeConverter;
-  private $_addressHasher;
-  private $_createAddress;
-  public $addressClass;
-  public $networkTimestampClass;
+  public NetworkTimestampDatetimeConverter $datetimeConverter;
+  protected $_addressHasher;
+  protected $_createAddress;
+  protected ReflectionClass $_addressClass;
+  public ReflectionClass $networkTimestampClass;
   public function __construct($name, $identifier, $datetimeConverter, $addressHasher, $createAddress, $addressClass, $networkTimestampClass)
   {
     $this->name = $name;
@@ -18,8 +19,8 @@ class Network
     $this->datetimeConverter = $datetimeConverter;
     $this->_addressHasher  = $addressHasher;
     $this->_createAddress  = $createAddress;
-    $this->addressClass = $addressClass;
-    $this->networkTimestampClass = $networkTimestampClass;
+    $this->_addressClass = new ReflectionClass($addressClass);
+    $this->networkTimestampClass = new ReflectionClass($networkTimestampClass);
   }
 
   public function publicKeyToAddress(string $publicKey)

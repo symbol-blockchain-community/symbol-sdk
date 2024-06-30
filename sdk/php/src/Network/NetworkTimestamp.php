@@ -2,29 +2,35 @@
 
 namespace SymbolSdk\Network;
 
-use DateTime;
+use Error;
 
 class NetworkTimestamp
 {
-  public $epoc;
-  public $timeUnits;
+  public int $timestamp;
 
-  public function __construct($epoch, $timeUnits)
+  public function __construct(int $timestamp)
   {
-    $this->epoc = $epoch;
-    switch ($timeUnits) {
-      case 'hours':
-        $this->timeUnits = 60 * 60 * 1000;
-        break;
-      case 'minutes':
-        $this->timeUnits = 60 * 1000;
-        break;
-      case 'seconds':
-        $this->timeUnits = 1000;
-        break;
-      case 'milliseconds':
-        $this->timeUnits = 1;
-        break;
-    }
+    $this->timestamp = $timestamp;
+  }
+
+  public function isEpochal(){
+    return 0 == $this->timestamp;
+  }
+
+  public function addSeconds(int $count){
+    throw new Error('`addSeconds` must be implemented by concrete class');
+  }
+
+  public function addMinutes(int $count){
+    return $this->addSeconds(60 * $count);
+  }
+
+  public function addHours(int $count){
+    return $this->addMinutes(60 * $count);
+  }
+
+  public function __toString()
+  {
+    return $this->timestamp; 
   }
 }
