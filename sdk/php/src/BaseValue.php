@@ -30,7 +30,8 @@ class BaseValue
 	public function __construct(int $size, $value)
 	{
 		$this->size = $size;
-		if(is_float($value)) throw new Error('Value ' . $value . ' exceeds the maximum integer size (' . PHP_INT_MAX . ') supported by this system');
+		if(is_float($value)) 
+			throw new Error('Value ' . $value . ' exceeds the maximum integer size (' . PHP_INT_MAX . ') supported by this system. However, if the value is within the 64-bit integer range, you can pass it as a string (e.g., \'0xFFFFFFFFFFFFFFFF\' or \'18446744073709551615\').');
 		if(is_string($value)) {
 			$this->value = Converter::intStringToInt($value);
 		} else {
