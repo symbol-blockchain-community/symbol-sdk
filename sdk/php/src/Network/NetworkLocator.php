@@ -1,5 +1,5 @@
 <?php
-namespace SymbolSdk;
+namespace SymbolSdk\Network;
 
 use RangeException;
 

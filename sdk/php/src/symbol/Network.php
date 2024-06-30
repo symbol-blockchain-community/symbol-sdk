@@ -2,69 +2,25 @@
 
 namespace SymbolSdk\Symbol;
 
-require_once __DIR__ . '/../Network.php';
-require_once __DIR__ . '/../BinaryData.php';
-require_once __DIR__ . '/../utils/converter.php';
-require_once __DIR__ . '/../NetworkTimestamp.php';
-
 use SymbolSdk\BinaryData;
-use SymbolSdk\Network as BasicNetwork;
+use SymbolSdk\Network\Network as BasicNetwork;
 use SymbolSdk\Utils\Converter;
-use SymbolSdk\NetworkTimestampDatetimeConverter;
-
+use SymbolSdk\Symbol\Address;
+use SymbolSdk\Network\NetworkTimestampDatetimeConverter;
+use SymbolSdk\Network\NetworkTimestamp;
 use DateTime;
 
-class Address extends BinaryData
-{
-  static $SIZE = 24;
-
-  static $ENCODED_SIZE = 39;
-
-  static $NAME = 'Address';
-
-  public function __construct($addressInput)
-  {
-    if (mb_check_encoding($addressInput, 'UTF-8')) {
-      $addressInput = Converter::addressToBinary($addressInput);
-    } else if ($addressInput instanceof Address) {
-      $addressInput = $addressInput->binaryData;
-    };
-    parent::__construct(self::$SIZE, $addressInput);
-  }
-}
 
 class Network extends BasicNetwork
 {
-  /**
-   * @var Network MAINNET
-   */
   public static $MAINNET;
 
-  /**
-   * @var Network TESTNET
-   */
   public static $TESTNET;
 
-  /**
-   * @var Network[] NETWORKS
-   */
   public static $NETWORKS;
 
-  /**
-   * @var Hash256
-   */
   public $generationHashSeed;
 
-  /**
-   * Network constructor.
-   * @param string $name Network name
-   * @param int $identifier Network identifier byte
-   * @param DateTime $epochTime Network epoch time
-   * @param callable $generationHashSeedCallback Network generation hash seed callback
-   * @param callable $addressConstructor Address constructor callback
-   * @param string $addressClass Address class name
-   * @param string $networkTimestampClass NetworkTimestamp class name
-   */
   public function __construct($name, $identifier, $epochTime, $generationHashSeed)
   {
     parent::__construct(
@@ -75,8 +31,8 @@ class Network extends BasicNetwork
       function ($addressWithoutChecksum, $checksum) {
         return new Address($addressWithoutChecksum . substr($checksum, 0, 3));
       },
-      'Address',
-      'NetworkTimestamp'
+      Address::class,
+      NetworkTimestamp::class
     );
 
     $this->generationHashSeed = $generationHashSeed;

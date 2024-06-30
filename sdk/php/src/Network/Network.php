@@ -1,6 +1,6 @@
 <?php
 
-namespace SymbolSdk;
+namespace SymbolSdk\Network;
 
 class Network
 {

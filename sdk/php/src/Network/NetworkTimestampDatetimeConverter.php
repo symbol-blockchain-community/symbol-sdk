@@ -1,12 +1,12 @@
 <?php
 
-namespace SymbolSdk;
+namespace SymbolSdk\Network;
 
 use DateTime;
 
 class NetworkTimestampDatetimeConverter
 {
-  public $epoc;
+  public DateTime $epoc;
   public $timeUnits;
 
   public function __construct($epoch, $timeUnits)
@@ -26,5 +26,9 @@ class NetworkTimestampDatetimeConverter
         $this->timeUnits = 1;
         break;
     }
+  }
+
+  public function toDatetime($rawTimestamp){
+    $datetime = DateTime::createFromFormat('U', $this->epoc->getTimestamp());
   }
 }
