@@ -23,22 +23,6 @@ class MessageEncoder{
     $this->DELEGATION_MARKER = hex2bin('FE2A8061577301E2');
   }
 
-  private function filterExceptions(callable $statement, array $exceptions) {
-    try {
-      $message = $statement();
-      var_dump($message);
-      return [true, $message];
-    } catch (Exception $exception) {
-      $exceptionMessage = $exception->getMessage();
-      foreach ($exceptions as $exceptionMessagePattern) {
-        if (strpos($exceptionMessage, $exceptionMessagePattern) !== false) {
-          return [false, null];
-        }
-      }
-      throw $exception;
-    }
-  }
-
   public function publicKey(){
     return $this->_keyPair->publicKey();
   }
