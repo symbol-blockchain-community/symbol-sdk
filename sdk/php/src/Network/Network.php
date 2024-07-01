@@ -2,6 +2,7 @@
 
 namespace SymbolSdk\Network;
 use ReflectionClass;
+use SymbolSdk\CryptoTypes\PublicKey;
 
 class Network
 {
@@ -23,8 +24,9 @@ class Network
     $this->networkTimestampClass = new ReflectionClass($networkTimestampClass);
   }
 
-  public function publicKeyToAddress(string $publicKey)
+  public function publicKeyToAddress(string|PublicKey $publicKey)
   {
+    if($publicKey instanceof PublicKey) $publicKey = $publicKey->binaryData;
     $partOneHash = hash($this->_addressHasher, $publicKey, true);
     $partTwoHash = hash('ripemd160', $partOneHash, true);
     $identifierBinary = pack('C', $this->identifier);

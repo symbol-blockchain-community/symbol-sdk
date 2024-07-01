@@ -21,7 +21,7 @@ class KeyPair
     $this->_keyPair = Ed25519::keyPairFromSeed($privateKey->binaryData, self::HASH_MODE);
   }
 
-  public function sign($message){
+  public function sign(string $message){
     $signature = Ed25519::sign($message, $this->_keyPair, self::HASH_MODE);
     return new Signature($signature);
   }

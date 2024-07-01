@@ -6,6 +6,7 @@ require_once __DIR__ . '/../../vendor/autoload.php';
 
 use SymbolSdk\Impl\Ed25519;
 use Error;
+use SymbolSdk\CryptoTypes\Signature;
 use SymbolSdk\Utils\ArrayHelpers;
 
 class Verifier {
@@ -19,7 +20,7 @@ class Verifier {
     $this->publicKey = $publicKey;
   }
 
-  public function verify($message, $signature){
+  public function verify(string $message, Signature $signature){
     return Ed25519::verify($message, $signature->binaryData, $this->publicKey->binaryData, self::HASH_MODE);
   }
 }
