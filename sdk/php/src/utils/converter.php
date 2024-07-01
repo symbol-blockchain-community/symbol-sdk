@@ -117,12 +117,12 @@ class Converter {
 		throw new Exception("invalid address type");
 	}
 
+	public static function binaryToArray($binary) {
+		return array_values(unpack('C*', $binary));
+	}
+
 	public static function arrayToBinary($array) {
-		$binaryData = '';
-		foreach ($array as $element) {
-				$binaryData .= pack('C', $element);
-		}
-		return $binaryData;
+    return pack('C*', ...$array);
 	}
 
 	public static function arrayToHex($array){

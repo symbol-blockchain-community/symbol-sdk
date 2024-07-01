@@ -3,6 +3,8 @@ namespace SymbolSdk\Impl\External;
 require_once __DIR__ . '/Keccak.php';
 
 use SymbolSdk\Impl\External\Keccak;
+use SymbolSdk\Utils\Converter;
+
 use Error;
 use TypeError;
 use Exception;
@@ -848,20 +850,9 @@ class TweetNaclFastSymbol {
 		}
 	}
 
-	public static function binaryTointArray($binary){
-		$intArray = unpack('C*', $binary);
-		array_unshift($intArray, 0);
-		foreach ($intArray as $key => $value) {
-			$intArray[$key - 1] = $value;
-		}
-		array_pop($intArray);
-		array_pop($intArray);
-		return $intArray;
-	}
-
 	public static function nacl_sign($msg, $secretKey, $hasher){
-		$msg = self::binaryTointArray($msg);
-		$secretKey = self::binaryTointArray($secretKey);
+		$msg = Converter::binaryToArray($msg);
+		$secretKey = Converter::binaryToArray($secretKey);
 		self::checkArrayTypes($msg, $secretKey);
 		if (count($secretKey) !== self::$crypto_sign_SECRETKEYBYTES)
 			throw new Error('bad secret key size');
@@ -878,7 +869,7 @@ class TweetNaclFastSymbol {
 	}
 
 	public static function nacl_sign_keyPair_fromSeed($seed, $hasher) {
-		$seed = self::binaryTointArray($seed);
+		$seed = Converter::binaryToArray($seed);
 		self::checkArrayTypes($seed);
 
 		if (count($seed) !== self::$crypto_sign_SEEDBYTES)
@@ -896,9 +887,9 @@ class TweetNaclFastSymbol {
 	}
 
 	public static function nacl_sign_detached_verify($msg, $sig, $publicKey, $hasher){
-		$msg = self::binaryTointArray($msg);
-		$sig = self::binaryTointArray($sig);
-		$publicKey = self::binaryTointArray($publicKey);
+		$msg = Converter::binaryToArray($msg);
+		$sig = Converter::binaryToArray($sig);
+		$publicKey = Converter::binaryToArray($publicKey);
 		self::checkArrayTypes($msg, $sig, $publicKey);
 		if (count($sig) !== self::$crypto_sign_BYTES)
 			throw new Error('bad signature size');

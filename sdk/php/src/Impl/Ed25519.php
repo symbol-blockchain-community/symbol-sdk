@@ -5,10 +5,11 @@ require_once __DIR__ . '/../../vendor/autoload.php';
 
 use SymbolSdk\Impl\External\TweetNaclFastSymbol;
 use SymbolSdk\Utils\ArrayHelpers;
+use SymbolSdk\Utils\Converter;
 
 class Ed25519 {
   static function isCanonicalS($encodedS) {
-    $encodedS = TweetNaclFastSymbol::binaryTointArray($encodedS);
+    $encodedS = Converter::binaryToArray($encodedS);
     $reducedEncodedS = array_merge($encodedS, array_fill(0, 32, 0));
     TweetNaclFastSymbol::reduce($reducedEncodedS);
 
