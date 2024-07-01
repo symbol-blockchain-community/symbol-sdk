@@ -39,6 +39,10 @@ class AbstractTypeFormatter(ABC):
 	def get_serialize_descriptor(self) -> MethodDescriptor:
 		pass
 
+	def get_serialize_protected_descriptor(self) -> MethodDescriptor:
+		# pylint: disable=no-self-use
+		return None
+
 	@abstractmethod
 	def get_size_descriptor(self) -> MethodDescriptor:
 		pass

@@ -482,29 +482,28 @@ class StructFormatter(AbstractTypeFormatter):
 		return body
 
 	def get_serialize_descriptor(self):
-		body = ''
-
-		method_name = ''
-		result = ''
+		body = '$writer = new BinaryWriter($this->size());\n'
+		result = 'string'
 		arguments = []
-		return_str = ''
-
-		if self.is_type_abstract:
-			result = 'void'
-			method_name = 'public function _serialize'
-			arguments = ['BinaryWriter &$writer']
-		else:
-			result = 'string'
-			body += '$writer = new BinaryWriter($this->size());\n'
-			return_str = 'return $writer->getBinaryData();'
 
 		if self.base_struct:
 			body += '$this->sort();\n'
 			body += 'parent::_serialize($writer);\n'
 
-		body += self.generate_serialize_fields()
-		body += return_str
-		return MethodDescriptor(body=body, method_name=method_name, result=result, arguments=arguments)
+		if self.is_type_abstract:
+			body += '$this->_serialize($writer);\n'
+		else:
+			body += self.generate_serialize_fields()
+
+		body += 'return $writer->getBinaryData();'
+		return MethodDescriptor(body=body, result=result, arguments=arguments)
+
+	def get_serialize_protected_descriptor(self):
+		if not self.is_type_abstract:
+			return None
+
+		body = self.generate_serialize_fields()
+		return MethodDescriptor(body=body)
 
 	def generate_size_field(self, field):
 		condition = self.generate_condition(field, True)

@@ -108,7 +108,17 @@ class TypeFormatter(ClassFormatter):
 	def generate_serializer(self):
 		method_descriptor = self.provider.get_serialize_descriptor()
 		method_descriptor.method_name = 'public function serialize' if not method_descriptor.method_name else method_descriptor.method_name
-		method_descriptor.result = '' if not method_descriptor.result else method_descriptor.result
+		method_descriptor.result = 'string'
+		return self.generate_method(method_descriptor)
+
+	def generate_serializer_protected(self):
+		method_descriptor = self.provider.get_serialize_protected_descriptor()
+		if not method_descriptor:
+			return None
+
+		method_descriptor.method_name = 'public function _serialize'
+		method_descriptor.arguments = ['BinaryWriter &$writer']
+		method_descriptor.result = 'void'
 		return self.generate_method(method_descriptor)
 
 	def generate_size(self):
@@ -145,6 +155,7 @@ class TypeFormatter(ClassFormatter):
 		methods.append(self.generate_deserializer('deserialize'))
 
 		methods.append(self.generate_serializer())
+		_append_if_not_none(methods, self.generate_serializer_protected())
 
 		_append_if_not_none(methods, self.generate_representation())
 

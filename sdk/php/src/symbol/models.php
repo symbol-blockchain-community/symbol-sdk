@@ -720,6 +720,12 @@ class Transaction {
 		$instance->deadline = $deadline;
 	}
 
+	public function serialize(): string {
+		$writer = new BinaryWriter($this->size());
+		$this->_serialize($writer);
+		return $writer->getBinaryData();
+	}
+
 	public function _serialize(BinaryWriter &$writer): void {
 		$writer->write(Converter::intToBinary($this->size(), 4));
 		$writer->write(Converter::intToBinary($this->verifiableEntityHeaderReserved_1, 4));
@@ -805,6 +811,12 @@ class EmbeddedTransaction {
 		$instance->version = $version;
 		$instance->network = $network;
 		$instance->type = $type;
+	}
+
+	public function serialize(): string {
+		$writer = new BinaryWriter($this->size());
+		$this->_serialize($writer);
+		return $writer->getBinaryData();
 	}
 
 	public function _serialize(BinaryWriter &$writer): void {
@@ -1124,6 +1136,12 @@ class Block {
 		$instance->stateHash = $stateHash;
 		$instance->beneficiaryAddress = $beneficiaryAddress;
 		$instance->feeMultiplier = $feeMultiplier;
+	}
+
+	public function serialize(): string {
+		$writer = new BinaryWriter($this->size());
+		$this->_serialize($writer);
+		return $writer->getBinaryData();
 	}
 
 	public function _serialize(BinaryWriter &$writer): void {
@@ -1693,6 +1711,12 @@ class Receipt {
 
 		$instance->version = $version;
 		$instance->type = $type;
+	}
+
+	public function serialize(): string {
+		$writer = new BinaryWriter($this->size());
+		$this->_serialize($writer);
+		return $writer->getBinaryData();
 	}
 
 	public function _serialize(BinaryWriter &$writer): void {
