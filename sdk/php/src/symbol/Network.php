@@ -9,6 +9,7 @@ use SymbolSdk\Symbol\Address;
 use SymbolSdk\Network\NetworkTimestampDatetimeConverter;
 use SymbolSdk\Network\NetworkTimestamp;
 use DateTime;
+use SymbolSdk\CryptoTypes\Hash256;
 
 class Network extends BasicNetwork
 {
@@ -22,13 +23,13 @@ class Network extends BasicNetwork
 
   const BASE32_RFC4648_ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
 
-  public function __construct($name, $identifier, $epochTime, $generationHashSeed)
+  public function __construct(string $name, int $identifier, DateTime $epochTime, Hash256 $generationHashSeed)
   {
     parent::__construct(
       $name,
       $identifier,
       new NetworkTimestampDatetimeConverter($epochTime, 'milliseconds'),
-      $generationHashSeed,
+      'sha3-256',
       function ($addressWithoutChecksum, $checksum) {
         return new Address($addressWithoutChecksum . substr($checksum, 0, 3));
       },
@@ -48,14 +49,14 @@ class Network extends BasicNetwork
       'mainnet',
       0x68,
       new DateTime('2021-03-16T00:06:25Z'),
-      'sha3-256'
+      new Hash256('57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6')
     );
 
     self::$TESTNET = new Network(
       'testnet',
       0x98,
       new DateTime('2022-10-31T21:07:47Z'),
-      'sha3-256'
+      new Hash256('49D6E1CE276A85B70EAFE52349AACCA389302E7A9754BCF1221E79494FC665A4')
     );
 
     self::$NETWORKS = [self::$MAINNET, self::$TESTNET];
