@@ -2,10 +2,11 @@
 
 namespace SymbolSdk\Symbol;
 
-define('NAMESPACE_FLAG', gmp_init('8000000000000000', 16));
 use Exception;
 
 class IdGenerator {
+  private const NAMESPACE_FLAG = 0x8000000000000000;
+
   public static function generateMosaicId($ownerAddress, $nonce) {
     $hasher = hash_init('sha3-256');
     hash_update($hasher, self::uint32ToBytes($nonce));
