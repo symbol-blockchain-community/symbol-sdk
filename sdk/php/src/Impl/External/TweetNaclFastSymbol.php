@@ -576,7 +576,7 @@ class TweetNaclFastSymbol {
 		}
 	}
 
-	public static function crypto_hash(&$out, $m, $n, $hasher) {
+	public static function crypto_hash(&$out, $m, $n, string $hasher) {
 		for ($i = 0; $i < count($m); $i++) {
 			$m[$i] = pack('C*', $m[$i]);
 		}
@@ -655,7 +655,7 @@ class TweetNaclFastSymbol {
 		self::scalarmult($p, $q, $s);
 	}
 
-	private static function crypto_sign_keypair(&$pk, &$sk, $hasher) {
+	private static function crypto_sign_keypair(&$pk, &$sk, string $hasher) {
 		$d = new SplFixedArray(64);
 		$p = [self::gf(), self::gf(), self::gf(), self::gf()];
 
@@ -850,7 +850,7 @@ class TweetNaclFastSymbol {
 		}
 	}
 
-	public static function nacl_sign($msg, $secretKey, $hasher){
+	public static function nacl_sign(string $msg, string $secretKey, string $hasher){
 		$msg = Converter::binaryToArray($msg);
 		$secretKey = Converter::binaryToArray($secretKey);
 		self::checkArrayTypes($msg, $secretKey);
@@ -861,14 +861,14 @@ class TweetNaclFastSymbol {
 		return $signedMsg;
 	}
 
-	public static function nacl_sign_detached($msg, $secretKey, $hasher){
+	public static function nacl_sign_detached(string $msg, string $secretKey, string $hasher){
 		$signedMsg = self::nacl_sign($msg, $secretKey, $hasher);
 		$sig = array_fill(0, self::$crypto_sign_BYTES, 0);
 		for($i = 0; $i < count($sig); $i++) $sig[$i] = $signedMsg[$i];
-		return self::arrayToBinary($sig);
+		return Converter::arrayToBinary($sig);
 	}
 
-	public static function nacl_sign_keyPair_fromSeed($seed, $hasher) {
+	public static function nacl_sign_keyPair_fromSeed(string $seed, string $hasher) {
 		$seed = Converter::binaryToArray($seed);
 		self::checkArrayTypes($seed);
 
@@ -883,10 +883,10 @@ class TweetNaclFastSymbol {
 		}
 		self::crypto_sign_keypair($pk, $sk, $hasher);
 		
-		return ['publicKey' => self::arrayToBinary($pk), 'secretKey' => self::arrayToBinary($sk)];
+		return ['publicKey' => Converter::arrayToBinary($pk), 'secretKey' => Converter::arrayToBinary($sk)];
 	}
 
-	public static function nacl_sign_detached_verify($msg, $sig, $publicKey, $hasher){
+	public static function nacl_sign_detached_verify(string $msg, string $sig, string $publicKey, string $hasher){
 		$msg = Converter::binaryToArray($msg);
 		$sig = Converter::binaryToArray($sig);
 		$publicKey = Converter::binaryToArray($publicKey);
@@ -900,14 +900,6 @@ class TweetNaclFastSymbol {
 		for ($i = 0; $i < self::$crypto_sign_BYTES; $i++) $sm[$i] = $sig[$i];
 		for ($i = 0; $i < count($msg); $i++) $sm[$i+self::$crypto_sign_BYTES] = $msg[$i];
 		return (self::crypto_sign_open($m, $sm, count($sm), $publicKey, $hasher) >= 0);
-	}
-
-	public static function arrayToBinary($array) {
-		$binaryData = '';
-		foreach ($array as $element) {
-				$binaryData .= pack('C', $element);
-		}
-		return $binaryData;
 	}
 }
 ?>

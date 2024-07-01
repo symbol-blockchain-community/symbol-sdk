@@ -4,6 +4,7 @@ namespace SymbolSdk;
 
 use SymbolSdk\Impl\External\TweetNaclFastSymbol;
 use SymbolSdk\CryptoTypes\SharedKey256;
+use SymbolSdk\Utils\Converter;
 
 use Error;
 
@@ -59,7 +60,7 @@ class SharedKey {
       $sharedSecret = array_fill(0, 32, 0);
       TweetNaclFastSymbol::pack($sharedSecret, $result);
 
-      return TweetNaclFastSymbol::arrayToBinary($sharedSecret);
+      return Converter::arrayToBinary($sharedSecret);
     };
   }
 
@@ -67,8 +68,8 @@ class SharedKey {
     $deriveSharedSecret = self::deriveSharedSecretFactory($hasher);
     
     return function($privateKeyBinary, $otherPublicKeyBinary) use ($deriveSharedSecret, $info) {
-      $privateKeyIntArray = TweetNaclFastSymbol::binaryTointArray($privateKeyBinary);
-      $otherPublicKeyIntArray = TweetNaclFastSymbol::binaryTointArray($otherPublicKeyBinary);
+      $privateKeyIntArray = Converter::binaryToArray($privateKeyBinary);
+      $otherPublicKeyIntArray = Converter::binaryToArray($otherPublicKeyBinary);
       $sharedSecret = $deriveSharedSecret($privateKeyIntArray, $otherPublicKeyIntArray);
       $sharedKeyBinary = hash_hkdf('sha256', $sharedSecret, 32, $info);
       return new SharedKey256($sharedKeyBinary);

@@ -4,6 +4,7 @@ namespace SymbolSdk\Impl;
 require_once __DIR__ . '/../../vendor/autoload.php';
 
 use SymbolSdk\Impl\External\TweetNaclFastSymbol;
+use SymbolSdk\Symbol\KeyPair;
 use SymbolSdk\Utils\ArrayHelpers;
 use SymbolSdk\Utils\Converter;
 
@@ -22,7 +23,7 @@ class Ed25519 {
     return TweetNaclFastSymbol::nacl_sign_keyPair_fromSeed($seed, $hashMode);
   }
 
-  static function sign($message, $keyPair, $hashMode){
+  static function sign(string $message, $keyPair, string $hashMode){
     TweetNaclFastSymbol::init();
     return TweetNaclFastSymbol::nacl_sign_detached($message, $keyPair['secretKey'], $hashMode);
   }
