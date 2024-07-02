@@ -111,10 +111,10 @@ class SymbolFacade
 
 	/**
 	 * Creates a Symbol public account from a public key.
-	 * @param PublicKey publicKey Account public key.
+	 * @param PublicKey|Models\PublicKey publicKey Account public key.
 	 * @return SymbolPublicAccount Symbol public account.
 	 */
-	public function createPublicAccount(PublicKey $publicKey): SymbolPublicAccount
+	public function createPublicAccount(PublicKey|Models\PublicKey $publicKey): SymbolPublicAccount
 	{
 		return new SymbolPublicAccount($this, $publicKey);
 	}
@@ -153,8 +153,6 @@ class SymbolFacade
 	 */
 	public function signTransaction(KeyPair $keyPair, Models\Transaction $transaction): Signature
 	{
-		var_dump(strtoupper(bin2hex($this->network->generationHashSeed->binaryData)));
-		var_dump(strtoupper(bin2hex(self::transactionDataBuffer($transaction->serialize()))));
 		return $keyPair->sign($this->network->generationHashSeed->binaryData . self::transactionDataBuffer($transaction->serialize()));
 	}
 
@@ -215,7 +213,7 @@ class SymbolFacade
 	}
 
 	const COSIGNATURE_SIZE = 104;
-	public static function setMaxFee(Models\Transaction $transaction, int $feeMultiplier, int $cosignatureCount = 0)
+	public static function setMaxFee(Models\Transaction &$transaction, int $feeMultiplier, int $cosignatureCount = 0)
 	{
 		$transaction->fee = new Models\Amount(($transaction->size() + $cosignatureCount * self::COSIGNATURE_SIZE) * $feeMultiplier);
 	}
