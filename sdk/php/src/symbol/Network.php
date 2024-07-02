@@ -2,15 +2,17 @@
 
 namespace SymbolSdk\Symbol;
 
-use SymbolSdk\BinaryData;
 use SymbolSdk\Network\Network as BasicNetwork;
-use SymbolSdk\Utils\Converter;
+
 use SymbolSdk\Symbol\Address;
 use SymbolSdk\Network\NetworkTimestampDatetimeConverter;
 use SymbolSdk\Network\NetworkTimestamp;
-use DateTime;
 use SymbolSdk\CryptoTypes\Hash256;
+use DateTime;
 
+/**
+ * Represents a Symbol network.
+ */
 class Network extends BasicNetwork
 {
   public static $MAINNET;
@@ -21,8 +23,13 @@ class Network extends BasicNetwork
 
   public $generationHashSeed;
 
-  const BASE32_RFC4648_ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
-
+  /**
+   * Creates a new network with the specified name, identifier byte and generation hash seed.
+   * @param string name Network name.
+   * @param int identifier Network identifier byte.
+   * @param DateTime epochTime Network epoch time.
+   * @param Hash256 generationHashSeed Network generation hash seed.
+   */
   public function __construct(string $name, int $identifier, DateTime $epochTime, Hash256 $generationHashSeed)
   {
     parent::__construct(
@@ -60,42 +67,5 @@ class Network extends BasicNetwork
     );
 
     self::$NETWORKS = [self::$MAINNET, self::$TESTNET];
-  }
-
-  public function isValidAddressString($addressString) {
-		if ($this->_addressClass->getConstant('ENCODED_SIZE') !== strlen($addressString))
-			return false;
-
-		for ($i = 0; $i < strlen($addressString); ++$i) {
-      if (strpos(self::BASE32_RFC4648_ALPHABET, $addressString[$i]) === false)
-				return false;
-		}
-		return $this->isValidAddress($this->_addressClass->newInstance($addressString));
-	}
-
-  public function isValidAddress(BinaryData $address): bool{
-    if(Converter::binaryToInt($address->binaryData[0], 1) != $this->identifier)
-      return false;
-    $hash = hash($this->_addressHasher, substr($address->binaryData, 0, 1 + 20 ), true);
-    $checkSumFromAddress = substr($address->binaryData, 1 + 20);
-    $calculatedChecksum = substr($hash, 0, strlen($checkSumFromAddress));
-    for ($i = 0; $i < strlen($checkSumFromAddress); ++$i) {
-			if ($checkSumFromAddress[$i] != $calculatedChecksum[$i])
-				return false;
-		}
-		return true;
-  }
-
-  public function toDatetime(NetworkTimestamp $referenceNetworkTimestamp) {
-		return $this->datetimeConverter->toDatetime($referenceNetworkTimestamp->timestamp);
-	}
-
-  public function fromDatetime(DateTime $referenceDatetime) {
-		return $this->networkTimestampClass->newInstance($this->datetimeConverter->toDifference($referenceDatetime));
-	}
-
-  public function __toString()
-  {
-    return $this->name;
   }
 }

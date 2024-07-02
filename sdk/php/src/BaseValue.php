@@ -25,14 +25,14 @@ class BaseValue
 	/**
 	 * Creates a base value.
 	 * @param int $size Size of the integer.
-	 * @param int $value Value.
+	 * @param int|float|string $value Value.
 	 */
-	public function __construct(int $size, $value)
+	public function __construct(int $size, int|string $value)
 	{
 		$this->size = $size;
-		if(is_float($value)) 
+		if (is_float($value))
 			throw new Error('Value ' . $value . ' exceeds the maximum integer size (' . PHP_INT_MAX . ') supported by this system. However, if the value is within the 64-bit integer range, you can pass it as a string (e.g., \'0xFFFFFFFFFFFFFFFF\' or \'18446744073709551615\').');
-		if(is_string($value)) {
+		if (is_string($value)) {
 			$this->value = Converter::intStringToInt($value);
 		} else {
 			$this->value = $value;

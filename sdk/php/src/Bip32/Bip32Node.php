@@ -1,14 +1,24 @@
 <?php
+
 namespace SymbolSdk\Bip32;
 
 use SymbolSdk\CryptoTypes\PrivateKey;
 use SymbolSdk\Utils\Converter;
 
-class Bip32Node {
-	public string $seed;
+/**
+ * Representation of a BIP32 node.
+ */
+class Bip32Node
+{
 	public PrivateKey $privateKey;
+	public string $seed;
 	public string $chainCode;
 
+	/**
+	 * Creates a BIP32 node around a key and data.
+	 * @param string hmacKey BIP32 HMAC key.
+	 * @param string data BIP32 seed.
+	 */
 	public function __construct(string $hmacKey, string $seed)
 	{
 		$this->seed = $seed;
@@ -17,7 +27,13 @@ class Bip32Node {
 		$this->chainCode = substr($hmacResult, PrivateKey::$SIZE);
 	}
 
-	public function deriveOne(int $identifier){
+	/**
+	 * Derives a direct child node with specified identifier.
+	 * @param int identifier Child identifier.
+	 * @return Bip32Node BIP32 child node.
+	 */
+	public function deriveOne(int $identifier): Bip32Node
+	{
 		$childData = array_fill(0, 1 + PrivateKey::$SIZE + 4, 0);
 		$childData[0] = 0;
 		$childData[count($childData) - 4] = 0x80;
@@ -31,7 +47,13 @@ class Bip32Node {
 		return new Bip32Node($this->chainCode, Converter::arrayToBinary($childData));
 	}
 
-	public function derivePath(array $path){
+	/**
+	 * Derives a descendent node with specified path.
+	 * @param array path BIP32 path.
+	 * @return Bip32Node BIP32 node at the end of the path.
+	 */
+	public function derivePath(array $path): Bip32Node
+	{
 		$nextNode = $this;
 		foreach ($path as $identifier) {
 			$nextNode = $nextNode->deriveOne($identifier);

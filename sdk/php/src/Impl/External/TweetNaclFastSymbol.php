@@ -1,6 +1,5 @@
 <?php
 namespace SymbolSdk\Impl\External;
-require_once __DIR__ . '/Keccak.php';
 
 use SymbolSdk\Impl\External\Keccak;
 use SymbolSdk\Utils\Converter;

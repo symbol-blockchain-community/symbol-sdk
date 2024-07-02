@@ -1,13 +1,23 @@
 <?php
+
 namespace SymbolSdk\Symbol;
 
 use SymbolSdk\CryptoTypes\PrivateKey;
 use SymbolSdk\Symbol\KeyPair;
 
-class VotingKeysGenerator{
+/**
+ * Generates symbol voting keys.
+ */
+class VotingKeysGenerator
+{
   private KeyPair $_rootKeyPair;
   private $_privateKeyGenerator;
 
+  /**
+   * Creates a generator around a voting root key pair.
+   * @param KeyPair rootKeyPair Voting root key pair.
+   * @param callable privateKeyGenerator Private key generator.
+   */
   public function __construct(KeyPair $rootKeyPair, callable $privateKeyGenerator = null)
   {
     $this->_rootKeyPair = $rootKeyPair;
@@ -19,7 +29,14 @@ class VotingKeysGenerator{
     return PrivateKey::random();
   }
 
-  public function generate(int $startEpoch, int $endEpoch){
+  /**
+   * Generates voting keys for specified epochs.
+   * @param int startEpoch Start epoch.
+   * @param int endEpoch End epoch.
+   * @return string Serialized voting keys.
+   */
+  public function generate(int $startEpoch, int $endEpoch)
+  {
     $numEpochs = $endEpoch - $startEpoch + 1;
     $buffer = '';
     $buffer .= pack('P', $startEpoch); // start key identifier
@@ -32,8 +49,8 @@ class VotingKeysGenerator{
 
     for ($i = 0; $i < $numEpochs; ++$i) {
       $identifier = $endEpoch - $i;
-			$childPrivateKey = call_user_func($this->_privateKeyGenerator);
-			$childKeyPair = new KeyPair($childPrivateKey);
+      $childPrivateKey = call_user_func($this->_privateKeyGenerator);
+      $childKeyPair = new KeyPair($childPrivateKey);
 
       $parentSignedPayloadBuffer = '';
       $parentSignedPayloadBuffer .= $childKeyPair->publicKey()->binaryData;

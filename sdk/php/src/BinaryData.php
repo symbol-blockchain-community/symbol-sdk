@@ -21,7 +21,7 @@ class BinaryData
 	 * @param int fixedSize Size of the array.
 	 * @param string hex string.
 	 */
-	public function __construct($fixedSize, $binaryData)
+	public function __construct(int $fixedSize, string $binaryData)
 	{
 		if (Converter::isHexString($binaryData)) {
 			$binaryData = hex2bin($binaryData);
@@ -42,7 +42,7 @@ class BinaryData
 	 * Returns string representation of this object.
 	 * @return string String representation of this object
 	 */
-	public function __toString()
+	public function __toString(): string
 	{
 		if (get_class($this) == 'SymbolSdk\Symbol\Address' || get_class($this) == 'SymbolSdk\Symbol\UnresolvedAddress') {
 			return Converter::binaryToAddress($this->binaryData);

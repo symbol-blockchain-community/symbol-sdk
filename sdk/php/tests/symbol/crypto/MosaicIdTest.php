@@ -6,7 +6,7 @@ require_once __DIR__ . '/../../../src/symbol/models.php';
 require_once __DIR__ . '/../../../src/symbol/idGenerator.php';
 
 use SymbolSdk\Symbol\IdGenerator;
-use SymbolSdk\Symbol\Models\Address;
+use SymbolSdk\Symbol\Address;
 use PHPUnit\Framework\TestCase;
 
 class MosaicIdTest extends TestCase

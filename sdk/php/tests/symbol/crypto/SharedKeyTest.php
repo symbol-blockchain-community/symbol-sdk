@@ -6,6 +6,7 @@ require_once __DIR__ . '/../../../src/symbol/models.php';
 
 use PHPUnit\Framework\TestCase;
 use SymbolSdk\CryptoTypes\PrivateKey;
+use SymbolSdk\CryptoTypes\PublicKey;
 use SymbolSdk\Symbol\KeyPair;
 use SymbolSdk\Symbol\SharedKeySymbol;
 

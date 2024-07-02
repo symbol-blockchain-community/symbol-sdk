@@ -8,12 +8,14 @@ use SymbolSdk\Utils\Converter;
 
 use Error;
 
-class SharedKey {
-  private static function isCanonicalKey($intArray){
+class SharedKey
+{
+  private static function isCanonicalKey($intArray)
+  {
     // 0 != a if bits 8 through 254 of data are all set
     $a = ($intArray[31] & 0x7F) ^ 0x7F;
     for ($i = 30; $i > 0; --$i) {
-        $a |= $intArray[$i] ^ 0xFF;
+      $a |= $intArray[$i] ^ 0xFF;
     }
 
     $a = ($a - 1) >> 8;
@@ -23,7 +25,8 @@ class SharedKey {
     return 0 != 1 - ($a & $b & 1);
   }
 
-  private static function isInMainSubgroup($point) {
+  private static function isInMainSubgroup($point)
+  {
     $result = [TweetNaclFastSymbol::gf(), TweetNaclFastSymbol::gf(), TweetNaclFastSymbol::gf(), TweetNaclFastSymbol::gf()];
     // multiply by group order
     TweetNaclFastSymbol::scalarmult($result, $point, TweetNaclFastSymbol::$L);
@@ -33,12 +36,18 @@ class SharedKey {
     $areEqual = TweetNaclFastSymbol::neq25519($result[1], $result[2]);
     $isZero = TweetNaclFastSymbol::neq25519($gf0, $result[0]);
 
-	  // yes, this is supposed to be  bit OR
+    // yes, this is supposed to be  bit OR
     return 0 === ($areEqual | $isZero);
   }
 
-  public static function deriveSharedSecretFactory($hasher) {
-    return function($privateKeyIntArray, $otherPublicKeyIntArray) use ($hasher) {
+  /**
+   * Creates a shared secret factory given a hash function.
+   * @param string hasher name.
+   * @return callable Creates a shared secret from a raw private key and public key.
+   */
+  public static function deriveSharedSecretFactory(string $hasher): callable
+  {
+    return function ($privateKeyIntArray, $otherPublicKeyIntArray) use ($hasher) {
       $point = [TweetNaclFastSymbol::gf(), TweetNaclFastSymbol::gf(), TweetNaclFastSymbol::gf(), TweetNaclFastSymbol::gf()];
       if (!self::isCanonicalKey($otherPublicKeyIntArray) || 0 !== TweetNaclFastSymbol::unpackneg($point, $otherPublicKeyIntArray) || !self::isInMainSubgroup($point)) {
         throw new Error('invalid point');
@@ -64,10 +73,17 @@ class SharedKey {
     };
   }
 
-  public static function deriveSharedKeyFactory($info, $hasher) {
+  /**
+   * Creates a shared key factory given a tag and a hash function.
+   * @param string info Tag used in HKDF algorithm.
+   * @param string hasher name.
+   * @return callable Creates a shared key from a raw private key and public key.
+   */
+  public static function deriveSharedKeyFactory($info, $hasher): callable
+  {
     $deriveSharedSecret = self::deriveSharedSecretFactory($hasher);
-    
-    return function($privateKeyBinary, $otherPublicKeyBinary) use ($deriveSharedSecret, $info) {
+
+    return function ($privateKeyBinary, $otherPublicKeyBinary) use ($deriveSharedSecret, $info) {
       $privateKeyIntArray = Converter::binaryToArray($privateKeyBinary);
       $otherPublicKeyIntArray = Converter::binaryToArray($otherPublicKeyBinary);
       $sharedSecret = $deriveSharedSecret($privateKeyIntArray, $otherPublicKeyIntArray);
