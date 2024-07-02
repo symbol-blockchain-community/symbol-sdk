@@ -213,4 +213,10 @@ class SymbolFacade
 		$hexPayload = strtoupper(bin2hex($transactionBuffer));
 		return $isPlainPayload ? $hexPayload : json_encode(['payload' => $hexPayload]);
 	}
+
+	const COSIGNATURE_SIZE = 104;
+	public static function setMaxFee(Models\Transaction $transaction, int $feeMultiplier, int $cosignatureCount = 0)
+	{
+		$transaction->fee = new Models\Amount(($transaction->size() + $cosignatureCount * self::COSIGNATURE_SIZE) * $feeMultiplier);
+	}
 }
