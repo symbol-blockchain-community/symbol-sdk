@@ -1263,6 +1263,10 @@ class NemesisBlockV1 extends Block {
 	public static function deserialize(BinaryReader $reader){
 		$instance = new NemesisBlockV1();
 
+		$size = Converter::binaryToInt($reader->read(4), 4);
+		$reader->retreat(4);
+		$reader = new BinaryReader($reader->read($size));
+		$reader->retreat($size);
 		Block::_deserialize($reader, $instance);
 		$votingEligibleAccountsCount = Converter::binaryToInt($reader->read(4), 4);
 		$harvestingEligibleAccountsCount = Converter::binaryToInt($reader->read(8), 8);
@@ -1364,6 +1368,10 @@ class NormalBlockV1 extends Block {
 	public static function deserialize(BinaryReader $reader){
 		$instance = new NormalBlockV1();
 
+		$size = Converter::binaryToInt($reader->read(4), 4);
+		$reader->retreat(4);
+		$reader = new BinaryReader($reader->read($size));
+		$reader->retreat($size);
 		Block::_deserialize($reader, $instance);
 		$blockHeaderReserved_1 = Converter::binaryToInt($reader->read(4), 4);
 		if (0 !== $blockHeaderReserved_1)
@@ -1469,6 +1477,10 @@ class ImportanceBlockV1 extends Block {
 	public static function deserialize(BinaryReader $reader){
 		$instance = new ImportanceBlockV1();
 
+		$size = Converter::binaryToInt($reader->read(4), 4);
+		$reader->retreat(4);
+		$reader = new BinaryReader($reader->read($size));
+		$reader->retreat($size);
 		Block::_deserialize($reader, $instance);
 		$votingEligibleAccountsCount = Converter::binaryToInt($reader->read(4), 4);
 		$harvestingEligibleAccountsCount = Converter::binaryToInt($reader->read(8), 8);
@@ -1764,6 +1776,10 @@ class HarvestFeeReceipt extends Receipt {
 	public static function deserialize(BinaryReader $reader){
 		$instance = new HarvestFeeReceipt();
 
+		$size = Converter::binaryToInt($reader->read(4), 4);
+		$reader->retreat(4);
+		$reader = new BinaryReader($reader->read($size));
+		$reader->retreat($size);
 		Receipt::_deserialize($reader, $instance);
 		$mosaic = Mosaic::deserialize($reader);
 		$targetAddress = Address::deserialize($reader);
@@ -1819,6 +1835,10 @@ class InflationReceipt extends Receipt {
 	public static function deserialize(BinaryReader $reader){
 		$instance = new InflationReceipt();
 
+		$size = Converter::binaryToInt($reader->read(4), 4);
+		$reader->retreat(4);
+		$reader = new BinaryReader($reader->read($size));
+		$reader->retreat($size);
 		Receipt::_deserialize($reader, $instance);
 		$mosaic = Mosaic::deserialize($reader);
 
@@ -1874,6 +1894,10 @@ class LockHashCreatedFeeReceipt extends Receipt {
 	public static function deserialize(BinaryReader $reader){
 		$instance = new LockHashCreatedFeeReceipt();
 
+		$size = Converter::binaryToInt($reader->read(4), 4);
+		$reader->retreat(4);
+		$reader = new BinaryReader($reader->read($size));
+		$reader->retreat($size);
 		Receipt::_deserialize($reader, $instance);
 		$mosaic = Mosaic::deserialize($reader);
 		$targetAddress = Address::deserialize($reader);
@@ -1933,6 +1957,10 @@ class LockHashCompletedFeeReceipt extends Receipt {
 	public static function deserialize(BinaryReader $reader){
 		$instance = new LockHashCompletedFeeReceipt();
 
+		$size = Converter::binaryToInt($reader->read(4), 4);
+		$reader->retreat(4);
+		$reader = new BinaryReader($reader->read($size));
+		$reader->retreat($size);
 		Receipt::_deserialize($reader, $instance);
 		$mosaic = Mosaic::deserialize($reader);
 		$targetAddress = Address::deserialize($reader);
@@ -1992,6 +2020,10 @@ class LockHashExpiredFeeReceipt extends Receipt {
 	public static function deserialize(BinaryReader $reader){
 		$instance = new LockHashExpiredFeeReceipt();
 
+		$size = Converter::binaryToInt($reader->read(4), 4);
+		$reader->retreat(4);
+		$reader = new BinaryReader($reader->read($size));
+		$reader->retreat($size);
 		Receipt::_deserialize($reader, $instance);
 		$mosaic = Mosaic::deserialize($reader);
 		$targetAddress = Address::deserialize($reader);
@@ -2051,6 +2083,10 @@ class LockSecretCreatedFeeReceipt extends Receipt {
 	public static function deserialize(BinaryReader $reader){
 		$instance = new LockSecretCreatedFeeReceipt();
 
+		$size = Converter::binaryToInt($reader->read(4), 4);
+		$reader->retreat(4);
+		$reader = new BinaryReader($reader->read($size));
+		$reader->retreat($size);
 		Receipt::_deserialize($reader, $instance);
 		$mosaic = Mosaic::deserialize($reader);
 		$targetAddress = Address::deserialize($reader);
@@ -2110,6 +2146,10 @@ class LockSecretCompletedFeeReceipt extends Receipt {
 	public static function deserialize(BinaryReader $reader){
 		$instance = new LockSecretCompletedFeeReceipt();
 
+		$size = Converter::binaryToInt($reader->read(4), 4);
+		$reader->retreat(4);
+		$reader = new BinaryReader($reader->read($size));
+		$reader->retreat($size);
 		Receipt::_deserialize($reader, $instance);
 		$mosaic = Mosaic::deserialize($reader);
 		$targetAddress = Address::deserialize($reader);
@@ -2169,6 +2209,10 @@ class LockSecretExpiredFeeReceipt extends Receipt {
 	public static function deserialize(BinaryReader $reader){
 		$instance = new LockSecretExpiredFeeReceipt();
 
+		$size = Converter::binaryToInt($reader->read(4), 4);
+		$reader->retreat(4);
+		$reader = new BinaryReader($reader->read($size));
+		$reader->retreat($size);
 		Receipt::_deserialize($reader, $instance);
 		$mosaic = Mosaic::deserialize($reader);
 		$targetAddress = Address::deserialize($reader);
@@ -2223,6 +2267,10 @@ class MosaicExpiredReceipt extends Receipt {
 	public static function deserialize(BinaryReader $reader){
 		$instance = new MosaicExpiredReceipt();
 
+		$size = Converter::binaryToInt($reader->read(4), 4);
+		$reader->retreat(4);
+		$reader = new BinaryReader($reader->read($size));
+		$reader->retreat($size);
 		Receipt::_deserialize($reader, $instance);
 		$artifactId = MosaicId::deserialize($reader);
 
@@ -2287,6 +2335,10 @@ class MosaicRentalFeeReceipt extends Receipt {
 	public static function deserialize(BinaryReader $reader){
 		$instance = new MosaicRentalFeeReceipt();
 
+		$size = Converter::binaryToInt($reader->read(4), 4);
+		$reader->retreat(4);
+		$reader = new BinaryReader($reader->read($size));
+		$reader->retreat($size);
 		Receipt::_deserialize($reader, $instance);
 		$mosaic = Mosaic::deserialize($reader);
 		$senderAddress = Address::deserialize($reader);
@@ -2449,6 +2501,10 @@ class NamespaceExpiredReceipt extends Receipt {
 	public static function deserialize(BinaryReader $reader){
 		$instance = new NamespaceExpiredReceipt();
 
+		$size = Converter::binaryToInt($reader->read(4), 4);
+		$reader->retreat(4);
+		$reader = new BinaryReader($reader->read($size));
+		$reader->retreat($size);
 		Receipt::_deserialize($reader, $instance);
 		$artifactId = NamespaceId::deserialize($reader);
 
@@ -2499,6 +2555,10 @@ class NamespaceDeletedReceipt extends Receipt {
 	public static function deserialize(BinaryReader $reader){
 		$instance = new NamespaceDeletedReceipt();
 
+		$size = Converter::binaryToInt($reader->read(4), 4);
+		$reader->retreat(4);
+		$reader = new BinaryReader($reader->read($size));
+		$reader->retreat($size);
 		Receipt::_deserialize($reader, $instance);
 		$artifactId = NamespaceId::deserialize($reader);
 
@@ -2563,6 +2623,10 @@ class NamespaceRentalFeeReceipt extends Receipt {
 	public static function deserialize(BinaryReader $reader){
 		$instance = new NamespaceRentalFeeReceipt();
 
+		$size = Converter::binaryToInt($reader->read(4), 4);
+		$reader->retreat(4);
+		$reader = new BinaryReader($reader->read($size));
+		$reader->retreat($size);
 		Receipt::_deserialize($reader, $instance);
 		$mosaic = Mosaic::deserialize($reader);
 		$senderAddress = Address::deserialize($reader);
@@ -3002,6 +3066,10 @@ class AccountKeyLinkTransactionV1 extends Transaction {
 	public static function deserialize(BinaryReader $reader){
 		$instance = new AccountKeyLinkTransactionV1();
 
+		$size = Converter::binaryToInt($reader->read(4), 4);
+		$reader->retreat(4);
+		$reader = new BinaryReader($reader->read($size));
+		$reader->retreat($size);
 		Transaction::_deserialize($reader, $instance);
 		$linkedPublicKey = PublicKey::deserialize($reader);
 		$linkAction = LinkAction::deserialize($reader);
@@ -3069,6 +3137,10 @@ class EmbeddedAccountKeyLinkTransactionV1 extends EmbeddedTransaction {
 	public static function deserialize(BinaryReader $reader){
 		$instance = new EmbeddedAccountKeyLinkTransactionV1();
 
+		$size = Converter::binaryToInt($reader->read(4), 4);
+		$reader->retreat(4);
+		$reader = new BinaryReader($reader->read($size));
+		$reader->retreat($size);
 		EmbeddedTransaction::_deserialize($reader, $instance);
 		$linkedPublicKey = PublicKey::deserialize($reader);
 		$linkAction = LinkAction::deserialize($reader);
@@ -3142,6 +3214,10 @@ class NodeKeyLinkTransactionV1 extends Transaction {
 	public static function deserialize(BinaryReader $reader){
 		$instance = new NodeKeyLinkTransactionV1();
 
+		$size = Converter::binaryToInt($reader->read(4), 4);
+		$reader->retreat(4);
+		$reader = new BinaryReader($reader->read($size));
+		$reader->retreat($size);
 		Transaction::_deserialize($reader, $instance);
 		$linkedPublicKey = PublicKey::deserialize($reader);
 		$linkAction = LinkAction::deserialize($reader);
@@ -3209,6 +3285,10 @@ class EmbeddedNodeKeyLinkTransactionV1 extends EmbeddedTransaction {
 	public static function deserialize(BinaryReader $reader){
 		$instance = new EmbeddedNodeKeyLinkTransactionV1();
 
+		$size = Converter::binaryToInt($reader->read(4), 4);
+		$reader->retreat(4);
+		$reader = new BinaryReader($reader->read($size));
+		$reader->retreat($size);
 		EmbeddedTransaction::_deserialize($reader, $instance);
 		$linkedPublicKey = PublicKey::deserialize($reader);
 		$linkAction = LinkAction::deserialize($reader);
@@ -3413,6 +3493,10 @@ class AggregateCompleteTransactionV1 extends Transaction {
 	public static function deserialize(BinaryReader $reader){
 		$instance = new AggregateCompleteTransactionV1();
 
+		$size = Converter::binaryToInt($reader->read(4), 4);
+		$reader->retreat(4);
+		$reader = new BinaryReader($reader->read($size));
+		$reader->retreat($size);
 		Transaction::_deserialize($reader, $instance);
 		$transactionsHash = Hash256::deserialize($reader);
 		$payloadSize = Converter::binaryToInt($reader->read(4), 4);
@@ -3506,6 +3590,10 @@ class AggregateCompleteTransactionV2 extends Transaction {
 	public static function deserialize(BinaryReader $reader){
 		$instance = new AggregateCompleteTransactionV2();
 
+		$size = Converter::binaryToInt($reader->read(4), 4);
+		$reader->retreat(4);
+		$reader = new BinaryReader($reader->read($size));
+		$reader->retreat($size);
 		Transaction::_deserialize($reader, $instance);
 		$transactionsHash = Hash256::deserialize($reader);
 		$payloadSize = Converter::binaryToInt($reader->read(4), 4);
@@ -3599,6 +3687,10 @@ class AggregateBondedTransactionV1 extends Transaction {
 	public static function deserialize(BinaryReader $reader){
 		$instance = new AggregateBondedTransactionV1();
 
+		$size = Converter::binaryToInt($reader->read(4), 4);
+		$reader->retreat(4);
+		$reader = new BinaryReader($reader->read($size));
+		$reader->retreat($size);
 		Transaction::_deserialize($reader, $instance);
 		$transactionsHash = Hash256::deserialize($reader);
 		$payloadSize = Converter::binaryToInt($reader->read(4), 4);
@@ -3692,6 +3784,10 @@ class AggregateBondedTransactionV2 extends Transaction {
 	public static function deserialize(BinaryReader $reader){
 		$instance = new AggregateBondedTransactionV2();
 
+		$size = Converter::binaryToInt($reader->read(4), 4);
+		$reader->retreat(4);
+		$reader = new BinaryReader($reader->read($size));
+		$reader->retreat($size);
 		Transaction::_deserialize($reader, $instance);
 		$transactionsHash = Hash256::deserialize($reader);
 		$payloadSize = Converter::binaryToInt($reader->read(4), 4);
@@ -3785,6 +3881,10 @@ class VotingKeyLinkTransactionV1 extends Transaction {
 	public static function deserialize(BinaryReader $reader){
 		$instance = new VotingKeyLinkTransactionV1();
 
+		$size = Converter::binaryToInt($reader->read(4), 4);
+		$reader->retreat(4);
+		$reader = new BinaryReader($reader->read($size));
+		$reader->retreat($size);
 		Transaction::_deserialize($reader, $instance);
 		$linkedPublicKey = VotingPublicKey::deserialize($reader);
 		$startEpoch = FinalizationEpoch::deserialize($reader);
@@ -3870,6 +3970,10 @@ class EmbeddedVotingKeyLinkTransactionV1 extends EmbeddedTransaction {
 	public static function deserialize(BinaryReader $reader){
 		$instance = new EmbeddedVotingKeyLinkTransactionV1();
 
+		$size = Converter::binaryToInt($reader->read(4), 4);
+		$reader->retreat(4);
+		$reader = new BinaryReader($reader->read($size));
+		$reader->retreat($size);
 		EmbeddedTransaction::_deserialize($reader, $instance);
 		$linkedPublicKey = VotingPublicKey::deserialize($reader);
 		$startEpoch = FinalizationEpoch::deserialize($reader);
@@ -3951,6 +4055,10 @@ class VrfKeyLinkTransactionV1 extends Transaction {
 	public static function deserialize(BinaryReader $reader){
 		$instance = new VrfKeyLinkTransactionV1();
 
+		$size = Converter::binaryToInt($reader->read(4), 4);
+		$reader->retreat(4);
+		$reader = new BinaryReader($reader->read($size));
+		$reader->retreat($size);
 		Transaction::_deserialize($reader, $instance);
 		$linkedPublicKey = PublicKey::deserialize($reader);
 		$linkAction = LinkAction::deserialize($reader);
@@ -4018,6 +4126,10 @@ class EmbeddedVrfKeyLinkTransactionV1 extends EmbeddedTransaction {
 	public static function deserialize(BinaryReader $reader){
 		$instance = new EmbeddedVrfKeyLinkTransactionV1();
 
+		$size = Converter::binaryToInt($reader->read(4), 4);
+		$reader->retreat(4);
+		$reader = new BinaryReader($reader->read($size));
+		$reader->retreat($size);
 		EmbeddedTransaction::_deserialize($reader, $instance);
 		$linkedPublicKey = PublicKey::deserialize($reader);
 		$linkAction = LinkAction::deserialize($reader);
@@ -4097,6 +4209,10 @@ class HashLockTransactionV1 extends Transaction {
 	public static function deserialize(BinaryReader $reader){
 		$instance = new HashLockTransactionV1();
 
+		$size = Converter::binaryToInt($reader->read(4), 4);
+		$reader->retreat(4);
+		$reader = new BinaryReader($reader->read($size));
+		$reader->retreat($size);
 		Transaction::_deserialize($reader, $instance);
 		$mosaic = UnresolvedMosaic::deserialize($reader);
 		$duration = BlockDuration::deserialize($reader);
@@ -4174,6 +4290,10 @@ class EmbeddedHashLockTransactionV1 extends EmbeddedTransaction {
 	public static function deserialize(BinaryReader $reader){
 		$instance = new EmbeddedHashLockTransactionV1();
 
+		$size = Converter::binaryToInt($reader->read(4), 4);
+		$reader->retreat(4);
+		$reader = new BinaryReader($reader->read($size));
+		$reader->retreat($size);
 		EmbeddedTransaction::_deserialize($reader, $instance);
 		$mosaic = UnresolvedMosaic::deserialize($reader);
 		$duration = BlockDuration::deserialize($reader);
@@ -4312,6 +4432,10 @@ class SecretLockTransactionV1 extends Transaction {
 	public static function deserialize(BinaryReader $reader){
 		$instance = new SecretLockTransactionV1();
 
+		$size = Converter::binaryToInt($reader->read(4), 4);
+		$reader->retreat(4);
+		$reader = new BinaryReader($reader->read($size));
+		$reader->retreat($size);
 		Transaction::_deserialize($reader, $instance);
 		$recipientAddress = UnresolvedAddress::deserialize($reader);
 		$secret = Hash256::deserialize($reader);
@@ -4407,6 +4531,10 @@ class EmbeddedSecretLockTransactionV1 extends EmbeddedTransaction {
 	public static function deserialize(BinaryReader $reader){
 		$instance = new EmbeddedSecretLockTransactionV1();
 
+		$size = Converter::binaryToInt($reader->read(4), 4);
+		$reader->retreat(4);
+		$reader = new BinaryReader($reader->read($size));
+		$reader->retreat($size);
 		EmbeddedTransaction::_deserialize($reader, $instance);
 		$recipientAddress = UnresolvedAddress::deserialize($reader);
 		$secret = Hash256::deserialize($reader);
@@ -4503,6 +4631,10 @@ class SecretProofTransactionV1 extends Transaction {
 	public static function deserialize(BinaryReader $reader){
 		$instance = new SecretProofTransactionV1();
 
+		$size = Converter::binaryToInt($reader->read(4), 4);
+		$reader->retreat(4);
+		$reader = new BinaryReader($reader->read($size));
+		$reader->retreat($size);
 		Transaction::_deserialize($reader, $instance);
 		$recipientAddress = UnresolvedAddress::deserialize($reader);
 		$secret = Hash256::deserialize($reader);
@@ -4591,6 +4723,10 @@ class EmbeddedSecretProofTransactionV1 extends EmbeddedTransaction {
 	public static function deserialize(BinaryReader $reader){
 		$instance = new EmbeddedSecretProofTransactionV1();
 
+		$size = Converter::binaryToInt($reader->read(4), 4);
+		$reader->retreat(4);
+		$reader = new BinaryReader($reader->read($size));
+		$reader->retreat($size);
 		EmbeddedTransaction::_deserialize($reader, $instance);
 		$recipientAddress = UnresolvedAddress::deserialize($reader);
 		$secret = Hash256::deserialize($reader);
@@ -4685,6 +4821,10 @@ class AccountMetadataTransactionV1 extends Transaction {
 	public static function deserialize(BinaryReader $reader){
 		$instance = new AccountMetadataTransactionV1();
 
+		$size = Converter::binaryToInt($reader->read(4), 4);
+		$reader->retreat(4);
+		$reader = new BinaryReader($reader->read($size));
+		$reader->retreat($size);
 		Transaction::_deserialize($reader, $instance);
 		$targetAddress = UnresolvedAddress::deserialize($reader);
 		$scopedMetadataKey = Converter::binaryToInt($reader->read(8), 8);
@@ -4773,6 +4913,10 @@ class EmbeddedAccountMetadataTransactionV1 extends EmbeddedTransaction {
 	public static function deserialize(BinaryReader $reader){
 		$instance = new EmbeddedAccountMetadataTransactionV1();
 
+		$size = Converter::binaryToInt($reader->read(4), 4);
+		$reader->retreat(4);
+		$reader = new BinaryReader($reader->read($size));
+		$reader->retreat($size);
 		EmbeddedTransaction::_deserialize($reader, $instance);
 		$targetAddress = UnresolvedAddress::deserialize($reader);
 		$scopedMetadataKey = Converter::binaryToInt($reader->read(8), 8);
@@ -4872,6 +5016,10 @@ class MosaicMetadataTransactionV1 extends Transaction {
 	public static function deserialize(BinaryReader $reader){
 		$instance = new MosaicMetadataTransactionV1();
 
+		$size = Converter::binaryToInt($reader->read(4), 4);
+		$reader->retreat(4);
+		$reader = new BinaryReader($reader->read($size));
+		$reader->retreat($size);
 		Transaction::_deserialize($reader, $instance);
 		$targetAddress = UnresolvedAddress::deserialize($reader);
 		$scopedMetadataKey = Converter::binaryToInt($reader->read(8), 8);
@@ -4969,6 +5117,10 @@ class EmbeddedMosaicMetadataTransactionV1 extends EmbeddedTransaction {
 	public static function deserialize(BinaryReader $reader){
 		$instance = new EmbeddedMosaicMetadataTransactionV1();
 
+		$size = Converter::binaryToInt($reader->read(4), 4);
+		$reader->retreat(4);
+		$reader = new BinaryReader($reader->read($size));
+		$reader->retreat($size);
 		EmbeddedTransaction::_deserialize($reader, $instance);
 		$targetAddress = UnresolvedAddress::deserialize($reader);
 		$scopedMetadataKey = Converter::binaryToInt($reader->read(8), 8);
@@ -5072,6 +5224,10 @@ class NamespaceMetadataTransactionV1 extends Transaction {
 	public static function deserialize(BinaryReader $reader){
 		$instance = new NamespaceMetadataTransactionV1();
 
+		$size = Converter::binaryToInt($reader->read(4), 4);
+		$reader->retreat(4);
+		$reader = new BinaryReader($reader->read($size));
+		$reader->retreat($size);
 		Transaction::_deserialize($reader, $instance);
 		$targetAddress = UnresolvedAddress::deserialize($reader);
 		$scopedMetadataKey = Converter::binaryToInt($reader->read(8), 8);
@@ -5169,6 +5325,10 @@ class EmbeddedNamespaceMetadataTransactionV1 extends EmbeddedTransaction {
 	public static function deserialize(BinaryReader $reader){
 		$instance = new EmbeddedNamespaceMetadataTransactionV1();
 
+		$size = Converter::binaryToInt($reader->read(4), 4);
+		$reader->retreat(4);
+		$reader = new BinaryReader($reader->read($size));
+		$reader->retreat($size);
 		EmbeddedTransaction::_deserialize($reader, $instance);
 		$targetAddress = UnresolvedAddress::deserialize($reader);
 		$scopedMetadataKey = Converter::binaryToInt($reader->read(8), 8);
@@ -5385,6 +5545,10 @@ class MosaicDefinitionTransactionV1 extends Transaction {
 	public static function deserialize(BinaryReader $reader){
 		$instance = new MosaicDefinitionTransactionV1();
 
+		$size = Converter::binaryToInt($reader->read(4), 4);
+		$reader->retreat(4);
+		$reader = new BinaryReader($reader->read($size));
+		$reader->retreat($size);
 		Transaction::_deserialize($reader, $instance);
 		$id = MosaicId::deserialize($reader);
 		$duration = BlockDuration::deserialize($reader);
@@ -5479,6 +5643,10 @@ class EmbeddedMosaicDefinitionTransactionV1 extends EmbeddedTransaction {
 	public static function deserialize(BinaryReader $reader){
 		$instance = new EmbeddedMosaicDefinitionTransactionV1();
 
+		$size = Converter::binaryToInt($reader->read(4), 4);
+		$reader->retreat(4);
+		$reader = new BinaryReader($reader->read($size));
+		$reader->retreat($size);
 		EmbeddedTransaction::_deserialize($reader, $instance);
 		$id = MosaicId::deserialize($reader);
 		$duration = BlockDuration::deserialize($reader);
@@ -5569,6 +5737,10 @@ class MosaicSupplyChangeTransactionV1 extends Transaction {
 	public static function deserialize(BinaryReader $reader){
 		$instance = new MosaicSupplyChangeTransactionV1();
 
+		$size = Converter::binaryToInt($reader->read(4), 4);
+		$reader->retreat(4);
+		$reader = new BinaryReader($reader->read($size));
+		$reader->retreat($size);
 		Transaction::_deserialize($reader, $instance);
 		$mosaicId = UnresolvedMosaicId::deserialize($reader);
 		$delta = Amount::deserialize($reader);
@@ -5645,6 +5817,10 @@ class EmbeddedMosaicSupplyChangeTransactionV1 extends EmbeddedTransaction {
 	public static function deserialize(BinaryReader $reader){
 		$instance = new EmbeddedMosaicSupplyChangeTransactionV1();
 
+		$size = Converter::binaryToInt($reader->read(4), 4);
+		$reader->retreat(4);
+		$reader = new BinaryReader($reader->read($size));
+		$reader->retreat($size);
 		EmbeddedTransaction::_deserialize($reader, $instance);
 		$mosaicId = UnresolvedMosaicId::deserialize($reader);
 		$delta = Amount::deserialize($reader);
@@ -5723,6 +5899,10 @@ class MosaicSupplyRevocationTransactionV1 extends Transaction {
 	public static function deserialize(BinaryReader $reader){
 		$instance = new MosaicSupplyRevocationTransactionV1();
 
+		$size = Converter::binaryToInt($reader->read(4), 4);
+		$reader->retreat(4);
+		$reader = new BinaryReader($reader->read($size));
+		$reader->retreat($size);
 		Transaction::_deserialize($reader, $instance);
 		$sourceAddress = UnresolvedAddress::deserialize($reader);
 		$mosaic = UnresolvedMosaic::deserialize($reader);
@@ -5791,6 +5971,10 @@ class EmbeddedMosaicSupplyRevocationTransactionV1 extends EmbeddedTransaction {
 	public static function deserialize(BinaryReader $reader){
 		$instance = new EmbeddedMosaicSupplyRevocationTransactionV1();
 
+		$size = Converter::binaryToInt($reader->read(4), 4);
+		$reader->retreat(4);
+		$reader = new BinaryReader($reader->read($size));
+		$reader->retreat($size);
 		EmbeddedTransaction::_deserialize($reader, $instance);
 		$sourceAddress = UnresolvedAddress::deserialize($reader);
 		$mosaic = UnresolvedMosaic::deserialize($reader);
@@ -5880,6 +6064,10 @@ class MultisigAccountModificationTransactionV1 extends Transaction {
 	public static function deserialize(BinaryReader $reader){
 		$instance = new MultisigAccountModificationTransactionV1();
 
+		$size = Converter::binaryToInt($reader->read(4), 4);
+		$reader->retreat(4);
+		$reader = new BinaryReader($reader->read($size));
+		$reader->retreat($size);
 		Transaction::_deserialize($reader, $instance);
 		$minRemovalDelta = Converter::binaryToInt($reader->read(1), 1);
 		$minApprovalDelta = Converter::binaryToInt($reader->read(1), 1);
@@ -5979,6 +6167,10 @@ class EmbeddedMultisigAccountModificationTransactionV1 extends EmbeddedTransacti
 	public static function deserialize(BinaryReader $reader){
 		$instance = new EmbeddedMultisigAccountModificationTransactionV1();
 
+		$size = Converter::binaryToInt($reader->read(4), 4);
+		$reader->retreat(4);
+		$reader = new BinaryReader($reader->read($size));
+		$reader->retreat($size);
 		EmbeddedTransaction::_deserialize($reader, $instance);
 		$minRemovalDelta = Converter::binaryToInt($reader->read(1), 1);
 		$minApprovalDelta = Converter::binaryToInt($reader->read(1), 1);
@@ -6073,6 +6265,10 @@ class AddressAliasTransactionV1 extends Transaction {
 	public static function deserialize(BinaryReader $reader){
 		$instance = new AddressAliasTransactionV1();
 
+		$size = Converter::binaryToInt($reader->read(4), 4);
+		$reader->retreat(4);
+		$reader = new BinaryReader($reader->read($size));
+		$reader->retreat($size);
 		Transaction::_deserialize($reader, $instance);
 		$namespaceId = NamespaceId::deserialize($reader);
 		$address = Address::deserialize($reader);
@@ -6149,6 +6345,10 @@ class EmbeddedAddressAliasTransactionV1 extends EmbeddedTransaction {
 	public static function deserialize(BinaryReader $reader){
 		$instance = new EmbeddedAddressAliasTransactionV1();
 
+		$size = Converter::binaryToInt($reader->read(4), 4);
+		$reader->retreat(4);
+		$reader = new BinaryReader($reader->read($size));
+		$reader->retreat($size);
 		EmbeddedTransaction::_deserialize($reader, $instance);
 		$namespaceId = NamespaceId::deserialize($reader);
 		$address = Address::deserialize($reader);
@@ -6231,6 +6431,10 @@ class MosaicAliasTransactionV1 extends Transaction {
 	public static function deserialize(BinaryReader $reader){
 		$instance = new MosaicAliasTransactionV1();
 
+		$size = Converter::binaryToInt($reader->read(4), 4);
+		$reader->retreat(4);
+		$reader = new BinaryReader($reader->read($size));
+		$reader->retreat($size);
 		Transaction::_deserialize($reader, $instance);
 		$namespaceId = NamespaceId::deserialize($reader);
 		$mosaicId = MosaicId::deserialize($reader);
@@ -6307,6 +6511,10 @@ class EmbeddedMosaicAliasTransactionV1 extends EmbeddedTransaction {
 	public static function deserialize(BinaryReader $reader){
 		$instance = new EmbeddedMosaicAliasTransactionV1();
 
+		$size = Converter::binaryToInt($reader->read(4), 4);
+		$reader->retreat(4);
+		$reader = new BinaryReader($reader->read($size));
+		$reader->retreat($size);
 		EmbeddedTransaction::_deserialize($reader, $instance);
 		$namespaceId = NamespaceId::deserialize($reader);
 		$mosaicId = MosaicId::deserialize($reader);
@@ -6404,6 +6612,10 @@ class NamespaceRegistrationTransactionV1 extends Transaction {
 	public static function deserialize(BinaryReader $reader){
 		$instance = new NamespaceRegistrationTransactionV1();
 
+		$size = Converter::binaryToInt($reader->read(4), 4);
+		$reader->retreat(4);
+		$reader = new BinaryReader($reader->read($size));
+		$reader->retreat($size);
 		Transaction::_deserialize($reader, $instance);
 		// deserialize to temporary buffer for further processing
 		$durationTemporary = BlockDuration::deserialize($reader);
@@ -6524,6 +6736,10 @@ class EmbeddedNamespaceRegistrationTransactionV1 extends EmbeddedTransaction {
 	public static function deserialize(BinaryReader $reader){
 		$instance = new EmbeddedNamespaceRegistrationTransactionV1();
 
+		$size = Converter::binaryToInt($reader->read(4), 4);
+		$reader->retreat(4);
+		$reader = new BinaryReader($reader->read($size));
+		$reader->retreat($size);
 		EmbeddedTransaction::_deserialize($reader, $instance);
 		// deserialize to temporary buffer for further processing
 		$durationTemporary = BlockDuration::deserialize($reader);
@@ -6694,6 +6910,10 @@ class AccountAddressRestrictionTransactionV1 extends Transaction {
 	public static function deserialize(BinaryReader $reader){
 		$instance = new AccountAddressRestrictionTransactionV1();
 
+		$size = Converter::binaryToInt($reader->read(4), 4);
+		$reader->retreat(4);
+		$reader = new BinaryReader($reader->read($size));
+		$reader->retreat($size);
 		Transaction::_deserialize($reader, $instance);
 		$restrictionFlags = AccountRestrictionFlags::deserialize($reader);
 		$restrictionAdditionsCount = Converter::binaryToInt($reader->read(1), 1);
@@ -6784,6 +7004,10 @@ class EmbeddedAccountAddressRestrictionTransactionV1 extends EmbeddedTransaction
 	public static function deserialize(BinaryReader $reader){
 		$instance = new EmbeddedAccountAddressRestrictionTransactionV1();
 
+		$size = Converter::binaryToInt($reader->read(4), 4);
+		$reader->retreat(4);
+		$reader = new BinaryReader($reader->read($size));
+		$reader->retreat($size);
 		EmbeddedTransaction::_deserialize($reader, $instance);
 		$restrictionFlags = AccountRestrictionFlags::deserialize($reader);
 		$restrictionAdditionsCount = Converter::binaryToInt($reader->read(1), 1);
@@ -6880,6 +7104,10 @@ class AccountMosaicRestrictionTransactionV1 extends Transaction {
 	public static function deserialize(BinaryReader $reader){
 		$instance = new AccountMosaicRestrictionTransactionV1();
 
+		$size = Converter::binaryToInt($reader->read(4), 4);
+		$reader->retreat(4);
+		$reader = new BinaryReader($reader->read($size));
+		$reader->retreat($size);
 		Transaction::_deserialize($reader, $instance);
 		$restrictionFlags = AccountRestrictionFlags::deserialize($reader);
 		$restrictionAdditionsCount = Converter::binaryToInt($reader->read(1), 1);
@@ -6970,6 +7198,10 @@ class EmbeddedAccountMosaicRestrictionTransactionV1 extends EmbeddedTransaction 
 	public static function deserialize(BinaryReader $reader){
 		$instance = new EmbeddedAccountMosaicRestrictionTransactionV1();
 
+		$size = Converter::binaryToInt($reader->read(4), 4);
+		$reader->retreat(4);
+		$reader = new BinaryReader($reader->read($size));
+		$reader->retreat($size);
 		EmbeddedTransaction::_deserialize($reader, $instance);
 		$restrictionFlags = AccountRestrictionFlags::deserialize($reader);
 		$restrictionAdditionsCount = Converter::binaryToInt($reader->read(1), 1);
@@ -7066,6 +7298,10 @@ class AccountOperationRestrictionTransactionV1 extends Transaction {
 	public static function deserialize(BinaryReader $reader){
 		$instance = new AccountOperationRestrictionTransactionV1();
 
+		$size = Converter::binaryToInt($reader->read(4), 4);
+		$reader->retreat(4);
+		$reader = new BinaryReader($reader->read($size));
+		$reader->retreat($size);
 		Transaction::_deserialize($reader, $instance);
 		$restrictionFlags = AccountRestrictionFlags::deserialize($reader);
 		$restrictionAdditionsCount = Converter::binaryToInt($reader->read(1), 1);
@@ -7156,6 +7392,10 @@ class EmbeddedAccountOperationRestrictionTransactionV1 extends EmbeddedTransacti
 	public static function deserialize(BinaryReader $reader){
 		$instance = new EmbeddedAccountOperationRestrictionTransactionV1();
 
+		$size = Converter::binaryToInt($reader->read(4), 4);
+		$reader->retreat(4);
+		$reader = new BinaryReader($reader->read($size));
+		$reader->retreat($size);
 		EmbeddedTransaction::_deserialize($reader, $instance);
 		$restrictionFlags = AccountRestrictionFlags::deserialize($reader);
 		$restrictionAdditionsCount = Converter::binaryToInt($reader->read(1), 1);
@@ -7256,6 +7496,10 @@ class MosaicAddressRestrictionTransactionV1 extends Transaction {
 	public static function deserialize(BinaryReader $reader){
 		$instance = new MosaicAddressRestrictionTransactionV1();
 
+		$size = Converter::binaryToInt($reader->read(4), 4);
+		$reader->retreat(4);
+		$reader = new BinaryReader($reader->read($size));
+		$reader->retreat($size);
 		Transaction::_deserialize($reader, $instance);
 		$mosaicId = UnresolvedMosaicId::deserialize($reader);
 		$restrictionKey = Converter::binaryToInt($reader->read(8), 8);
@@ -7350,6 +7594,10 @@ class EmbeddedMosaicAddressRestrictionTransactionV1 extends EmbeddedTransaction 
 	public static function deserialize(BinaryReader $reader){
 		$instance = new EmbeddedMosaicAddressRestrictionTransactionV1();
 
+		$size = Converter::binaryToInt($reader->read(4), 4);
+		$reader->retreat(4);
+		$reader = new BinaryReader($reader->read($size));
+		$reader->retreat($size);
 		EmbeddedTransaction::_deserialize($reader, $instance);
 		$mosaicId = UnresolvedMosaicId::deserialize($reader);
 		$restrictionKey = Converter::binaryToInt($reader->read(8), 8);
@@ -7531,6 +7779,10 @@ class MosaicGlobalRestrictionTransactionV1 extends Transaction {
 	public static function deserialize(BinaryReader $reader){
 		$instance = new MosaicGlobalRestrictionTransactionV1();
 
+		$size = Converter::binaryToInt($reader->read(4), 4);
+		$reader->retreat(4);
+		$reader = new BinaryReader($reader->read($size));
+		$reader->retreat($size);
 		Transaction::_deserialize($reader, $instance);
 		$mosaicId = UnresolvedMosaicId::deserialize($reader);
 		$referenceMosaicId = UnresolvedMosaicId::deserialize($reader);
@@ -7643,6 +7895,10 @@ class EmbeddedMosaicGlobalRestrictionTransactionV1 extends EmbeddedTransaction {
 	public static function deserialize(BinaryReader $reader){
 		$instance = new EmbeddedMosaicGlobalRestrictionTransactionV1();
 
+		$size = Converter::binaryToInt($reader->read(4), 4);
+		$reader->retreat(4);
+		$reader = new BinaryReader($reader->read($size));
+		$reader->retreat($size);
 		EmbeddedTransaction::_deserialize($reader, $instance);
 		$mosaicId = UnresolvedMosaicId::deserialize($reader);
 		$referenceMosaicId = UnresolvedMosaicId::deserialize($reader);
@@ -7759,6 +8015,10 @@ class TransferTransactionV1 extends Transaction {
 	public static function deserialize(BinaryReader $reader){
 		$instance = new TransferTransactionV1();
 
+		$size = Converter::binaryToInt($reader->read(4), 4);
+		$reader->retreat(4);
+		$reader = new BinaryReader($reader->read($size));
+		$reader->retreat($size);
 		Transaction::_deserialize($reader, $instance);
 		$recipientAddress = UnresolvedAddress::deserialize($reader);
 		$messageSize = Converter::binaryToInt($reader->read(2), 2);
@@ -7865,6 +8125,10 @@ class EmbeddedTransferTransactionV1 extends EmbeddedTransaction {
 	public static function deserialize(BinaryReader $reader){
 		$instance = new EmbeddedTransferTransactionV1();
 
+		$size = Converter::binaryToInt($reader->read(4), 4);
+		$reader->retreat(4);
+		$reader = new BinaryReader($reader->read($size));
+		$reader->retreat($size);
 		EmbeddedTransaction::_deserialize($reader, $instance);
 		$recipientAddress = UnresolvedAddress::deserialize($reader);
 		$messageSize = Converter::binaryToInt($reader->read(2), 2);

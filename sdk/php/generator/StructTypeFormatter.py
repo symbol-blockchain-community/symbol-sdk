@@ -356,6 +356,10 @@ class StructFormatter(AbstractTypeFormatter):
 			body += f'$instance = new {self.typename}();\n\n'
 
 		if self.base_struct:
+			body += '$size = Converter::binaryToInt($reader->read(4), 4);\n'
+			body += '$reader->retreat(4);\n'
+			body += '$reader = new BinaryReader($reader->read($size));\n'
+			body += '$reader->retreat($size);\n'
 			body += f'{self.base_struct.name}::_deserialize($reader, $instance);\n'
 
 		# special treatment for condition-guarded fields,
