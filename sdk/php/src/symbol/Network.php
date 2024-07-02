@@ -6,7 +6,7 @@ use SymbolSdk\Network\Network as BasicNetwork;
 
 use SymbolSdk\Symbol\Address;
 use SymbolSdk\Network\NetworkTimestampDatetimeConverter;
-use SymbolSdk\Network\NetworkTimestamp;
+use SymbolSdk\Symbol\NetworkTimestamp;
 use SymbolSdk\CryptoTypes\Hash256;
 use DateTime;
 
