@@ -47,6 +47,13 @@ class NetworkTimestampDatetimeConverter
     return DateTime::createFromFormat('U', $this->epoch->getTimestamp() + $rawTimestamp * $this->timeUnits);
   }
 
+  private static function getMilliSeconds(DateTime $dateTime): int
+  {
+    $timestampInSeconds = $dateTime->getTimestamp();
+    $microseconds = (int) $dateTime->format('u');
+    return $timestampInSeconds * 1000 + (int) ($microseconds / 1000);
+  }
+
   /**
    * Subtracts the network epoch from the reference date.
    * @param DateTime referenceDatetime Reference date.
@@ -57,7 +64,7 @@ class NetworkTimestampDatetimeConverter
     if ($referenceDatetime < $this->epoch)
       throw new RangeException('timestamp cannot be before epoch');
 
-    $differenceMilliseconds = $referenceDatetime->getTimestamp() - $this->epoch->getTimestamp();
+    $differenceMilliseconds = self::getMilliSeconds($referenceDatetime) - self::getMilliSeconds($this->epoch);
     return floor($differenceMilliseconds / $this->timeUnits);
   }
 }
