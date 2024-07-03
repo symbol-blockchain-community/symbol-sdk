@@ -35,8 +35,10 @@
   "config": {
     "sort-packages": true
   },
-  "exclude": [
-    "/tests",
-    "/phpunit.xml"
-  ]
+  "archive": {
+    "exclude": [
+      "/tests",
+      "/phpunit.xml"
+    ]
+  }
 }
