@@ -36,6 +36,7 @@
     "sort-packages": true
   },
   "exclude": [
-    "/tests"
+    "/tests",
+    "/phpunit.xml"
   ]
 }
