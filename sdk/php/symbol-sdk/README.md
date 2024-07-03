@@ -26,6 +26,7 @@ use SymbolSdk\Symbol\Models\UnresolvedMosaicId;
 use SymbolSdk\Symbol\Models\PublicKey;
 use SymbolSdk\Symbol\Models\Amount;
 use SymbolSdk\Symbol\Models\NetworkType;
+use SymbolSdk\Symbol\Models\Timestamp;
 
 $facade = new SymbolFacade('testnet');
 $alice = $facade->createAccount(new PrivateKey('5DB8324E7EB83E7665D500B014283260EF312139034E86DFB7EE736503EA****'));
@@ -34,6 +35,7 @@ $bob = $facade->createPublicAccount(new PublicKey('4C4BD7F8E1E1AC61DB817089F9416
 $transferTransaction = new TransferTransactionV1(
   network: new NetworkType(NetworkType::TESTNET),
   signerPublicKey: $alice->publicKey,
+	deadline: new Timestamp($facade->now()->addHours(2)),
   recipientAddress: $bob->address,
   mosaics: [
     new UnresolvedMosaic(
