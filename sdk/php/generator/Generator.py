@@ -50,13 +50,6 @@ def generate_files(ast_models, output_directory: Path):
 			r'''<?php
 namespace SymbolSdk\Symbol\Models;
 
-require_once __DIR__ . '/../BaseValue.php';
-require_once __DIR__ . '/../BinaryData.php';
-require_once __DIR__ . '/../utils/BinaryReader.php';
-require_once __DIR__ . '/../utils/BinaryWriter.php';
-require_once __DIR__ . '/../utils/arrayHelpers.php';
-require_once __DIR__ . '/../utils/converter.php';
-
 use SymbolSdk\BaseValue;
 use SymbolSdk\BinaryData;
 use SymbolSdk\Utils\Converter;
