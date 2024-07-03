@@ -5,6 +5,9 @@
   "autoload": {
     "psr-4": {
       "SymbolSdk\\": "src"
-    }
+    },
+    "files": [
+      "src/Symbol/models.php"
+    ]
   }
 }
