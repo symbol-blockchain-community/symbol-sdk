@@ -9,6 +9,7 @@ use SymbolSdk\Network\NetworkTimestampDatetimeConverter;
 use SymbolSdk\Symbol\NetworkTimestamp;
 use SymbolSdk\CryptoTypes\Hash256;
 use DateTime;
+use SymbolSdk\Symbol\Models\UnresolvedAddress;
 
 /**
  * Represents a Symbol network.
@@ -38,7 +39,7 @@ class Network extends BasicNetwork
       new NetworkTimestampDatetimeConverter($epochTime, 'milliseconds'),
       'sha3-256',
       function ($addressWithoutChecksum, $checksum) {
-        return new Address($addressWithoutChecksum . substr($checksum, 0, 3));
+        return new UnresolvedAddress($addressWithoutChecksum . substr($checksum, 0, 3));
       },
       Address::class,
       NetworkTimestamp::class
