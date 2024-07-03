@@ -15,10 +15,11 @@ class IdGenerator
    * @param int nonce Nonce.
    * @return string Computed mosaic id by GMP.
    */
-  public static function generateMosaicId(Address|Models\UnresolvedAddress|Models\Address $ownerAddress, int $nonce): string
+  public static function generateMosaicId(Address|Models\UnresolvedAddress|Models\Address $ownerAddress, int $nonce = null): array
   {
     $hasher = hash_init('sha3-256');
-    hash_update($hasher, self::uint32ToBytes($nonce));
+    $nonce = $nonce ?? self::binaryToUint32(openssl_random_pseudo_bytes(4));
+    hash_update($hasher, self::uint32ToBinary($nonce));
     hash_update($hasher, $ownerAddress->binaryData);
     $digest = hash_final($hasher, true);
     $result = self::digestToGmp($digest);
@@ -29,7 +30,7 @@ class IdGenerator
       $result = gmp_sub($result, gmp_add($gmpMax, 1));
     }
 
-    return gmp_strval($result);
+    return ["nonce" => $nonce, "id" => gmp_strval($result)];
   }
 
   /**
@@ -41,8 +42,8 @@ class IdGenerator
   public static function generateNamespaceId(string $name, int $parentNamespaceId = 0): string
   {
     $hasher = hash_init('sha3-256');
-    hash_update($hasher, self::uint32ToBytes($parentNamespaceId & 0xFFFFFFFF));
-    hash_update($hasher, self::uint32ToBytes(($parentNamespaceId >> 32) & 0xFFFFFFFF));
+    hash_update($hasher, self::uint32ToBinary($parentNamespaceId & 0xFFFFFFFF));
+    hash_update($hasher, self::uint32ToBinary(($parentNamespaceId >> 32) & 0xFFFFFFFF));
     hash_update($hasher, $name);
     $digest = hash_final($hasher, true);
     $result = self::digestToGmp($digest);
@@ -107,9 +108,15 @@ class IdGenerator
     return $path[count($path) - 1];
   }
 
-  private static function uint32ToBytes($num)
+  private static function uint32ToBinary($num)
   {
     return pack('V', $num);
+  }
+
+  private static function binaryToUint32($binary)
+  {
+    $unpacked = unpack('V', $binary);
+    return $unpacked[1];
   }
 
   private static function digestToGmp($digest)
