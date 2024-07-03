@@ -5,7 +5,6 @@ namespace SymbolSdk\Network;
 use ReflectionClass;
 use SymbolSdk\CryptoTypes\PublicKey;
 use SymbolSdk\Utils\Converter;
-use SymbolSdk\BinaryData;
 use DateTime;
 
 /**
