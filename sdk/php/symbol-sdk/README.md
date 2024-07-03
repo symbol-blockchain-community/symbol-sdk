@@ -39,7 +39,7 @@ $transferTransaction = new TransferTransactionV1(
   recipientAddress: $bob->address,
   mosaics: [
     new UnresolvedMosaic(
-      mosaicId: new UnresolvedMosaicId(),
+      mosaicId: new UnresolvedMosaicId('0x72C0212E67A08BCE'),
       amount: new Amount(1)
     )
   ],
