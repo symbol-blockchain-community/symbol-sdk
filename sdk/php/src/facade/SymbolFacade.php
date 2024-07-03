@@ -10,6 +10,7 @@ use SymbolSdk\CryptoTypes\Hash256;
 use SymbolSdk\CryptoTypes\PrivateKey;
 use SymbolSdk\CryptoTypes\SharedKey256;
 use SymbolSdk\Symbol\Models;
+use SymbolSdk\Symbol\Models\Hash256 as ModelsHash256;
 use SymbolSdk\Network\NetworkLocator;
 use SymbolSdk\Symbol\KeyPair;
 use SymbolSdk\Symbol\SymbolPublicAccount;
@@ -18,6 +19,9 @@ use SymbolSdk\Symbol\Verifier;
 use SymbolSdk\Symbol\Address;
 use SymbolSdk\Symbol\SharedKeySymbol;
 use SymbolSdk\Symbol\NetworkTimestamp;
+use SymbolSdk\Merkle\MerkleHashBuilder;
+
+use Exception;
 
 /**
  * Facade used to interact with Symbol blockchain.
@@ -199,17 +203,42 @@ class SymbolFacade
 	}
 
 	/**
+	 * Hashes embedded transactions of an aggregate transaction.
+	 * @param array embeddedTransactions Embedded transactions to hash.
+	 * @return ModelsHash256 Aggregate transactions hash.
+	 */
+	public static function hashEmbeddedTransactions($embeddedTransactions): ModelsHash256
+	{
+		$hashBuilder = new MerkleHashBuilder();
+		foreach ($embeddedTransactions as $tx) {
+			$hashBuilder->update(new ModelsHash256(hash('sha3-256', $tx->serialize())));
+		}
+
+		return $hashBuilder->final();
+	}
+
+	/**
 	 * Attaches a signature to a transaction.
 	 * @param Models\Transaction transaction Transaction object.
 	 * @param Signature signature Signature to attach.
+	 * @param int payload type 0: array 1: json 2: string only payload.
 	 * @return string JSON transaction payload.
 	 */
-	public static function attachSignature(Models\Transaction &$transaction, Signature $signature, bool $isPlainPayload = false): string
+	public static function attachSignature(Models\Transaction &$transaction, Signature $signature, int $payloadType = 0)
 	{
 		$transaction->signature = new Models\Signature($signature->binaryData);
 		$transactionBuffer = $transaction->serialize();
 		$hexPayload = strtoupper(bin2hex($transactionBuffer));
-		return $isPlainPayload ? $hexPayload : json_encode(['payload' => $hexPayload]);
+		switch ($payloadType) {
+			case 0:
+				return ['payload' => $hexPayload];
+			case 1:
+				return json_encode(['payload' => $hexPayload]);
+			case 2:
+				return $hexPayload;
+			default:
+				throw new Exception('invalid payload type');
+		}
 	}
 
 	const COSIGNATURE_SIZE = 104;
