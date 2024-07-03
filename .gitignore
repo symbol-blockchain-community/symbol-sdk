@@ -50,7 +50,7 @@ test.ts
 
 # php
 sdk/php/test.php
-sdk/php/vendor
+sdk/php/symbol-sdk/vendor
 sdk/php/.phpunit.result.cache
 sdk/php/src/t.php
 
