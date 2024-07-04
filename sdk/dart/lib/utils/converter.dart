@@ -58,7 +58,7 @@ Uint8List intToBytes(dynamic value, int byteSize) {
 
 BigInt uint8ListToBigInt(Uint8List data) {
   var result = BigInt.from(0);
-  for (var i = 0; i < data.length; i++) {
+  for (var i = 0; i < 8; i++) {
     result += BigInt.from(data[i]) << (8 * i);
   }
   return result;
