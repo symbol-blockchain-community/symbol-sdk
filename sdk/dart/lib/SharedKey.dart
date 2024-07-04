@@ -1,14 +1,16 @@
 import 'package:symbol_sdk/index.dart';
 
 import './CryptoTypes.dart' as ct;
-import 'package:symbol_sdk/crypto/tweetNacl.dart' as tweet_nacl;
+import 'package:symbol_sdk/impl/external/tweetNacl.dart' as tweet_nacl;
 import 'package:pointycastle/export.dart' as pointy;
 
 import 'dart:typed_data';
+
 var a = tweet_nacl.TweetNaCl().D;
 
 Int32List gf() {
-  return Int32List.fromList([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]); //16
+  return Int32List.fromList(
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]); //16
 }
 
 bool isCanonicalKey(ct.PublicKey publicKey) {
@@ -31,13 +33,14 @@ bool isInMainSubgroup(List<Int32List> point) {
   // multiply by group order
   tweetNacl.scalarmult(result, point, L, 0);
   // check if result is neutral element
-  final areEqual = tweetNacl.neq25519(result[1], result[2]); 
+  final areEqual = tweetNacl.neq25519(result[1], result[2]);
   final isZero = tweetNacl.neq25519(gf(), result[0]);
-  // yes, this is supposed to be bit OR 
-  return 0 == (areEqual | isZero); 
+  // yes, this is supposed to be bit OR
+  return 0 == (areEqual | isZero);
 }
 
-Uint8List Function(Uint8List privateKeyBytes, ct.PublicKey otherPublicKey) deriveSharedSecretFactory(cryptoHash) {
+Uint8List Function(Uint8List privateKeyBytes, ct.PublicKey otherPublicKey)
+    deriveSharedSecretFactory(cryptoHash) {
   return (privateKeyBytes, otherPublicKey) {
     var tweetNacl = tweet_nacl.TweetNaCl();
     var scalarmult = tweetNacl.scalarmult;
@@ -45,7 +48,9 @@ Uint8List Function(Uint8List privateKeyBytes, ct.PublicKey otherPublicKey) deriv
     var point = [gf(), gf(), gf(), gf()];
 
     tweet_nacl.TweetNaCl.unpackneg(point, otherPublicKey.bytes);
-    if (!isCanonicalKey(otherPublicKey) || 0 != tweet_nacl.TweetNaCl.unpackneg(point, otherPublicKey.bytes) || !isInMainSubgroup(point)){
+    if (!isCanonicalKey(otherPublicKey) ||
+        0 != tweet_nacl.TweetNaCl.unpackneg(point, otherPublicKey.bytes) ||
+        !isInMainSubgroup(point)) {
       throw Exception('invalid point');
     }
     // negate point == negate X coordinate and 't'
@@ -55,14 +60,14 @@ Uint8List Function(Uint8List privateKeyBytes, ct.PublicKey otherPublicKey) deriv
     var scalar = Uint8List(64);
 
     cryptoHash(scalar, privateKeyBytes);
-  
+
     scalar[0] &= 248;
     scalar[31] &= 127;
     scalar[31] |= 64;
 
     var result = [gf(), gf(), gf(), gf()];
     scalarmult(result, point, scalar, 0);
-  
+
     var sharedSecret = Uint8List(32);
     tweetNacl.pack(sharedSecret, result);
     return sharedSecret;
@@ -74,7 +79,8 @@ Function deriveSharedKeyFactory(String info, Function cryptoHash) {
   return (Uint8List privateKeyBytes, ct.PublicKey otherPublicKey) {
     final sharedSecret = deriveSharedSecret(privateKeyBytes, otherPublicKey);
     var hkdf = pointy.KeyDerivator('SHA-256/HKDF');
-    var hkdfParams = pointy.HkdfParameters(sharedSecret, 32, Uint8List(32), utf8ToBytes(info));
+    var hkdfParams = pointy.HkdfParameters(
+        sharedSecret, 32, Uint8List(32), utf8ToBytes(info));
     hkdf.init(hkdfParams);
     var key = hkdf.process(Uint8List(0));
     return ct.SharedKey256(key);

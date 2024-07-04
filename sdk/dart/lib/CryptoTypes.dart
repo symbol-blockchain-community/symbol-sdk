@@ -1,6 +1,6 @@
 import './ByteArray.dart';
 import 'dart:typed_data';
-import 'package:ed25519_edwards/ed25519_edwards.dart' as ed;
+import './impl/external/tweetNacl.dart' as tweet_nacl;
 
 class Hash256 extends ByteArray {
   static const SIZE = 32;
@@ -18,7 +18,7 @@ class PrivateKey extends ByteArray {
   PrivateKey(dynamic privateKey) : super(SIZE, privateKey);
 
   static PrivateKey random() {
-    return PrivateKey(ed.generateKey().privateKey.bytes.sublist(SIZE));
+    return PrivateKey(tweet_nacl.TweetNaCl.randombytes(SIZE));
   }
 }
 

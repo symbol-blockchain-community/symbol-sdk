@@ -56,9 +56,8 @@ class TweetNaCl {
     0xe898, 0x7779, 0x4079, 0x8cc7,
     0xfe73, 0x2b6f, 0x6cee, 0x5203
   ]);
-  
-  Int32List get D => _D;
 
+  Int32List get D => _D;
 
   static final _D2 = Int32List.fromList([
     0xf159, 0x26b2, 0x9b94, 0xebd6, // 0-3
@@ -1285,7 +1284,7 @@ class TweetNaCl {
     c = v ~/ 0x10000;
     t15 = v - c * 0x10000;
     t0 += 38 * (c - 1);
-    
+
     o[0 + ooff] = t0;
     o[1 + ooff] = t1;
     o[2 + ooff] = t2;
@@ -1717,7 +1716,7 @@ class TweetNaCl {
     }
   }
 
-  static int _crypto_hash_off(Uint8List out, Uint8List m, int moff, int n) { 
+  static int _crypto_hash_off(Uint8List out, Uint8List m, int moff, int n) {
     final x = Uint8List(256);
     int i;
     final b = n;
@@ -1759,7 +1758,7 @@ class TweetNaCl {
     return _crypto_hash_off(out, m, 0, m.length);
   }
 
-  static void add(List<Int32List> p, List<Int32List> q){
+  static void add(List<Int32List> p, List<Int32List> q) {
     return _add(p, q);
   }
 
@@ -1831,7 +1830,8 @@ class TweetNaCl {
     r[31] ^= _par25519_off(tx, 0) << 7;
   }
 
-  void scalarmult(List<Int32List> p, List<Int32List> q, Uint8List s, final int soff){
+  void scalarmult(
+      List<Int32List> p, List<Int32List> q, Uint8List s, final int soff) {
     _scalarmult(p, q, s, soff);
   }
 
@@ -1910,6 +1910,7 @@ class TweetNaCl {
   static void modL(Uint8List r, final int roff, Int32List x) {
     _modL(r, roff, x);
   }
+
   static void _modL(Uint8List r, final int roff, Int32List x) {
     int carry;
     int i, j;
@@ -2064,7 +2065,7 @@ class TweetNaCl {
     final den6 = Int32List(16);
     _set25519(r[2], _gf1);
     _unpack25519(r[1], p);
-    
+
     _S(inum, r[1]);
     _M(den, inum, Int32List.fromList(_D));
     _Z(inum, inum, r[2]);
@@ -2077,7 +2078,7 @@ class TweetNaCl {
     _M(t, t, den);
 
     _pow2523(t, t);
-    
+
     _M(t, t, inum);
     _M(t, t, den);
     _M(t, t, den);

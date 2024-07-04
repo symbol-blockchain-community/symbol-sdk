@@ -1,7 +1,7 @@
 import '../CryptoTypes.dart' as ct;
 import 'dart:typed_data';
 import '../Cipher.dart';
-import '../crypto/tweetNacl.dart' as tweet_nacl;
+import 'external/tweetNacl.dart' as tweet_nacl;
 
 const GCM_IV_SIZE = 12;
 const CBC_IV_SIZE = 16;
@@ -18,7 +18,8 @@ Uint8List concatArrays(List<Uint8List> arrays) {
   return result;
 }
 
-Map<String, Uint8List> decode(int tagSize, int ivSize, Uint8List encodedMessage) {
+Map<String, Uint8List> decode(
+    int tagSize, int ivSize, Uint8List encodedMessage) {
   return {
     'tag': encodedMessage.sublist(0, tagSize),
     'initializationVector': encodedMessage.sublist(tagSize, tagSize + ivSize),
@@ -36,10 +37,12 @@ Uint8List decodeAesGcm(
   final sharedKey = deriveSharedKey(keyPair, recipientPublicKey);
   final cipher = AesGcmCipher(Uint8List.fromList(sharedKey.bytes));
 
-  return cipher.decrypt(Uint8List.fromList(decoded['encodedMessageData']! + decoded['tag']!), decoded['initializationVector']!);
+  return cipher.decrypt(
+      Uint8List.fromList(decoded['encodedMessageData']! + decoded['tag']!),
+      decoded['initializationVector']!);
 }
 
-Map<String, dynamic> encodeAesGcm (
+Map<String, dynamic> encodeAesGcm(
     ct.SharedKey256 Function(dynamic, ct.PublicKey) deriveSharedKey,
     dynamic keyPair,
     ct.PublicKey recipientPublicKey,
