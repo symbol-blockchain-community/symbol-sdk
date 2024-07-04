@@ -9,7 +9,9 @@ import 'package:symbol_sdk/impl/CiperHelper.dart';
 import 'package:symbol_sdk/utils/converter.dart';
 
 void main() async {
-  var file = File('../../../../../tests/vectors/nem/crypto/4.test-cipher.json');
+  var currentPath = Directory.current.path;
+  var file =
+      File(currentPath + '/../../tests/vectors/nem/crypto/4.test-cipher.json');
   var contents = await file.readAsString();
   var jsonMap = jsonDecode(contents);
   (jsonMap as List).forEach((element) {
@@ -19,7 +21,8 @@ void main() async {
       var recipientPublicKey = PublicKey(element['otherPublicKey']);
       var clearText = hexToBytes(element['clearText']);
       var iv = element['iv'];
-      final result = encodeAesGcm(deriveSharedKey, keyPair, recipientPublicKey, clearText, hexToBytes(iv));
+      final result = encodeAesGcm(deriveSharedKey, keyPair, recipientPublicKey,
+          clearText, hexToBytes(iv));
       var tag = element['tag'];
       var cipherText = element['cipherText'];
       expect(hex.encode(result['tag']).toUpperCase(), tag);

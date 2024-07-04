@@ -5,10 +5,11 @@ import 'package:symbol_sdk/symbol/KeyPair.dart';
 import 'package:symbol_sdk/utils/converter.dart';
 import 'package:symbol_sdk/Bip32.dart';
 
-void nodeTest(Bip32Node node, List<dynamic> children, String rootPublicKey, List<List<int>> childrenPath, List<String> childrenPublicKey) async {
+void nodeTest(Bip32Node node, List<dynamic> children, String rootPublicKey,
+    List<List<int>> childrenPath, List<String> childrenPublicKey) async {
   var rootKeyPair = KeyPair(node.privateKey);
   expect(rootKeyPair.publicKey.toString(), rootPublicKey);
-  for(var i = 0; i < children.length; i++){
+  for (var i = 0; i < children.length; i++) {
     var childNode = node.derivePath(childrenPath[i]);
     var childKeyPair = KeyPair(childNode.privateKey);
     expect(childKeyPair.publicKey.toString(), childrenPublicKey[i]);
@@ -16,13 +17,15 @@ void nodeTest(Bip32Node node, List<dynamic> children, String rootPublicKey, List
 }
 
 void main() async {
-  var file = File('../../../../../tests/vectors/symbol/crypto/6.test-hd-derivation.json');
+  var currentPath = Directory.current.path;
+  var file = File(currentPath +
+      '/../../tests/vectors/symbol/crypto/6.test-hd-derivation.json');
   var contents = await file.readAsString();
   var jsonMap = jsonDecode(contents);
   var counter = 0;
   var publicNet = jsonMap['public_net'];
   var testVectors = jsonMap['test_vectors'];
-  
+
   publicNet.forEach((element) {
     test(counter, () async {
       var mnemonic = element['mnemonic'];
@@ -33,16 +36,20 @@ void main() async {
       var childrenPath = <List<int>>[];
       var childrenPublicKey = <String>[];
       children.forEach((child) {
-        childrenPath.add((child['path'] as List<dynamic>).map((item) => item as int).toList());
+        childrenPath.add((child['path'] as List<dynamic>)
+            .map((item) => item as int)
+            .toList());
         childrenPublicKey.add(child['publicKey']);
       });
-      if(mnemonic != null) {  
+      if (mnemonic != null) {
         var node = Bip32().fromMnemonic(mnemonic, passphrase);
-        nodeTest(node, children, rootPublicKey, childrenPath, childrenPublicKey);
+        nodeTest(
+            node, children, rootPublicKey, childrenPath, childrenPublicKey);
       }
-      if(seed != null){
+      if (seed != null) {
         var node = Bip32().fromSeed(hexToBytes(seed));
-        nodeTest(node, children, rootPublicKey, childrenPath, childrenPublicKey);
+        nodeTest(
+            node, children, rootPublicKey, childrenPath, childrenPublicKey);
       }
     });
     counter++;
@@ -58,16 +65,20 @@ void main() async {
       var childrenPath = <List<int>>[];
       var childrenPublicKey = <String>[];
       children.forEach((child) {
-        childrenPath.add((child['path'] as List<dynamic>).map((item) => item as int).toList());
+        childrenPath.add((child['path'] as List<dynamic>)
+            .map((item) => item as int)
+            .toList());
         childrenPublicKey.add(child['publicKey']);
       });
-      if(mnemonic != null) {  
+      if (mnemonic != null) {
         var node = Bip32().fromMnemonic(mnemonic, passphrase);
-        nodeTest(node, children, rootPublicKey, childrenPath, childrenPublicKey);
+        nodeTest(
+            node, children, rootPublicKey, childrenPath, childrenPublicKey);
       }
-      if(seed != null){
+      if (seed != null) {
         var node = Bip32().fromSeed(hexToBytes(seed));
-        nodeTest(node, children, rootPublicKey, childrenPath, childrenPublicKey);
+        nodeTest(
+            node, children, rootPublicKey, childrenPath, childrenPublicKey);
       }
     });
     counter++;

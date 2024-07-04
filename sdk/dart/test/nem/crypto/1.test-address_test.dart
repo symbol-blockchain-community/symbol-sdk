@@ -6,7 +6,9 @@ import 'package:symbol_sdk/CryptoTypes.dart';
 import 'package:symbol_sdk/nem/Network.dart';
 
 void main() async {
-  var file = File('../../../../../tests/vectors/nem/crypto/1.test-address.json');
+  var currentPath = Directory.current.path;
+  var file =
+      File(currentPath + '/../../tests/vectors/nem/crypto/1.test-address.json');
   var contents = await file.readAsString();
   var jsonMap = jsonDecode(contents);
   (jsonMap as List).forEach((element) {
@@ -14,8 +16,10 @@ void main() async {
       var publicKey = PublicKey(element['publicKey']);
       var mainNetwork = Network.MAINNET;
       var testNetwork = Network.TESTNET;
-      var testAddress = addressToString(testNetwork.publicKeyToAddress(publicKey));
-      var mainAddress = addressToString(mainNetwork.publicKeyToAddress(publicKey));
+      var testAddress =
+          addressToString(testNetwork.publicKeyToAddress(publicKey));
+      var mainAddress =
+          addressToString(mainNetwork.publicKeyToAddress(publicKey));
       expect(mainAddress, element['address_Public']);
       expect(testAddress, element['address_PublicTest']);
     });

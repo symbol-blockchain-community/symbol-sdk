@@ -6,7 +6,9 @@ import 'dart:typed_data';
 import 'package:pointycastle/export.dart';
 
 void main() async {
-  var file = File('../../../../../tests/vectors/symbol/crypto/0.test-sha3-256.json');
+  var currentPath = Directory.current.path;
+  var file = File(
+      currentPath + '/../../tests/vectors/symbol/crypto/0.test-sha3-256.json');
   var contents = await file.readAsString();
   var jsonMap = jsonDecode(contents);
   final digest = SHA3Digest(256);

@@ -7,7 +7,9 @@ import 'package:symbol_sdk/symbol/KeyPair.dart';
 import 'package:symbol_sdk/CryptoTypes.dart';
 
 void main() async {
-  var file = File('../../../../../tests/vectors/symbol/crypto/2.test-sign.json');
+  var currentPath = Directory.current.path;
+  var file =
+      File(currentPath + '/../../tests/vectors/symbol/crypto/2.test-sign.json');
   var contents = await file.readAsString();
   var jsonMap = jsonDecode(contents);
   (jsonMap as List).forEach((element) {
