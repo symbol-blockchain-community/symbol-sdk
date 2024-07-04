@@ -12,7 +12,9 @@ class KeyPair {
 
   KeyPair(PrivateKey privateKey) : _privateKey = privateKey {
     _privateKey = privateKey;
-    _keyPair = ed25519.keyPairFromSeed(privateKey.bytes, hashMode);
+    var reversedPrivateKeyBytes =
+        Uint8List.fromList([...privateKey.bytes.reversed]);
+    _keyPair = ed25519.keyPairFromSeed(reversedPrivateKeyBytes, hashMode);
   }
 
   PublicKey get publicKey => PublicKey(_keyPair.publicKey);
