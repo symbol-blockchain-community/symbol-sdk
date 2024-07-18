@@ -44,7 +44,7 @@ class BinaryData
 	 */
 	public function __toString(): string
 	{
-		if (get_class($this) == 'SymbolSdk\Symbol\Address' || get_class($this) == 'SymbolSdk\Symbol\UnresolvedAddress') {
+		if (get_class($this) == 'SymbolSdk\Symbol\Address' || get_class($this) == 'SymbolSdk\Symbol\Models\UnresolvedAddress') {
 			return Converter::binaryToAddress($this->binaryData);
 		}
 

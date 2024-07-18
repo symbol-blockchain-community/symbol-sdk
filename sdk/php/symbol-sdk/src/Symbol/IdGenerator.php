@@ -5,39 +5,69 @@ namespace SymbolSdk\Symbol;
 use Exception;
 use SymbolSdk\Symbol\Models;
 
+define('NAMESPACE_FLAG', 1 << 63);
+
 class IdGenerator
 {
   private const NAMESPACE_FLAG = 0x8000000000000000;
 
+  private static function uint32ToBytes($value) {
+    return [
+      $value & 0xFF,
+      ($value >> 8) & 0xFF,
+      ($value >> 16) & 0xFF,
+      ($value >> 24) & 0xFF
+    ];
+  }
+
   /**
-   * Generates a mosaic id from an owner address and a nonce.
-   * @param Address|Models\UnresolvedAddress|Models\Address ownerAddress Owner address.
-   * @param int nonce Nonce.
-   * @return string Computed mosaic id by GMP.
+   * ハッシュのバイト配列をBigIntに変換
+   * @param string $digest
+   * @return int
    */
-  public static function generateMosaicId(Address|Models\UnresolvedAddress|Models\Address $ownerAddress, int $nonce = null): array
-  {
+  private static function digestToBigInt($digest) {
+    $result = 0;
+    for ($i = 0; $i < 8; ++$i) {
+      $result += ord($digest[$i]) << (8 * $i);
+    }
+    return $result;
+  }
+
+  /**
+   * モザイクIDを生成
+   * @param string $ownerAddressBytes
+   * @param int $nonce
+   * @return int
+   */
+  public static function generateMosaicId(Address|Models\UnresolvedAddress|Models\Address $ownerAddress, int $nonce = null) {
+    // SHA3-256の初期化
     $hasher = hash_init('sha3-256');
+
+    // nonceをバイト配列に変換し、ハッシュに追加
     $nonce = $nonce ?? self::binaryToUint32(openssl_random_pseudo_bytes(4));
-    hash_update($hasher, self::uint32ToBinary($nonce));
+    $nonceBytes = self::uint32ToBytes($nonce);
+    hash_update($hasher, pack('C*', ...$nonceBytes));
+
+    // 所有者のアドレスバイトをハッシュに追加
     hash_update($hasher, $ownerAddress->binaryData);
+
+    // ハッシュの計算
     $digest = hash_final($hasher, true);
-    $result = self::digestToGmp($digest);
 
-    $gmpMax = gmp_init('9223372036854775807');
-
-    if (gmp_testbit($result, 63)) {
-      $result = gmp_sub($result, gmp_add($gmpMax, 1));
+    // バイト配列からBigIntへの変換
+    $result = self::digestToBigInt($digest);
+    if ($result & NAMESPACE_FLAG) {
+      $result -= NAMESPACE_FLAG;
     }
 
-    return ["nonce" => $nonce, "id" => gmp_strval($result)];
+    return ["nonce" => $nonce, "id" => $result];
   }
 
   /**
    * Generates a namespace id from a name and an optional parent namespace id.
    * @param string name Namespace name.
    * @param int parentNamespaceId Parent namespace id.
-   * @return string Computed namespace id by GMP.
+   * @return string Computed namespace id.
    */
   public static function generateNamespaceId(string $name, int $parentNamespaceId = 0): string
   {
@@ -46,9 +76,9 @@ class IdGenerator
     hash_update($hasher, self::uint32ToBinary(($parentNamespaceId >> 32) & 0xFFFFFFFF));
     hash_update($hasher, $name);
     $digest = hash_final($hasher, true);
-    $result = self::digestToGmp($digest);
+    $result = self::digestToBigInt($digest);
 
-    return gmp_strval(gmp_or($result, self::NAMESPACE_FLAG));
+    return $result | NAMESPACE_FLAG;
   }
 
   /**
@@ -117,15 +147,5 @@ class IdGenerator
   {
     $unpacked = unpack('V', $binary);
     return $unpacked[1];
-  }
-
-  private static function digestToGmp($digest)
-  {
-    $result = gmp_init(0);
-    for ($i = 0; $i < 8; ++$i) {
-      $shifted = gmp_mul(ord($digest[$i]), gmp_pow(2, 8 * $i));
-      $result = gmp_add($result, $shifted);
-    }
-    return $result;
   }
 }

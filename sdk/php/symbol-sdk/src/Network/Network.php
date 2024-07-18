@@ -5,6 +5,7 @@ namespace SymbolSdk\Network;
 use ReflectionClass;
 use SymbolSdk\CryptoTypes\PublicKey;
 use SymbolSdk\Utils\Converter;
+use SymbolSdk\Symbol\Models;
 use DateTime;
 
 /**
@@ -52,12 +53,12 @@ class Network
 
   /**
    * Converts a public key to an address.
-   * @param PublicKey publicKey Public key to convert.
+   * @param PublicKey|string|Models\PublicKey publicKey Public key to convert.
    * @return TAddress Address corresponding to the public key input.
    */
-  public function publicKeyToAddress(string|PublicKey $publicKey)
+  public function publicKeyToAddress(string|PublicKey|Models\PublicKey $publicKey)
   {
-    if ($publicKey instanceof PublicKey) $publicKey = $publicKey->binaryData;
+    if ($publicKey instanceof PublicKey || $publicKey instanceof Models\PublicKey) $publicKey = $publicKey->binaryData;
     $partOneHash = hash($this->_addressHasher, $publicKey, true);
     $partTwoHash = hash('ripemd160', $partOneHash, true);
     $identifierBinary = pack('C', $this->identifier);

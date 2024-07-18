@@ -2,8 +2,6 @@
 
 namespace SymbolSdk\Symbol\Models;
 
-require_once __DIR__ . '/../../../src/symbol/models.php';
-
 use PHPUnit\Framework\TestCase;
 use SymbolSdk\Symbol\KeyPair;
 use SymbolSdk\Bip32\Bip32;
@@ -24,7 +22,7 @@ class HdDerivationTest extends TestCase
 
 	public function testHdDerivation()
 	{
-		$jsonFilePath = dirname(__DIR__, 5) . '/tests/vectors/symbol/crypto/6.test-hd-derivation.json';
+		$jsonFilePath = dirname(__DIR__, 6) . '/tests/vectors/symbol/crypto/6.test-hd-derivation.json';
 		$jsonData = file_get_contents($jsonFilePath);
 		$decodedData = json_decode($jsonData, true);
 

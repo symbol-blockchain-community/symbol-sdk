@@ -7,7 +7,7 @@ class Metadata {
    * @param string $seed Seed value.
    * @return string Metadata generate key.
    */
-  static function metadataGenerateKey(string $str): string {
+  static function metadataGenerateKey(string $str): int {
     $bytes = mb_convert_encoding($str, 'UTF-8');
     $sha3Hash = hash('sha3-256', $bytes, true);
 
@@ -17,7 +17,7 @@ class Metadata {
 
     // Convert to unsigned 64-bit integer (ulong in C#)
     $ulongKey = unpack('P', $keyBytes)[1];
-    return $ulongKey;
+    return (int)$ulongKey;
   }
 
   /**

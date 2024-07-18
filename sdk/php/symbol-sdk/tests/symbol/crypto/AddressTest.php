@@ -2,8 +2,6 @@
 
 namespace SymbolSdk\Symbol\Models;
 
-require_once __DIR__ . '/../../../src/symbol/models.php';
-
 use PHPUnit\Framework\TestCase;
 use SymbolSdk\Symbol\Network;
 
@@ -11,7 +9,7 @@ class AddressTest extends TestCase
 {
   public function testAddress()
   {
-    $jsonFilePath = dirname(__DIR__, 5) . '/tests/vectors/symbol/crypto/1.test-address.json';
+    $jsonFilePath = dirname(__DIR__, 6) . '/tests/vectors/symbol/crypto/1.test-address.json';
     $jsonData = file_get_contents($jsonFilePath);
     $decodedData = json_decode($jsonData, true);
 

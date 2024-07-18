@@ -1,15 +1,21 @@
 # Symbol-SDK
 
-php用のsymbol-sdkです、NEMは使えません。
+php 用の symbol-sdk です、NEM は使えません。
 
-modelsやsign, 他crypto関連のテストは行っていますがsdk自体の動作テストは行っていません。自己責任でご利用ください。
+models や sign, 他 crypto 関連のテストは行っていますが sdk 自体の動作テストは行っていません。自己責任でご利用ください。
 
-SymbolCommunity管理（有志）のよる管理です、管理者、コントリビューターは常時募集しています。
+SymbolCommunity 管理（有志）のよる管理です、管理者、コントリビューターは常時募集しています。
 
-Transactionのアナウンス、REST APIからのデータ取得には以下ライブラリがおすすめです。
+## Install
 
 ```
-comporser install symbol-rest-client
+comporser require symbol-blockchain-community/symbol-sdk
+```
+
+また、Transaction のアナウンス、REST API からのデータ取得には以下ライブラリがおすすめです。
+
+```
+comporser require symbol-blockchain-community/symbol-rest-client
 ```
 
 ## TransferTransaction
@@ -62,3 +68,5 @@ try {
   echo 'Exception when calling TransactionRoutesApi->announceTransaction: ', $e->getMessage(), PHP_EOL;
 }
 ```
+
+その他 Transaction についてはまだドキュメントがありません。いずれ速習 Symbol for PHP を作成したいとは思っています。
