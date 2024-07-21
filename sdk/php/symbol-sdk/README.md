@@ -9,13 +9,13 @@ SymbolCommunity 管理（有志）のよる管理です、管理者、コント�
 ## Install
 
 ```
-comporser require symbol-blockchain-community/symbol-sdk
+composer require symbol-blockchain-community/symbol-sdk
 ```
 
 また、Transaction のアナウンス、REST API からのデータ取得には以下ライブラリがおすすめです。
 
 ```
-comporser require symbol-blockchain-community/symbol-rest-client
+composer require symbol-blockchain-community/symbol-rest-client
 ```
 
 ## TransferTransaction

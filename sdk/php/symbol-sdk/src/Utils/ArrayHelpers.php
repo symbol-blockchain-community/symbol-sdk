@@ -16,7 +16,7 @@ class ArrayHelpers
 	 * @param array|int rhs Right object to compare.
 	 * @returns int 1 if lhs is greater than rhs; -1 if lhs is less than rhs; 0 if lhs and rhs are equal.
 	 */
-	public static function deepCompare(array|int $lhs, array|int $rhs): int
+	public static function deepCompare(array|int|string $lhs, array|int|string $rhs): int
 	{
 		if (!is_array($lhs) && !($lhs instanceof SplFixedArray) && !($lhs instanceof ArrayAccess)) {
 			if ($lhs === $rhs)

@@ -5,6 +5,7 @@ namespace SymbolSdk\Symbol;
 use SymbolSdk\Impl\Ed25519;
 use SymbolSdk\CryptoTypes\Signature;
 use SymbolSdk\Utils\ArrayHelpers;
+use SymbolSdk\CryptoTypes\PublicKey;
 use Error;
 
 /**
@@ -19,7 +20,7 @@ class Verifier
    * Creates a verifier from a public key.
    * @param PublicKey publicKey Public key.
    */
-  public function __construct($publicKey)
+  public function __construct(PublicKey $publicKey)
   {
     if (0 == ArrayHelpers::deepCompare(str_repeat("\x00", 32), $publicKey->binaryData))
       throw new Error('public key cannot be zero');
