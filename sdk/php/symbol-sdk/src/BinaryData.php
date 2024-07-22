@@ -48,6 +48,6 @@ class BinaryData
 			return Converter::binaryToAddress($this->binaryData);
 		}
 
-		return '0x' . strtoupper(bin2hex($this->binaryData));
+		return strtoupper(bin2hex($this->binaryData));
 	}
 }

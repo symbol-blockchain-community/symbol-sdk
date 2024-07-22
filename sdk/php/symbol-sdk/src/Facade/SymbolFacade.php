@@ -169,7 +169,7 @@ class SymbolFacade
 	public function verifyTransaction(Models\Transaction $transaction, Signature $signature): bool
 	{
 		$verifyBuffer = $this->network->generationHashSeed->binaryData . self::transactionDataBuffer($transaction->serialize());
-		$verifier = new Verifier($transaction->signerPublicKey);
+		$verifier = new Verifier(new PublicKey($transaction->signerPublicKey->binaryData));
 		return $verifier->verify($verifyBuffer, $signature);
 	}
 
