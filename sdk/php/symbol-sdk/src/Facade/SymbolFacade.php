@@ -169,7 +169,7 @@ class SymbolFacade
 	public function verifyTransaction(Models\Transaction $transaction, Signature $signature): bool
 	{
 		$verifyBuffer = $this->network->generationHashSeed->binaryData . self::transactionDataBuffer($transaction->serialize());
-		$verifier = new Verifier(new PublicKey($transaction->signerPublicKey->binaryData));
+		$verifier = new Verifier($transaction->signerPublicKey);
 		return $verifier->verify($verifyBuffer, $signature);
 	}
 
@@ -187,7 +187,7 @@ class SymbolFacade
 		$initializeCosignature = function (Models\Cosignature &$cosignature) use ($keyPair, $transactionHash) {
 			$cosignature->version = 0;
 			$cosignature->signerPublicKey = new Models\PublicKey($keyPair->publicKey()->binaryData);
-			$cosignature->signature = new Models\Signature($keyPair->sign($transactionHash));
+			$cosignature->signature = new Models\Signature($keyPair->sign($transactionHash->binaryData));
 		};
 
 		if ($detached) {

@@ -69,4 +69,51 @@ try {
 }
 ```
 
+## AggregateCompleteTransaction
+
+モザイク作成を例にします
+AggregateTransaction の Inner Transaction クラスは全て Embedded がつきます
+`MosaicDefinitionTransactionV1` -> `EmbeddedMosaicDefinitionTransactionV1`
+また、Inner Transaction もネットワークタイプの設定が必要です。
+
+```php
+$mosaicId = IdGenerator::generateMosaicId($alice->address);
+$mosaicDefinitisonTransaction = new EmbeddedMosaicDefinitionTransactionV1(
+  network: new NetworkType(NetworkType::TESTNET),
+  signerPublicKey: $alice->publicKey,
+  nonce: new MosaicNonce($mosaicId['nonce']),
+  id: new MosaicId($mosaicId['id']),
+  duration: new BlockDuration(0),
+  divisibility: 2,
+  flags: new MosaicFlags(MosaicFlags::TRANSFERABLE)
+);
+$mosaicSupplyChangeTransaction = new EmbeddedMosaicSupplyChangeTransactionV1(
+  network: new NetworkType(NetworkType::TESTNET),
+  signerPublicKey: $alice->publicKey,
+  mosaicId: new UnresolvedMosaicId($mosaicId['id']),
+  action: new MosaicSupplyChangeAction(MosaicSupplyChangeAction::INCREASE),
+  delta: new Amount(10000)
+);
+$inner = [$mosaicDefinitisonTransaction, $mosaicSupplyChangeTransaction];
+$merkleHash = SymbolFacade::hashEmbeddedTransactions($inner);
+
+$aggTransaction = new AggregateCompleteTransactionV2(
+  network: new NetworkType(NetworkType::TESTNET),
+  signerPublicKey: $alice->publicKey,
+  deadline: new Timestamp($facade->now()->addHours(2)->timestamp),
+  transactions: $inner,
+  transactionsHash: $merkleHash
+);
+
+$facade->setMaxFee($aggTransaction, 100);
+$signature = $alice->signTransaction($aggTransaction);
+$payload = $facade->attachSignature($aggTransaction, $signature);
+try {
+  $result = $apiInstance->announceTransaction($payload);
+  print_r($result);
+} catch (Exception $e) {
+  echo 'Exception when calling TransactionRoutesApi->announceTransaction: ', $e->getMessage(), PHP_EOL;
+}
+```
+
 その他 Transaction についてはまだドキュメントがありません。いずれ速習 Symbol for PHP を作成したいとは思っています。

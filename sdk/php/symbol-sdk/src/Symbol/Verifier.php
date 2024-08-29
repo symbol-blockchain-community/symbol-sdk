@@ -5,7 +5,7 @@ namespace SymbolSdk\Symbol;
 use SymbolSdk\Impl\Ed25519;
 use SymbolSdk\CryptoTypes\Signature;
 use SymbolSdk\Utils\ArrayHelpers;
-use SymbolSdk\CryptoTypes\PublicKey;
+use SymbolSdk\Symbol\Models\PublicKey;
 use Error;
 
 /**

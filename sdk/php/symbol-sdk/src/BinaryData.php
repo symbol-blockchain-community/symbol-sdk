@@ -2,8 +2,6 @@
 
 namespace SymbolSdk;
 
-require_once __DIR__ . '/utils/converter.php';
-
 use SymbolSdk\Utils\Converter;
 
 use Exception;
