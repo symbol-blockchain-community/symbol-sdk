@@ -2,8 +2,6 @@
 
 namespace SymbolSdk\Impl;
 
-require_once __DIR__ . '/../../vendor/autoload.php';
-
 use SymbolSdk\Impl\External\TweetNaclFastSymbol;
 use SymbolSdk\Utils\ArrayHelpers;
 use SymbolSdk\Utils\Converter;
