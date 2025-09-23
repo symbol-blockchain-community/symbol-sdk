@@ -73,11 +73,22 @@ class SymbolFacade
 	private static function transactionDataBuffer(string $transactionBuffer): string
 	{
 		$TRANSACTION_HEADER_SIZE = 4 + 4 + Signature::$SIZE + PublicKey::$SIZE + 4;
-		$AGGREGATE_HASHED_SIZE = 4 + 8 + 8 + Hash256::$SIZE;
+		$PRE_V3_AGGREGATE_HASHED_SIZE = array_sum([
+            4,  // version, network, type
+            8,  // maxFee
+            8,  // deadline
+            Hash256::$SIZE // transactionsHash
+        ]);
+		$AGGREGATE_HASHED_SIZE = $PRE_V3_AGGREGATE_HASHED_SIZE + array_sum([
+            4 // payloadSize
+        ]);
 		$dataBufferStart = $TRANSACTION_HEADER_SIZE;
-		$dataBufferEnd = self::isAggregateTransaction($transactionBuffer)
-			? $TRANSACTION_HEADER_SIZE + $AGGREGATE_HASHED_SIZE
-			: strlen($transactionBuffer);
+		$dataBufferEnd = strlen($transactionBuffer);
+		if (self::isAggregateTransaction($transactionBuffer)) {
+        $version = ord($transactionBuffer[$TRANSACTION_HEADER_SIZE]);
+        $dataBufferEnd = $TRANSACTION_HEADER_SIZE
+            + (($version >= 3) ? $AGGREGATE_HASHED_SIZE : $PRE_V3_AGGREGATE_HASHED_SIZE);
+    }
 		return substr($transactionBuffer, $dataBufferStart, $dataBufferEnd - $dataBufferStart);
 	}
 
@@ -192,7 +203,7 @@ class SymbolFacade
 
 		if ($detached) {
 			$cosignature = new Models\DetachedCosignature();
-			$cosignature->parentHash = new Hash256($transactionHash);
+			$cosignature->parentHash = new Models\Hash256($transactionHash);
 			$initializeCosignature($cosignature);
 			return $cosignature;
 		}

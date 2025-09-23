@@ -35,7 +35,7 @@ class PodTypeFormatter(AbstractTypeFormatter):
 			body += f'{variable_name} = {variable_name} ?? str_repeat("\\x00", self::size());\n'
 		body += f'parent::__construct({self.pod.size}, {variable_name});'
 		if self._is_array:
-			arguments = [f'string {variable_name} = {self.printer.get_default_value()}']
+			arguments = [f'?string {variable_name} = {self.printer.get_default_value()}']
 		else:
 			arguments = [f'{variable_name} = {self.printer.get_default_value()}']
 

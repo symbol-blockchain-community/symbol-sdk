@@ -12,7 +12,7 @@ function generate_code() {
 	PYTHONPATH="${git_root}/catbuffer/parser" python3 -m catparser \
 		--schema "${git_root}/catbuffer/schemas/$1/all_generated.cats"  \
 		--include "${git_root}/catbuffer/schemas/$1" \
-		--output "${git_root}/sdk/php/src/$2" \
+		--output "${git_root}/sdk/php/symbol-sdk/src/$2" \
 		--quiet \
 		--generator generator.Generator
 }
@@ -20,9 +20,9 @@ function generate_code() {
 if [[ $# -eq 0 ]]; then
 	echo "updating generated code in git"
 	# for name in "nem" "symbol";
-	for name in "symbol";
+	for name in "Symbol";
 	do
-		rm -rf "./src/${name}/models.php"
+		rm -rf ".symbol-sdk/src/${name}/models.php"
 		generate_code "${name}" "${name}"
 	done
 elif [[ "$1" = "dryrun" ]]; then
@@ -38,3 +38,6 @@ else
 	echo "unknown options"
 	exit 1
 fi
+
+/Users/matsukawatoshiya/Desktop/symbol-sdk/sdk/php/symbol-sdk/src/Symbol
+/Users/matsukawatoshiya/Desktop/symbol-sdk/sdk/php/src/Symbol

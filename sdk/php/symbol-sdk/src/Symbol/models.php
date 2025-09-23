@@ -227,7 +227,7 @@ class Timestamp extends BaseValue {
 }
 
 class UnresolvedAddress extends BinaryData {
-	public function __construct(string $unresolvedAddress = null){
+	public function __construct(?string $unresolvedAddress = null){
 		$unresolvedAddress = $unresolvedAddress ?? str_repeat("\x00", self::size());
 		parent::__construct(24, $unresolvedAddress);
 	}
@@ -246,7 +246,7 @@ class UnresolvedAddress extends BinaryData {
 }
 
 class Address extends BinaryData {
-	public function __construct(string $address = null){
+	public function __construct(?string $address = null){
 		$address = $address ?? str_repeat("\x00", self::size());
 		parent::__construct(24, $address);
 	}
@@ -265,7 +265,7 @@ class Address extends BinaryData {
 }
 
 class Hash256 extends BinaryData {
-	public function __construct(string $hash256 = null){
+	public function __construct(?string $hash256 = null){
 		$hash256 = $hash256 ?? str_repeat("\x00", self::size());
 		parent::__construct(32, $hash256);
 	}
@@ -284,7 +284,7 @@ class Hash256 extends BinaryData {
 }
 
 class Hash512 extends BinaryData {
-	public function __construct(string $hash512 = null){
+	public function __construct(?string $hash512 = null){
 		$hash512 = $hash512 ?? str_repeat("\x00", self::size());
 		parent::__construct(64, $hash512);
 	}
@@ -303,7 +303,7 @@ class Hash512 extends BinaryData {
 }
 
 class PublicKey extends BinaryData {
-	public function __construct(string $publicKey = null){
+	public function __construct(?string $publicKey = null){
 		$publicKey = $publicKey ?? str_repeat("\x00", self::size());
 		parent::__construct(32, $publicKey);
 	}
@@ -322,7 +322,7 @@ class PublicKey extends BinaryData {
 }
 
 class VotingPublicKey extends BinaryData {
-	public function __construct(string $votingPublicKey = null){
+	public function __construct(?string $votingPublicKey = null){
 		$votingPublicKey = $votingPublicKey ?? str_repeat("\x00", self::size());
 		parent::__construct(32, $votingPublicKey);
 	}
@@ -341,7 +341,7 @@ class VotingPublicKey extends BinaryData {
 }
 
 class Signature extends BinaryData {
-	public function __construct(string $signature = null){
+	public function __construct(?string $signature = null){
 		$signature = $signature ?? str_repeat("\x00", self::size());
 		parent::__construct(64, $signature);
 	}
@@ -833,7 +833,7 @@ class EmbeddedTransaction {
 }
 
 class ProofGamma extends BinaryData {
-	public function __construct(string $proofGamma = null){
+	public function __construct(?string $proofGamma = null){
 		$proofGamma = $proofGamma ?? str_repeat("\x00", self::size());
 		parent::__construct(32, $proofGamma);
 	}
@@ -852,7 +852,7 @@ class ProofGamma extends BinaryData {
 }
 
 class ProofVerificationHash extends BinaryData {
-	public function __construct(string $proofVerificationHash = null){
+	public function __construct(?string $proofVerificationHash = null){
 		$proofVerificationHash = $proofVerificationHash ?? str_repeat("\x00", self::size());
 		parent::__construct(16, $proofVerificationHash);
 	}
@@ -871,7 +871,7 @@ class ProofVerificationHash extends BinaryData {
 }
 
 class ProofScalar extends BinaryData {
-	public function __construct(string $proofScalar = null){
+	public function __construct(?string $proofScalar = null){
 		$proofScalar = $proofScalar ?? str_repeat("\x00", self::size());
 		parent::__construct(32, $proofScalar);
 	}
@@ -3625,6 +3625,103 @@ class AggregateCompleteTransactionV2 extends Transaction {
 	}
 }
 
+class AggregateCompleteTransactionV3 extends Transaction {
+	const TRANSACTION_VERSION = 3;
+
+	const TRANSACTION_TYPE = TransactionType::AGGREGATE_COMPLETE;
+
+	public ?Hash256 $transactionsHash;
+
+	public ?array $transactions;
+
+	public ?array $cosignatures;
+
+	private int $aggregateTransactionHeaderReserved_1 = 0; // reserved field
+
+	public function __construct(
+		?Signature $signature = null,
+		?PublicKey $signerPublicKey = null,
+		?NetworkType $network = null,
+		?Amount $fee = null,
+		?Timestamp $deadline = null,
+		?Hash256 $transactionsHash = null,
+		?array $transactions = null,
+		?array $cosignatures = null
+	){
+		parent::__construct(
+			$signature,
+			$signerPublicKey,
+			AggregateCompleteTransactionV3::TRANSACTION_VERSION,
+			$network,
+			new TransactionType(AggregateCompleteTransactionV3::TRANSACTION_TYPE),
+			$fee,
+			$deadline,
+		);
+		$this->transactionsHash = $transactionsHash ?? new Hash256();
+		$this->transactions = $transactions ?? [];
+		$this->cosignatures = $cosignatures ?? [];
+		$this->aggregateTransactionHeaderReserved_1 = 0; // reserved field
+	}
+
+	public function sort(){
+	}
+
+	public function size(){
+		$size = 0;
+		$size += parent::size();
+		$size += $this->transactionsHash->size();
+		$size += 4;
+		$size += 4;
+		$size += ArrayHelpers::size($this->transactions, 8, false);
+		$size += ArrayHelpers::size($this->cosignatures);
+		return $size;
+	}
+
+	public static function deserialize(BinaryReader $reader){
+		$instance = new AggregateCompleteTransactionV3();
+
+		$size = Converter::binaryToInt($reader->read(4), 4);
+		$reader->retreat(4);
+		$reader = new BinaryReader($reader->read($size));
+		$reader->retreat($size);
+		Transaction::_deserialize($reader, $instance);
+		$transactionsHash = Hash256::deserialize($reader);
+		$payloadSize = Converter::binaryToInt($reader->read(4), 4);
+		$aggregateTransactionHeaderReserved_1 = Converter::binaryToInt($reader->read(4), 4);
+		if (0 !== $aggregateTransactionHeaderReserved_1)
+			throw new OutOfRangeException('Invalid value of reserved field (' . $aggregateTransactionHeaderReserved_1 . ')');
+		$transactions = ArrayHelpers::readVariableSizeElements($reader, [EmbeddedTransactionFactory::class, 'deserialize'], $payloadSize, 8, false);
+		$cosignatures = ArrayHelpers::readArray($reader, [Cosignature::class, 'deserialize']);
+
+		$instance->transactionsHash = $transactionsHash;
+		$instance->transactions = $transactions;
+		$instance->cosignatures = $cosignatures;
+		return $instance;
+	}
+
+	public function serialize(): string {
+		$writer = new BinaryWriter($this->size());
+		$this->sort();
+		parent::_serialize($writer);
+		$writer->write($this->transactionsHash->serialize());
+		$writer->write(Converter::intToBinary(ArrayHelpers::size($this->transactions, 8, false), 4)); // bound: payload_size
+		$writer->write(Converter::intToBinary($this->aggregateTransactionHeaderReserved_1, 4));
+		ArrayHelpers::writeVariableSizeElements($writer, $this->transactions, 8, false);
+		ArrayHelpers::writeArray($writer, $this->cosignatures);
+		return $writer->getBinaryData();
+	}
+
+	public function __toString(){
+		$result = '(';
+		$result .= parent::__toString();
+		$result .= 'transactionsHash: ' . $this->transactionsHash . ', ';
+		$result .= 'transactions: ' . '[' . implode(',', array_map(fn ($e) => $e, $this->transactions)) . ']' . ', ';
+		$result .= 'cosignatures: ' . '[' . implode(',', array_map(fn ($e) => $e, $this->cosignatures)) . ']' . ', ';
+		$result .= ')';
+		return $result;
+	}
+}
+
 class AggregateBondedTransactionV1 extends Transaction {
 	const TRANSACTION_VERSION = 1;
 
@@ -3776,6 +3873,103 @@ class AggregateBondedTransactionV2 extends Transaction {
 
 	public static function deserialize(BinaryReader $reader){
 		$instance = new AggregateBondedTransactionV2();
+
+		$size = Converter::binaryToInt($reader->read(4), 4);
+		$reader->retreat(4);
+		$reader = new BinaryReader($reader->read($size));
+		$reader->retreat($size);
+		Transaction::_deserialize($reader, $instance);
+		$transactionsHash = Hash256::deserialize($reader);
+		$payloadSize = Converter::binaryToInt($reader->read(4), 4);
+		$aggregateTransactionHeaderReserved_1 = Converter::binaryToInt($reader->read(4), 4);
+		if (0 !== $aggregateTransactionHeaderReserved_1)
+			throw new OutOfRangeException('Invalid value of reserved field (' . $aggregateTransactionHeaderReserved_1 . ')');
+		$transactions = ArrayHelpers::readVariableSizeElements($reader, [EmbeddedTransactionFactory::class, 'deserialize'], $payloadSize, 8, false);
+		$cosignatures = ArrayHelpers::readArray($reader, [Cosignature::class, 'deserialize']);
+
+		$instance->transactionsHash = $transactionsHash;
+		$instance->transactions = $transactions;
+		$instance->cosignatures = $cosignatures;
+		return $instance;
+	}
+
+	public function serialize(): string {
+		$writer = new BinaryWriter($this->size());
+		$this->sort();
+		parent::_serialize($writer);
+		$writer->write($this->transactionsHash->serialize());
+		$writer->write(Converter::intToBinary(ArrayHelpers::size($this->transactions, 8, false), 4)); // bound: payload_size
+		$writer->write(Converter::intToBinary($this->aggregateTransactionHeaderReserved_1, 4));
+		ArrayHelpers::writeVariableSizeElements($writer, $this->transactions, 8, false);
+		ArrayHelpers::writeArray($writer, $this->cosignatures);
+		return $writer->getBinaryData();
+	}
+
+	public function __toString(){
+		$result = '(';
+		$result .= parent::__toString();
+		$result .= 'transactionsHash: ' . $this->transactionsHash . ', ';
+		$result .= 'transactions: ' . '[' . implode(',', array_map(fn ($e) => $e, $this->transactions)) . ']' . ', ';
+		$result .= 'cosignatures: ' . '[' . implode(',', array_map(fn ($e) => $e, $this->cosignatures)) . ']' . ', ';
+		$result .= ')';
+		return $result;
+	}
+}
+
+class AggregateBondedTransactionV3 extends Transaction {
+	const TRANSACTION_VERSION = 3;
+
+	const TRANSACTION_TYPE = TransactionType::AGGREGATE_BONDED;
+
+	public ?Hash256 $transactionsHash;
+
+	public ?array $transactions;
+
+	public ?array $cosignatures;
+
+	private int $aggregateTransactionHeaderReserved_1 = 0; // reserved field
+
+	public function __construct(
+		?Signature $signature = null,
+		?PublicKey $signerPublicKey = null,
+		?NetworkType $network = null,
+		?Amount $fee = null,
+		?Timestamp $deadline = null,
+		?Hash256 $transactionsHash = null,
+		?array $transactions = null,
+		?array $cosignatures = null
+	){
+		parent::__construct(
+			$signature,
+			$signerPublicKey,
+			AggregateBondedTransactionV3::TRANSACTION_VERSION,
+			$network,
+			new TransactionType(AggregateBondedTransactionV3::TRANSACTION_TYPE),
+			$fee,
+			$deadline,
+		);
+		$this->transactionsHash = $transactionsHash ?? new Hash256();
+		$this->transactions = $transactions ?? [];
+		$this->cosignatures = $cosignatures ?? [];
+		$this->aggregateTransactionHeaderReserved_1 = 0; // reserved field
+	}
+
+	public function sort(){
+	}
+
+	public function size(){
+		$size = 0;
+		$size += parent::size();
+		$size += $this->transactionsHash->size();
+		$size += 4;
+		$size += 4;
+		$size += ArrayHelpers::size($this->transactions, 8, false);
+		$size += ArrayHelpers::size($this->cosignatures);
+		return $size;
+	}
+
+	public static function deserialize(BinaryReader $reader){
+		$instance = new AggregateBondedTransactionV3();
 
 		$size = Converter::binaryToInt($reader->read(4), 4);
 		$reader->retreat(4);
@@ -8188,8 +8382,10 @@ class TransactionFactory {
 		self::toKey([NodeKeyLinkTransactionV1::TRANSACTION_TYPE, NodeKeyLinkTransactionV1::TRANSACTION_VERSION]) => NodeKeyLinkTransactionV1::class,
 		self::toKey([AggregateCompleteTransactionV1::TRANSACTION_TYPE, AggregateCompleteTransactionV1::TRANSACTION_VERSION]) => AggregateCompleteTransactionV1::class,
 		self::toKey([AggregateCompleteTransactionV2::TRANSACTION_TYPE, AggregateCompleteTransactionV2::TRANSACTION_VERSION]) => AggregateCompleteTransactionV2::class,
+		self::toKey([AggregateCompleteTransactionV3::TRANSACTION_TYPE, AggregateCompleteTransactionV3::TRANSACTION_VERSION]) => AggregateCompleteTransactionV3::class,
 		self::toKey([AggregateBondedTransactionV1::TRANSACTION_TYPE, AggregateBondedTransactionV1::TRANSACTION_VERSION]) => AggregateBondedTransactionV1::class,
 		self::toKey([AggregateBondedTransactionV2::TRANSACTION_TYPE, AggregateBondedTransactionV2::TRANSACTION_VERSION]) => AggregateBondedTransactionV2::class,
+		self::toKey([AggregateBondedTransactionV3::TRANSACTION_TYPE, AggregateBondedTransactionV3::TRANSACTION_VERSION]) => AggregateBondedTransactionV3::class,
 		self::toKey([VotingKeyLinkTransactionV1::TRANSACTION_TYPE, VotingKeyLinkTransactionV1::TRANSACTION_VERSION]) => VotingKeyLinkTransactionV1::class,
 		self::toKey([VrfKeyLinkTransactionV1::TRANSACTION_TYPE, VrfKeyLinkTransactionV1::TRANSACTION_VERSION]) => VrfKeyLinkTransactionV1::class,
 		self::toKey([HashLockTransactionV1::TRANSACTION_TYPE, HashLockTransactionV1::TRANSACTION_VERSION]) => HashLockTransactionV1::class,
