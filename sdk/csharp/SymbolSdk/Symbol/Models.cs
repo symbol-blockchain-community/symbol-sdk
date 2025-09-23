@@ -4988,6 +4988,185 @@ public class AggregateCompleteTransactionV2 : ITransaction {
 	}
 }
 
+public class AggregateCompleteTransactionV3 : ITransaction {
+	public const byte TRANSACTION_VERSION = 3;
+
+	public static readonly TransactionType TRANSACTION_TYPE = TransactionType.AGGREGATE_COMPLETE;
+
+	private readonly uint VerifiableEntityHeaderReserved_1;
+	private readonly uint EntityBodyReserved_1;
+	private readonly uint AggregateTransactionHeaderReserved_1;
+
+	public AggregateCompleteTransactionV3(
+	    Signature? signature = null,
+	    PublicKey? signerPublicKey = null,
+	    byte? version = null,
+	    NetworkType? network = null,
+	    TransactionType? type = null,
+	    Amount? fee = null,
+	    Timestamp? deadline = null,
+	    Hash256? transactionsHash = null,
+	    IBaseTransaction[]? transactions = null,
+	    Cosignature[]? cosignatures = null
+	) {
+		Signature = signature ?? new Signature();
+		SignerPublicKey = signerPublicKey ?? new PublicKey();
+		Version = version ?? AggregateCompleteTransactionV3.TRANSACTION_VERSION;
+		Network = network ?? NetworkType.MAINNET;
+		Type = type ?? AggregateCompleteTransactionV3.TRANSACTION_TYPE;
+		Fee = fee ?? new Amount();
+		Deadline = deadline ?? new Timestamp();
+		TransactionsHash = transactionsHash ?? new Hash256();
+		Transactions = transactions ?? Array.Empty<IBaseTransaction>();
+		Cosignatures = cosignatures ?? Array.Empty<Cosignature>();
+		VerifiableEntityHeaderReserved_1 = 0; // reserved field
+		EntityBodyReserved_1 = 0; // reserved field
+		AggregateTransactionHeaderReserved_1 = 0; // reserved field
+	}
+
+	public void Sort() {
+	}
+
+	public Signature Signature {
+		get; set;
+	}
+
+	public PublicKey SignerPublicKey {
+		get; set;
+	}
+
+	public byte Version {
+		get; set;
+	}
+
+	public NetworkType Network {
+		get; set;
+	}
+
+	public TransactionType Type {
+		get; set;
+	}
+
+	public Amount Fee {
+		get; set;
+	}
+
+	public Timestamp Deadline {
+		get; set;
+	}
+
+	public Hash256 TransactionsHash {
+		get; set;
+	}
+
+	public IBaseTransaction[] Transactions {
+		get; set;
+	}
+
+	public Cosignature[] Cosignatures {
+		get; set;
+	}
+
+	public uint Size {
+		get {
+			uint size = 0;
+			size += 4;
+			size += 4;
+			size += Signature.Size;
+			size += SignerPublicKey.Size;
+			size += 4;
+			size += 1;
+			size += Network.Size;
+			size += Type.Size;
+			size += Fee.Size;
+			size += Deadline.Size;
+			size += TransactionsHash.Size;
+			size += 4;
+			size += 4;
+			size += ArrayHelpers.Size(Transactions, 8, false);
+			size += ArrayHelpers.Size(Cosignatures);
+			return size;
+		}
+	}
+
+	public static AggregateCompleteTransactionV3 Deserialize(BinaryReader br) {
+		var size = br.ReadUInt32();
+		br = new BinaryReader(new MemoryStream(br.ReadBytes((int) size - 4)));
+		var verifiableEntityHeaderReserved_1 = br.ReadUInt32();
+		if (0 != verifiableEntityHeaderReserved_1)
+			throw new Exception($"Invalid value of reserved field ({verifiableEntityHeaderReserved_1})");
+		var signature = Signature.Deserialize(br);
+		var signerPublicKey = PublicKey.Deserialize(br);
+		var entityBodyReserved_1 = br.ReadUInt32();
+		if (0 != entityBodyReserved_1)
+			throw new Exception($"Invalid value of reserved field ({entityBodyReserved_1})");
+		var version = br.ReadByte();
+		var network = NetworkType.Deserialize(br);
+		var type = TransactionType.Deserialize(br);
+		var fee = Amount.Deserialize(br);
+		var deadline = Timestamp.Deserialize(br);
+		var transactionsHash = Hash256.Deserialize(br);
+		var payloadSize = br.ReadUInt32();
+		var aggregateTransactionHeaderReserved_1 = br.ReadUInt32();
+		if (0 != aggregateTransactionHeaderReserved_1)
+			throw new Exception($"Invalid value of reserved field ({aggregateTransactionHeaderReserved_1})");
+		var transactions = ArrayHelpers.ReadVariableSizeElements(br, EmbeddedTransactionFactory.Deserialize, payloadSize, 8, false);
+		var cosignatures = ArrayHelpers.ReadArray(br, Cosignature.Deserialize);
+
+		var instance = new AggregateCompleteTransactionV3(
+			signature,
+			signerPublicKey,
+			version,
+			network,
+			type,
+			fee,
+			deadline,
+			transactionsHash,
+			transactions,
+			cosignatures);
+		return instance;
+	}
+
+	public byte[] Serialize() {
+		using var ms = new MemoryStream();
+		using var bw = new BinaryWriter(ms);
+		bw.Write(Size);
+		bw.Write(BitConverter.GetBytes(VerifiableEntityHeaderReserved_1)); 
+		bw.Write(Signature.Serialize()); 
+		bw.Write(SignerPublicKey.Serialize()); 
+		bw.Write(BitConverter.GetBytes(EntityBodyReserved_1)); 
+		bw.Write(Version); 
+		bw.Write(Network.Serialize()); 
+		bw.Write(Type.Serialize()); 
+		bw.Write(Fee.Serialize()); 
+		bw.Write(Deadline.Serialize()); 
+		bw.Write(TransactionsHash.Serialize()); 
+		bw.Write(BitConverter.GetBytes(ArrayHelpers.Size(Transactions, 8, false)));  // bound: payload_size
+		bw.Write(BitConverter.GetBytes(AggregateTransactionHeaderReserved_1)); 
+		Sort();
+		ArrayHelpers.WriteVariableSizeElements(bw, Transactions, 8, false);
+		Sort();
+		ArrayHelpers.WriteArray(bw, Cosignatures);
+		return ms.ToArray();
+	}
+
+	public override string ToString() {
+		var result = "(";
+		result += $"signature: {Signature}, ";
+		result += $"signerPublicKey: {SignerPublicKey}, ";
+		result += $"version: {Converter.ToString(Version)}, ";
+		result += $"network: {Network}, ";
+		result += $"type: {Type}, ";
+		result += $"fee: {Fee}, ";
+		result += $"deadline: {Deadline}, ";
+		result += $"transactionsHash: {TransactionsHash}, ";
+		result += $"transactions: [{string.Join(",", Transactions.Select(e => e.ToString()))}], ";
+		result += $"cosignatures: [{string.Join(",", Cosignatures.Select(e => e.ToString()))}], ";
+		result += ")";
+		return result;
+	}
+}
+
 public class AggregateBondedTransactionV1 : ITransaction {
 	public const byte TRANSACTION_VERSION = 1;
 
@@ -5293,6 +5472,185 @@ public class AggregateBondedTransactionV2 : ITransaction {
 		var cosignatures = ArrayHelpers.ReadArray(br, Cosignature.Deserialize);
 
 		var instance = new AggregateBondedTransactionV2(
+			signature,
+			signerPublicKey,
+			version,
+			network,
+			type,
+			fee,
+			deadline,
+			transactionsHash,
+			transactions,
+			cosignatures);
+		return instance;
+	}
+
+	public byte[] Serialize() {
+		using var ms = new MemoryStream();
+		using var bw = new BinaryWriter(ms);
+		bw.Write(Size);
+		bw.Write(BitConverter.GetBytes(VerifiableEntityHeaderReserved_1)); 
+		bw.Write(Signature.Serialize()); 
+		bw.Write(SignerPublicKey.Serialize()); 
+		bw.Write(BitConverter.GetBytes(EntityBodyReserved_1)); 
+		bw.Write(Version); 
+		bw.Write(Network.Serialize()); 
+		bw.Write(Type.Serialize()); 
+		bw.Write(Fee.Serialize()); 
+		bw.Write(Deadline.Serialize()); 
+		bw.Write(TransactionsHash.Serialize()); 
+		bw.Write(BitConverter.GetBytes(ArrayHelpers.Size(Transactions, 8, false)));  // bound: payload_size
+		bw.Write(BitConverter.GetBytes(AggregateTransactionHeaderReserved_1)); 
+		Sort();
+		ArrayHelpers.WriteVariableSizeElements(bw, Transactions, 8, false);
+		Sort();
+		ArrayHelpers.WriteArray(bw, Cosignatures);
+		return ms.ToArray();
+	}
+
+	public override string ToString() {
+		var result = "(";
+		result += $"signature: {Signature}, ";
+		result += $"signerPublicKey: {SignerPublicKey}, ";
+		result += $"version: {Converter.ToString(Version)}, ";
+		result += $"network: {Network}, ";
+		result += $"type: {Type}, ";
+		result += $"fee: {Fee}, ";
+		result += $"deadline: {Deadline}, ";
+		result += $"transactionsHash: {TransactionsHash}, ";
+		result += $"transactions: [{string.Join(",", Transactions.Select(e => e.ToString()))}], ";
+		result += $"cosignatures: [{string.Join(",", Cosignatures.Select(e => e.ToString()))}], ";
+		result += ")";
+		return result;
+	}
+}
+
+public class AggregateBondedTransactionV3 : ITransaction {
+	public const byte TRANSACTION_VERSION = 3;
+
+	public static readonly TransactionType TRANSACTION_TYPE = TransactionType.AGGREGATE_BONDED;
+
+	private readonly uint VerifiableEntityHeaderReserved_1;
+	private readonly uint EntityBodyReserved_1;
+	private readonly uint AggregateTransactionHeaderReserved_1;
+
+	public AggregateBondedTransactionV3(
+	    Signature? signature = null,
+	    PublicKey? signerPublicKey = null,
+	    byte? version = null,
+	    NetworkType? network = null,
+	    TransactionType? type = null,
+	    Amount? fee = null,
+	    Timestamp? deadline = null,
+	    Hash256? transactionsHash = null,
+	    IBaseTransaction[]? transactions = null,
+	    Cosignature[]? cosignatures = null
+	) {
+		Signature = signature ?? new Signature();
+		SignerPublicKey = signerPublicKey ?? new PublicKey();
+		Version = version ?? AggregateBondedTransactionV3.TRANSACTION_VERSION;
+		Network = network ?? NetworkType.MAINNET;
+		Type = type ?? AggregateBondedTransactionV3.TRANSACTION_TYPE;
+		Fee = fee ?? new Amount();
+		Deadline = deadline ?? new Timestamp();
+		TransactionsHash = transactionsHash ?? new Hash256();
+		Transactions = transactions ?? Array.Empty<IBaseTransaction>();
+		Cosignatures = cosignatures ?? Array.Empty<Cosignature>();
+		VerifiableEntityHeaderReserved_1 = 0; // reserved field
+		EntityBodyReserved_1 = 0; // reserved field
+		AggregateTransactionHeaderReserved_1 = 0; // reserved field
+	}
+
+	public void Sort() {
+	}
+
+	public Signature Signature {
+		get; set;
+	}
+
+	public PublicKey SignerPublicKey {
+		get; set;
+	}
+
+	public byte Version {
+		get; set;
+	}
+
+	public NetworkType Network {
+		get; set;
+	}
+
+	public TransactionType Type {
+		get; set;
+	}
+
+	public Amount Fee {
+		get; set;
+	}
+
+	public Timestamp Deadline {
+		get; set;
+	}
+
+	public Hash256 TransactionsHash {
+		get; set;
+	}
+
+	public IBaseTransaction[] Transactions {
+		get; set;
+	}
+
+	public Cosignature[] Cosignatures {
+		get; set;
+	}
+
+	public uint Size {
+		get {
+			uint size = 0;
+			size += 4;
+			size += 4;
+			size += Signature.Size;
+			size += SignerPublicKey.Size;
+			size += 4;
+			size += 1;
+			size += Network.Size;
+			size += Type.Size;
+			size += Fee.Size;
+			size += Deadline.Size;
+			size += TransactionsHash.Size;
+			size += 4;
+			size += 4;
+			size += ArrayHelpers.Size(Transactions, 8, false);
+			size += ArrayHelpers.Size(Cosignatures);
+			return size;
+		}
+	}
+
+	public static AggregateBondedTransactionV3 Deserialize(BinaryReader br) {
+		var size = br.ReadUInt32();
+		br = new BinaryReader(new MemoryStream(br.ReadBytes((int) size - 4)));
+		var verifiableEntityHeaderReserved_1 = br.ReadUInt32();
+		if (0 != verifiableEntityHeaderReserved_1)
+			throw new Exception($"Invalid value of reserved field ({verifiableEntityHeaderReserved_1})");
+		var signature = Signature.Deserialize(br);
+		var signerPublicKey = PublicKey.Deserialize(br);
+		var entityBodyReserved_1 = br.ReadUInt32();
+		if (0 != entityBodyReserved_1)
+			throw new Exception($"Invalid value of reserved field ({entityBodyReserved_1})");
+		var version = br.ReadByte();
+		var network = NetworkType.Deserialize(br);
+		var type = TransactionType.Deserialize(br);
+		var fee = Amount.Deserialize(br);
+		var deadline = Timestamp.Deserialize(br);
+		var transactionsHash = Hash256.Deserialize(br);
+		var payloadSize = br.ReadUInt32();
+		var aggregateTransactionHeaderReserved_1 = br.ReadUInt32();
+		if (0 != aggregateTransactionHeaderReserved_1)
+			throw new Exception($"Invalid value of reserved field ({aggregateTransactionHeaderReserved_1})");
+		var transactions = ArrayHelpers.ReadVariableSizeElements(br, EmbeddedTransactionFactory.Deserialize, payloadSize, 8, false);
+		var cosignatures = ArrayHelpers.ReadArray(br, Cosignature.Deserialize);
+
+		var instance = new AggregateBondedTransactionV3(
 			signature,
 			signerPublicKey,
 			version,
@@ -12655,8 +13013,10 @@ public class TransactionFactory : IDeserializer {
 			{ToKey(new uint[]{NodeKeyLinkTransactionV1.TRANSACTION_TYPE.Value, NodeKeyLinkTransactionV1.TRANSACTION_VERSION}), NodeKeyLinkTransactionV1.Deserialize},
 			{ToKey(new uint[]{AggregateCompleteTransactionV1.TRANSACTION_TYPE.Value, AggregateCompleteTransactionV1.TRANSACTION_VERSION}), AggregateCompleteTransactionV1.Deserialize},
 			{ToKey(new uint[]{AggregateCompleteTransactionV2.TRANSACTION_TYPE.Value, AggregateCompleteTransactionV2.TRANSACTION_VERSION}), AggregateCompleteTransactionV2.Deserialize},
+			{ToKey(new uint[]{AggregateCompleteTransactionV3.TRANSACTION_TYPE.Value, AggregateCompleteTransactionV3.TRANSACTION_VERSION}), AggregateCompleteTransactionV3.Deserialize},
 			{ToKey(new uint[]{AggregateBondedTransactionV1.TRANSACTION_TYPE.Value, AggregateBondedTransactionV1.TRANSACTION_VERSION}), AggregateBondedTransactionV1.Deserialize},
 			{ToKey(new uint[]{AggregateBondedTransactionV2.TRANSACTION_TYPE.Value, AggregateBondedTransactionV2.TRANSACTION_VERSION}), AggregateBondedTransactionV2.Deserialize},
+			{ToKey(new uint[]{AggregateBondedTransactionV3.TRANSACTION_TYPE.Value, AggregateBondedTransactionV3.TRANSACTION_VERSION}), AggregateBondedTransactionV3.Deserialize},
 			{ToKey(new uint[]{VotingKeyLinkTransactionV1.TRANSACTION_TYPE.Value, VotingKeyLinkTransactionV1.TRANSACTION_VERSION}), VotingKeyLinkTransactionV1.Deserialize},
 			{ToKey(new uint[]{VrfKeyLinkTransactionV1.TRANSACTION_TYPE.Value, VrfKeyLinkTransactionV1.TRANSACTION_VERSION}), VrfKeyLinkTransactionV1.Deserialize},
 			{ToKey(new uint[]{HashLockTransactionV1.TRANSACTION_TYPE.Value, HashLockTransactionV1.TRANSACTION_VERSION}), HashLockTransactionV1.Deserialize},
@@ -12696,8 +13056,10 @@ public class TransactionFactory : IDeserializer {
 			{"node_key_link_transaction_v1", new NodeKeyLinkTransactionV1()},
 			{"aggregate_complete_transaction_v1", new AggregateCompleteTransactionV1()},
 			{"aggregate_complete_transaction_v2", new AggregateCompleteTransactionV2()},
+			{"aggregate_complete_transaction_v3", new AggregateCompleteTransactionV3()},
 			{"aggregate_bonded_transaction_v1", new AggregateBondedTransactionV1()},
 			{"aggregate_bonded_transaction_v2", new AggregateBondedTransactionV2()},
+			{"aggregate_bonded_transaction_v3", new AggregateBondedTransactionV3()},
 			{"voting_key_link_transaction_v1", new VotingKeyLinkTransactionV1()},
 			{"vrf_key_link_transaction_v1", new VrfKeyLinkTransactionV1()},
 			{"hash_lock_transaction_v1", new HashLockTransactionV1()},

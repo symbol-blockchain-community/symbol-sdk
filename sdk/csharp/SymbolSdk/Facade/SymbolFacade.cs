@@ -10,7 +10,17 @@ namespace SymbolSdk.Symbol
         public Network Network;
 
         private readonly int TRANSACTION_HEADER_SIZE = new List<int> { 4, 4, Signature.SIZE, PublicKey.SIZE, 4 }.Aggregate((x, y) => x + y);
-        private readonly int AGGREGATE_HASHED_SIZE = new List<int> { 4, 8, 8, Hash256.SIZE }.Aggregate((x, y) => x + y);
+        private static readonly int PRE_V3_AGGREGATE_HASHED_SIZE = new List<int> {
+	        4,  // version, network, type
+	        8,  // maxFee
+	        8,  // deadline
+	        Hash256.SIZE // transactionsHash
+        }.Sum();
+
+        private static readonly int AGGREGATE_HASHED_SIZE = PRE_V3_AGGREGATE_HASHED_SIZE + 
+                                                            new List<int> {
+	                                                            4 // payloadSize
+                                                            }.Sum();
 
         /**
 		 * Creates a Symbol facade.
@@ -126,16 +136,21 @@ namespace SymbolSdk.Symbol
             return aggregateTypes.ToList().Any(aggregateType => aggregateType == transactionType);
         }
 
-        private byte[] TransactionDataBuffer(byte[] transactionBuffer)
+        public byte[] TransactionDataBuffer(byte[] transactionBuffer)
         {
-            var dataBufferStart = TRANSACTION_HEADER_SIZE;
-            var dataBufferEnd = IsAggregateTransaction(transactionBuffer)
-                ? TRANSACTION_HEADER_SIZE + AGGREGATE_HASHED_SIZE
-                : transactionBuffer.Length;
+	        var dataBufferStart = TRANSACTION_HEADER_SIZE;
+	        var dataBufferEnd = transactionBuffer.Length;
 
-            var result = new byte[dataBufferEnd - dataBufferStart];
-            Array.Copy(transactionBuffer, dataBufferStart, result, 0, dataBufferEnd - dataBufferStart);
-            return result;
+	        if (IsAggregateTransaction(transactionBuffer))
+	        {
+		        var version = transactionBuffer[TRANSACTION_HEADER_SIZE];
+		        dataBufferEnd = TRANSACTION_HEADER_SIZE +
+		                        (version >= 3 ? AGGREGATE_HASHED_SIZE : PRE_V3_AGGREGATE_HASHED_SIZE);
+	        }
+
+	        var result = new byte[dataBufferEnd - dataBufferStart];
+	        Array.Copy(transactionBuffer, dataBufferStart, result, 0, dataBufferEnd - dataBufferStart);
+	        return result;
         }
     }
 }

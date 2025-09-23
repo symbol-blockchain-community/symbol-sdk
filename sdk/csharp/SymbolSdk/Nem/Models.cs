@@ -3486,7 +3486,6 @@ public class MultisigTransactionV1 : ITransaction {
 		bw.Write(BitConverter.GetBytes((uint)Cosignatures.Length));  // bound: cosignatures_count
 		Sort();
 		ArrayHelpers.WriteArray(bw, Cosignatures);
-		
 		return ms.ToArray();
 	}
 
