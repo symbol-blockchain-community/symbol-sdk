@@ -5378,6 +5378,208 @@ class AggregateCompleteTransactionV2 implements ISerializable, ITransaction {
 }
 
 
+class AggregateCompleteTransactionV3 implements ISerializable, ITransaction {
+	static const int TRANSACTION_VERSION = 3;
+	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.AGGREGATE_COMPLETE.value);
+	@override
+	late Signature signature;
+	@override
+	late PublicKey signerPublicKey;
+	@override
+	late int version;
+	late NetworkType network;
+	@override
+	late TransactionType type;
+	late Amount fee;
+	late Timestamp deadline;
+	late Hash256 transactionsHash;
+	late List<IInnerTransaction> transactions;
+	late List<Cosignature> cosignatures;
+	final int verifiableEntityHeaderReserved_1 = 0; // reserved field
+	final int entityBodyReserved_1 = 0; // reserved field
+	final int aggregateTransactionHeaderReserved_1 = 0; // reserved field
+
+	static const Map<String, String> TYPE_HINTS = {
+		'signature': 'pod:Signature',
+		'signerPublicKey': 'pod:PublicKey',
+		'network': 'enum:NetworkType',
+		'type': 'enum:TransactionType',
+		'fee': 'pod:Amount',
+		'deadline': 'pod:Timestamp',
+		'transactionsHash': 'pod:Hash256',
+		'transactions': 'array[EmbeddedTransaction]',
+		'cosignatures': 'array[Cosignature]'
+	};
+
+	AggregateCompleteTransactionV3({ 
+	Signature? signature,
+	PublicKey? signerPublicKey,
+	int? version,
+	NetworkType? network,
+	TransactionType? type,
+	Amount? fee,
+	Timestamp? deadline,
+	Hash256? transactionsHash,
+	List<IInnerTransaction>? transactions,
+	List<Cosignature>? cosignatures
+	}) {
+		this.signature = signature ?? Signature();
+		this.signerPublicKey = signerPublicKey ?? PublicKey();
+		this.version = version ?? AggregateCompleteTransactionV3.TRANSACTION_VERSION;
+		this.network = network ?? NetworkType.MAINNET;
+		this.type = type ?? AggregateCompleteTransactionV3.TRANSACTION_TYPE;
+		this.fee = fee ?? Amount();
+		this.deadline = deadline ?? Timestamp();
+		this.transactionsHash = transactionsHash ?? Hash256();
+		this.transactions = transactions ?? [];
+		this.cosignatures = cosignatures ?? [];
+	}
+
+	@override
+	void sort() {
+		// empty body
+	}
+
+	@override
+	int get size {
+		var size = 0;
+		size += 4;
+		size += 4;
+		size += signature.size;
+		size += signerPublicKey.size;
+		size += 4;
+		size += 1;
+		size += network.size;
+		size += type.size;
+		size += fee.size;
+		size += deadline.size;
+		size += transactionsHash.size;
+		size += 4;
+		size += 4;
+		size += ArrayHelpers.size(transactions, 8, false);
+		size += ArrayHelpers.size(cosignatures);
+		return size;
+	}
+
+	@override
+	AggregateCompleteTransactionV3 deserialize(Uint8List payload) {
+		var buffer = payload;
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
+		buffer = buffer.sublist(4);
+		var verifiableEntityHeaderReserved_1 = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(4);
+		if (0 != verifiableEntityHeaderReserved_1) {
+			throw RangeError('Invalid value of reserved field ($verifiableEntityHeaderReserved_1)');
+		}
+		var signature = Signature().deserialize(buffer);
+		buffer = buffer.sublist(signature.size);
+		var signerPublicKey = PublicKey().deserialize(buffer);
+		buffer = buffer.sublist(signerPublicKey.size);
+		var entityBodyReserved_1 = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(4);
+		if (0 != entityBodyReserved_1) {
+			throw RangeError('Invalid value of reserved field ($entityBodyReserved_1)');
+		}
+		var version = bytesToInt(buffer.sublist(0, 1), 1);
+		buffer = buffer.sublist(1);
+		var network = NetworkType().deserialize(buffer);
+		buffer = buffer.sublist(network.size);
+		var type = TransactionType().deserialize(buffer);
+		buffer = buffer.sublist(type.size);
+		var fee = Amount().deserialize(buffer);
+		buffer = buffer.sublist(fee.size);
+		var deadline = Timestamp().deserialize(buffer);
+		buffer = buffer.sublist(deadline.size);
+		var transactionsHash = Hash256().deserialize(buffer);
+		buffer = buffer.sublist(transactionsHash.size);
+		var payloadSize = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(4);
+		var aggregateTransactionHeaderReserved_1 = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(4);
+		if (0 != aggregateTransactionHeaderReserved_1) {
+			throw RangeError('Invalid value of reserved field ($aggregateTransactionHeaderReserved_1)');
+		}
+		var transactions = ArrayHelpers.readVariableSizeElements(buffer.sublist(0, payloadSize), EmbeddedTransactionFactory(), 8, false).map((item) => item as IInnerTransaction).toList();
+		buffer = buffer.sublist(payloadSize);
+		var cosignatures = ArrayHelpers.readArray(buffer, Cosignature()).map((item) => item as Cosignature).toList();
+		buffer = buffer.sublist(ArrayHelpers.size(cosignatures));
+
+		var instance = AggregateCompleteTransactionV3(
+			signature: signature,
+			signerPublicKey: signerPublicKey,
+			version: version,
+			network: network,
+			type: type,
+			fee: fee,
+			deadline: deadline,
+			transactionsHash: transactionsHash,
+			transactions: transactions,
+			cosignatures: cosignatures,
+		);
+		return instance;
+	}
+
+	@override
+	Uint8List serialize() {
+		var buffer = Uint8List(size);
+		var currentPos = 0;
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(size, 4));
+		currentPos += 4;
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(verifiableEntityHeaderReserved_1, 4));
+		currentPos += 4;
+		buffer.setRange(currentPos, currentPos + signature.size, signature.serialize());
+		currentPos += signature.size;
+		buffer.setRange(currentPos, currentPos + signerPublicKey.size, signerPublicKey.serialize());
+		currentPos += signerPublicKey.size;
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(entityBodyReserved_1, 4));
+		currentPos += 4;
+		buffer.setRange(currentPos, currentPos + 1, intToBytes(version, 1));
+		currentPos += 1;
+		buffer.setRange(currentPos, currentPos + network.size, network.serialize());
+		currentPos += network.size;
+		buffer.setRange(currentPos, currentPos + type.size, type.serialize());
+		currentPos += type.size;
+		buffer.setRange(currentPos, currentPos + fee.size, fee.serialize());
+		currentPos += fee.size;
+		buffer.setRange(currentPos, currentPos + deadline.size, deadline.serialize());
+		currentPos += deadline.size;
+		buffer.setRange(currentPos, currentPos + transactionsHash.size, transactionsHash.serialize());
+		currentPos += transactionsHash.size;
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(ArrayHelpers.size(transactions, 8, false), 4));
+		currentPos += 4;
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(aggregateTransactionHeaderReserved_1, 4));
+		currentPos += 4;
+		sort();
+		var res_transactions = ArrayHelpers.writeVariableSizeElements(buffer, transactions, 8, currentPos, false);
+		currentPos = res_transactions.item2;
+		buffer = res_transactions.item1;
+		sort();
+		var res_cosignatures = ArrayHelpers.writeArray(buffer, cosignatures, currentPos);
+		currentPos = res_cosignatures.item2;
+		buffer = res_cosignatures.item1;
+		return buffer;
+	}
+
+	@override
+	String toString() {
+		var result = 'AggregateCompleteTransactionV3(';
+		result += 'signature: "${signature.toString()}", ';
+		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
+		result += 'network: "${network.toString()}", ';
+		result += 'type: "${type.toString()}", ';
+		result += 'fee: "${fee.toString()}", ';
+		result += 'deadline: "${deadline.toString()}", ';
+		result += 'transactionsHash: "${transactionsHash.toString()}", ';
+		result += 'transactions: "${transactions.map((e) => e.toString()).toList()}", ';
+		result += 'cosignatures: "${cosignatures.map((e) => e.toString()).toList()}", ';
+		result += ')';
+		return result;
+	}
+}
+
+
 class AggregateBondedTransactionV1 implements ISerializable, ITransaction {
 	static const int TRANSACTION_VERSION = 1;
 	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.AGGREGATE_BONDED.value);
@@ -5766,6 +5968,208 @@ class AggregateBondedTransactionV2 implements ISerializable, ITransaction {
 	@override
 	String toString() {
 		var result = 'AggregateBondedTransactionV2(';
+		result += 'signature: "${signature.toString()}", ';
+		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
+		result += 'version: "0x${intToHex(version)}", ';
+		result += 'network: "${network.toString()}", ';
+		result += 'type: "${type.toString()}", ';
+		result += 'fee: "${fee.toString()}", ';
+		result += 'deadline: "${deadline.toString()}", ';
+		result += 'transactionsHash: "${transactionsHash.toString()}", ';
+		result += 'transactions: "${transactions.map((e) => e.toString()).toList()}", ';
+		result += 'cosignatures: "${cosignatures.map((e) => e.toString()).toList()}", ';
+		result += ')';
+		return result;
+	}
+}
+
+
+class AggregateBondedTransactionV3 implements ISerializable, ITransaction {
+	static const int TRANSACTION_VERSION = 3;
+	static final TransactionType TRANSACTION_TYPE = TransactionType(TransactionType.AGGREGATE_BONDED.value);
+	@override
+	late Signature signature;
+	@override
+	late PublicKey signerPublicKey;
+	@override
+	late int version;
+	late NetworkType network;
+	@override
+	late TransactionType type;
+	late Amount fee;
+	late Timestamp deadline;
+	late Hash256 transactionsHash;
+	late List<IInnerTransaction> transactions;
+	late List<Cosignature> cosignatures;
+	final int verifiableEntityHeaderReserved_1 = 0; // reserved field
+	final int entityBodyReserved_1 = 0; // reserved field
+	final int aggregateTransactionHeaderReserved_1 = 0; // reserved field
+
+	static const Map<String, String> TYPE_HINTS = {
+		'signature': 'pod:Signature',
+		'signerPublicKey': 'pod:PublicKey',
+		'network': 'enum:NetworkType',
+		'type': 'enum:TransactionType',
+		'fee': 'pod:Amount',
+		'deadline': 'pod:Timestamp',
+		'transactionsHash': 'pod:Hash256',
+		'transactions': 'array[EmbeddedTransaction]',
+		'cosignatures': 'array[Cosignature]'
+	};
+
+	AggregateBondedTransactionV3({ 
+	Signature? signature,
+	PublicKey? signerPublicKey,
+	int? version,
+	NetworkType? network,
+	TransactionType? type,
+	Amount? fee,
+	Timestamp? deadline,
+	Hash256? transactionsHash,
+	List<IInnerTransaction>? transactions,
+	List<Cosignature>? cosignatures
+	}) {
+		this.signature = signature ?? Signature();
+		this.signerPublicKey = signerPublicKey ?? PublicKey();
+		this.version = version ?? AggregateBondedTransactionV3.TRANSACTION_VERSION;
+		this.network = network ?? NetworkType.MAINNET;
+		this.type = type ?? AggregateBondedTransactionV3.TRANSACTION_TYPE;
+		this.fee = fee ?? Amount();
+		this.deadline = deadline ?? Timestamp();
+		this.transactionsHash = transactionsHash ?? Hash256();
+		this.transactions = transactions ?? [];
+		this.cosignatures = cosignatures ?? [];
+	}
+
+	@override
+	void sort() {
+		// empty body
+	}
+
+	@override
+	int get size {
+		var size = 0;
+		size += 4;
+		size += 4;
+		size += signature.size;
+		size += signerPublicKey.size;
+		size += 4;
+		size += 1;
+		size += network.size;
+		size += type.size;
+		size += fee.size;
+		size += deadline.size;
+		size += transactionsHash.size;
+		size += 4;
+		size += 4;
+		size += ArrayHelpers.size(transactions, 8, false);
+		size += ArrayHelpers.size(cosignatures);
+		return size;
+	}
+
+	@override
+	AggregateBondedTransactionV3 deserialize(Uint8List payload) {
+		var buffer = payload;
+		var size = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(0, size);
+		buffer = buffer.sublist(4);
+		var verifiableEntityHeaderReserved_1 = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(4);
+		if (0 != verifiableEntityHeaderReserved_1) {
+			throw RangeError('Invalid value of reserved field ($verifiableEntityHeaderReserved_1)');
+		}
+		var signature = Signature().deserialize(buffer);
+		buffer = buffer.sublist(signature.size);
+		var signerPublicKey = PublicKey().deserialize(buffer);
+		buffer = buffer.sublist(signerPublicKey.size);
+		var entityBodyReserved_1 = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(4);
+		if (0 != entityBodyReserved_1) {
+			throw RangeError('Invalid value of reserved field ($entityBodyReserved_1)');
+		}
+		var version = bytesToInt(buffer.sublist(0, 1), 1);
+		buffer = buffer.sublist(1);
+		var network = NetworkType().deserialize(buffer);
+		buffer = buffer.sublist(network.size);
+		var type = TransactionType().deserialize(buffer);
+		buffer = buffer.sublist(type.size);
+		var fee = Amount().deserialize(buffer);
+		buffer = buffer.sublist(fee.size);
+		var deadline = Timestamp().deserialize(buffer);
+		buffer = buffer.sublist(deadline.size);
+		var transactionsHash = Hash256().deserialize(buffer);
+		buffer = buffer.sublist(transactionsHash.size);
+		var payloadSize = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(4);
+		var aggregateTransactionHeaderReserved_1 = bytesToInt(buffer.sublist(0, 4), 4);
+		buffer = buffer.sublist(4);
+		if (0 != aggregateTransactionHeaderReserved_1) {
+			throw RangeError('Invalid value of reserved field ($aggregateTransactionHeaderReserved_1)');
+		}
+		var transactions = ArrayHelpers.readVariableSizeElements(buffer.sublist(0, payloadSize), EmbeddedTransactionFactory(), 8, false).map((item) => item as IInnerTransaction).toList();
+		buffer = buffer.sublist(payloadSize);
+		var cosignatures = ArrayHelpers.readArray(buffer, Cosignature()).map((item) => item as Cosignature).toList();
+		buffer = buffer.sublist(ArrayHelpers.size(cosignatures));
+
+		var instance = AggregateBondedTransactionV3(
+			signature: signature,
+			signerPublicKey: signerPublicKey,
+			version: version,
+			network: network,
+			type: type,
+			fee: fee,
+			deadline: deadline,
+			transactionsHash: transactionsHash,
+			transactions: transactions,
+			cosignatures: cosignatures,
+		);
+		return instance;
+	}
+
+	@override
+	Uint8List serialize() {
+		var buffer = Uint8List(size);
+		var currentPos = 0;
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(size, 4));
+		currentPos += 4;
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(verifiableEntityHeaderReserved_1, 4));
+		currentPos += 4;
+		buffer.setRange(currentPos, currentPos + signature.size, signature.serialize());
+		currentPos += signature.size;
+		buffer.setRange(currentPos, currentPos + signerPublicKey.size, signerPublicKey.serialize());
+		currentPos += signerPublicKey.size;
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(entityBodyReserved_1, 4));
+		currentPos += 4;
+		buffer.setRange(currentPos, currentPos + 1, intToBytes(version, 1));
+		currentPos += 1;
+		buffer.setRange(currentPos, currentPos + network.size, network.serialize());
+		currentPos += network.size;
+		buffer.setRange(currentPos, currentPos + type.size, type.serialize());
+		currentPos += type.size;
+		buffer.setRange(currentPos, currentPos + fee.size, fee.serialize());
+		currentPos += fee.size;
+		buffer.setRange(currentPos, currentPos + deadline.size, deadline.serialize());
+		currentPos += deadline.size;
+		buffer.setRange(currentPos, currentPos + transactionsHash.size, transactionsHash.serialize());
+		currentPos += transactionsHash.size;
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(ArrayHelpers.size(transactions, 8, false), 4));
+		currentPos += 4;
+		buffer.setRange(currentPos, currentPos + 4, intToBytes(aggregateTransactionHeaderReserved_1, 4));
+		currentPos += 4;
+		sort();
+		var res_transactions = ArrayHelpers.writeVariableSizeElements(buffer, transactions, 8, currentPos, false);
+		currentPos = res_transactions.item2;
+		buffer = res_transactions.item1;
+		sort();
+		var res_cosignatures = ArrayHelpers.writeArray(buffer, cosignatures, currentPos);
+		currentPos = res_cosignatures.item2;
+		buffer = res_cosignatures.item1;
+		return buffer;
+	}
+
+	@override
+	String toString() {
+		var result = 'AggregateBondedTransactionV3(';
 		result += 'signature: "${signature.toString()}", ';
 		result += 'signerPublicKey: "${signerPublicKey.toString()}", ';
 		result += 'version: "0x${intToHex(version)}", ';
@@ -13739,8 +14143,10 @@ class TransactionFactory implements ISerializable {
 			(NodeKeyLinkTransactionV1.TRANSACTION_TYPE.value, NodeKeyLinkTransactionV1.TRANSACTION_VERSION): NodeKeyLinkTransactionV1(),
 			(AggregateCompleteTransactionV1.TRANSACTION_TYPE.value, AggregateCompleteTransactionV1.TRANSACTION_VERSION): AggregateCompleteTransactionV1(),
 			(AggregateCompleteTransactionV2.TRANSACTION_TYPE.value, AggregateCompleteTransactionV2.TRANSACTION_VERSION): AggregateCompleteTransactionV2(),
+			(AggregateCompleteTransactionV3.TRANSACTION_TYPE.value, AggregateCompleteTransactionV3.TRANSACTION_VERSION): AggregateCompleteTransactionV3(),
 			(AggregateBondedTransactionV1.TRANSACTION_TYPE.value, AggregateBondedTransactionV1.TRANSACTION_VERSION): AggregateBondedTransactionV1(),
 			(AggregateBondedTransactionV2.TRANSACTION_TYPE.value, AggregateBondedTransactionV2.TRANSACTION_VERSION): AggregateBondedTransactionV2(),
+			(AggregateBondedTransactionV3.TRANSACTION_TYPE.value, AggregateBondedTransactionV3.TRANSACTION_VERSION): AggregateBondedTransactionV3(),
 			(VotingKeyLinkTransactionV1.TRANSACTION_TYPE.value, VotingKeyLinkTransactionV1.TRANSACTION_VERSION): VotingKeyLinkTransactionV1(),
 			(VrfKeyLinkTransactionV1.TRANSACTION_TYPE.value, VrfKeyLinkTransactionV1.TRANSACTION_VERSION): VrfKeyLinkTransactionV1(),
 			(HashLockTransactionV1.TRANSACTION_TYPE.value, HashLockTransactionV1.TRANSACTION_VERSION): HashLockTransactionV1(),
@@ -13778,8 +14184,10 @@ class TransactionFactory implements ISerializable {
 			'node_key_link_transaction_v1': () => NodeKeyLinkTransactionV1(),
 			'aggregate_complete_transaction_v1': () => AggregateCompleteTransactionV1(),
 			'aggregate_complete_transaction_v2': () => AggregateCompleteTransactionV2(),
+			'aggregate_complete_transaction_v3': () => AggregateCompleteTransactionV3(),
 			'aggregate_bonded_transaction_v1': () => AggregateBondedTransactionV1(),
 			'aggregate_bonded_transaction_v2': () => AggregateBondedTransactionV2(),
+			'aggregate_bonded_transaction_v3': () => AggregateBondedTransactionV3(),
 			'voting_key_link_transaction_v1': () => VotingKeyLinkTransactionV1(),
 			'vrf_key_link_transaction_v1': () => VrfKeyLinkTransactionV1(),
 			'hash_lock_transaction_v1': () => HashLockTransactionV1(),

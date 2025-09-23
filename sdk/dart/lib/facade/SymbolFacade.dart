@@ -12,7 +12,16 @@ import '../utils/converter.dart';
 
 const TRANSACTION_HEADER_SIZE = 4 + 4 + Signature.SIZE + PublicKey.SIZE + 4;
 
-const AGGREGATE_HASHED_SIZE = 4 + 8 + 8 + Hash256.SIZE;
+final int PRE_V3_AGGREGATE_HASHED_SIZE = [
+  4, // version, network, type
+  8, // maxFee
+  8, // deadline
+  Hash256.SIZE, // transactionsHash
+].fold(0, (sum, element) => sum + element);
+
+final int AGGREGATE_HASHED_SIZE = PRE_V3_AGGREGATE_HASHED_SIZE +
+    [4] // payloadSize
+        .fold(0, (sum, element) => sum + element);
 
 bool isAggregateTransaction(Uint8List transactionBuffer) {
   final transactionTypeOffset =
@@ -29,9 +38,12 @@ bool isAggregateTransaction(Uint8List transactionBuffer) {
 
 Uint8List transactionDataBuffer(Uint8List transactionBuffer) {
   final dataBufferStart = TRANSACTION_HEADER_SIZE;
-  final dataBufferEnd = isAggregateTransaction(transactionBuffer)
-      ? TRANSACTION_HEADER_SIZE + AGGREGATE_HASHED_SIZE
-      : transactionBuffer.length;
+  var dataBufferEnd = transactionBuffer.length;
+  if (isAggregateTransaction(transactionBuffer)) {
+    var version = transactionBuffer[TRANSACTION_HEADER_SIZE];
+    dataBufferEnd = TRANSACTION_HEADER_SIZE +
+        (3 <= version ? AGGREGATE_HASHED_SIZE : PRE_V3_AGGREGATE_HASHED_SIZE);
+  }
 
   return transactionBuffer.sublist(dataBufferStart, dataBufferEnd);
 }
