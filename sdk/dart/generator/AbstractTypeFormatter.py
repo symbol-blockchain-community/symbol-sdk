@@ -50,8 +50,16 @@ class AbstractTypeFormatter(ABC):
 	def get_getter_descriptors(self):
 		# pylint: disable=no-self-use
 		return []
+	
+	def get_computed_descriptor(eslf):
+		# pylint: disable=no-self-use
+		return []
 
 	def get_setter_descriptors(self):
+		# pylint: disable=no-self-use
+		return []
+	
+	def get_getter_setter_descriptors(self):
 		# pylint: disable=no-self-use
 		return []
 

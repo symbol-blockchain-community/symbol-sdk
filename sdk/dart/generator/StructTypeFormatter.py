@@ -92,8 +92,8 @@ class StructFormatter(AbstractTypeFormatter):
 	def re_name(name):
 		if 'Transaction' == name:
 			return 'ITransaction'
-		if 'Transaction[]' == name:
-			return 'ITransaction[]'
+		if 'List<Transaction>' == name:
+			return 'List<ITransaction>'
 		name = name.replace("NonVerifiable", "IInner")
 		name = name.replace("Embedded", "IInner")
 		return name
@@ -162,7 +162,7 @@ class StructFormatter(AbstractTypeFormatter):
 
 	def get_ctor_descriptor(self):
 		args = []
-		body = 'super()'
+		body = ''
 		for field in self.non_reserved_fields():
 			arg_name = self.field_name(field, is_argument=True)
 			args.append(f'{self.re_name(field.extensions.printer.get_type())}? {arg_name}') if not self.is_fields_one() else args.append(f'[{arg_name}]')
@@ -455,27 +455,16 @@ class StructFormatter(AbstractTypeFormatter):
 		annotations = ''
 		return MethodDescriptor(body=body, annotations=annotations)
 	
-	def create_getter_descriptor(self, field):
-		method_name = 'get ' + field.extensions.printer.name
-		body = f'return {self.field_name(field)};'
-		if is_computed(field):
+	def get_computed_descriptor(self):
+		fields = list(self.computed_fields())
+		if(is_computed and len(fields) != 0):
+			field = fields[0]
+			method_name = 'get ' + field.extensions.printer.name
 			method_name += 'Computed'
 			body = f'return {field.field_type.sizeref.property_name}?.size ?? 0;'
-
-		method_descriptor = MethodDescriptor(method_name=method_name, body=body, result=self.re_name(field.extensions.printer.get_type()))
-		return method_descriptor
-
-	def get_getter_descriptors(self):
-		return list(map(self.create_getter_descriptor, self.computed_fields()))
-
-	def create_setter_descriptor(self, field):
-		method_descriptor = MethodDescriptor(
-			method_name= 'set ' + field.extensions.printer.name,
-			arguments=[f'{self.re_name(field.extensions.printer.get_type())} value'],
-			body=f'{self.field_name(field)} = value;',
-		)
-		return method_descriptor
-
+			method_descriptor = MethodDescriptor(method_name=method_name, body=body, result=self.re_name(field.extensions.printer.get_type()))
+			return method_descriptor
+	
 	def generate_str_field(self, field):
 		condition = self.generate_condition(field, True)
 		if field.display_type == DisplayType.INTEGER:

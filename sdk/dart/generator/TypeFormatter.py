@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-
 from .format import indent
 
 
@@ -98,6 +97,13 @@ class TypeFormatter(ClassFormatter):
 		method_descriptor.result = 'void'
 		return self.generate_method(method_descriptor)
 	
+	def generate_computed(self):
+		method_descriptor = self.provider.get_computed_descriptor()
+		if not method_descriptor:
+			return None
+
+		return self.generate_method(method_descriptor)
+	
 	def generate_deserializer(self):
 		# 'deserialize'
 		method_descriptor = self.provider.get_deserialize_descriptor()
@@ -125,9 +131,6 @@ class TypeFormatter(ClassFormatter):
 		method_descriptor.annotations = ['@override']
 		return self.generate_method(method_descriptor)
 	
-	def generate_getters_setters(self):
-		return list(map(self.generate_method, self.provider.get_getter_setter_descriptors()))
-
 	def generate_representation(self):
 		method_descriptor = self.provider.get_str_descriptor()
 		if not method_descriptor:
@@ -144,8 +147,7 @@ class TypeFormatter(ClassFormatter):
 		_append_if_not_none(methods, self.generate_ctor())
 		_append_if_not_none(methods, self.generate_comparer())
 		_append_if_not_none(methods, self.generate_sort())
-
-		methods.extend(self.generate_getters_setters())
+		_append_if_not_none(methods, self.generate_computed())
 
 		_append_if_not_none(methods, self.generate_size())
 
